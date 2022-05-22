@@ -1,0 +1,30 @@
+{
+  "name": "kniw",
+  "version": "0.0.1",
+  "description": "Node.js on Docker",
+  "author": "Motojouya (Takuya Sugiyama) <motojouya@gmail.com>",
+  "main": "index.js",
+  "scripts": {
+    "start": "node dist/main.js",
+    "build": "webpack",
+    "prepare": "webpack --config webpack.config.js",
+    "watch": "webpack --config webpack.dev.js --watch"
+  },
+  "private": true,
+  "devDependencies": {
+    "@types/figlet": "^1.5.4",
+    "@types/inquirer": "^8.2.1",
+    "@types/node": "^17.0.35",
+    "@types/yargs": "^17.0.10",
+    "ts-loader": "^9.3.0",
+    "typescript": "^4.6.4",
+    "webpack": "^5.72.1",
+    "webpack-cli": "^4.9.2",
+    "webpack-merge": "^5.8.0"
+  },
+  "dependencies": {
+    "figlet": "^1.5.2",
+    "inquirer": "^8.2.4",
+    "yargs": "^17.5.1"
+  }
+}
