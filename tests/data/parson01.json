@@ -1,0 +1,16 @@
+{
+  "デニム": {
+    "blessing": "dark",
+    "race": "tallman",
+    "main_weapon": "claymore",
+    "sub_weapon": "shield",
+    "armor": "steel_armor"
+  },
+  "カチュア": {
+    "blessing": "light",
+    "race": "tallman",
+    "main_weapon": "light_wand",
+    "sub_weapon": "large_jar",
+    "armor": "light_robe"
+  }
+}
