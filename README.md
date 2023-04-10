@@ -44,3 +44,7 @@ TypeScriptで型を定義したい
 }
 ```
 
+## memos
+`npm ts-node index.ts`
+
+
