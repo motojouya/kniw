@@ -102,26 +102,26 @@ $USER_HOME/.kniw以下に以下の構成で保存する。
 
 ### データモデル
 
-- action
-  名前はない
+- action  
+  名前はない  
   actor、乱数、対象を受け取って、対象の状態を変化させる関数
 
-- skill
-  actorを受け取って、actorをbindしたactionの配列を返す関数が本体
+- skill  
+  actorを受け取って、actorをbindしたactionの配列を返す関数が本体  
   property
   - name: string
   - wt: int
   - getActions: func
 
-- ability
-  特定の能力のこと、itemを装備するとcharactorにつく
+- ability  
+  特定の能力のこと、itemを装備するとcharactorにつく  
   実装としてはnameのみで、abilityを考慮してどう実装するかはskill側が持つ
 
-- item
+- item  
   種類
   - 武器
   - 防具
-  - エレメント
+  - エレメント  
   property
   - skills
   - name
@@ -131,26 +131,26 @@ $USER_HOME/.kniw以下に以下の構成で保存する。
     - 防御力
     - hp
     - wt
-  - limitation
+  - limitation  
     何かと組み合わせることができないという制約
 
-- charactor
-  実際に動かす人。マスタデータではなく、ユーザが作って来るが、制約もある。
+- charactor  
+  実際に動かす人。マスタデータではなく、ユーザが作って来るが、制約もある。  
   property
   - name
-  - skills
+  - skills  
     これはitemから移譲しているもの
-  - abilities
+  - abilities  
     これもitemから移譲しているもの
   - parameter
     - 攻撃力
     - 防御力
     - hp
-    - wt
+    - wt  
     これもitemから移譲しているもの
   - 現在hp
   - 現在mp
-  - status
+  - status  
     状態異常など
 
 - party
@@ -158,7 +158,7 @@ $USER_HOME/.kniw以下に以下の構成で保存する。
   - name
   - charactors
 
-- config
+- config  
   property
   - party人数
   - 乱数幅。ダメージ、命中
@@ -195,22 +195,22 @@ chalkなどのライブラリが使えそう。
 
 タスクを分けると
 1. ストレージアクセス
-2. コマンドラインインタフェース
-  2.1. charactor
-  2.2. party
-  2.3. battle
+2. コマンドラインインタフェース  
+  2.1. charactor  
+  2.2. party  
+  2.3. battle  
 3. データモデルの大枠とサンプル実装
 4. コマンド自体の実装。対話の流れも
-5. 全てのデータモデルの実装
-  5.1. skills
-  5.2. items&ability
-  5.3. charactor&party&config
+5. 全てのデータモデルの実装  
+  5.1. skills  
+  5.2. items&ability  
+  5.3. charactor&party&config  
 6. もろもろ微調整
-7. 最後のドキュメントまとめ
-  7.1. 使い方
-  7.2. レゴの組み方
-  7.3. gif動画
-  7.4. ポリシーやら開発の仕方やら
+7. 最後のドキュメントまとめ  
+  7.1. 使い方  
+  7.2. レゴの組み方  
+  7.3. gif動画  
+  7.4. ポリシーやら開発の仕方やら  
 
 それぞれで、新しく仕様が変わったらドキュメントに記載はしていきたい
 
