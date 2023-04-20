@@ -1,23 +1,32 @@
 import { Action } from 'src/model/action'
 import { Charactor } from 'src/model/charactor'
 
-type Randoms = {
-  times: number
-  damage: number
-  accuracy: number
+export type Randoms = {
+  times: number,
+  damage: number,
+  accuracy: number,
 }
 
-type Field = {
+export type Field = {
   climate: string
 }
 
-type ActionToCharactor = (actor: Charactor) => (randoms: Randoms) => (field: Field) => (receiver: Charactor) => Charactor;
-type ActionToField = (actor: Charactor) => (randoms: Randoms) => (field: Field) => Field;
-type Action = ActionToCharactor | ActionToField;
-type GetAccuracy = (actor: Charactor) => (field: Field) => number;
+export type ActionToCharactor = (self: Skill) => (actor: Charactor) => (randoms: Randoms) => (field: Field) => (receiver: Charactor) => Charactor;
+export type ActionToField = (self: Skill) => (actor: Charactor) => (randoms: Randoms) => (field: Field) => Field;
+export type GetAccuracy = (self: Skill) => (actor: Charactor) => (field: Field) => (receiver: Charactor) => number;
 
-type Skill = {
-  name: string
-  action: Action
-  getAccuracy: GetAccuracy
+export type Skill = {
+  name: string,
+  action: ActionToCharactor,
+  receiverCount: number,
+  getAccuracy: GetAccuracy,
+} | {
+  name: string,
+  action: ActionToField,
+  receiverCount: 0,
+  getAccuracy: GetAccuracy,
 };
+
+//dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
+//actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ
+
