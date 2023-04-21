@@ -1,43 +1,46 @@
-import { Equipment } from 'src/model/equipment'
+import { Physical, addPhysicals } from 'src/model/basics'
+import { Weapon, Armor, Element } from 'src/model/equipment'
 import { Ability } from 'src/model/ability'
+import { Skill } from 'src/model/skill'
 
-//Equipment用のモジュールを用意したい
-export type Equipment = {
-  weapon: Weapon,
-  armor: Armor,
-  element: Element,
-  getSkills: GetSkills,
-  getAbilities: GetAbilities,
-  getAdditionalPhysical: GetPhysical,
-}
-
-export type Physical = {
-  STR: number,
-  VIT: number,
-  DEX: number,
-  AGI: number,
-  AVD: number,
-  INT: number,
-  MND: number,
-  RES: number,
-  WT: number,
+const basePhysical: Physical = {
+  MaxHP: 100,
+  MaxMP: 100,
+  STR: 100,
+  VIT: 100,
+  DEX: 100,
+  AGI: 100,
+  AVD: 100,
+  INT: 100,
+  MND: 100,
+  RES: 100,
+  WT: 100,
 };
-
-export type GetAbilities = (self: Charactor) => Ability[];
-export type GetSkills = (self: Charactor) => Skill[];
-export type GetPhysical = (self: Charactor) => Physical;
-export type GetStatuses = (self: Charactor) => string[];
-export type GetHP = (self: Charactor) => number;
-export type GetMP = (self: Charactor) => number;
 
 export type Charactor = {
   name: string,
-  equipment: Equipment,
+  weapon: Weapon,
+  armor: Armor,
+  element: Element,
   getAbilities: GetAbilities,
   getSkills: GetSkills,
   getPhysical: GetPhysical,
-  getStatuses: GetStatuses,
-  getHP: GetHP,
-  getMP: GetMP,
+  statuses: Status[],
+  hp: number,
+  mp: number,
 }
+
+export type GetAbilities = (self: Charactor) => Ability[];
+const getAbilities: GetAbilities = self => [...self.weapon.abilities, ...self.armor.abilities, ...self.element.abilities];
+
+export type GetSkills = (self: Charactor) => Skill[];
+const getSkills: GetSkills = self => [...self.weapon.skills, ...self.armor.skills, ...self.element.skills];
+
+export type GetPhysical = (self: Charactor) => Physical;
+const getPhysical: GetPhysical = self => addPhysicals([basePhysical, self.weapon.additionalPhysical, self.armor.additionalPhysical, self.element.additionalPhysical]);
+
+//CharactorについてはDBへの保存関数も記載したい
+//同様にBattleLog, Party型も
+//BattleLogはモジュールとしてbattle関数を定義してもいいかもしれない。ちょくちょく対話したりコンソールにメッセージ出したりするので、そこをどう扱うかな
+//Ability型を作って上げる必要がある
 

@@ -1,15 +1,6 @@
+import { Field, Randoms } from 'src/model/basics'
 import { Action } from 'src/model/action'
 import { Charactor } from 'src/model/charactor'
-
-export type Randoms = {
-  times: number,
-  damage: number,
-  accuracy: number,
-}
-
-export type Field = {
-  climate: string
-}
 
 export type ActionToCharactor = (self: Skill) => (actor: Charactor) => (randoms: Randoms) => (field: Field) => (receiver: Charactor) => Charactor;
 export type ActionToField = (self: Skill) => (actor: Charactor) => (randoms: Randoms) => (field: Field) => Field;
