@@ -1,13 +1,21 @@
 import { Physical, addPhysicals } from 'src/model/basics'
-import { Weapon, createWeapon, Armor, createArmor, Element, createElement } from 'src/model/equipment'
+import {
+  Weapon,
+  createWeapon,
+  Armor,
+  createArmor,
+  Element,
+  createElement
+} from 'src/model/equipment'
 import { Ability } from 'src/model/ability'
 import { Skill } from 'src/model/skill'
 import {
-  save as saveToStorage,
-  list as listFromStorage,
-  get as getFromStorage,
-  remove as removeFromStorage
-} from 'src/repository/file_storage'
+  CreateSave<T>
+  CreateGet<T>
+  CreateRemove
+  CreateList
+  CreateStore<T>
+} from 'src/mode/store';
 
 const NAMESPACE = 'charactor';
 
@@ -33,6 +41,7 @@ export type Charactor = {
   statuses: Status[],
   hp: number,
   mp: number,
+  restWt: number,
 }
 
 export type GetAbilities = (charactor: Charactor) => Ability[];
@@ -54,26 +63,41 @@ export const createCharactor: CreateCharactor = (name: string, weaponName: strin
     statuses: [],
     hp: 0,
     mp: 0,
+    restWt: 0,
   };
   someonesPhysical = getPhysical(someone);
   someone.hp = someonesPhysical.MaxHp;
+  someone.restWt = someonesPhysical.wt;
   return someone;
 };
 
-export type Save = (charactor: Charactor) => Promise<void>
-export const save: Save = async ({ name, weapon, armor, element }) => (await saveToStorage(NAMESPACE, name, { weapon: weapon.name, armor: armor.name, element: element.name }));
+const createSave: CreateSave<Charactor> =
+  storage =>
+  async ({ name, weapon, armor, element }) =>
+  (await storage.save(NAMESPACE, name, { weapon: weapon.name, armor: armor.name, element: element.name }));
 
-export type Get = (name: string) => Promise<Charactor>
-export const get: Get = async name => createCharactor(...(await getFromStorage(NAMESPACE, name)));
+const createGet: CreateGet<Charactor> =
+  storage =>
+  async name =>
+  createCharactor(...(await storage.get(NAMESPACE, name)));
 
-export type Remove = (name: string) => Promise<void>
-export const remove: Remove = async name => (await removeFromStorage(NAMESPACE, name));
+const createRemove: CreateRemove =
+  storage =>
+  async name =>
+  (await storage.remove(NAMESPACE, name));
 
-export type List = () => Promise<string[]>
-export const list: List = async () => (await listFromStorage(NAMESPACE));
+const createList: CreateList =
+  storage =>
+  async () =>
+  (await storage.list(NAMESPACE));
 
-
-//同様にBattleLog, Party型も
-//BattleLogはモジュールとしてbattle関数を定義してもいいかもしれない。ちょくちょく対話したりコンソールにメッセージ出したりするので、そこをどう扱うかな
-//Ability型を作って上げる必要がある
+export const createStorage: CreateStore<Charactor> = storage => {
+  storage.checkNamespace(NAMESPACE);
+  return {
+    save: createSave(storage),
+    list: createList(storage),
+    get: createGet(storage),
+    remove: createRemove(storage),
+  }
+};
 

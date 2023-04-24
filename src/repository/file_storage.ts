@@ -1,40 +1,73 @@
 import fs from 'fs'
 import path from 'path';
+import {
+  Save,
+  List,
+  Get,
+  Remove,
+  CreateSave,
+  CreateList,
+  CreateGet,
+  CreateRemove,
+  Storage,
+  CreateStorage,
+  CheckNamespace,
+  CreateCheckNamespace,
+} from 'src/repository/storage';
 
 const FILE_EXTENSION = '.json';
 
 type IsDataFile = (dirName: string, file: string) => boolean;
 const isDataFile: IsDataFile = (dirName, file) => fs.statSync(path.join(dirName, file)).isFile() && new RegExp('.*' + FILE_EXTENSION).test(file)
 
-type CreateDirectory = (dir: string) => Promise<void>;
-const createDirectory: CreateDirectory = async dir => {
-  if (!fs.existsSync(dir)) {
-    return await fs.promises.mkdir(dir);
+type CreateDirctory = async (dirName: string) => Promise<void>
+const createDirctory: CreateDirctory = async dirName => {
+  if (!fs.existsSync(dirName)) {
+    return await fs.promises.mkdir(dirName);
   }
 };
 
-type ResolvePath = (dirName: string, fileBaseName: string, extension: string) => string
-const resolvePath: ResolvePath = (dirName, fileBaseName, extension) => path.join(dirName, (fileBaseName + FILE_EXTENSION))
+const createCheckNamespace: CreateCheckNamespace =
+  basePath =>
+  async namespace =>
+  createDirctory(path.join(basePath, namespace));
 
-export type CreateStorage = (basedir: string, tables: string[]) => Promise<void>;
-export const createStorage: CreateStorage = async (basedir, tables) => {
-  await createDirectory(basedir);
-  tables.forEach(async table => await createDirectory(path.join(basedir, table)));
+type ResolvePath = (basePath: string, dirName: string, fileBaseName: string, extension: string) => string
+const resolvePath: ResolvePath = (basePath, dirName, fileBaseName, extension) => path.join(basePath, dirName, (fileBaseName + FILE_EXTENSION))
+
+const createSave: CreateSave =
+  basePath =>
+  async (namespace, objctKey, json) =>
+  fs.promises.writeFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), JSON.stringify(data));
+
+const createList: CreateList =
+  basePath =>
+  async namespace =>
+  fs.promises.readdir(path.join(basePath, dirName)).then(
+    files => files.filter(file => isDataFile(namespace, file)).map(file => path.basename(file, FILE_EXTENSION))
+  );
+
+const createGet: CreateGet =
+  basePath =>
+  async (namespace, objctKey) =>
+  fs.promises.readFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), { encoding: "utf8" }).then(contents => JSON.parse(contents));
+
+const createRemove: CreateRemove =
+  basePath =>
+  async (namespace, objctKey) =>
+  fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
+
+export const createStorage: CreateStorage = async (basePath, tables) => {
+  await createDirctory(basePath);
+  //await Promise.all(tables.map(async table => await createDirectory(path.join(basePath, table))));
+  return {
+    checkNamespace: createCheckNamespace(basePath),
+    save: createSave(basePath),
+    list: createList(basePath),
+    get: createGet(basePath),
+    remove: createRemove(basePath),
+  };
 };
-
-export type Save = (namespace: string, objctKey: string, data: object) => Promise<void>;
-export const save: Save = async (dirName, objctKey, json) => fs.promises.writeFile(resolvePath(dirName, objctKey, FILE_EXTENSION), JSON.stringify(data));
-
-export type List = (namespace: string) => Promise<string[]>;
-export const list: List = async namespace => fs.promises.readdir(namespace).then(
-  files => files.filter(file => isDataFile(namespace, file)).map(file => path.basename(file, FILE_EXTENSION))
-);
-
-export type Get = (namespace: string, objctKey: string) => Promise<object>;
-export const get: Get = async (namespace, objctKey) => fs.promises.readFile(resolvePath(namespace, objctKey, FILE_EXTENSION), { encoding: "utf8" }).then(contents => JSON.parse(contents));
-
-export type Remove = (namespace: string, objctKey: string) => Promise<void>;
-export const remove: Remove = async (namespace, objctKey) => fs.promises.unlink(resolvePath(namespace, objctKey, FILE_EXTENSION));
 
 //async function test () {
 //  const homeDir = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
