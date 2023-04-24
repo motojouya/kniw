@@ -13,25 +13,28 @@ const createDirectory: CreateDirectory = async dir => {
   }
 };
 
+type ResolvePath = (dirName: string, fileBaseName: string, extension: string) => string
+const resolvePath: ResolvePath = (dirName, fileBaseName, extension) => path.join(dirName, (fileBaseName + FILE_EXTENSION))
+
 export type CreateStorage = (basedir: string, tables: string[]) => Promise<void>;
 export const createStorage: CreateStorage = async (basedir, tables) => {
   await createDirectory(basedir);
   tables.forEach(async table => await createDirectory(path.join(basedir, table)));
 };
 
-export type Save = (fileName: string, text: string) => Promise<void>;
-export const save: Save = async (fileName, text) => fs.promises.writeFile(fileName, text);
+export type Save = (namespace: string, objctKey: string, data: object) => Promise<void>;
+export const save: Save = async (dirName, objctKey, json) => fs.promises.writeFile(resolvePath(dirName, objctKey, FILE_EXTENSION), JSON.stringify(data));
 
-export type List = (dirName: string) => Promise<string[]>;
-export const list: List = async dirName => fs.promises.readdir(dirName).then(
-  files => files.filter(file => isDataFile(dirName, file)).map(file => path.basename(file, FILE_EXTENSION))
+export type List = (namespace: string) => Promise<string[]>;
+export const list: List = async namespace => fs.promises.readdir(namespace).then(
+  files => files.filter(file => isDataFile(namespace, file)).map(file => path.basename(file, FILE_EXTENSION))
 );
 
-export type Get = (fileName: string) => Promise<object>;
-export const get: Get = async fileName => fs.promises.readFile(fileName, { encoding: "utf8" }).then(contents => JSON.parse(contents));
+export type Get = (namespace: string, objctKey: string) => Promise<object>;
+export const get: Get = async (namespace, objctKey) => fs.promises.readFile(resolvePath(namespace, objctKey, FILE_EXTENSION), { encoding: "utf8" }).then(contents => JSON.parse(contents));
 
-export type Remove = (fileName: string) => Promise<void>;
-export const remove: Remove = async fileName => fs.promises.unlink(fileName);
+export type Remove = (namespace: string, objctKey: string) => Promise<void>;
+export const remove: Remove = async (namespace, objctKey) => fs.promises.unlink(resolvePath(namespace, objctKey, FILE_EXTENSION));
 
 //async function test () {
 //  const homeDir = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
