@@ -1,4 +1,4 @@
-import { Charactor } from 'src/model/charactor'
+import { Charactor, getPhysical } from 'src/model/charactor'
 import {
   CreateSave<T>
   CreateGet<T>
@@ -19,6 +19,9 @@ export const createParty: CreateParty = (name, charactors) => ({
   name,
   charactors,
 })
+
+export type sortByWT = (home: Party, visitor: Party) => Charactor[]
+export type sortByWT = (home, visitor) => [...home.charactors, ...visitor.charactors].sort((left, right) => (left.restWt - right.restWt))
 
 const createSave: CreateSave<Party> =
   storage =>

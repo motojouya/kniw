@@ -18,6 +18,7 @@ export type Turn = {
   receivers: Charactor[],
   homeStatus: Party,
   visitorStatus: Party,
+  field: Field,
 }
 
 export type Battle = {
@@ -27,13 +28,41 @@ export type Battle = {
   turns: Turn[],
 }
 
-export type CreateParty = (name: string, charactors: Charactor[]) => Party
-export const createParty: CreateParty = (name, charactors) => ({
-  name,
-  charactors,
-})
+type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
+const updateCharactor: UpdateCharactor = receivers => charactor => {
+  const receiver = resultReceivers.find(receiver => charactor.name === receiver.name);
+  if (receiver) {
+    return receiver;
+  }
+  return charactor;
+}
 
-export type Act = 
+export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
+export type act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
+  const lastTurn = battle.turns.slice(-1)[0];
+  const newTurn = {
+    datetime,
+    actor,
+    skill,
+    receivers,
+    homeParty: lastTurn.homeParty,
+    visitorParty: lastTurn.visitorParty,
+    field: lastTurn.field,
+  };
+
+  if (skill.receiverCount === 0) {
+    newTurn.field = skill.action(skill)(actor)(randoms)(turn.field);
+  } else {
+    const resultReceivers = receivers.map(receiver => skill.action(skill)(actor)(randoms)(turn.field)(receiver));
+    newTurn.homeParty = newTurn.homeParty.charactors.map(updateCharactor(resultReceivers));
+    newTurn.visitorParty = newTurn.visitorParty.charactors.map(updateCharactor(resultReceivers));
+  }
+  return newTurn;
+};
+
+//ターン経過による状態変化を起こす関数
+//これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
+export type Wait = (battle: Battle, datetime: Date, randoms: Randoms) => Turn
 
 const createSave: CreateSave<Party> =
   storage =>
