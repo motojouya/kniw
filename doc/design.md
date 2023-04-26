@@ -28,7 +28,17 @@ kniwコマンドに対して、以下のサブコマンドと、それぞれに�
   - export <name>
 - battle
   - histories
-  - start
+  - history <key>
+  - start <home-file-path> <visitor-file-path>
+- ability
+  - list
+  - show
+- skill
+  - list
+  - show
+- equipment
+  - list
+  - show
 
 ### charactor
 戦闘に出すキャラクターを作るコマンド。

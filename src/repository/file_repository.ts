@@ -9,11 +9,11 @@ import {
   CreateList,
   CreateGet,
   CreateRemove,
-  Storage,
-  CreateStorage,
+  Repository,
+  CreateRepository,
   CheckNamespace,
   CreateCheckNamespace,
-} from 'src/repository/storage';
+} from 'src/repository/repository';
 
 const FILE_EXTENSION = '.json';
 
@@ -57,7 +57,7 @@ const createRemove: CreateRemove =
   async (namespace, objctKey) =>
   fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
 
-export const createStorage: CreateStorage = async (basePath, tables) => {
+export const createRepository: CreateRepository = async (basePath, tables) => {
   await createDirctory(basePath);
   //await Promise.all(tables.map(async table => await createDirectory(path.join(basePath, table))));
   return {

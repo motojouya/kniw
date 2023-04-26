@@ -1,5 +1,6 @@
 import { Ability } from 'src/model/ability'
 import { Skill } from 'src/model/skill'
+import { CharactorMaking } from 'src/model/charactor';
 import { weapons } from 'src/store/equipment/weapon'
 import { armors } from 'src/store/equipment/armor'
 import { elements } from 'src/store/equipment/element'
@@ -10,8 +11,11 @@ type Equipment = {
   skills: Skill[],
   abilities: Ability[],
   additionalPhysical: Physical,
+  wearable: Wearable,
   description: string,
 }
+
+export type Wearable = (charactor: CharactorMaking) => string | null;
 
 export type Weapon = Equipment;
 export type Armor = Equipment;

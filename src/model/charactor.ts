@@ -1,4 +1,4 @@
-import { Status, Physical, addPhysicals } from 'src/model/basics'
+import { Status, Physical, addPhysicals, ErrorMessage } from 'src/model/basics'
 import {
   Weapon,
   createWeapon,
@@ -33,6 +33,7 @@ const basePhysical: Physical = {
   WT: 100,
 };
 
+//TODO element, 武器、防具と設定できるが、種族もしたい。ドラゴン、ゴーレム、トールマン、リザードマン、ホークマン、マーメイド、ワーウルフetc
 export type Charactor = {
   name: string,
   weapon: Weapon,
@@ -42,7 +43,12 @@ export type Charactor = {
   hp: number,
   mp: number,
   restWt: number,
+  isVisitor?: boolean,
 }
+
+export type CharactorBattling = Required<Charactor>;
+
+export type CharactorMaking = Pick<Charactor, 'name'> | Pick<Charactor, 'name' | 'element'> | Pick<Charactor, 'name' | 'element' | 'armor'> | Pick<Charactor, 'name' | 'element' | 'armor' | 'weapon'>
 
 export type GetAbilities = (charactor: Charactor) => Ability[];
 const getAbilities: GetAbilities = charactor => [...charactor.weapon.abilities, ...charactor.armor.abilities, ...charactor.element.abilities];
@@ -53,13 +59,23 @@ const getSkills: GetSkills = charactor => [...charactor.weapon.skills, ...charac
 export type GetPhysical = (charactor: Charactor) => Physical;
 const getPhysical: GetPhysical = charactor => addPhysicals([basePhysical, charactor.weapon.additionalPhysical, charactor.armor.additionalPhysical, charactor.element.additionalPhysical]);
 
-export type CreateCharactor = (name: string, weapon: Weapon, armor: Armor, element: Element) => Charactor;
-export const createCharactor: CreateCharactor = (name: string, weaponName: string, armorName: string, elementName: string) => {
+export type CreateCharactor = (name: string, weapon: Weapon, armor: Armor, element: Element) => Charactor | ErrorMessage;
+export const createCharactor: CreateCharactor = (name, weaponName, armorName, elementName) => {
+
+  const element = createElement(elementName);
+  const armor = createArmor(armorName);
+  const weapon = createWeapon(weaponName);
+
+  const validateMessage = validate({ name }, element, armor, weapon);
+  if (validateMessage) {
+    return validateMessage;
+  }
+
   const someone: Charactor = {
     name,
-    weapon: createWeapon(weaponName),
-    armor: createArmor(armorName),
-    element: createElement(elementName),
+    weapon,
+    armor,
+    element,
     statuses: [],
     hp: 0,
     mp: 0,
@@ -68,18 +84,54 @@ export const createCharactor: CreateCharactor = (name: string, weaponName: strin
   someonesPhysical = getPhysical(someone);
   someone.hp = someonesPhysical.MaxHp;
   someone.restWt = someonesPhysical.wt;
+
   return someone;
 };
+
+type Validate = (someone: CharactorMaking, element: Element, armor: Armor, weapon: Weapon) => string | null;
+const validate: Validate = (someone, element, armor, weapon) => {
+
+  let someoneMaking = { ...someone };
+
+  const elementMessage = element.wearable(someone);
+  if (elementMessage) {
+    return elementMessage;
+  }
+  someoneMaking = {
+    ...someoneMaking,
+    element,
+  };
+
+  const armorMessage = armor.wearable(someone);
+  if (armorMessage) {
+    return armorMessage;
+  }
+  someoneMaking = {
+    ...someoneMaking,
+    armor,
+  };
+
+  const weaponMessage = weapon.wearable(someone);
+  if (weaponMessage) {
+    return weaponMessage;
+  }
+
+  return null;
+}
 
 const createSave: CreateSave<Charactor> =
   storage =>
   async ({ name, weapon, armor, element }) =>
-  (await storage.save(NAMESPACE, name, { weapon: weapon.name, armor: armor.name, element: element.name }));
+  (await storage.save(NAMESPACE, name, { name, weapon: weapon.name, armor: armor.name, element: element.name }));
 
-const createGet: CreateGet<Charactor> =
-  storage =>
-  async name =>
-  createCharactor(...(await storage.get(NAMESPACE, name)));
+const createGet: CreateGet<Charactor> = storage => async name => {
+  const result = await storage.get(NAMESPACE, name);
+  const charactor = createCharactor(...result);
+  if (charactor typeof ErrorMessage) {
+    return Promise.reject(new Error(charactor));
+  }
+  return charactor;
+}
 
 const createRemove: CreateRemove =
   storage =>

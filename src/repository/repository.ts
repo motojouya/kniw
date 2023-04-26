@@ -11,7 +11,7 @@ export type CreateList = (basePath: string) => List;
 export type CreateGet = (basePath: string) => Get;
 export type CreateRemove = (basePath: string) => Remove;
 
-export type Storage = {
+export type Repository = {
   checkNamespace: CheckNamespace,
   save: Save,
   list: List,
@@ -19,5 +19,5 @@ export type Storage = {
   remove: Remove,
 }
 
-export type CreateStorage = (basePath: string, tables: string[]) => Promise<Storage>;
+export type CreateRepository = (basePath: string, tables: string[]) => Promise<Repository>;
 

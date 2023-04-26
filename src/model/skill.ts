@@ -11,12 +11,14 @@ export type Skill = {
   name: string,
   action: ActionToCharactor,
   receiverCount: number,
+  additionalWt: number,
   getAccuracy: GetAccuracy,
   description: string,
 } | {
   name: string,
   action: ActionToField,
   receiverCount: 0,
+  additionalWt: number,
   getAccuracy: GetAccuracy,
   description: string,
 };

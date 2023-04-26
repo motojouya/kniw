@@ -1,3 +1,4 @@
+import { changeClimate } from 'src/model/basics';
 import { Party } from 'src/model/party'
 import { Charactor } from 'src/model/charactor'
 import { Skill } from 'src/model/skill'
@@ -11,19 +12,24 @@ import {
 
 const NAMESPACE = 'battle';
 
+export type GameResult = 'HOME' | 'VISITOR' | 'DRAW';
+
 export type Turn = {
   datetime: Date,
   actor: Charactor,
   skill: Skill,
   receivers: Charactor[],
-  homeStatus: Party,
-  visitorStatus: Party,
+  sortedCharactors: Charactor[]
+  field: Field,
+} | {
+  datetime: Date,
+  actor: Charactor,
+  sortedCharactors: Charactor[]
   field: Field,
 } | {
   datetime: Date,
   wt: number,
-  homeStatus: Party,
-  visitorStatus: Party,
+  sortedCharactors: Charactor[]
   field: Field,
 }
 
@@ -32,7 +38,17 @@ export type Battle = {
   home: Party,
   visitor: Party,
   turns: Turn[],
+  result?: GameResult,
 }
+
+export type CreateBattle = (home: Party, visitor: Party, turns: Turn[], result: GameResult | null) => Battle;
+export const createBattle = (datetime, home, visitor, turns, result) => ({
+  datetime,
+  home,
+  visitor,
+  turns,
+  result,
+});
 
 type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
@@ -43,16 +59,19 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
   return charactor;
 }
 
+//TODO util作る？
+export type ArrayLast<T> = (ary: Array) => T;
+export type arrayLast: ArrayLast<T> = ary => ary.slice(-1)[0];
+
 export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
-export type act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
-  const lastTurn = battle.turns.slice(-1)[0];
+export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
+  const lastTurn = arrayLast(battle.turns);
   const newTurn = {
     datetime,
     actor,
     skill,
     receivers,
-    homeParty: lastTurn.homeParty,
-    visitorParty: lastTurn.visitorParty,
+    sortedCharactors: lastTurn.sortedCharactors,
     field: lastTurn.field,
   };
 
@@ -60,9 +79,38 @@ export type act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
     newTurn.field = skill.action(skill)(actor)(randoms)(turn.field);
   } else {
     const resultReceivers = receivers.map(receiver => skill.action(skill)(actor)(randoms)(turn.field)(receiver));
-    newTurn.homeParty = newTurn.homeParty.charactors.map(updateCharactor(resultReceivers));
-    newTurn.visitorParty = newTurn.visitorParty.charactors.map(updateCharactor(resultReceivers));
+    newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
   }
+
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+    if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
+      actor.restWt = getPhysical(actor).wt + skill.additionalWt;
+    }
+    return actor;
+  });
+  newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
+
+  return newTurn;
+};
+
+export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn
+export const stay: Stay = (battle, actor, datetime, randoms) => {
+  const lastTurn = arrayLast(battle.turns);
+  const newTurn = {
+    datetime,
+    actor,
+    sortedCharactors: lastTurn.sortedCharactors,
+    field: lastTurn.field,
+  };
+
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+    if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
+      actor.restWt = getPhysical(actor).wt;
+    }
+    return actor;
+  });
+  newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
+
   return newTurn;
 };
 
@@ -86,38 +134,69 @@ const waitCharactor: WaitTurns = (charactor, wt, randoms) => {
 //ターン経過による状態変化を起こす関数
 //これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
 export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn
-export type wait: Wait = (battle, wt, datetime, randoms) => {
-  const lastTurn = battle.turns.slice(-1)[0];
+export const wait: Wait = (battle, wt, datetime, randoms) => {
+  const lastTurn = arrayLast(battle.turns);
   const newTurn = {
     datetime,
     wt,
-    homeParty: lastTurn.homeParty,
-    visitorParty: lastTurn.visitorParty,
-    field: lastTurn.field,
+    sortedCharactors: lastTurn.sortedCharactors,
+    field: {
+      climate: changeClimate(randoms)
+    },
   };
-  newTurn.homeParty = newTurn.homeParty.charactors.map(charactor => waitCharactor(charactor, wt, randoms));
-  newTurn.visitorParty = newTurn.visitorParty.charactors.map(charactor => waitCharactor(charactor, wt, randoms));
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => waitCharactor(charactor, wt, randoms));
 
   return newTurn;
 };
 
-//TODO
-//battleの終了条件の判定関数が必要なはず
+type SortByWT = (charactors: Charactor[]) => Charactor[]
+const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
+  //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
+  //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
+  return left.restWt - right.restWt;
+});
 
-//TODO
-//いまはhomeParty visitorPartyという形で保持しているが、wt sortedな状態のほうがふさわしいかも
-//そうなると、Charactor型に、homeかvisitorかの判別がつくpropertyがあると便利かも
+export type Start = (homeParty: Party, visitorParty: Party, datetime: Date, randoms: Randoms) => Turn;
+export const start: Start = (homeParty, visitorParty, datetime, randoms) => ({
+  datetime,
+  wt: 0,
+  sortedCharactors: sortByWT([...homeParty.charactors, ...visitorParty.charactors]),
+  field: {
+    climate: changeClimate(randoms)
+  },
+});
 
-//TODO 以下書く
-const createSave: CreateSave<Party> =
+export type IsSettlement = (battle: Battle) => GameResult | null;
+export const isSettlement: IsSettlement = battle => {
+  const lastestTurn = arrayLast(battle.turns);
+  const homeCharactors = sortedCharactors.filter(charactor => !charactor.isVisitor && charactor.hp);
+  const visitorCharactors = sortedCharactors.filter(charactor => charactor.isVisitor && charactor.hp);
+
+  if (homeCharactors.length === 0 && visitorCharactors.length === 0) {
+    return 'DRAW';
+  }
+  if (homeCharactors.length > 0 && visitorCharactors.length === 0) {
+    return 'HOME';
+  }
+  if (homeCharactors.length === 0 && visitorCharactors.length > 0) {
+    return 'VISITOR';
+  }
+  return null;
+};
+
+const createSave: CreateSave<Battle> =
   storage =>
   async obj =>
   (await storage.save(NAMESPACE, obj.name, obj));
 
-const createGet: CreateGet<Party> =
-  storage =>
-  async name =>
-  createParty(...(await storage.get(NAMESPACE, name)));
+const createGet: CreateGet<Battle> = storage => async name => {
+  const result = await storage.get(NAMESPACE, name);
+  const battle = createBattle(...result);
+  if (battle typeof ErrorMessage) {
+    return Promise.reject(new Error(battle));
+  }
+  return battle;
+}
 
 const createRemove: CreateRemove =
   storage =>
@@ -129,16 +208,13 @@ const createList: CreateList =
   async () =>
   (await storage.list(NAMESPACE));
 
-export const createStorage: CreateStore<Charactor> = storage => {
-  storage.checkNamespace(NAMESPACE);
+export const createStore: CreateStore<Battle> = repository => {
+  repository.checkNamespace(NAMESPACE);
   return {
-    save: createSave(storage),
-    list: createList(storage),
-    get: createGet(storage),
-    remove: createRemove(storage),
+    save: createSave(repository),
+    list: createList(repository),
+    get: createGet(repository),
+    remove: createRemove(repository),
   }
 };
-
-//同様にBattleLog型も
-//BattleLogはモジュールとしてbattle関数を定義してもいいかもしれない。ちょくちょく対話したりコンソールにメッセージ出したりするので、そこをどう扱うかな
 
