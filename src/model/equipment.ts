@@ -10,6 +10,7 @@ type Equipment = {
   skills: Skill[],
   abilities: Ability[],
   additionalPhysical: Physical,
+  description: string,
 }
 
 export type Weapon = Equipment;

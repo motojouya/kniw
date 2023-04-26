@@ -1,4 +1,4 @@
-import { Physical, addPhysicals } from 'src/model/basics'
+import { Status, Physical, addPhysicals } from 'src/model/basics'
 import {
   Weapon,
   createWeapon,

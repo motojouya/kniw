@@ -5,8 +5,16 @@ export type Randoms = {
 }
 
 export type Field = {
-  climate: string
+  climate: string,
+  description: string,
 }
+
+export type Status = {
+  name: string,
+  restWt: number,
+  description: string,
+}
+
 
 export type Physical = {
   MaxHP: number,
