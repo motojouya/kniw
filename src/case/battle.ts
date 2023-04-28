@@ -12,7 +12,78 @@ import {
   arrayLast, //TODO
 } from 'src/model/battle';
 
-export const battle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => {
+
+const SKILL = 'SKILL';
+const LIST = 'LIST';
+const CHARACTOR = 'CHARACTOR';
+const INTERRUPTION = 'INTERRUPTION';
+const SURRENDER = 'SURRENDER';
+const BACK = 'BACK';
+
+const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Charactor[]) => {
+
+  while (true) {
+    const skills = getSkills(actor);
+    const skillOptions = skills.map(skill => ({ option: skill, label: skill.name }))
+    skillOptions.push({ option: 'BACK', label: '戻る' });
+    const skill = await conversation.select('Skillを選んでください', skillOptions);
+    if (skill === BACK) {
+      return;
+    }
+
+    const receiverCount = skill.receiverCount;
+    const receiverOptions = receivers.map(receiver => ({ option: receiver, label: receiver.name }))
+    const receivers = await conversation.multiSelect('対象を' + receiverCount + '体まで選んでください。未選択でSkillを選び直せます', receiverOptions);
+
+    if (receivers.length === 0) {
+      continue;
+    }
+
+    console.log(); // 効果を表示
+
+    const isExecute = confirm();
+
+    if (!isExecute) {
+      continue;
+    } else {
+      return; //something
+    }
+  }
+};
+
+const playerSelect = (conversation: Conversation, actor: Charactor) => {
+
+  while (true) {
+    const select = await conversation.select('どうしますか？', [
+      { option: 'SKILL', label: 'Skillを選ぶ' },
+      { option: 'LIST', label: '一覧を見る' },
+      { option: 'CHARACTOR', label: 'Charactorを見る' },
+      { option: 'INTERRUPTION', label: '戦いを中断する' },
+      { option: 'SURRENDER', label: '降参する' },
+    ]);
+
+    switch (select) {
+    case SKILL: 
+      break;
+    case LIST: 
+      break;
+    case CHARACTOR: 
+      break;
+    case INTERRUPTION: 
+      break;
+    case SURRENDER: 
+      break;
+    default: //do nothing
+    }
+  }
+
+
+  await conversation.autoCompleteMultiSelect('')
+
+};
+
+export type Battle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => Promise<void>
+export const battle: Battle = (conversation, repository) => (home, visitor) => {
   const battleStore = createStore<Battle>(repository);
   const battle = createBattle('TODO Date', home, visitor, [], null);
   const turns = battle.turns;
