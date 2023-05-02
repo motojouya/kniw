@@ -1,5 +1,5 @@
 import { Ability } from 'src/model/ability'
-import { abilities } from 'src/store/equipment/ability'
+import { abilities } from 'src/data/ability'
 
 export type Ability = {
   name: string,

@@ -13,7 +13,7 @@ import {
   CreateRepository,
   CheckNamespace,
   CreateCheckNamespace,
-} from 'src/repository/repository';
+} from 'src/io/repository';
 
 const FILE_EXTENSION = '.json';
 
@@ -33,7 +33,7 @@ const createCheckNamespace: CreateCheckNamespace =
   createDirctory(path.join(basePath, namespace));
 
 type ResolvePath = (basePath: string, dirName: string, fileBaseName: string, extension: string) => string
-const resolvePath: ResolvePath = (basePath, dirName, fileBaseName, extension) => path.join(basePath, dirName, (fileBaseName + FILE_EXTENSION))
+const resolvePath: ResolvePath = (basePath, dirName, fileBaseName, extension) => path.join(basePath, dirName, (fileBaseName + extension))
 
 const createSave: CreateSave =
   basePath =>

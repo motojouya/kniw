@@ -24,15 +24,15 @@ const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Ch
 
   while (true) {
     const skills = getSkills(actor);
-    const skillOptions = skills.map(skill => ({ option: skill, label: skill.name }))
-    skillOptions.push({ option: 'BACK', label: '戻る' });
+    const skillOptions = skills.map(skill => ({ value: skill, label: skill.name }))
+    skillOptions.push({ value: 'BACK', label: '戻る' });
     const skill = await conversation.select('Skillを選んでください', skillOptions);
     if (skill === BACK) {
       return;
     }
 
     const receiverCount = skill.receiverCount;
-    const receiverOptions = receivers.map(receiver => ({ option: receiver, label: receiver.name }))
+    const receiverOptions = receivers.map(receiver => ({ value: receiver, label: receiver.name }))
     const receivers = await conversation.multiSelect('対象を' + receiverCount + '体まで選んでください。未選択でSkillを選び直せます', receiverOptions);
 
     if (receivers.length === 0) {
@@ -55,11 +55,11 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
 
   while (true) {
     const select = await conversation.select('どうしますか？', [
-      { option: 'SKILL', label: 'Skillを選ぶ' },
-      { option: 'LIST', label: '一覧を見る' },
-      { option: 'CHARACTOR', label: 'Charactorを見る' },
-      { option: 'INTERRUPTION', label: '戦いを中断する' },
-      { option: 'SURRENDER', label: '降参する' },
+      { value: 'SKILL', label: 'Skillを選ぶ' },
+      { value: 'LIST', label: '一覧を見る' },
+      { value: 'CHARACTOR', label: 'Charactorを見る' },
+      { value: 'INTERRUPTION', label: '戦いを中断する' },
+      { value: 'SURRENDER', label: '降参する' },
     ]);
 
     switch (select) {
