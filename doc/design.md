@@ -29,7 +29,9 @@ kniwコマンドに対して、以下のサブコマンドと、それぞれに�
 - battle
   - histories
   - history <key>
+  - export <key>
   - start <home-file-path> <visitor-file-path>
+  - resume <log-path>
 - ability
   - list
   - show
