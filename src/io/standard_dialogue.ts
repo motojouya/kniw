@@ -1,6 +1,6 @@
-import prompts from 'prompts';
-//import { PromptObject } from '@type/prompts';
-import type { PromptObject } from 'prompts';
+import { prompt } from 'enquirer';
+//import type { Choice } from 'enquirer';
+//import type { ArrayPromptOptions } from 'enquirer';
 
 export type SelectOption = {
   value: string,
@@ -9,35 +9,37 @@ export type SelectOption = {
 
 export type SelectTitle = {
   value: string,
-  title: string,
+  name: string,
+  message: string,
 };
 
-type Change = (option: SelectOption) => SelectTitle;
-const change: Change = option => ({ value: option.value, title: option.label });
+//type ChangeToChoice = (option: SelectOption) => Choice;
+type ChangeToChoice = (option: SelectOption) => { value: string, name: string, message: string };
+const changeToChoice: ChangeToChoice = option => ({ value: option.value, name: option.label, message: (option.label + '_' + option.value) });
 
-type IncludeString = (text: string, test: string) => boolean;
-const includeString: IncludeString = (text, test) => text.toLowerCase().includes(test.toLowerCase());
-
-//AutocompleteMultiselectPrompt::updateFilteredOptionsと同じ実装
-//@see https://github.com/terkelg/prompts/blob/master/lib/elements/autocompleteMultiselect.js
-type Suggest = (input: string, values: SelectTitle[]) => SelectTitle[];
-const suggest: Suggest = (input, values) => values.filter(v => {
-  if (!input) {
-    return true;
-  }
-  if (includeString(v.title, input)) {
-    return true;
-  }
-  if (includeString(v.value, input)) {
-    return true;
-  }
-  return false;
-});
+// type IncludeString = (text: string, test: string) => boolean;
+// const includeString: IncludeString = (text, test) => text.toLowerCase().includes(test.toLowerCase());
+// 
+// //AutocompleteMultiselectPrompt::updateFilteredOptionsと同じ実装
+// //@see https://github.com/terkelg/prompts/blob/master/lib/elements/autocompleteMultiselect.js
+// type Suggest = (input: string, values: SelectTitle[]) => SelectTitle[];
+// const suggest: Suggest = (input, values) => values.filter(v => {
+//   if (!input) {
+//     return true;
+//   }
+//   if (includeString(v.title, input)) {
+//     return true;
+//   }
+//   if (includeString(v.value, input)) {
+//     return true;
+//   }
+//   return false;
+// });
 
 export type TextInput = (message: string) => Promise<string>
 export const textInput: TextInput = async message => {
-  const response = await prompts({
-    type: 'text',
+  const response = await prompt({
+    type: 'input',
     name: 'value',
     message: message
   });
@@ -46,7 +48,7 @@ export const textInput: TextInput = async message => {
 
 export type Confirm = (message: string) => Promise<boolean>
 export const confirm: Confirm = async message => {
-  const response = await prompts({
+  const response = await prompt({
     type: 'confirm',
     name: 'value',
     message: message
@@ -67,54 +69,35 @@ export const clear: Clear = async () => {
 //10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
 export type MultiSelect = (message: string, limit: number, options: SelectOption[]) => Promise<string[]>
 export const multiSelect: MultiSelect = async (message, limit, options) => {
-  let request: PromptObject<string> | null = null;
-  if (options.length > 10) {
-    request = {
-      type: 'autocompleteMultiselect',
-      name: 'value',
-      message: message,
-      choices: options.map(change),
-      max: limit,
-      suggest: suggest,
-    };
-  } else {
-    request = {
-      type: 'multiselect',
-      name: 'value',
-      message: message,
-      choices: options.map(change),
-      max: limit,
-    };
-  }
-
-  const response = await prompts(request);
+  try {
+  const response = await prompt({
+    type: options.length > 10 ? 'autocomplete' : 'select',
+    name: 'value',
+    message: message,
+    //choices: options.map(changeToChoice),
+    choices: [{name:'name-a', value:'value-a', message:'msg-a'}, {name:'name-b', value:'value-b', message:'msg-b'}]
+    multiple: true,
+    limit: limit,
+  });
+  console.log(response);
   return response.value;
+  } catch (e) {
+  console.log(e);
+  throw e;
+  }
 };
 
 //10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
-export type Select = (message: string, options: SelectOption[]) => Promise<string>
-export const select: Select = async (message, options) => {
-  let request: PromptObject<string> | null = null;
-  if (options.length > 10) {
-    request = {
-      type: 'autocomplete',
-      name: 'value',
-      message: message,
-      choices: options.map(change),
-      suggest: suggest,
-    };
-  } else {
-    request = {
-      type: 'select',
-      name: 'value',
-      message: message,
-      choices: options.map(change),
-    };
-  }
-
-  const response = await prompts(request);
-  return response.value;
-};
+//export type Select = (message: string, options: SelectOption[]) => Promise<string>
+//export const select: Select = async (message, options) => {
+//  const response = await prompt({
+//    type: options.length > 10 ? 'autocomplete' : 'select',
+//    name: 'value',
+//    message: message,
+//    choices: options.map(changeToChoice),
+//  });
+//  return response.value;
+//};
 
 const test = () => {
   console.log('test');
