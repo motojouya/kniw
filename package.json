@@ -20,8 +20,9 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@types/prompts": "^2.4.4",
     "commander": "^10.0.1",
-    "enquirer": "^2.3.6",
+    "prompts": "^2.4.2",
     "ts-node": "^10.9.1"
   }
 }

@@ -1,59 +1,36 @@
-import { prompt } from 'enquirer';
-//import type { Choice } from 'enquirer';
-//import type { ArrayPromptOptions } from 'enquirer';
+import prompts from 'prompts';
+import type { Choice } from 'prompts';
 
 export type SelectOption = {
   value: string,
   label: string,
 };
 
-export type SelectTitle = {
-  value: string,
-  name: string,
-  message: string,
-};
+export type DialogResult = {
+  value: boolean | string | string[];
+}
 
-//type ChangeToChoice = (option: SelectOption) => Choice;
-type ChangeToChoice = (option: SelectOption) => { value: string, name: string, message: string };
-const changeToChoice: ChangeToChoice = option => ({ value: option.value, name: option.label, message: (option.label + '_' + option.value) });
-
-// type IncludeString = (text: string, test: string) => boolean;
-// const includeString: IncludeString = (text, test) => text.toLowerCase().includes(test.toLowerCase());
-// 
-// //AutocompleteMultiselectPrompt::updateFilteredOptionsと同じ実装
-// //@see https://github.com/terkelg/prompts/blob/master/lib/elements/autocompleteMultiselect.js
-// type Suggest = (input: string, values: SelectTitle[]) => SelectTitle[];
-// const suggest: Suggest = (input, values) => values.filter(v => {
-//   if (!input) {
-//     return true;
-//   }
-//   if (includeString(v.title, input)) {
-//     return true;
-//   }
-//   if (includeString(v.value, input)) {
-//     return true;
-//   }
-//   return false;
-// });
+type ChangeToChoice = (option: SelectOption) => Choice;
+const changeToChoice: ChangeToChoice = option => ({ value: option.value, title: option.label });
 
 export type TextInput = (message: string) => Promise<string>
 export const textInput: TextInput = async message => {
-  const response = await prompt({
-    type: 'input',
+  const response: DialogResult = await prompts({
+    type: 'text',
     name: 'value',
     message: message
   });
-  return response.value;
+  return (response.value as string);
 };
 
 export type Confirm = (message: string) => Promise<boolean>
 export const confirm: Confirm = async message => {
-  const response = await prompt({
+  const response: DialogResult = await prompts({
     type: 'confirm',
     name: 'value',
     message: message
   });
-  return response.value;
+  return (response.value as boolean);
 };
 
 export type Message = (message: string) => Promise<void>
@@ -69,40 +46,49 @@ export const clear: Clear = async () => {
 //10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
 export type MultiSelect = (message: string, limit: number, options: SelectOption[]) => Promise<string[]>
 export const multiSelect: MultiSelect = async (message, limit, options) => {
-  try {
-  const response = await prompt({
-    type: options.length > 10 ? 'autocomplete' : 'select',
+  const response: DialogResult = await prompts({
+    type: options.length > 10 ? 'autocompleteMultiselect' : 'multiselect',
     name: 'value',
     message: message,
-    //choices: options.map(changeToChoice),
-    choices: [{name:'name-a', value:'value-a', message:'msg-a'}, {name:'name-b', value:'value-b', message:'msg-b'}]
-    multiple: true,
-    limit: limit,
+    choices: options.map(changeToChoice),
+    max: limit,
   });
-  console.log(response);
-  return response.value;
+  return (response.value as string[]);
+};
+
+export type Select = (message: string, options: SelectOption[]) => Promise<string>
+export const select: Select = async (message, options) => {
+  const response = await multiSelect(message, 1, options);
+  return response[0];
+};
+
+//TODO escape keyで結果にvalue propertyがない状態になるので、それを検知して何かしらしたい。
+//例外ではないよな。単に結果なしなので、そういうハンドリングができる型に変えちゃうか
+const test = async () => {
+  try {
+    const r = await multiSelect('選んでください', 3, [
+      { label: 'a', value: 'a' },
+      { label: 'b', value: 'b' },
+      { label: 'c', value: 'c' },
+      { label: 'd', value: 'd' },
+      { label: 'e', value: 'e' },
+      { label: 'f', value: 'f' },
+      { label: 'g', value: 'g' },
+      { label: 'h', value: 'h' },
+      { label: 'i', value: 'i' },
+      { label: 'j', value: 'j' },
+      { label: 'k', value: 'k' },
+      { label: 'l', value: 'l' },
+      { label: 'm', value: 'm' },
+      { label: 'n', value: 'n' },
+    ]);
+    //const r = await textInput('なんでしょうか');
+    //const r = await confirm('ほんまのほんまに？');
+    console.log('try ok', r);
   } catch (e) {
-  console.log(e);
-  throw e;
+    console.log('catch ng', e);
   }
 };
-
-//10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
-//export type Select = (message: string, options: SelectOption[]) => Promise<string>
-//export const select: Select = async (message, options) => {
-//  const response = await prompt({
-//    type: options.length > 10 ? 'autocomplete' : 'select',
-//    name: 'value',
-//    message: message,
-//    choices: options.map(changeToChoice),
-//  });
-//  return response.value;
-//};
-
-const test = () => {
-  console.log('test');
-};
-
 
 test();
 
