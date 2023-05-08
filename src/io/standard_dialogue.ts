@@ -1,36 +1,58 @@
 import prompts from 'prompts';
-import type { Choice } from 'prompts';
+import type { Choice, Answers } from 'prompts';
 
 export type SelectOption = {
   value: string,
   label: string,
 };
 
-export type DialogResult = {
-  value: boolean | string | string[];
+export type ExceptionResult = {
+  code: string,
+  message: string,
+};
+
+export type Result<T> = ExceptionResult | T;
+
+export function isError<T>(result: Result<T>): result is ExceptionResult {
+  return 'code' in result;
 }
+
+export const NO_ANSWER_RESULT: ExceptionResult = {
+  code: 'NO_ANSWER',
+  message: '回答がありません',
+};
 
 type ChangeToChoice = (option: SelectOption) => Choice;
 const changeToChoice: ChangeToChoice = option => ({ value: option.value, title: option.label });
 
-export type TextInput = (message: string) => Promise<string>
+export type TextInput = (message: string) => Promise<Result<string>>
 export const textInput: TextInput = async message => {
-  const response: DialogResult = await prompts({
+  const response: Answers<"value"> = await prompts({
     type: 'text',
     name: 'value',
     message: message
   });
-  return (response.value as string);
+
+  if ('value' in response) {
+    return (response.value as string);
+  } else {
+    return NO_ANSWER_RESULT;
+  }
 };
 
-export type Confirm = (message: string) => Promise<boolean>
+export type Confirm = (message: string) => Promise<Result<boolean>>
 export const confirm: Confirm = async message => {
-  const response: DialogResult = await prompts({
+  const response: Answers<"value"> = await prompts({
     type: 'confirm',
     name: 'value',
     message: message
   });
-  return (response.value as boolean);
+
+  if ('value' in response) {
+    return (response.value as boolean);
+  } else {
+    return NO_ANSWER_RESULT;
+  }
 };
 
 export type Message = (message: string) => Promise<void>
@@ -44,22 +66,35 @@ export const clear: Clear = async () => {
 };
 
 //10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
-export type MultiSelect = (message: string, limit: number, options: SelectOption[]) => Promise<string[]>
+export type MultiSelect = (message: string, limit: number, options: SelectOption[]) => Promise<Result<string[]>>
 export const multiSelect: MultiSelect = async (message, limit, options) => {
-  const response: DialogResult = await prompts({
+  const response: Answers<"value"> = await prompts({
     type: options.length > 10 ? 'autocompleteMultiselect' : 'multiselect',
     name: 'value',
     message: message,
     choices: options.map(changeToChoice),
     max: limit,
   });
-  return (response.value as string[]);
+
+  if ('value' in response) {
+    return (response.value as string[]);
+  } else {
+    return NO_ANSWER_RESULT;
+  }
 };
 
-export type Select = (message: string, options: SelectOption[]) => Promise<string>
+export type Select = (message: string, options: SelectOption[]) => Promise<Result<string>>
 export const select: Select = async (message, options) => {
   const response = await multiSelect(message, 1, options);
-  return response[0];
+  if (isError<string[]>(response)) {
+    return response
+  } else {
+    if (response.length > 0) {
+      return response[0];
+    } else {
+      return '';
+    }
+  }
 };
 
 //TODO escape keyで結果にvalue propertyがない状態になるので、それを検知して何かしらしたい。
