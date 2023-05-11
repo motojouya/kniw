@@ -1,4 +1,3 @@
-export type ErrorMessage = string;
 
 export type Randoms = {
   times: number,

@@ -1,4 +1,4 @@
-import { Status, Physical, addPhysicals, ErrorMessage } from 'src/model/basics'
+import { Status, Physical, addPhysicals } from 'src/model/basics'
 import {
   Weapon,
   createWeapon,
@@ -6,6 +6,8 @@ import {
   createArmor,
   Element,
   createElement
+  NotWearableErorr,
+  isNotWearableErorr,
 } from 'src/model/equipment'
 import { Ability } from 'src/model/ability'
 import { Skill } from 'src/model/skill'
@@ -59,15 +61,15 @@ const getSkills: GetSkills = charactor => [...charactor.weapon.skills, ...charac
 export type GetPhysical = (charactor: Charactor) => Physical;
 const getPhysical: GetPhysical = charactor => addPhysicals([basePhysical, charactor.weapon.additionalPhysical, charactor.armor.additionalPhysical, charactor.element.additionalPhysical]);
 
-export type CreateCharactor = (name: string, weapon: Weapon, armor: Armor, element: Element) => Charactor | ErrorMessage;
+export type CreateCharactor = (name: string, weapon: Weapon, armor: Armor, element: Element) => Charactor | NotWearableErorr;
 export const createCharactor: CreateCharactor = (name, weaponName, armorName, elementName) => {
 
   const element = createElement(elementName);
   const armor = createArmor(armorName);
   const weapon = createWeapon(weaponName);
 
-  const validateMessage = validate({ name }, element, armor, weapon);
-  if (validateMessage) {
+  const validateResult = validate({ name }, element, armor, weapon);
+  if (isNotWearableErorr(validateResult)) {
     return validateMessage;
   }
 
@@ -88,32 +90,32 @@ export const createCharactor: CreateCharactor = (name, weaponName, armorName, el
   return someone;
 };
 
-type Validate = (someone: CharactorMaking, element: Element, armor: Armor, weapon: Weapon) => string | null;
+type Validate = (someone: CharactorMaking, element: Element, armor: Armor, weapon: Weapon) => NotWearableErorr | null;
 const validate: Validate = (someone, element, armor, weapon) => {
 
   let someoneMaking = { ...someone };
 
-  const elementMessage = element.wearable(someone);
-  if (elementMessage) {
-    return elementMessage;
+  const elementResult = element.wearable(someone);
+  if (isNotWearableErorr(elementResult)) {
+    return elementResult;
   }
   someoneMaking = {
     ...someoneMaking,
     element,
   };
 
-  const armorMessage = armor.wearable(someone);
-  if (armorMessage) {
-    return armorMessage;
+  const armorResult = armor.wearable(someone);
+  if (isNotWearableErorr(armorResult)) {
+    return armorResult;
   }
   someoneMaking = {
     ...someoneMaking,
     armor,
   };
 
-  const weaponMessage = weapon.wearable(someone);
-  if (weaponMessage) {
-    return weaponMessage;
+  const weaponResult = weapon.wearable(someone);
+  if (isNotWearableErorr(weaponResult)) {
+    return weaponResult;
   }
 
   return null;
@@ -127,8 +129,8 @@ const createSave: CreateSave<Charactor> =
 const createGet: CreateGet<Charactor> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
   const charactor = createCharactor(...result);
-  if (charactor typeof ErrorMessage) {
-    return Promise.reject(new Error(charactor));
+  if (isNotWearableErorr(charactor)) {
+    return Promise.reject(charactor);
   }
   return charactor;
 }

@@ -14,12 +14,12 @@ export type Party = {
   charactors: Charactor[],
 }
 
-export type CreateParty = (name: string, charactors: Charactor[]) => Party | ErrorMessage
+export type CreateParty = (name: string, charactors: Charactor[]) => Party | CharactorDuplicationErorr
 export const createParty: CreateParty = (name, charactors) => {
 
-  const validateMessage = validate(name, charactors);
-  if (validateMessage) {
-    return validateMessage;
+  const validateResult = validate(name, charactors);
+  if (isCharactorDuplicationErorr(validateResult)) {
+    return validateResult;
   }
 
   return {
@@ -28,7 +28,15 @@ export const createParty: CreateParty = (name, charactors) => {
   }
 };
 
-type Validate = (name: string, charactors: Charactor[]) => string | null;
+export type CharactorDuplicationErorr = {
+  message: string,
+};
+
+export function isCharactorDuplicationErorr(obj: any): obj is CharactorDuplicationErorr {
+  return "message" in obj;
+}
+
+type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationErorr | null;
 const validate: Validate = (name, charactors) => {
 
   const nameCountMap = charactors.reduce((acc, charactor) => {
@@ -43,7 +51,7 @@ const validate: Validate = (name, charactors) => {
 
   for (let name in nameCountMap) {
     if (nameCountMap[name] > 1) {
-      return 'Partyに同じ名前のキャラクターが存在します';
+      return { message: 'Partyに同じ名前のキャラクターが存在します' };
     }
   }
 
@@ -58,8 +66,8 @@ const createSave: CreateSave<Party> =
 const createGet: CreateGet<Party> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
   const party = createParty(...result);
-  if (party typeof ErrorMessage) {
-    return Promise.reject(new Error(party));
+  if (isCharactorDuplicationErorr(party)) {
+    return Promise.reject(party);
   }
   return party;
 }

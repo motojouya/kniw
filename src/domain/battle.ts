@@ -191,11 +191,7 @@ const createSave: CreateSave<Battle> =
 
 const createGet: CreateGet<Battle> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
-  const battle = createBattle(...result);
-  if (battle typeof ErrorMessage) {
-    return Promise.reject(new Error(battle));
-  }
-  return battle;
+  return createBattle(...result);
 }
 
 const createRemove: CreateRemove =
