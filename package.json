@@ -8,7 +8,8 @@
     "start": "node dist/main.js",
     "build": "webpack",
     "prepare": "webpack --config webpack.config.js",
-    "watch": "webpack --config webpack.dev.js --watch"
+    "watch": "webpack --config webpack.dev.js --watch",
+    "test": "mocha --require ts-node/register --watch-extensions ts \"test/**/*.ts\""
   },
   "private": true,
   "devDependencies": {
@@ -21,6 +22,7 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@types/mocha": "^10.0.1",
     "@types/prompts": "^2.4.4",
     "commander": "^10.0.1",
     "prompts": "^2.4.2",

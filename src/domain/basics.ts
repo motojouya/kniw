@@ -24,7 +24,7 @@ export const changeClimate: ChangeClimate = randoms => {
 
   const parcentAccuracy = randoms.accuracy * 100;
   const candidates = climateParcent.reduce((acc, climate) => {
-    if (!acc.length === 0) {
+    if (acc.length === 0) {
       return [climate];
     }
 
@@ -33,10 +33,14 @@ export const changeClimate: ChangeClimate = randoms => {
     acc.push(climate);
 
     return acc;
-  }, []);
+  }, [] as ClimateParcent[]);
 
   const climate = candidates.find(candidate => candidate.parcent > parcentAccuracy);
-  return climate.name;
+  if (climate) {
+    return climate.name;
+  } else {
+    return 'SUNNY';
+  }
 }
 
 export type Field = {
@@ -78,8 +82,8 @@ const zeroPhysical: Physical = {
   WT: 0,
 };
 
-type AddPhysical = (left: Physical) => (right: Physical) => Physical
-const addPhysical: AddPhysical = left => right => ({
+type AddPhysical = (left: Physical, right: Physical) => Physical
+const addPhysical: AddPhysical = (left, right) => ({
   MaxHP: left.MaxHP + right.MaxHP,
   MaxMP: left.MaxMP + right.MaxMP,
   STR  : left.STR   + right.STR,
