@@ -2,6 +2,7 @@ import assert from 'assert';
 import {
   changeClimate,
   addPhysicals,
+  validateRamdoms,
 } from 'src/domain/basics';
 
 describe('Climate#changeClimate', function () {
@@ -43,7 +44,7 @@ describe('Climate#changeClimate', function () {
       damage: 0.1,
       accuracy: 0.45,
     });
-    assert.equal(result, 'SUNNY');
+    assert.equal(result, 'RAIN');
   });
   it('55 test', function () {
     const result = changeClimate({
@@ -100,7 +101,7 @@ describe('Climate#changeClimate', function () {
       damage: 0.1,
       accuracy: 0.40,
     });
-    assert.equal(result, 'SNOW');
+    assert.equal(result, 'SUNNY');
   });
   it('41 test', function () {
     const result = changeClimate({
@@ -108,7 +109,7 @@ describe('Climate#changeClimate', function () {
       damage: 0.1,
       accuracy: 0.41,
     });
-    assert.equal(result, 'SNOW');
+    assert.equal(result, 'RAIN');
   });
   it('100 test', function () {
     const result = changeClimate({
@@ -119,8 +120,48 @@ describe('Climate#changeClimate', function () {
     assert.equal(result, 'SNOW');
   });
 
-  //TODO 数値以外の値の入力も
-  //マイナスとか、1を超えるとか、timesとdamageの値の変化とか
+  it('times test', function () {
+    const result = changeClimate({
+      times: 0.95,
+      damage: 0.1,
+      accuracy: 0.05,
+    });
+    assert.equal(result, 'SUNNY');
+  });
+  it('damage test', function () {
+    const result = changeClimate({
+      times: 0.1,
+      damage: 0.95,
+      accuracy: 0.05,
+    });
+    assert.equal(result, 'SUNNY');
+  });
 
+  it('minus test', function () {
+    try {
+      const result = changeClimate({
+        times: 0.1,
+        damage: 0.1,
+        accuracy: -0.5,
+      });
+      assert.fail();
+    } catch (e) {
+      const error = e as Error;
+      assert.equal(error.message, 'accuracyの値は0から1です');
+    }
+  });
+  it('over test', function () {
+    try {
+      const result = changeClimate({
+        times: 0.1,
+        damage: 0.1,
+        accuracy: 1.5,
+      });
+      assert.fail();
+    } catch (e) {
+      const error = e as Error;
+      assert.equal(error.message, 'accuracyの値は0から1です');
+    }
+  });
 });
 

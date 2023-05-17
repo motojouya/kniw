@@ -5,6 +5,40 @@ export type Randoms = {
   accuracy: number,
 }
 
+export type RamdomRangeError = {
+  prop: string,
+  value: number,
+  message: string,
+};
+
+
+export type ValidateRamdoms = (randoms: Randoms) => null | RamdomRangeError;
+export const validateRamdoms: ValidateRamdoms = ({ times, damage, accuracy }) => {
+  if (times > 1 || times < 0) {
+    return {
+      prop: 'times',
+      value: times,
+      message: 'timesの値は0から1です',
+    };
+  }
+  if (damage > 1 || damage < 0) {
+    return {
+      prop: 'damage',
+      value: damage,
+      message: 'damageの値は0から1です',
+    };
+  }
+  if (accuracy > 1 || accuracy < 0) {
+    return {
+      prop: 'accuracy',
+      value: accuracy,
+      message: 'accuracyの値は0から1です',
+    };
+  }
+  return null;
+};
+
+
 export type Climate = 'SUNNY' | 'RAIN' | 'STORM' | 'SNOW' | 'FOGGY';
 type ClimateParcent = {
   name: Climate,
@@ -22,20 +56,27 @@ const climateParcent: ClimateParcent[] = [
 export type ChangeClimate = (randoms: Randoms) => Climate;
 export const changeClimate: ChangeClimate = randoms => {
 
+  const validateResult = validateRamdoms(randoms);
+  if (validateResult) {
+    console.log(validateResult);
+    throw new Error(validateResult.message);
+  }
+
   const parcentAccuracy = randoms.accuracy * 100;
   const candidates = climateParcent.reduce((acc, climate) => {
+    const climateCalc = { ...climate };
     if (acc.length === 0) {
-      return [climate];
+      return [climateCalc];
     }
 
     const lastOne = acc.slice(-1)[0];
-    climate.parcent += lastOne.parcent;
-    acc.push(climate);
+    climateCalc.parcent += lastOne.parcent;
+    acc.push(climateCalc);
 
     return acc;
   }, [] as ClimateParcent[]);
 
-  const climate = candidates.find(candidate => candidate.parcent > parcentAccuracy);
+  const climate = candidates.find(candidate => candidate.parcent >= parcentAccuracy);
   if (climate) {
     return climate.name;
   } else {
