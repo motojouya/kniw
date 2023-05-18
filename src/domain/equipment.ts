@@ -44,6 +44,6 @@ export type NotWearableErorr = {
 };
 
 export function isNotWearableErorr(obj: any): obj is NotWearableErorr {
-  return "type" in obj && "cause" in obj && "message" in obj;
+  return !!obj && typeof obj === 'object' && 'type' in obj && 'cause' in obj && 'message' in obj;
 }
 

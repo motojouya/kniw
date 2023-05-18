@@ -33,7 +33,7 @@ export type CharactorDuplicationErorr = {
 };
 
 export function isCharactorDuplicationErorr(obj: any): obj is CharactorDuplicationErorr {
-  return "message" in obj;
+  return !!obj && typeof obj === 'object' && 'message' in obj;
 }
 
 type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationErorr | null;

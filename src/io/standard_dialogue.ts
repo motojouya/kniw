@@ -11,7 +11,7 @@ export type NotApplicable = {
 };
 
 export function isNotApplicable(obj: any): obj is NotApplicable {
-  return "message" in obj;
+  return !!obj && typeof obj === 'object' && 'message' in obj;
 }
 
 type ChangeToChoice = (option: SelectOption) => Choice;

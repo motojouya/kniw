@@ -1,9 +1,5 @@
 import assert from 'assert';
-import {
-  changeClimate,
-  addPhysicals,
-  validateRamdoms,
-} from 'src/domain/basics';
+import { changeClimate } from 'src/domain/field';
 
 describe('Climate#changeClimate', function () {
   it('5 test', function () {
