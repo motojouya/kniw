@@ -16,14 +16,14 @@ type Equipment = {
   description: string,
 }
 
-export type Wearable = (charactor: CharactorMaking) => string | null;
+export type Wearable = (charactor: CharactorMaking) => null | NotWearableErorr;
 
 export type Race = Equipment;
 export type Weapon = Equipment;
 export type Armor = Equipment;
 export type Element = Equipment;
 
-export type CreateEquipment = (name: string) => Equipment;
+export type CreateEquipment = (name: string) => Equipment | null;
 
 export type CreateRace = CreateEquipment;
 export const createRace: CreateRace = name => races.find(race => name === race.name);
