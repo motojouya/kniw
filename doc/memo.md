@@ -85,7 +85,17 @@ equipment
 これくらいあればテストケースが書きやすいはず
 あとはio関連のテストも先にできそう。そっち先かな。そして並行して上記の実装イメージを持つ
 
+装備というか、人の属性は、`acquirement`にしたい。
+raceはそのまま
+element -> blessing祝福
+armor -> clothing衣服
 
+blessingは4種類
+sky空
+sea海
+earth大地
+mind心
 
-
+sky -> sea -> earth -> skyという力関係
+mindは力関係図にはいらないが、強くもない感じのイメージ
 
