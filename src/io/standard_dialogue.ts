@@ -89,33 +89,3 @@ export const select: Select = async (message, options) => {
   }
 };
 
-//TODO escape keyで結果にvalue propertyがない状態になるので、それを検知して何かしらしたい。
-//例外ではないよな。単に結果なしなので、そういうハンドリングができる型に変えちゃうか
-const test = async () => {
-  try {
-    const r = await multiSelect('選んでください', 3, [
-      { label: 'a', value: 'a' },
-      { label: 'b', value: 'b' },
-      { label: 'c', value: 'c' },
-      { label: 'd', value: 'd' },
-      { label: 'e', value: 'e' },
-      { label: 'f', value: 'f' },
-      { label: 'g', value: 'g' },
-      { label: 'h', value: 'h' },
-      { label: 'i', value: 'i' },
-      { label: 'j', value: 'j' },
-      { label: 'k', value: 'k' },
-      { label: 'l', value: 'l' },
-      { label: 'm', value: 'm' },
-      { label: 'n', value: 'n' },
-    ]);
-    //const r = await textInput('なんでしょうか');
-    //const r = await confirm('ほんまのほんまに？');
-    console.log('try ok', r);
-  } catch (e) {
-    console.log('catch ng', e);
-  }
-};
-
-test();
-
