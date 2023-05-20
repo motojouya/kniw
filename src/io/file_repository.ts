@@ -22,7 +22,7 @@ export type Repository = {
   remove: Remove,
 }
 
-export type CreateRepository = (basePath: string, tables: string[]) => Promise<Repository>;
+export type CreateRepository = (basePath: string) => Promise<Repository>;
 
 //以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
@@ -67,9 +67,8 @@ const createRemove: CreateRemove =
   async (namespace, objctKey) =>
   fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
 
-export const createRepository: CreateRepository = async (basePath, tables) => {
+export const createRepository: CreateRepository = async basePath => {
   await createDirctory(basePath);
-  //await Promise.all(tables.map(async table => await createDirectory(path.join(basePath, table))));
   return {
     checkNamespace: createCheckNamespace(basePath),
     save: createSave(basePath),
