@@ -2,13 +2,13 @@ import { Status, Physical, addPhysicals } from 'src/model/basics'
 import {
   Weapon,
   createWeapon,
-  Armor,
-  createArmor,
-  Element,
-  createElement
+  Clothing,
+  createClothing,
+  Blessing,
+  createBlessing
   NotWearableErorr,
   isNotWearableErorr,
-} from 'src/model/equipment'
+} from 'src/model/acquirement'
 import { Ability } from 'src/model/ability'
 import { Skill } from 'src/model/skill'
 import {
@@ -35,7 +35,6 @@ const basePhysical: Physical = {
   WT: 100,
 };
 
-//TODO element, 武器、防具と設定できるが、種族もしたい。ドラゴン、ゴーレム、トールマン、リザードマン、ホークマン、マーメイド、ワーウルフetc
 export type Charactor = {
   name: string,
   weapon: Weapon,
