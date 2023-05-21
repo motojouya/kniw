@@ -1,62 +1,75 @@
 import assert from 'assert';
+import fs from 'fs'
+import path from 'path';
 import { createRepository } from 'src/io/file_repository'
 
-// export const createRepository: CreateRepository = async basePath => {
-//   await createDirctory(basePath);
-//   //await Promise.all(tables.map(async table => await createDirectory(path.join(basePath, table))));
-//   return {
-//     checkNamespace: createCheckNamespace(basePath),
-//     save: createSave(basePath),
-//     list: createList(basePath),
-//     get: createGet(basePath),
-//     remove: createRemove(basePath),
-//   };
-// };
-
 const DIRNAME = 'temp';
-const NAMESPACE = 'temp';
+const NAMESPACE = 'test';
 
 describe('Repository#checkNamespace', function () {
 
-  beforeEach(function () {
+  beforeEach(async function () {
     if (fs.existsSync(DIRNAME)) {
       return await fs.promises.rm(DIRNAME, { recursive: true });
     }
   });
 
-  it('minus test', function () {
-    const repository = createRepository(DIRNAME);
+  it('normal', async function () {
+    const repository = await createRepository(DIRNAME);
+    assert.equal(fs.existsSync(DIRNAME), true);
 
-    assert.true(fs.existsSync(DIRNAME));
+    await repository.checkNamespace(NAMESPACE);
+    assert.equal(fs.existsSync(path.join(DIRNAME, NAMESPACE)), true);
 
-    repository.checkNamespace(NAMESPACE);
+    const listResult01 = await repository.list(NAMESPACE);
+    assert.equal(listResult01.length, 0);
 
-    assert.true(fs.existsSync(path.join(DIRNAME, NAMESPACE)));
+    await repository.save(NAMESPACE, 'something', { test: 'something', check: 'anything' });
+    await repository.save(NAMESPACE, 'this', { test: 'this', check: 'that' });
 
-    try {
-      const result = changeClimate({
-        times: 0.1,
-        damage: 0.1,
-        accuracy: -0.5,
-      });
+    const listResult02 = await repository.list(NAMESPACE);
+    assert.equal(listResult02.length, 2);
+    assert.equal(listResult02[0], 'something');
+    assert.equal(listResult02[1], 'this');
+
+    const getResult02 = await repository.get(NAMESPACE, 'something');
+    if (!getResult02) {
       assert.fail();
-    } catch (e) {
-      const error = e as Error;
-      assert.equal(error.message, 'accuracyの値は0から1です');
     }
+    assert.equal(getResult02.test, 'something');
+    assert.equal(getResult02.check, 'anything');
+
+    await repository.remove(NAMESPACE, 'something');
+
+    const listResult03 = await repository.list(NAMESPACE);
+    assert.equal(listResult03.length, 1);
+    assert.equal(listResult03[0], 'this');
+
+    const getResult03 = await repository.get(NAMESPACE, 'something');
+    assert.equal(getResult03, null);
+
+    await repository.remove(NAMESPACE, 'something');
   });
-  it('over test', function () {
+
+  it('no namespace', async function () {
+    const repository = await createRepository(DIRNAME);
+
+    assert.equal(fs.existsSync(DIRNAME), true);
+
+    const listResult = await repository.list(NAMESPACE);
+
+    const getResult = await repository.get(NAMESPACE, 'something');
+
     try {
-      const result = changeClimate({
-        times: 0.1,
-        damage: 0.1,
-        accuracy: 1.5,
-      });
+      await repository.save(NAMESPACE, 'something', { test: 'something', check: 'anything' });
       assert.fail();
-    } catch (e) {
-      const error = e as Error;
-      assert.equal(error.message, 'accuracyの値は0から1です');
+    } catch(e) {
+      console.log(e);
+      const error = e as any
+      assert.equal(error.code, 'ENOENT');
     }
+
+    await repository.remove(NAMESPACE, 'something');
   });
 });
 
