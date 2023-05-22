@@ -2,21 +2,17 @@ import type {
   Skill,
   ActionToCharactor,
   GetAccuracy,
+  calcOrdinaryDirectDamage,
+  calcOrdinaryAccuracy,
 } from 'src/domain/skill'
-
-const action: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-};
-
-const getAccuracy: GetAccuracy = (self, actor, field, receiver) => {
-};
 
 export const chop: Skill = {
   name: 'chop',
   label: '斬りつける',
-  action: action,
+  action: calcOrdinaryDirectDamage,
   receiverCount: 1,
   additionalWt: 100,
-  getAccuracy: getAccuracy,
+  getAccuracy: calcOrdinaryAccuracy,
   description: '斬りつける',
 };
 
