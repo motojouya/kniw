@@ -66,10 +66,16 @@ equipment
 先ず実装するのは
 - race
   - human
-  - wolfman
+  - werewolf
+  - lizardman
+  - merman
+  - hawkman
+  - fairy
 - element
-  - fire
-  - thunder
+  - sky
+  - sea
+  - earth
+  - mind
 - armor
   - steel armor
   - fire robe
