@@ -65,12 +65,13 @@ equipment
 
 先ず実装するのは
 - race
-  - human
-  - werewolf
-  - lizardman
-  - merman
-  - hawkman
-  - fairy
+  - human 空、海、大地、心
+  - fairy 空、海
+  - werewolf 空、大地
+  - lizardman 海、大地
+  - merman 海
+  - hawkman 空
+  - golem 大地
 - element
   - sky
   - sea

@@ -38,8 +38,9 @@ const basePhysical: Physical = {
 export type Charactor = {
   name: string,
   weapon: Weapon,
-  armor: Armor,
-  element: Element,
+  clothing: Clothing,
+  blessing: Blessing,
+  race: Race,
   statuses: Status[],
   hp: number,
   mp: number,
