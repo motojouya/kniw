@@ -87,7 +87,8 @@ equipment
   - chop
   - drought -> 日照り
 - ability
-  - quick -> Ability#waitのテストのため
+  - shooting guard -> Ability#waitのテストのため
+  - mp gain plus
 
 これくらいあればテストケースが書きやすいはず
 あとはio関連のテストも先にできそう。そっち先かな。そして並行して上記の実装イメージを持つ
@@ -105,4 +106,9 @@ mind心
 
 sky -> sea -> earth -> skyという力関係  
 mindは力関係図にはいらないが、強くもない感じのイメージ
+
+
+
+
+
 

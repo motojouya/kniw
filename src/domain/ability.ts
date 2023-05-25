@@ -8,6 +8,7 @@ export type Ability = {
 };
 
 export type Wait = (wt: number, charactor: Charactor, randoms: Randoms) => Charactor;
+export const justWait: Wait = (wt, charactor, randoms) => charactor;
 
 export type CreateAbility = (name: string) => Ability;
 export const createAbility: CreateAbility = name => abilities.find(ability => name === ability.name);
