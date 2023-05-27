@@ -1,4 +1,5 @@
 import type { Weapon, Wearable } from 'src/domain/acquirement'
+import { chop } from 'src/data/skill/chop'
 
 const wearableClothings = [
   'steelArmor',
@@ -7,7 +8,7 @@ const wearableClothings = [
 export const lightSword: Weapon = {
   name: 'lightSword',
   label: '光の剣',
-  skills: [],
+  skills: [chop],
   abilities: [],
   additionalPhysical: {
     MaxHP: 0,

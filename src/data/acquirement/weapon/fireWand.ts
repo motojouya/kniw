@@ -1,4 +1,5 @@
 import type { Weapon, Wearable } from 'src/domain/acquirement'
+import { volcanoRise } from 'src/data/skill/volcanoRise'
 
 const wearableClothings = [
   'fireRobe',
@@ -7,7 +8,7 @@ const wearableClothings = [
 export const fireWand: Weapon = {
   name: 'fireWand',
   label: '炎の杖',
-  skills: [],
+  skills: [volcanoRise],
   abilities: [],
   additionalPhysical: {
     MaxHP: 0,

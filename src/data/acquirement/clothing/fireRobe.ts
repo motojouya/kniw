@@ -1,4 +1,5 @@
 import type { Clothing, Wearable } from 'src/domain/acquirement'
+import { mpGainPlus } from 'src/data/ability/mpGainPlus'
 
 const wearableBlessings = [
   'mind',
@@ -9,7 +10,7 @@ export const fireRobe: Clothing = {
   name: 'fireRobe',
   label: '炎の衣',
   skills: [],
-  abilities: [],
+  abilities: [mpGainPlus],
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
