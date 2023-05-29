@@ -31,11 +31,11 @@ export const createRace: CreateRace = name => races.find(race => name === race.n
 export type CreateWeapon = CreateAcquirement;
 export const createWeapon: CreateWeapon = name => weapons.find(weapon => name === weapon.name);
 
-export type CreateArmor = CreateAcquirement;
-export const createArmor: CreateArmor = name => clothings.find(clothing => name === clothing.name);
+export type CreateClothing = CreateAcquirement;
+export const createClothing: CreateClothing = name => clothings.find(clothing => name === clothing.name);
 
-export type CreateElement = CreateAcquirement;
-export const createElement: CreateElement = name => blessings.find(blessing => name === blessing.name);
+export type CreateBlessing = CreateAcquirement;
+export const createBlessing: CreateBlessing = name => blessings.find(blessing => name === blessing.name);
 
 export type NotWearableErorr = {
   acquirement: Acquirement
