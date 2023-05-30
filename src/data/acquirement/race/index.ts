@@ -6,7 +6,7 @@ import { lizardman } from 'src/data/acquirement/race/lizardman';
 import { merman } from 'src/data/acquirement/race/merman';
 import { werewolf } from 'src/data/acquirement/race/werewolf';
 
-export {
+export default {
   fairy,
   golem,
   hawkman,

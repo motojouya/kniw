@@ -1,20 +1,22 @@
-import { Ability } from 'src/model/ability'
-import { Skill } from 'src/model/skill'
-import { CharactorMaking } from 'src/model/charactor';
-import { races } from 'src/store/acquirement/race'
-import { weapons } from 'src/store/acquirement/weapon'
-import { clothings } from 'src/store/acquirement/clothing'
-import { blessings } from 'src/store/acquirement/blessing'
+import { Ability } from 'src/domain/ability'
+import { Physical } from 'src/domain/physical'
+import { Skill } from 'src/domain/skill'
+import { CharactorMaking } from 'src/domain/charactor';
+import races from 'src/data/acquirement/race'
+import weapons from 'src/data/acquirement/weapon'
+import clothings from 'src/data/acquirement/clothing'
+import blessings from 'src/data/acquirement/blessing'
 
 type Acquirement = {
   name: string,
-  description: string,
   skills: Skill[],
   abilities: Ability[],
   additionalPhysical: Physical,
   wearable: Wearable,
   description: string,
 }
+
+type AcquirementDictionary = { [name: string]: Acquirement };
 
 export type Wearable = (charactor: CharactorMaking) => null | NotWearableErorr;
 
@@ -23,19 +25,12 @@ export type Weapon = Acquirement;
 export type Clothing = Acquirement;
 export type Blessing = Acquirement;
 
-export type CreateAcquirement = (name: string) => Acquirement | null;
+export type CreateAcquirement<T> = (name: string) => T | null;
 
-export type CreateRace = CreateAcquirement;
-export const createRace: CreateRace = name => races.find(race => name === race.name);
-
-export type CreateWeapon = CreateAcquirement;
-export const createWeapon: CreateWeapon = name => weapons.find(weapon => name === weapon.name);
-
-export type CreateClothing = CreateAcquirement;
-export const createClothing: CreateClothing = name => clothings.find(clothing => name === clothing.name);
-
-export type CreateBlessing = CreateAcquirement;
-export const createBlessing: CreateBlessing = name => blessings.find(blessing => name === blessing.name);
+export const createRace: CreateAcquirement<Race> = name => (races as AcquirementDictionary)[name];
+export const createWeapon: CreateAcquirement<Weapon> = name => (weapons as AcquirementDictionary)[name];
+export const createClothing: CreateAcquirement<Clothing> = name => (clothings as AcquirementDictionary)[name];
+export const createBlessing: CreateAcquirement<Blessing> = name => (blessings as AcquirementDictionary)[name];
 
 export type NotWearableErorr = {
   acquirement: Acquirement

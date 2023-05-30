@@ -1,7 +1,7 @@
 import type { Repository } from 'src/io/file_repository';
 
 export type Save<T> = (obj: T) => Promise<void>
-export type Get<T> = (name: string) => Promise<T>
+export type Get<T> = (name: string) => Promise<T | null>
 export type Remove = (name: string) => Promise<void>
 export type List = () => Promise<string[]>
 

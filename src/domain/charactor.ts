@@ -8,7 +8,7 @@ import {
   Clothing,
   createClothing,
   Blessing,
-  createBlessing
+  createBlessing,
   NotWearableErorr,
   isNotWearableErorr,
 } from 'src/domain/acquirement'
@@ -210,8 +210,18 @@ const createSave: CreateSave<Charactor> =
 
 const createGet: CreateGet<Charactor> = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
-  const charactor = createCharactor(...result);
-  if (isNotWearableErorr(charactor)) {
+  if (!result) {
+    return null;
+  }
+  const {
+    name: charactorName,
+    raceName: race,
+    blessingName: blessing,
+    clothingName: clothing,
+    weaponName: weapon,
+  } = result;
+  const charactor = createCharactor(charactorName, race, blessing, clothing, weapon);
+  if (isNotWearableErorr(charactor) || isAcquirementNotFoundError(charactor)) {
     return Promise.reject(charactor);
   }
   return charactor;

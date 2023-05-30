@@ -27,3 +27,17 @@ export const fireWand: Weapon = {
   description: '炎の杖。大地属性で炎の魔法が打てる杖。',
 };
 
+const wearable: Wearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => charactor => {
+  const clothingWearable = wearableClothings.includes(charactor.clothing.name);
+  if (!clothingWearable) {
+    return {
+      acquirement: self,
+      cause: charactor.clothing
+      message: 'このキャラクターの装備では' + self.name + 'を持つことはできません。',
+    };
+  }
+
+  return null;
+};
+
+
