@@ -12,13 +12,63 @@ type Acquirement = {
   skills: Skill[],
   abilities: Ability[],
   additionalPhysical: Physical,
-  wearable: Wearable,
+  ValidateWearable: ValidateWearable,
   description: string,
 }
 
 type AcquirementDictionary = { [name: string]: Acquirement };
 
-export type Wearable = (charactor: CharactorMaking) => null | NotWearableErorr;
+export type ValidateWearable = (charactor: CharactorMaking) => null | NotWearableErorr;
+
+export type CreateValidateWearable = (self: Acquirement, { wearableRaces: string[], wearableBlessings: string[], wearableClothings: string[], wearableWeapons: string[] }) => ValidateWearable;
+export const createValidateWearable: CreateValidateWearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => charactor => {
+
+  if (wearableRaces.length > 0) {
+    const raceWearable = wearableRaces.includes(charactor.race.name);
+    if (!raceWearable) {
+      return {
+        acquirement: self,
+        cause: charactor.race
+        message: 'このキャラクターの設定では' + self.name + 'になることはできません。',
+      };
+    }
+  }
+
+  if (wearableBlessings.length > 0) {
+    const blessingWearable = wearableBlessings.includes(charactor.blessing.name);
+    if (!blessingWearable) {
+      return {
+        acquirement: self,
+        cause: charactor.blessing
+        message: 'このキャラクターの設定では' + self.name + 'の祝福を受けることはできません。',
+      };
+    }
+  }
+
+  if (wearableClothings.length > 0) {
+    const clothingWearable = wearableClothings.includes(charactor.clothing.name);
+    if (!clothingWearable) {
+      return {
+        acquirement: self,
+        cause: charactor.clothing
+        message: 'このキャラクターの設定では' + self.name + 'を装備することはできません。',
+      };
+    }
+  }
+
+  if (wearableWeapons.length > 0) {
+    const weaponWearable = wearableWeapons.includes(charactor.weapon.name);
+    if (!weaponWearable) {
+      return {
+        acquirement: self,
+        cause: charactor.weapon
+        message: 'このキャラクターの設定では' + self.name + 'を持つことはできません。',
+      };
+    }
+  }
+
+  return null;
+};
 
 export type Race = Acquirement;
 export type Weapon = Acquirement;

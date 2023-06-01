@@ -1,4 +1,4 @@
-import type { Race, Wearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement'
 
 export const human: Race = {
   name: 'human',
@@ -18,7 +18,14 @@ export const human: Race = {
     RES: 0,
     WT: 0,
   },
-  wearable: charactor => true,
+  validateWearable: validateWearable,
   description: 'ヒト。装備の制約が少なく、できることも多いが逆に言えば器用貧乏',
 };
+
+const validateWearable = createValidateWearable(human, {
+  wearableRaces: [],
+  wearableBlessings: [],
+  wearableClothings: [],
+  wearableWeapons: [],
+});
 

@@ -168,7 +168,7 @@ const validate: Validate = (someone, race, blessing, clothing, weapon) => {
 
   let someoneMaking = { ...someone };
 
-  const raceResult = race.wearable(someoneMaking);
+  const raceResult = race.validateWearable(someoneMaking);
   if (isNotWearableErorr(raceResult)) {
     return raceResult;
   }
@@ -177,7 +177,7 @@ const validate: Validate = (someone, race, blessing, clothing, weapon) => {
     race,
   };
 
-  const blessingResult = blessing.wearable(someoneMaking);
+  const blessingResult = blessing.validateWearable(someoneMaking);
   if (isNotWearableErorr(blessingResult)) {
     return blessingResult;
   }
@@ -186,7 +186,7 @@ const validate: Validate = (someone, race, blessing, clothing, weapon) => {
     blessing,
   };
 
-  const clothingResult = clothing.wearable(someoneMaking);
+  const clothingResult = clothing.validateWearable(someoneMaking);
   if (isNotWearableErorr(clothingResult)) {
     return clothingResult;
   }
@@ -195,7 +195,7 @@ const validate: Validate = (someone, race, blessing, clothing, weapon) => {
     clothing,
   };
 
-  const weaponResult = weapon.wearable(someoneMaking);
+  const weaponResult = weapon.validateWearable(someoneMaking);
   if (isNotWearableErorr(weaponResult)) {
     return weaponResult;
   }

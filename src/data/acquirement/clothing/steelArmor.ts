@@ -1,11 +1,4 @@
-import type { Clothing, Wearable } from 'src/domain/acquirement'
-
-const wearableRaces = [
-  'human',
-  'lizardman',
-  'merman',
-  'werewolf',
-];
+import type { Clothing } from 'src/domain/acquirement'
 
 export const steelArmor: Clothing = {
   name: 'steelArmor',
@@ -25,7 +18,19 @@ export const steelArmor: Clothing = {
     RES: 0,
     WT: 10,
   },
-  wearable: charactor => wearableRaces.includes(charactor.race.name),
+  validateWearable: validateWearable,
   description: '鋼鉄の鎧。物理耐久が高い',
 };
+
+const validateWearable = createValidateWearable(steelArmor, {
+  wearableRaces: [
+    'human',
+    'lizardman',
+    'merman',
+    'werewolf',
+  ],
+  wearableBlessings: [],
+  wearableClothings: [],
+  wearableWeapons: [],
+});
 

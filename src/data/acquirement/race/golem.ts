@@ -1,4 +1,4 @@
-import type { Race, Wearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement'
 
 export const golem: Race = {
   name: 'golem',
@@ -18,7 +18,14 @@ export const golem: Race = {
     RES: 0,
     WT: 0,
   },
-  wearable: charactor => true,
+  validateWearable: validateWearable,
   description: 'ゴーレム。とにかく堅い。',
 };
+
+const validateWearable = createValidateWearable(golem, {
+  wearableRaces: [],
+  wearableBlessings: [],
+  wearableClothings: [],
+  wearableWeapons: [],
+});
 

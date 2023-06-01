@@ -1,11 +1,4 @@
-import type { Blessing, Wearable } from 'src/domain/acquirement'
-
-const wearableRaces = [
-  'human',
-  'fairy',
-  'lizardman',
-  'merman',
-];
+import type { Blessing } from 'src/domain/acquirement'
 
 export const sea: Blessing = {
   name: 'sea',
@@ -25,7 +18,19 @@ export const sea: Blessing = {
     RES: 0,
     WT: 0,
   },
-  wearable: charactor => wearableRaces.includes(charactor.race.name),
+  validateWearable: validateWearable,
   description: '海の祝福',
 };
+
+const validateWearable = createValidateWearable(sea, {
+  wearableRaces: [
+    'human',
+    'fairy',
+    'lizardman',
+    'merman',
+  ],
+  wearableBlessings: [],
+  wearableClothings: [],
+  wearableWeapons: [],
+});
 

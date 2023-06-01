@@ -1,4 +1,4 @@
-import type { Race, Wearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement'
 
 export const hawkman: Race = {
   name: 'hawkman',
@@ -18,7 +18,14 @@ export const hawkman: Race = {
     RES: 0,
     WT: 0,
   },
-  wearable: charactor => true,
+  validateWearable: validateWearable,
   description: 'ホークマン。飛行移動ができる。',
 };
+
+const validateWearable = createValidateWearable(hawkman, {
+  wearableRaces: [],
+  wearableBlessings: [],
+  wearableClothings: [],
+  wearableWeapons: [],
+});
 
