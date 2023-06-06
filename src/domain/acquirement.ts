@@ -1,7 +1,6 @@
 import { Ability } from 'src/domain/ability'
 import { Physical } from 'src/domain/physical'
 import { Skill } from 'src/domain/skill'
-import { CharactorMaking } from 'src/domain/charactor';
 import races from 'src/data/acquirement/race'
 import weapons from 'src/data/acquirement/weapon'
 import clothings from 'src/data/acquirement/clothing'
@@ -9,59 +8,60 @@ import blessings from 'src/data/acquirement/blessing'
 
 type Acquirement = {
   name: string,
+  label: string,
   skills: Skill[],
   abilities: Ability[],
   additionalPhysical: Physical,
-  ValidateWearable: ValidateWearable,
+  validateWearable: ValidateWearable,
   description: string,
 }
 
 type AcquirementDictionary = { [name: string]: Acquirement };
 
-export type ValidateWearable = (charactor: CharactorMaking) => null | NotWearableErorr;
+export type ValidateWearable = (race: Race | null, weapon: Weapon | null, clothing: Clothing | null, blessing: Blessing | null) => null | NotWearableErorr;
 
-export type CreateValidateWearable = (self: Acquirement, { wearableRaces: string[], wearableBlessings: string[], wearableClothings: string[], wearableWeapons: string[] }) => ValidateWearable;
-export const createValidateWearable: CreateValidateWearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => charactor => {
+export type CreateValidateWearable = (self: Acquirement, wearableAcquirements: { wearableRaces: string[], wearableBlessings: string[], wearableClothings: string[], wearableWeapons: string[] }) => ValidateWearable;
+export const createValidateWearable: CreateValidateWearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => (race, weapon, clothing, blessing) => {
 
-  if (wearableRaces.length > 0) {
-    const raceWearable = wearableRaces.includes(charactor.race.name);
+  if (wearableRaces.length > 0 && !!race) {
+    const raceWearable = wearableRaces.includes(race.name);
     if (!raceWearable) {
       return {
         acquirement: self,
-        cause: charactor.race
+        cause: race,
         message: 'このキャラクターの設定では' + self.name + 'になることはできません。',
       };
     }
   }
 
-  if (wearableBlessings.length > 0) {
-    const blessingWearable = wearableBlessings.includes(charactor.blessing.name);
+  if (wearableBlessings.length > 0 && !!blessing) {
+    const blessingWearable = wearableBlessings.includes(blessing.name);
     if (!blessingWearable) {
       return {
         acquirement: self,
-        cause: charactor.blessing
+        cause: blessing,
         message: 'このキャラクターの設定では' + self.name + 'の祝福を受けることはできません。',
       };
     }
   }
 
-  if (wearableClothings.length > 0) {
-    const clothingWearable = wearableClothings.includes(charactor.clothing.name);
+  if (wearableClothings.length > 0 && !!clothing) {
+    const clothingWearable = wearableClothings.includes(clothing.name);
     if (!clothingWearable) {
       return {
         acquirement: self,
-        cause: charactor.clothing
+        cause: clothing,
         message: 'このキャラクターの設定では' + self.name + 'を装備することはできません。',
       };
     }
   }
 
-  if (wearableWeapons.length > 0) {
-    const weaponWearable = wearableWeapons.includes(charactor.weapon.name);
+  if (wearableWeapons.length > 0 && !!weapon) {
+    const weaponWearable = wearableWeapons.includes(weapon.name);
     if (!weaponWearable) {
       return {
         acquirement: self,
-        cause: charactor.weapon
+        cause: weapon,
         message: 'このキャラクターの設定では' + self.name + 'を持つことはできません。',
       };
     }
@@ -69,6 +69,8 @@ export const createValidateWearable: CreateValidateWearable = (self, { wearableR
 
   return null;
 };
+
+export const tentativeValidateWearable: ValidateWearable = (race, weapon, clothing, blessing) => null;
 
 export type Race = Acquirement;
 export type Weapon = Acquirement;

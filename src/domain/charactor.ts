@@ -57,13 +57,6 @@ export type Charactor = {
 
 export type CharactorBattling = Required<Charactor>;
 
-export type CharactorMaking =
-  Pick<Charactor, 'name'> |
-  Pick<Charactor, 'name' | 'race'> |
-  Pick<Charactor, 'name' | 'race' | 'blessing'> |
-  Pick<Charactor, 'name' | 'race' | 'blessing' | 'clothing'> |
-  Pick<Charactor, 'name' | 'race' | 'blessing' | 'clothing' | 'weapon'>
-
 export type AcquirementNotFoundError = {
   acquirementName: string,
   type: string,
@@ -140,7 +133,7 @@ export const createCharactor: CreateCharactor = (name, raceName, blessingName, c
     };
   }
 
-  const validateResult = validate({ name }, race, blessing, clothing, weapon);
+  const validateResult = validate(name, race, blessing, clothing, weapon);
   if (isNotWearableErorr(validateResult)) {
     return validateResult;
   }
@@ -163,39 +156,25 @@ export const createCharactor: CreateCharactor = (name, raceName, blessingName, c
   return someone;
 };
 
-type Validate = (someone: CharactorMaking, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => NotWearableErorr | null;
-const validate: Validate = (someone, race, blessing, clothing, weapon) => {
+type Validate = (name: string, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => NotWearableErorr | null;
+const validate: Validate = (name, race, blessing, clothing, weapon) => {
 
-  let someoneMaking = { ...someone };
-
-  const raceResult = race.validateWearable(someoneMaking);
+  const raceResult = race.validateWearable(race, blessing, clothing, weapon);
   if (isNotWearableErorr(raceResult)) {
     return raceResult;
   }
-  someoneMaking = {
-    ...someoneMaking,
-    race,
-  };
 
-  const blessingResult = blessing.validateWearable(someoneMaking);
+  const blessingResult = blessing.validateWearable(race, blessing, clothing, weapon);
   if (isNotWearableErorr(blessingResult)) {
     return blessingResult;
   }
-  someoneMaking = {
-    ...someoneMaking,
-    blessing,
-  };
 
-  const clothingResult = clothing.validateWearable(someoneMaking);
+  const clothingResult = clothing.validateWearable(race, blessing, clothing, weapon);
   if (isNotWearableErorr(clothingResult)) {
     return clothingResult;
   }
-  someoneMaking = {
-    ...someoneMaking,
-    clothing,
-  };
 
-  const weaponResult = weapon.validateWearable(someoneMaking);
+  const weaponResult = weapon.validateWearable(race, blessing, clothing, weapon);
   if (isNotWearableErorr(weaponResult)) {
     return weaponResult;
   }
