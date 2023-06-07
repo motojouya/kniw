@@ -1,8 +1,2 @@
-import { chop } from 'src/data/skill/chop';
-import { volcateRise } from 'src/data/skill/volcateRise';
-
-export default {
-  chop,
-  volcateRise,
-};
-
+export { chop } from 'src/data/skill/chop';
+export { volcateRise } from 'src/data/skill/volcateRise';

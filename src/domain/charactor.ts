@@ -2,16 +2,18 @@ import { Physical, addPhysicals } from 'src/domain/physical'
 import { Status } from 'src/domain/status'
 import {
   Race,
-  createRace,
   Weapon,
-  createWeapon,
   Clothing,
-  createClothing,
   Blessing,
-  createBlessing,
   NotWearableErorr,
   isNotWearableErorr,
 } from 'src/domain/acquirement'
+import {
+  createRace,
+  createWeapon,
+  createClothing,
+  createBlessing,
+} from 'src/domain/acquirementStore'
 import { Ability } from 'src/domain/ability'
 import { Skill } from 'src/domain/skill'
 import {

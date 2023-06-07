@@ -1,4 +1,5 @@
-import { Race, tentativeValidateWearable, createValidateWearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement'
+import { tentativeValidateWearable, createValidateWearable } from 'src/domain/acquirement'
 
 const tentativeRace: Race = {
   name: 'fairy',
