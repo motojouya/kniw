@@ -3,6 +3,7 @@ import * as abilities from 'src/data/ability'
 
 export type Ability = {
   name: string,
+  label: string,
   wait: Wait,
   description: string,
 };
@@ -10,5 +11,8 @@ export type Ability = {
 export type Wait = (wt: number, charactor: Charactor, randoms: Randoms) => Charactor;
 export const justWait: Wait = (wt, charactor, randoms) => charactor;
 
-export type CreateAbility = (name: string) => Ability;
-export const createAbility: CreateAbility = name => abilities.find(ability => name === ability.name);
+type AbilityDictionary = { [name: string]: Ability };
+
+export type CreateAbility = (name: string) => Ability | null;
+export const createAbility: CreateAbility = name => (abilities as AbilityDictionary)[name];
+

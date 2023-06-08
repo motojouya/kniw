@@ -1,12 +1,7 @@
-import type {
-  Skill,
-  ActionToCharactor,
-  GetAccuracy,
-  calcOrdinaryMagicalDamage,
-  calcOrdinaryAccuracy,
-} from 'src/domain/skill'
+import type { Skill } from 'src/domain/skill'
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy } from 'src/domain/skill'
 
-export const volcateRise: Skill = {
+export const volcanoRise: Skill = {
   name: 'volcateRise',
   label: 'Volcate Rise',
   action: calcOrdinaryMagicalDamage,

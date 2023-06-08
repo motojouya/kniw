@@ -1,4 +1,5 @@
 import type { Clothing } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 import { mpGainPlus } from 'src/data/ability/mpGainPlus'
 
 export const fireRobe: Clothing = {
@@ -19,17 +20,18 @@ export const fireRobe: Clothing = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: validateWearable,
+  validateWearable: (race, weapon, clothing, blessing) => {
+    const validate = createValidateWearable(fireRobe, {
+      wearableRaces: [],
+      wearableBlessings: [
+        'mind',
+        'earth',
+      ],
+      wearableClothings: [],
+      wearableWeapons: [],
+    });
+    return validate(race, weapon, clothing, blessing);
+  },
   description: '炎の衣。魔法耐久が高い',
 };
-
-const validateWearable = createValidateWearable(fireRobe, {
-  wearableRaces: [],
-  wearableBlessings: [
-    'mind',
-    'earth',
-  ],
-  wearableClothings: [],
-  wearableWeapons: [],
-});
 

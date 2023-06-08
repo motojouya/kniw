@@ -1,4 +1,5 @@
-import type { Weapon, createValidateWearable } from 'src/domain/acquirement'
+import type { Weapon } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 import { volcanoRise } from 'src/data/skill/volcanoRise'
 
 export const fireWand: Weapon = {
@@ -19,14 +20,15 @@ export const fireWand: Weapon = {
     RES: 0,
     WT: 10,
   },
-  validateWearable: validateWearable,
+  validateWearable: (race, weapon, clothing, blessing) => {
+    const validate = createValidateWearable(fireWand, {
+      wearableRaces: [],
+      wearableBlessings: [],
+      wearableClothings: ['fireRobe'],
+      wearableWeapons: [],
+    });
+    return validate(race, weapon, clothing, blessing);
+  },
   description: '炎の杖。大地属性で炎の魔法が打てる杖。',
 };
-
-const validateWearable = createValidateWearable(fireWand, {
-  wearableRaces: [],
-  wearableBlessings: [],
-  wearableClothings: ['fireRobe'],
-  wearableWeapons: [],
-});
 

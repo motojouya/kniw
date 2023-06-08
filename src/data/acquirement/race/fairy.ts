@@ -1,7 +1,7 @@
 import type { Race } from 'src/domain/acquirement'
-import { tentativeValidateWearable, createValidateWearable } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 
-const tentativeRace: Race = {
+export const fairy: Race = {
   name: 'fairy',
   label: 'フェアリー',
   skills: [],
@@ -19,16 +19,15 @@ const tentativeRace: Race = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: tentativeValidateWearable,
+  validateWearable: (race, weapon, clothing, blessing) => {
+    const validate = createValidateWearable(fairy, {
+      wearableRaces: [],
+      wearableBlessings: [],
+      wearableClothings: [],
+      wearableWeapons: [],
+    });
+    return validate(race, weapon, clothing, blessing);
+  },
   description: 'フェアリー。魔法攻撃力が高い。',
 };
-
-tentativeRace.validateWearable = createValidateWearable(tentativeRace, {
-  wearableRaces: [],
-  wearableBlessings: [],
-  wearableClothings: [],
-  wearableWeapons: [],
-});
-
-export const fairy = tentativeRace;
 
