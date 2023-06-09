@@ -19,7 +19,7 @@ export const sky: Blessing = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: (race, weapon, clothing, blessing) => {
+  validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(sky, {
       wearableRaces: [
         'human',
@@ -31,7 +31,7 @@ export const sky: Blessing = {
       wearableClothings: [],
       wearableWeapons: [],
     });
-    return validate(race, weapon, clothing, blessing);
+    return validate(race, blessing, clothing, weapon);
   },
   description: '空の祝福',
 };

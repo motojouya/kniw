@@ -19,14 +19,14 @@ export const fairy: Race = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: (race, weapon, clothing, blessing) => {
+  validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(fairy, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: [],
       wearableWeapons: [],
     });
-    return validate(race, weapon, clothing, blessing);
+    return validate(race, blessing, clothing, weapon);
   },
   description: 'フェアリー。魔法攻撃力が高い。',
 };

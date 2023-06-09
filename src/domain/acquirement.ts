@@ -26,11 +26,11 @@ export type NotWearableErorr = {
 };
 
 export function isNotWearableErorr(obj: any): obj is NotWearableErorr {
-  return !!obj && typeof obj === 'object' && 'type' in obj && 'cause' in obj && 'message' in obj;
+  return !!obj && typeof obj === 'object' && 'acquirement' in obj && 'cause' in obj && 'message' in obj;
 }
 
 export type CreateValidateWearable = (self: Acquirement, wearableAcquirements: { wearableRaces: string[], wearableBlessings: string[], wearableClothings: string[], wearableWeapons: string[] }) => ValidateWearable;
-export const createValidateWearable: CreateValidateWearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => (race, weapon, clothing, blessing) => {
+export const createValidateWearable: CreateValidateWearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => (race, blessing, clothing, weapon) => {
 
   if (wearableRaces.length > 0 && !!race) {
     const raceWearable = wearableRaces.includes(race.name);
@@ -38,7 +38,7 @@ export const createValidateWearable: CreateValidateWearable = (self, { wearableR
       return {
         acquirement: self,
         cause: race,
-        message: 'このキャラクターの設定では' + self.name + 'になることはできません。',
+        message: 'このキャラクターの設定では' + self.name + 'を装備できません',
       };
     }
   }
@@ -49,7 +49,7 @@ export const createValidateWearable: CreateValidateWearable = (self, { wearableR
       return {
         acquirement: self,
         cause: blessing,
-        message: 'このキャラクターの設定では' + self.name + 'の祝福を受けることはできません。',
+        message: 'このキャラクターの設定では' + self.name + 'を装備できません',
       };
     }
   }
@@ -60,7 +60,7 @@ export const createValidateWearable: CreateValidateWearable = (self, { wearableR
       return {
         acquirement: self,
         cause: clothing,
-        message: 'このキャラクターの設定では' + self.name + 'を装備することはできません。',
+        message: 'このキャラクターの設定では' + self.name + 'を装備できません',
       };
     }
   }
@@ -71,7 +71,7 @@ export const createValidateWearable: CreateValidateWearable = (self, { wearableR
       return {
         acquirement: self,
         cause: weapon,
-        message: 'このキャラクターの設定では' + self.name + 'を持つことはできません。',
+        message: 'このキャラクターの設定では' + self.name + 'を装備できません',
       };
     }
   }

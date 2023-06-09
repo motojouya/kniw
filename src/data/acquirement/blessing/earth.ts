@@ -1,4 +1,5 @@
 import type { Blessing } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 
 export const earth: Blessing = {
   name: 'earth',
@@ -18,19 +19,20 @@ export const earth: Blessing = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: validateWearable,
+  validateWearable: (race, blessing, clothing, weapon) => {
+    const validate = createValidateWearable(earth, {
+      wearableRaces: [
+        'human',
+        'werewolf',
+        'lizardman',
+        'golem',
+      ],
+      wearableBlessings: [],
+      wearableClothings: [],
+      wearableWeapons: [],
+    });
+    return validate(race, blessing, clothing, weapon);
+  },
   description: '大地の祝福',
 };
-
-const validateWearable = createValidateWearable(earth, {
-  wearableRaces: [
-    'human',
-    'werewolf',
-    'lizardman',
-    'golem',
-  ],
-  wearableBlessings: [],
-  wearableClothings: [],
-  wearableWeapons: [],
-});
 

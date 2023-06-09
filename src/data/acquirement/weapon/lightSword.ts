@@ -1,4 +1,5 @@
 import type { Weapon } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 import { chop } from 'src/data/skill/chop'
 
 export const lightSword: Weapon = {
@@ -19,14 +20,15 @@ export const lightSword: Weapon = {
     RES: 0,
     WT: 10,
   },
-  validateWearable: validateWearable,
+  validateWearable: (race, blessing, clothing, weapon) => {
+    const validate = createValidateWearable(lightSword, {
+      wearableRaces: [],
+      wearableBlessings: [],
+      wearableClothings: ['steelArmor'],
+      wearableWeapons: [],
+    });
+    return validate(race, blessing, clothing, weapon);
+  },
   description: '光の剣。特に特別なわけではないが軽い。',
 };
-
-const validateWearable = createValidateWearable(lightSword, {
-  wearableRaces: [],
-  wearableBlessings: [],
-  wearableClothings: ['steelArmor'],
-  wearableWeapons: [],
-});
 

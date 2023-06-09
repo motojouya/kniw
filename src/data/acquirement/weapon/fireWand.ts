@@ -20,14 +20,14 @@ export const fireWand: Weapon = {
     RES: 0,
     WT: 10,
   },
-  validateWearable: (race, weapon, clothing, blessing) => {
+  validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(fireWand, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: ['fireRobe'],
       wearableWeapons: [],
     });
-    return validate(race, weapon, clothing, blessing);
+    return validate(race, blessing, clothing, weapon);
   },
   description: '炎の杖。大地属性で炎の魔法が打てる杖。',
 };

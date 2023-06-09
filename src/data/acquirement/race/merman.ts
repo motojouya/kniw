@@ -1,4 +1,5 @@
 import type { Race } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 
 export const merman: Race = {
   name: 'merman',
@@ -18,14 +19,15 @@ export const merman: Race = {
     RES: 10,
     WT: 0,
   },
-  validateWearable: validateWearable,
+  validateWearable: (race, blessing, clothing, weapon) => {
+    const validate = createValidateWearable(merman, {
+      wearableRaces: [],
+      wearableBlessings: [],
+      wearableClothings: [],
+      wearableWeapons: [],
+    });
+    return validate(race, blessing, clothing, weapon);
+  },
   description: 'マーマン。魔法防御力が高い。',
 };
-
-const validateWearable = createValidateWearable(merman, {
-  wearableRaces: [],
-  wearableBlessings: [],
-  wearableClothings: [],
-  wearableWeapons: [],
-});
 

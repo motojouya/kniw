@@ -20,7 +20,7 @@ export const fireRobe: Clothing = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: (race, weapon, clothing, blessing) => {
+  validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(fireRobe, {
       wearableRaces: [],
       wearableBlessings: [
@@ -30,7 +30,7 @@ export const fireRobe: Clothing = {
       wearableClothings: [],
       wearableWeapons: [],
     });
-    return validate(race, weapon, clothing, blessing);
+    return validate(race, blessing, clothing, weapon);
   },
   description: '炎の衣。魔法耐久が高い',
 };

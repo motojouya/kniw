@@ -1,4 +1,5 @@
 import type { Race } from 'src/domain/acquirement'
+import { createValidateWearable } from 'src/domain/acquirement'
 
 export const werewolf: Race = {
   name: 'werewolf',
@@ -18,14 +19,15 @@ export const werewolf: Race = {
     RES: 0,
     WT: 0,
   },
-  validateWearable: validateWearable,
+  validateWearable: (race, blessing, clothing, weapon) => {
+    const validate = createValidateWearable(werewolf, {
+      wearableRaces: [],
+      wearableBlessings: [],
+      wearableClothings: [],
+      wearableWeapons: [],
+    });
+    return validate(race, blessing, clothing, weapon);
+  },
   description: 'ワーウルフ。物理攻撃力が高い。',
 };
-
-const validateWearable = createValidateWearable(werewolf, {
-  wearableRaces: [],
-  wearableBlessings: [],
-  wearableClothings: [],
-  wearableWeapons: [],
-});
 

@@ -1,10 +1,5 @@
-import type {
-  Skill,
-  ActionToCharactor,
-  GetAccuracy,
-  calcOrdinaryDirectDamage,
-  calcOrdinaryAccuracy,
-} from 'src/domain/skill'
+import type { Skill } from 'src/domain/skill'
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy } from 'src/domain/skill'
 
 export const chop: Skill = {
   name: 'chop',
