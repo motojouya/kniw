@@ -11,8 +11,3 @@ export type Ability = {
 export type Wait = (wt: number, charactor: Charactor, randoms: Randoms) => Charactor;
 export const justWait: Wait = (wt, charactor, randoms) => charactor;
 
-type AbilityDictionary = { [name: string]: Ability };
-
-export type CreateAbility = (name: string) => Ability | null;
-export const createAbility: CreateAbility = name => (abilities as AbilityDictionary)[name];
-

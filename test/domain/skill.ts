@@ -1,4 +1,6 @@
 import assert from 'assert';
+import type { Physical } from 'src/domain/physical';
+import { addPhysicals } from 'src/domain/physical';
 import {
   calcOrdinaryDirectDamage,
   calcOrdinaryMagicalDamage,
@@ -8,6 +10,20 @@ import {
 // export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
 // export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
 // export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) => (100 + calcAttackAccuracy(actor) - calcDefenceAccuracy(receiver)) / 100;
+
+const basePhysical: Physical = {
+  MaxHP: 100,
+  MaxMP: 100,
+  STR: 100,
+  VIT: 100,
+  DEX: 100,
+  AGI: 100,
+  AVD: 100,
+  INT: 100,
+  MND: 100,
+  RES: 100,
+  WT: 100,
+};
 
 describe('Skill#calcOrdinaryAccuracy', function () {
   it('add', function () {

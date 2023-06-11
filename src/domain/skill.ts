@@ -28,11 +28,6 @@ export type Skill = {
 //dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
 //actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ
 
-type SkillDictionary = { [name: string]: Skill };
-
-export type CreateSkill = (name: string) => Skill | null;
-export const createSkill: CreateSkill = name => (skills as SkillDictionary)[name];
-
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   let damage = calcDirectAttack(actor) - calcDirectDefence(receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;

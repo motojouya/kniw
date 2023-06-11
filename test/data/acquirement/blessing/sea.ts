@@ -1,6 +1,37 @@
 import assert from 'assert';
-describe('something', function () {
-  it('add', function () {
+import type { NotWearableErorr } from 'src/domain/acquirement';
+import { isNotWearableErorr } from 'src/domain/acquirement';
+
+// import { earth } from 'src/data/acquirement/blessing/earth';
+// import { mind } from 'src/data/acquirement/blessing/mind';
+import { sea } from 'src/data/acquirement/blessing/sea';
+// import { sky } from 'src/data/acquirement/blessing/sky';
+// import { fireRobe } from 'src/data/acquirement/clothing/fireRobe';
+import { steelArmor } from 'src/data/acquirement/clothing/steelArmor';
+// import { fairy } from 'src/data/acquirement/race/fairy';
+// import { golem } from 'src/data/acquirement/race/golem';
+import { hawkman } from 'src/data/acquirement/race/hawkman';
+import { human } from 'src/data/acquirement/race/human';
+// import { lizardman } from 'src/data/acquirement/race/lizardman';
+// import { merman } from 'src/data/acquirement/race/merman';
+// import { werewolf } from 'src/data/acquirement/race/werewolf';
+// import { fireWand } from 'src/data/acquirement/weapon/fireWand';
+import { lightSword } from 'src/data/acquirement/weapon/lightSword';
+
+describe('sea#validateWearable', function () {
+  it('ok', function () {
+    const result = sea.validateWearable(human, sea, steelArmor, lightSword);
+    assert.equal(result, null);
+  });
+  it('ng', function () {
+    const result = sea.validateWearable(hawkman, sea, steelArmor, lightSword);
+    if (isNotWearableErorr(result)) {
+      assert.equal(result.acquirement.name, 'sea');
+      assert.equal(result.cause.name, 'hawkman');
+      assert.equal(result.message, 'このキャラクターの設定ではseaを装備できません');
+    } else {
+      assert.equal(true, false);
+    }
   });
 });
 

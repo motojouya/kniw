@@ -1,9 +1,17 @@
 import type { Ability, Wait } from 'src/domain/ability'
+import { getPhysical } from 'src/domain/charactor'
 
 const wait: Wait = (wt, charactor, randoms) => {
-  let mp = charactor.mp + (wt * 5) + Math.ceil(randoms.damage * 5);
-  if (mp > charactor.MaxMp) {
-    mp = charactor.MaxMp;
+  const turnAdd = wt;
+  let randomAdd = Math.ceil(randoms.damage * 5);
+  if (turnAdd < randomAdd) {
+    randomAdd = 0;
+  }
+  let mp = charactor.mp + turnAdd + randomAdd;
+
+  const physical = getPhysical(charactor);
+  if (mp > physical.MaxMP) {
+    mp = physical.MaxMP;
   }
 
   return {
