@@ -79,5 +79,3 @@ export const createValidateWearable: CreateValidateWearable = (self, { wearableR
   return null;
 };
 
-export const tentativeValidateWearable: ValidateWearable = (race, weapon, clothing, blessing) => null;
-

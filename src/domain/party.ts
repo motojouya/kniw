@@ -82,7 +82,7 @@ const createList: CreateList =
   async () =>
   (await storage.list(NAMESPACE));
 
-export const createStorage: CreateStore<Party> = storage => {
+export const createStore: CreateStore<Party> = storage => {
   storage.checkNamespace(NAMESPACE);
   return {
     save: createSave(storage),

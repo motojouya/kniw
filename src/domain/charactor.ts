@@ -218,7 +218,7 @@ const createList: CreateList =
   async () =>
   (await repository.list(NAMESPACE));
 
-export const createStorage: CreateStore<Charactor> = repository => {
+export const createStore: CreateStore<Charactor> = repository => {
   repository.checkNamespace(NAMESPACE);
   return {
     save: createSave(repository),
