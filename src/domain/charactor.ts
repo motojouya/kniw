@@ -196,12 +196,12 @@ const createGet: CreateGet<Charactor> = repository => async name => {
   }
   const {
     name: charactorName,
-    raceName: race,
-    blessingName: blessing,
-    clothingName: clothing,
-    weaponName: weapon,
+    race: raceName,
+    blessing: blessingName,
+    clothing: clothingName,
+    weapon: weaponName,
   } = result;
-  const charactor = createCharactor(charactorName, race, blessing, clothing, weapon);
+  const charactor = createCharactor(charactorName, raceName, blessingName, clothingName, weaponName);
   if (isNotWearableErorr(charactor) || isAcquirementNotFoundError(charactor)) {
     return Promise.reject(charactor);
   }
