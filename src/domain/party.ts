@@ -1,4 +1,4 @@
-import { Charactor, getPhysical } from 'src/model/charactor'
+import { Charactor, createCharactor, getPhysical } from 'src/model/charactor'
 import {
   CreateSave<T>
   CreateGet<T>
@@ -14,11 +14,12 @@ export type Party = {
   charactors: Charactor[],
 }
 
-export type CreateParty = (name: string, charactors: Charactor[]) => Party | CharactorDuplicationErorr
+export type CreateParty = (name: string, charactors: { name: string, race: string, blessing: string, clothing: string, weapon: string }[]) => Party | CharactorDuplicationError
 export const createParty: CreateParty = (name, charactors) => {
 
-  const validateResult = validate(name, charactors);
-  if (isCharactorDuplicationErorr(validateResult)) {
+  const charactorObjs = charactors.map(charactor => createCharactor(charactor.name, charactor.race, charactor.blessing, charactor.clothing, charactor.weapon));
+  const validateResult = validate(name, charactorObjs);
+  if (isCharactorDuplicationError(validateResult)) {
     return validateResult;
   }
 
@@ -28,15 +29,15 @@ export const createParty: CreateParty = (name, charactors) => {
   }
 };
 
-export type CharactorDuplicationErorr = {
+export type CharactorDuplicationError = {
   message: string,
 };
 
-export function isCharactorDuplicationErorr(obj: any): obj is CharactorDuplicationErorr {
+export function isCharactorDuplicationError(obj: any): obj is CharactorDuplicationError {
   return !!obj && typeof obj === 'object' && 'message' in obj;
 }
 
-type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationErorr | null;
+type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationError | null;
 const validate: Validate = (name, charactors) => {
 
   const nameCountMap = charactors.reduce((acc, charactor) => {
@@ -58,15 +59,22 @@ const validate: Validate = (name, charactors) => {
   return null;
 };
 
-const createSave: CreateSave<Party> =
-  storage =>
-  async obj =>
-  (await storage.save(NAMESPACE, obj.name, obj));
+const createSave: CreateSave<Party> = storage => async obj => {
+  const name = obj.name;
+  const charactors = obj.charactors.map(charactor => ({
+    name: charactor.name,
+    race: charactor.race.name,
+    blessing: charactor.blessing.name,
+    clothing: charactor.clothing.name,
+    weapon: charactor.weapon.name,
+  }));
+  (await storage.save(NAMESPACE, name, { name, charactors }));
+}
 
 const createGet: CreateGet<Party> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
   const party = createParty(...result);
-  if (isCharactorDuplicationErorr(party)) {
+  if (isCharactorDuplicationError(party)) {
     return Promise.reject(party);
   }
   return party;

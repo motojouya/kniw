@@ -1,11 +1,12 @@
 import assert from 'assert';
+import type { Party } from 'src/domain/party';
+import {
+  createParty,
+  createStore,
+  isCharactorDuplicationError,
+} from 'src/domain/party';
 import {
   createCharactor,
-  isAcquirementNotFoundError,
-  createStore,
-  getAbilities,
-  getSkills,
-  getPhysical,
   Charactor,
 } from 'src/domain/charactor';
 import { isNotWearableErorr } from 'src/domain/acquirement';
@@ -17,56 +18,26 @@ import type { Repository } from 'src/io/file_repository'
 // export const createStore: CreateStore<Party> = storage => {
 
 describe('Party#createParty', function () {
-  it('CharactorDuplicationErorr', function () {
-    const charactor = createCharactor('sam', 'race01', 'blessing01', 'clothing01', 'weapon01');
-    assert.equal(isCharactorDuplicationErorr(charactor), true);
-    if (isCharactorDuplicationErorr(charactor)) {
-      assert.equal(charactor.acquirementName, 'race01');
-      assert.equal(charactor.type, 'race');
-      assert.equal(charactor.message, 'race01という種族は存在しません');
-    } else {
-      assert.equal(true, false);
-    }
-  });
-  it('CharactorDuplicationErorr', function () {
-    const charactor = createCharactor('sam', 'fairy', 'earth', 'steelArmor', 'lightSword');
-    assert.equal(isCharactorDuplicationErorr(charactor), true);
-    if (isCharactorDuplicationErorr(charactor)) {
-      assert.equal(charactor.acquirement.name, 'earth');
-      assert.equal(charactor.cause.name, 'fairy');
-      assert.equal(charactor.message, 'このキャラクターの設定ではearthを装備できません');
+  it('CharactorDuplicationError', function () {
+    const charactor01 = (createCharactor('sam', 'human', 'earth', 'steelArmor', 'lightSword') as Charactor);
+    const charactor02 = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
+    const party = createParty('team01', [charactor01, charactor02]);
+    assert.equal(isCharactorDuplicationError(party), true);
+    if (isCharactorDuplicationError(party)) {
+      assert.equal(party.message, 'Partyに同じ名前のキャラクターが存在します');
     } else {
       assert.equal(true, false);
     }
   });
   it('ok', function () {
-    const charactor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-    assert.equal(charactor.name, 'sam');
-    assert.equal(charactor.race.name, 'human');
-    assert.equal(charactor.blessing.name, 'earth');
-    assert.equal(charactor.clothing.name, 'fireRobe');
-    assert.equal(charactor.weapon.name, 'fireWand');
+    const charactor01 = (createCharactor('sam', 'human', 'earth', 'steelArmor', 'lightSword') as Charactor);
+    const charactor02 = (createCharactor('john', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
+    const party = createParty('team01', [charactor01, charactor02]);
 
-    const abilities = getAbilities(charactor);
-    assert.equal(abilities.length, 1);
-    assert.equal(abilities[0].name, 'mpGainPlus');
-
-    const skills = getSkills(charactor);
-    assert.equal(skills.length, 1);
-    assert.equal(skills[0].name, 'volcanoRise');
-
-    const physical = getPhysical(charactor);
-    assert.equal(physical.MaxHP, 100);
-    assert.equal(physical.MaxMP, 100);
-    assert.equal(physical.STR, 120);
-    assert.equal(physical.VIT, 120);
-    assert.equal(physical.DEX, 100);
-    assert.equal(physical.AGI, 100);
-    assert.equal(physical.AVD, 100);
-    assert.equal(physical.INT, 110);
-    assert.equal(physical.MND, 120);
-    assert.equal(physical.RES, 100);
-    assert.equal(physical.WT, 110);
+    assert.equal(party.name, 'team01');
+    assert.equal(party.charactor.length, 2);
+    assert.equal(party.charactor[0].name, 'sam');
+    assert.equal(party.charactor[1].name, 'john');
   });
 });
 
@@ -74,15 +45,17 @@ const storeMock: Repository = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' })),
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
-  list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
+  list: namespace => new Promise((resolve, reject) => resolve(['team01', 'team02'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
 };
 
 describe('Party#createStore', function () {
   it('save', async () => {
     const store = createStore(storeMock);
-    const charactor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-    await store.save(charactor);
+    const charactor01 = (createCharactor('sam', 'human', 'earth', 'steelArmor', 'lightSword') as Charactor);
+    const charactor02 = (createCharactor('john', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
+    const party = createParty('team01', [charactor01, charactor02]);
+    await store.save(party);
     assert.equal(true, true);
   });
   it('get', async () => {
@@ -100,15 +73,15 @@ describe('Party#createStore', function () {
   });
   it('remove', async () => {
     const store = createStore(storeMock);
-    await store.remove('sam');
+    await store.remove('team01');
     assert.equal(true, true);
   });
   it('list', async () => {
     const store = createStore(storeMock);
-    const charactorList = await store.list();
-    assert.equal(charactorList.length, 2);
-    assert.equal(charactorList[0], 'sam');
-    assert.equal(charactorList[1], 'john');
+    const partyList = await store.list();
+    assert.equal(partyList.length, 2);
+    assert.equal(partyList[0], 'team01');
+    assert.equal(partyList[1], 'team02');
   });
 });
 
