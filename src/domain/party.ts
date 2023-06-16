@@ -95,7 +95,7 @@ const createGet: CreateGet<Party> = storage => async name => {
     return null;
   }
 
-  const party = createParty(result.name, result.charctors);
+  const party = createParty(result.name, result.charactors);
 
   if (isNotWearableErorr(party)) {
     return Promise.reject(party);

@@ -28,24 +28,6 @@ export type Skill = {
 //dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
 //actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ
 
-export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-  let damage = calcDirectAttack(actor) - calcDirectDefence(receiver);
-  damage += Math.ceil(randoms.damage * 10) - 5;
-  if (damage < 1) {
-    damage = 1;
-  }
-
-  let restHp = receiver.hp - damage;
-  if (restHp < 0) {
-    restHp = 0;
-  }
-
-  return {
-    ...receiver,
-    hp: restHp,
-  };
-}
-
 type CalcDirectAttack = (attacker: Charactor) => number;
 const calcDirectAttack: CalcDirectAttack = attacker => {
   const physical = getPhysical(attacker);
@@ -58,9 +40,8 @@ const calcDirectDefence: CalcDirectDefence = defencer => {
   return (physical.VIT + physical.STR) / 2;
 };
 
-export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-
-  let damage = calcMagicalAttack(actor) - calcMagicalDefence(receiver);
+export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
+  let damage = calcDirectAttack(actor) - calcDirectDefence(receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;
   if (damage < 1) {
     damage = 1;
@@ -89,7 +70,24 @@ const calcMagicalDefence: CalcMagicalDefence = defencer => {
   return (physical.VIT + physical.MND) / 2;
 };
 
-export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) => (100 + calcAttackAccuracy(actor) - calcDefenceAccuracy(receiver)) / 100;
+export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
+
+  let damage = calcMagicalAttack(actor) - calcMagicalDefence(receiver);
+  damage += Math.ceil(randoms.damage * 10) - 5;
+  if (damage < 1) {
+    damage = 1;
+  }
+
+  let restHp = receiver.hp - damage;
+  if (restHp < 0) {
+    restHp = 0;
+  }
+
+  return {
+    ...receiver,
+    hp: restHp,
+  };
+}
 
 type CalcAttackAccuracy = (attacker: Charactor) => number;
 const calcAttackAccuracy: CalcAttackAccuracy = attacker => {
@@ -102,4 +100,6 @@ const calcDefenceAccuracy: CalcDefenceAccuracy = defencer => {
   const physical = getPhysical(defencer);
   return (physical.DEX + physical.AVD) / 2;
 };
+
+export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) => (100 + calcAttackAccuracy(actor) - calcDefenceAccuracy(receiver)) / 100;
 

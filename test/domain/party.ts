@@ -79,11 +79,11 @@ describe('Party#createStore', function () {
       assert.equal(charactors[0].blessing.name, 'earth');
       assert.equal(charactors[0].clothing.name, 'steelArmor');
       assert.equal(charactors[0].weapon.name, 'lightSword');
-      assert.equal(charactors[0].name, 'john');
-      assert.equal(charactors[0].race.name, 'human');
-      assert.equal(charactors[0].blessing.name, 'earth');
-      assert.equal(charactors[0].clothing.name, 'fireRobe');
-      assert.equal(charactors[0].weapon.name, 'fireWand');
+      assert.equal(charactors[1].name, 'john');
+      assert.equal(charactors[1].race.name, 'human');
+      assert.equal(charactors[1].blessing.name, 'earth');
+      assert.equal(charactors[1].clothing.name, 'fireRobe');
+      assert.equal(charactors[1].weapon.name, 'fireWand');
     } else {
       assert.equal(true, false);
     }
