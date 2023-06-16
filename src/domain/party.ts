@@ -1,11 +1,18 @@
-import { Charactor, createCharactor, getPhysical } from 'src/model/charactor'
+import type { Charactor, AcquirementNotFoundError } from 'src/domain/charactor'
 import {
-  CreateSave<T>
-  CreateGet<T>
-  CreateRemove
-  CreateList
-  CreateStore<T>
-} from 'src/mode/store';
+  createCharactor,
+  getPhysical,
+  isAcquirementNotFoundError,
+} from 'src/domain/charactor'
+import type { NotWearableErorr } from 'src/domain/acquirement'
+import { isNotWearableErorr } from 'src/domain/acquirement'
+import type {
+  CreateSave,
+  CreateGet,
+  CreateRemove,
+  CreateList,
+  CreateStore,
+} from 'src/domain/store';
 
 const NAMESPACE = 'party';
 
@@ -14,10 +21,21 @@ export type Party = {
   charactors: Charactor[],
 }
 
-export type CreateParty = (name: string, charactors: { name: string, race: string, blessing: string, clothing: string, weapon: string }[]) => Party | CharactorDuplicationError
+export type CreateParty = (name: string, charactors: { name: string, race: string, blessing: string, clothing: string, weapon: string }[]) => Party | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError
 export const createParty: CreateParty = (name, charactors) => {
 
-  const charactorObjs = charactors.map(charactor => createCharactor(charactor.name, charactor.race, charactor.blessing, charactor.clothing, charactor.weapon));
+  const charactorObjs: Charactor[] = [];
+  for (let charactor of charactors) {
+    const charactorObj = createCharactor(charactor.name, charactor.race, charactor.blessing, charactor.clothing, charactor.weapon);
+    if (isAcquirementNotFoundError(charactorObj)) {
+      return charactorObj;
+    }
+    if (isNotWearableErorr(charactorObj)) {
+      return charactorObj;
+    }
+    charactorObjs.push(charactorObj);
+  }
+
   const validateResult = validate(name, charactorObjs);
   if (isCharactorDuplicationError(validateResult)) {
     return validateResult;
@@ -25,7 +43,7 @@ export const createParty: CreateParty = (name, charactors) => {
 
   return {
     name,
-    charactors,
+    charactors: charactorObjs,
   }
 };
 
@@ -48,7 +66,7 @@ const validate: Validate = (name, charactors) => {
     acc[charactor.name] += 1;
 
     return acc;
-  }, {});
+  }, ({} as { [name: string]: number }));
 
   for (let name in nameCountMap) {
     if (nameCountMap[name] > 1) {
@@ -73,7 +91,18 @@ const createSave: CreateSave<Party> = storage => async obj => {
 
 const createGet: CreateGet<Party> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
-  const party = createParty(...result);
+  if (!result) {
+    return null;
+  }
+
+  const party = createParty(result.name, result.charctors);
+
+  if (isNotWearableErorr(party)) {
+    return Promise.reject(party);
+  }
+  if (isAcquirementNotFoundError(party)) {
+    return Promise.reject(party);
+  }
   if (isCharactorDuplicationError(party)) {
     return Promise.reject(party);
   }
