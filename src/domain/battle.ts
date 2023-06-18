@@ -1,37 +1,54 @@
-import { changeClimate } from 'src/model/basics';
-import { Party } from 'src/model/party'
-import { Charactor } from 'src/model/charactor'
-import { Skill } from 'src/model/skill'
+import type { Field } from 'src/domain/field';
+import { changeClimate } from 'src/domain/field';
+import { Party } from 'src/domain/party'
+import { Charactor } from 'src/domain/charactor'
+import { Skill } from 'src/domain/skill'
 import {
-  CreateSave<T>
-  CreateGet<T>
-  CreateRemove
-  CreateList
-  CreateStore<T>
-} from 'src/mode/store';
+  CreateSave,
+  CreateGet,
+  CreateRemove,
+  CreateList,
+  CreateStore,
+} from 'src/domain/store';
 
 const NAMESPACE = 'battle';
 
 export type GameResult = 'HOME' | 'VISITOR' | 'DRAW';
 
-export type Turn = {
-  datetime: Date,
+export type DoSkill = {
   actor: Charactor,
   skill: Skill,
   receivers: Charactor[],
-  sortedCharactors: Charactor[]
-  field: Field,
-} | {
-  datetime: Date,
-  actor: Charactor,
-  sortedCharactors: Charactor[]
-  field: Field,
-} | {
-  datetime: Date,
-  wt: number,
-  sortedCharactors: Charactor[]
-  field: Field,
+};
+
+export function isActionDoSkill(obj: any): obj is DoSkill {
+  return !!obj && typeof obj === 'object' && 'actor' in obj && 'skill' in obj && 'receivers' in obj && !('wt' in obj);
 }
+
+export type DoNothing = {
+  actor: Charactor,
+};
+
+export function isActionDoNothing(obj: any): obj is DoNothing {
+  return !!obj && typeof obj === 'object' && 'actor' in obj && !('skill' in obj) && !('receivers' in obj) && !('wt' in obj);
+}
+
+export type TimePassing = {
+  wt: number,
+};
+
+export function isActionTimePassing(obj: any): obj is TimePassing {
+  return !!obj && typeof obj === 'object' && !('actor' in obj) && !('skill' in obj) && !('receivers' in obj) && 'wt' in obj;
+}
+
+export type Action = TimePassing | DoNothing | DoSkill;
+
+export type Turn = {
+  datetime: Date,
+  action: Action,
+  sortedCharactors: Charactor[]
+  field: Field,
+};
 
 export type Battle = {
   datetime: Date,
@@ -42,7 +59,7 @@ export type Battle = {
 }
 
 export type CreateBattle = (home: Party, visitor: Party, turns: Turn[], result: GameResult | null) => Battle;
-export const createBattle = (datetime, home, visitor, turns, result) => ({
+export const createBattle: CreateBattle = (datetime, home, visitor, turns, result) => ({
   datetime,
   home,
   visitor,
@@ -59,9 +76,9 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
   return charactor;
 }
 
-//TODO util作る？
-export type ArrayLast<T> = (ary: Array) => T;
-export type arrayLast: ArrayLast<T> = ary => ary.slice(-1)[0];
+//TODO util?
+type ArrayLast<T> = (ary: Array) => T;
+type arrayLast: ArrayLast<T> = ary => ary.slice(-1)[0];
 
 export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
 export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
@@ -184,6 +201,7 @@ export const isSettlement: IsSettlement = battle => {
   return null;
 };
 
+//TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
 const createSave: CreateSave<Battle> =
   storage =>
   async obj =>

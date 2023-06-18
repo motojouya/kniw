@@ -17,7 +17,7 @@ export const lizardman: Race = {
     INT: 0,
     MND: 0,
     RES: 0,
-    WT: 0,
+    WT: 5,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(lizardman, {

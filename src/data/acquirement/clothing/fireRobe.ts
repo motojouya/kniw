@@ -18,7 +18,7 @@ export const fireRobe: Clothing = {
     INT: 10,
     MND: 20,
     RES: 0,
-    WT: 0,
+    WT: 5,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(fireRobe, {
