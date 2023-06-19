@@ -10,16 +10,8 @@ export type GetAccuracy = (self: Skill, actor: Charactor, field: Field, receiver
 export type Skill = {
   name: string,
   label: string,
-  action: ActionToCharactor,
+  action: ActionToCharactor | ActionToField,
   receiverCount: number,
-  additionalWt: number,
-  getAccuracy: GetAccuracy,
-  description: string,
-} | {
-  name: string,
-  label: string,
-  action: ActionToField,
-  receiverCount: 0,
   additionalWt: number,
   getAccuracy: GetAccuracy,
   description: string,

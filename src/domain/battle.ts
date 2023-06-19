@@ -1,19 +1,26 @@
 import type { Field } from 'src/domain/field';
-import { changeClimate } from 'src/domain/field';
-import { Party } from 'src/domain/party'
-import { Charactor } from 'src/domain/charactor'
-import { Skill } from 'src/domain/skill'
-import {
+import type { Party } from 'src/domain/party'
+import type { Charactor } from 'src/domain/charactor'
+import type { Skill } from 'src/domain/skill'
+import type {
   CreateSave,
   CreateGet,
   CreateRemove,
   CreateList,
   CreateStore,
 } from 'src/domain/store';
+import type { Randoms } from 'src/domain/random';
+
+import { changeClimate } from 'src/domain/field';
+import { getPhysical, getAbilities } from 'src/domain/charactor'
 
 const NAMESPACE = 'battle';
 
-export type GameResult = 'HOME' | 'VISITOR' | 'DRAW';
+export type GameResult = 'ONGOING' | 'HOME' | 'VISITOR' | 'DRAW';
+export const GameOngoing: GameResult = 'ONGOING';
+export const GameHome: GameResult = 'HOME';
+export const GameVisitor: GameResult = 'VISITOR';
+export const GameDraw: GameResult = 'DRAW';
 
 export type DoSkill = {
   actor: Charactor,
@@ -55,10 +62,10 @@ export type Battle = {
   home: Party,
   visitor: Party,
   turns: Turn[],
-  result?: GameResult,
+  result: GameResult,
 }
 
-export type CreateBattle = (home: Party, visitor: Party, turns: Turn[], result: GameResult | null) => Battle;
+export type CreateBattle = (datetime: Date, home: Party, visitor: Party, turns: Turn[], result: GameResult) => Battle;
 export const createBattle: CreateBattle = (datetime, home, visitor, turns, result) => ({
   datetime,
   home,
@@ -69,39 +76,46 @@ export const createBattle: CreateBattle = (datetime, home, visitor, turns, resul
 
 type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
-  const receiver = resultReceivers.find(receiver => charactor.name === receiver.name);
+  const receiver = receivers.find(receiver => charactor.name === receiver.name);
   if (receiver) {
     return receiver;
   }
   return charactor;
 }
 
+////TODO util?
+//type ArrayLast<T> = (ary: Array<T>) => T;
+//const arrayLast: ArrayLast<T> = <T> ary => ary.slice(-1)[0];
+
 //TODO util?
-type ArrayLast<T> = (ary: Array) => T;
-type arrayLast: ArrayLast<T> = ary => ary.slice(-1)[0];
+function arrayLast<T>(ary: Array<T>): T {
+  return ary.slice(-1)[0];
+}
 
 export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
 export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn = {
     datetime,
-    actor,
-    skill,
-    receivers,
+    action: {
+      actor,
+      skill,
+      receivers,
+    },
     sortedCharactors: lastTurn.sortedCharactors,
     field: lastTurn.field,
   };
 
   if (skill.receiverCount === 0) {
-    newTurn.field = skill.action(skill)(actor)(randoms)(turn.field);
+    newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
   } else {
-    const resultReceivers = receivers.map(receiver => skill.action(skill)(actor)(randoms)(turn.field)(receiver));
+    const resultReceivers = receivers.map(receiver => skill.action(skill, actor, randoms, lastTurn.field, receiver));
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
   }
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      actor.restWt = getPhysical(actor).wt + skill.additionalWt;
+      actor.restWt = getPhysical(actor).WT + skill.additionalWt;
     }
     return actor;
   });
@@ -115,14 +129,14 @@ export const stay: Stay = (battle, actor, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn = {
     datetime,
-    actor,
+    action: { actor },
     sortedCharactors: lastTurn.sortedCharactors,
     field: lastTurn.field,
   };
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      actor.restWt = getPhysical(actor).wt;
+      actor.restWt = getPhysical(actor).WT;
     }
     return actor;
   });
@@ -132,7 +146,7 @@ export const stay: Stay = (battle, actor, datetime, randoms) => {
 };
 
 type WaitCharactor = (charactor: Charactor, wt: number, randoms: Randoms) => Charactor;
-const waitCharactor: WaitTurns = (charactor, wt, randoms) => {
+const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
 
   const abilities = getAbilities(charactor);
   const newCharactor = abilities.reduce((charactor, ability) => ability.wait(wt, charactor, randoms), { ...charactor });
@@ -155,7 +169,7 @@ export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn = {
     datetime,
-    wt,
+    action: { wt },
     sortedCharactors: lastTurn.sortedCharactors,
     field: {
       climate: changeClimate(randoms)
@@ -176,36 +190,36 @@ const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
 export type Start = (homeParty: Party, visitorParty: Party, datetime: Date, randoms: Randoms) => Turn;
 export const start: Start = (homeParty, visitorParty, datetime, randoms) => ({
   datetime,
-  wt: 0,
+  action: { wt: 0 },
   sortedCharactors: sortByWT([...homeParty.charactors, ...visitorParty.charactors]),
   field: {
     climate: changeClimate(randoms)
   },
 });
 
-export type IsSettlement = (battle: Battle) => GameResult | null;
+export type IsSettlement = (battle: Battle) => GameResult;
 export const isSettlement: IsSettlement = battle => {
   const lastestTurn = arrayLast(battle.turns);
-  const homeCharactors = sortedCharactors.filter(charactor => !charactor.isVisitor && charactor.hp);
-  const visitorCharactors = sortedCharactors.filter(charactor => charactor.isVisitor && charactor.hp);
+  const homeCharactors = lastestTurn.sortedCharactors.filter(charactor => !charactor.isVisitor && charactor.hp);
+  const visitorCharactors = lastestTurn.sortedCharactors.filter(charactor => charactor.isVisitor && charactor.hp);
 
   if (homeCharactors.length === 0 && visitorCharactors.length === 0) {
-    return 'DRAW';
+    return GameDraw;
   }
   if (homeCharactors.length > 0 && visitorCharactors.length === 0) {
-    return 'HOME';
+    return GameHome;
   }
   if (homeCharactors.length === 0 && visitorCharactors.length > 0) {
-    return 'VISITOR';
+    return GameVisitor;
   }
-  return null;
+  return GameOngoing;
 };
 
 //TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
 const createSave: CreateSave<Battle> =
   storage =>
   async obj =>
-  (await storage.save(NAMESPACE, obj.name, obj));
+  (await storage.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), obj));
 
 const createGet: CreateGet<Battle> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);

@@ -10,6 +10,7 @@ import {
   isSettlement,
   createStore,
   arrayLast, //TODO
+  GameOngoing,
 } from 'src/model/battle';
 
 
@@ -85,7 +86,7 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
 export type Battle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => Promise<void>
 export const battle: Battle = (conversation, repository) => (home, visitor) => {
   const battleStore = createStore<Battle>(repository);
-  const battle = createBattle('TODO Date', home, visitor, [], null);
+  const battle = createBattle('TODO Date', home, visitor, [], GameOngoing);
   const turns = battle.turns;
 
   turns.push(start(home, visitor, 'TODO Date', 'TODO random'));
