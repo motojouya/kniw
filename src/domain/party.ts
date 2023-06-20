@@ -3,6 +3,7 @@ import {
   createCharactor,
   getPhysical,
   isAcquirementNotFoundError,
+  createCharactorJson,
 } from 'src/domain/charactor'
 import type { NotWearableErorr } from 'src/domain/acquirement'
 import { isNotWearableErorr } from 'src/domain/acquirement'
@@ -77,17 +78,21 @@ const validate: Validate = (name, charactors) => {
   return null;
 };
 
-const createSave: CreateSave<Party> = storage => async obj => {
-  const name = obj.name;
-  const charactors = obj.charactors.map(charactor => ({
-    name: charactor.name,
-    race: charactor.race.name,
-    blessing: charactor.blessing.name,
-    clothing: charactor.clothing.name,
-    weapon: charactor.weapon.name,
-  }));
-  (await storage.save(NAMESPACE, name, { name, charactors }));
-}
+export type PartyJson = {
+  name: string,
+  charactors: CharactorJson[],
+};
+
+export type CreatePartyJson = (party: Patry) => PartyJson;
+export const createPartyJson: CreatePartyObj = party => ({
+  name: party.name,
+  charactors: party.charactors.map(createCharactorJson),
+});
+
+const createSave: CreateSave<Party> =
+  storage =>
+  async obj =>
+  (await storage.save(NAMESPACE, name, createPartyJson(obj)));
 
 const createGet: CreateGet<Party> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);

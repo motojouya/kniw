@@ -184,10 +184,27 @@ const validate: Validate = (name, race, blessing, clothing, weapon) => {
   return null;
 }
 
+export type CharactorJson = {
+  name: string,
+  race: string,
+  blessing: string,
+  clothing: string,
+  weapon: string,
+};
+
+export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
+export const createCharactorJson: CreateCharactorObj = charactor => ({
+  name: charactor.name,
+  race: charactor.race.name,
+  blessing: charactor.blessing.name,
+  clothing: charactor.clothing.name,
+  weapon: charactor.weapon.name,
+});
+
 const createSave: CreateSave<Charactor> =
   repository =>
-  async ({ name, race, blessing, clothing, weapon }) =>
-  (await repository.save(NAMESPACE, name, { name, race: race.name, blessing: blessing.name, clothing: clothing.name, weapon: weapon.name }));
+  async obj =>
+  (await repository.save(NAMESPACE, obj.name, createCharactorJson(obj)));
 
 const createGet: CreateGet<Charactor> = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
