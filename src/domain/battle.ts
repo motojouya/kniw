@@ -1,5 +1,5 @@
 import type { Field } from 'src/domain/field';
-import type { Party } from 'src/domain/party'
+import { createParty, Party, PartyJson } from 'src/domain/party'
 import { Charactor, createCharactor } from 'src/domain/charactor'
 import type { Skill } from 'src/domain/skill'
 import type {
@@ -24,37 +24,28 @@ export const GameVisitor: GameResult = 'VISITOR';
 export const GameDraw: GameResult = 'DRAW';
 
 export type DoSkill = {
+  type: 'DO_SKILL',
   actor: Charactor,
   skill: Skill,
   receivers: Charactor[],
 };
 
-export function isActionDoSkill(obj: any): obj is DoSkill {
-  return !!obj && typeof obj === 'object' && 'actor' in obj && 'skill' in obj && 'receivers' in obj && !('wt' in obj);
-}
-
 export type DoNothing = {
+  type: 'DO_NOTHING',
   actor: Charactor,
 };
 
-export function isActionDoNothing(obj: any): obj is DoNothing {
-  return !!obj && typeof obj === 'object' && 'actor' in obj && !('skill' in obj) && !('receivers' in obj) && !('wt' in obj);
-}
-
 export type TimePassing = {
+  type: 'TIME_PASSING',
   wt: number,
 };
-
-export function isActionTimePassing(obj: any): obj is TimePassing {
-  return !!obj && typeof obj === 'object' && !('actor' in obj) && !('skill' in obj) && !('receivers' in obj) && 'wt' in obj;
-}
 
 export type Action = TimePassing | DoNothing | DoSkill;
 
 export type Turn = {
   datetime: Date,
   action: Action,
-  sortedCharactors: Charactor[]
+  sortedCharactors: Charactor[],
   field: Field,
 };
 
@@ -66,29 +57,74 @@ export type Battle = {
   result: GameResult,
 }
 
-//TODO 続きここから
-export type CreateTurn = () => Turn;
+export type CreateAction = (actionJson: ActionJson) => Action
+export const createAction: CreateAction = actionJson => {
+  if (actionJson.type === 'DO_SKILL') {
+    return {
+      actor: createCharactor(actionJson.actor),
+      skill: name,
+      receivers: actionJson.receivers.map(createCharactor),
+    };
+  }
+  if (actionJson.type === 'DO_NOTHING') {
+    return {
+      actor: createCharactor(actionJson.actor),
+    };
+  }
+  if (actionJson.type === 'TIME_PASSING') {
+    return {
+      wt: 0 + actionJson.wt,
+    };
+  }
 
-export type CreateBattle = (datetime: Date, home: Party, visitor: Party, turns: Turn[], result: GameResult) => Battle;
-export const createBattle: CreateBattle = (datetime, home, visitor, turns, result) => ({
-  datetime,
-  home,
-  visitor,
-  turns,
-  result,
+};
+
+export type CreateTurn = (turnJson: TurnJson) => Turn;
+export const createTurn: CreateTurn = turnJson => ({
+  datetime: Date.parse(turnJson.datetime),
+  action: createAction(turnJson.action),
+  sortedCharactors: turnJson.sortedCharactors.map(createCharactor),
+  field: {
+    climate: turnJson.field.climate,
+  },
+}); 
+
+export type PropertyMissingError = {
+  json: object,
+  propertyName: string,
+  message: string,
+};
+
+export function isPropertyMissingError(obj: any) obj is PropertyMissingError {
+  return !!obj && typeof obj === 'object' && 'json' in obj && 'propertyName' in obj && 'message' in obj;
+};
+
+//TODO validationを入れる必要がある。
+//tsで型があると思いきやjsonからデータ型を作るところなのでjson propartyが足りてないことは有り得る。
+//型で守られていない部分なのでそのバリデーションの実装は必要なのと、各storeで共通のPropertyMissingErrorは用意したい。
+export type CreateBattle = (battleJson: BattleJson) => Battle;
+export const createBattle: CreateBattle = battleJson => ({
+  datetime: Date.parse(battleJson.datetime),
+  home: createParty(battleJson.home.name, battleJson.home.charactors),
+  visitor: createParty(battleJson.visitor.name, battleJson.visitor.charactors),
+  turns: battleJson.turns.map(createTurn),
+  result: battleJson.result,
 });
 
 export type DoSkillJson = {
+  type: 'DO_SKILL',
   actor: CharactorJson,
   skill: name,
   receivers: CharactorJson[],
 };
 
 export type DoNothingJson = {
+  type: 'DO_NOTHING',
   actor: CharactorJson,
 };
 
 export type TimePassingJson = {
+  type: 'TIME_PASSING',
   wt: number,
 };
 
@@ -96,19 +132,19 @@ export type ActionJson = DoSkillJson | DoNothingJson | TimePassingJson
 
 type CreateActionJson = (action: Action) => ActionJson;
 const createActionJson: CreateActionJson = action => {
-  if (isActionDoSkill(action)) {
+  if (action.type === 'DO_SKILL') {
     return {
       actor: createCharactorJson(action.actor),
       skill: action.skill.name,
       receivers: action.receivers.map(createCharactorJson),
     };
   }
-  if (isActionDoNothing(action)) {
+  if (action.type === 'DO_NOTHING') {
     return {
       actor: createCharactorJson(action.actor),
     };
   }
-  if (isActionTimePassing(action)) {
+  if (action.type === 'TIME_PASSING') {
     return {
       wt: action.wt,
     };
@@ -299,7 +335,10 @@ const createSave: CreateSave<Battle> =
 
 const createGet: CreateGet<Battle> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
-  return createBattle(...result);
+  if (!result) {
+    return null;
+  }
+  return createBattle((result as BattleJson));
 }
 
 const createRemove: CreateRemove =
