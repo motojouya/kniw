@@ -77,6 +77,15 @@ export type Battle = {
   result: GameResult,
 }
 
+export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
+export const newBattle: NewBattle = (datetime, home, visitor) => ({
+  datetime,
+  home,
+  visitor,
+  turns: [],
+  result: GameOngoing,
+});
+
 export type CreateAction = (actionJson: ActionJson) => Action | NotWearableErorr | AcquirementNotFoundError
 export const createAction: CreateAction = actionJson => {
   if (actionJson.type === 'DO_SKILL') {
@@ -437,11 +446,11 @@ const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
   return 0;
 });
 
-export type Start = (homeParty: Party, visitorParty: Party, datetime: Date, randoms: Randoms) => Turn;
-export const start: Start = (homeParty, visitorParty, datetime, randoms) => ({
+export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
+export const start: Start = (battle, datetime, randoms) => ({
   datetime,
   action: { wt: 0 },
-  sortedCharactors: sortByWT([...homeParty.charactors, ...visitorParty.charactors]),
+  sortedCharactors: sortByWT([...battle.home.charactors, ...battle.visitor.charactors]),
   field: {
     climate: changeClimate(randoms)
   },

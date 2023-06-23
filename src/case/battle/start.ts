@@ -83,13 +83,22 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
 
 };
 
-export type Battle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => Promise<void>
-export const battle: Battle = (conversation, repository) => (home, visitor) => {
-  const battleStore = createStore<Battle>(repository);
-  const battle = createBattle('TODO Date', home, visitor, [], GameOngoing);
-  const turns = battle.turns;
+export type StartBattle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => Promise<void>
+export const startBattle: StartBattle = (conversation, repository) => (home, visitor) => {
+  const battle = newBattle('TODO Date', home, visitor);
+  battle.turns.push(start(battle, 'TODO Date', 'TODO random'));
 
-  turns.push(start(home, visitor, 'TODO Date', 'TODO random'));
+  continueBattle(conversation, repository)(battle);
+};
+
+export type RestartBattle = (conversation: Conversation, repository: Repository) => (battleJson: BattleJson) => Promise<void>
+export const restartBattle: RestartBattle = (conversation, repository) => (battleJson) => {
+  continueBattle(conversation, repository)(createBattle(battleJson));
+};
+
+export type ContinueBattle = (conversation: Conversation, repository: Repository) => (battle: Battle) => Promise<void>
+export const continueBattle: ContinueBattle = (conversation, repository) => (battle) => {
+  const battleStore = createStore<Battle>(repository);
   while (true) {
     const firstWaiting = arrayLast(turns).sortedCharactors[0];
     turns.push(wait(battle, firstWaiting.restWt, 'TODO Date', 'TODO random'));
