@@ -1,6 +1,14 @@
 import type { Field } from 'src/domain/field';
-import { createParty, Party, PartyJson } from 'src/domain/party'
-import { Charactor, createCharactor } from 'src/domain/charactor'
+import type {
+  Party,
+  PartyJson,
+  CharactorDuplicationError,
+} from 'src/domain/party'
+import type {
+  Charactor,
+  AcquirementNotFoundError,
+} from 'src/domain/charactor'
+import type { NotWearableErorr } from 'src/domain/acquirement'
 import type { Skill } from 'src/domain/skill'
 import type {
   CreateSave,
@@ -11,9 +19,21 @@ import type {
 } from 'src/domain/store';
 import type { Randoms } from 'src/domain/random';
 
+import {
+  createParty,
+  createPartyJson,
+  isCharactorDuplicationError,
+} from 'src/domain/party'
+import {
+  createCharactor,
+  isAcquirementNotFoundError,
+  getPhysical,
+  getAbilities,
+  createCharactorJson,
+} from 'src/domain/charactor'
 import { changeClimate } from 'src/domain/field';
-import { getPhysical, getAbilities, createCharactorJson } from 'src/domain/charactor'
-import { createPartyJson } from 'src/domain/party';
+import { isNotWearableErorr } from 'src/domain/acquirement'
+import { createSkill } from 'src/domain/skillStore'
 
 const NAMESPACE = 'battle';
 
@@ -57,18 +77,44 @@ export type Battle = {
   result: GameResult,
 }
 
-export type CreateAction = (actionJson: ActionJson) => Action
+export type CreateAction = (actionJson: ActionJson) => Action | NotWearableErorr | AcquirementNotFoundError
 export const createAction: CreateAction = actionJson => {
   if (actionJson.type === 'DO_SKILL') {
+    const skillActor = createCharactor(actionJson.actor);
+    if (isNotWearableErorr(skillActor)) {
+      return skillActor;
+    }
+    if (isAcquirementNotFoundError(skillActor)) {
+      return skillActor;
+    }
+
+    const receivers: Charactor[] = [];
+    for (let receiverJson of actionJson.receivers) {
+      const receiver = createCharactor(receiverJson.name, receiverJson.race, receiverJson.blessing, receiverJson.clothing, receiverJson.weapon);
+      if (isNotWearableErorr(receiver)) {
+        return receiver;
+      }
+      if (isAcquirementNotFoundError(receiver)) {
+        return receiver;
+      }
+      receivers.push(receiver);
+    }
     return {
-      actor: createCharactor(actionJson.actor),
-      skill: name,
-      receivers: actionJson.receivers.map(createCharactor),
+      actor: skillActor,
+      skill: createSkill(actionJson.skill),
+      receivers: receivers,
     };
   }
   if (actionJson.type === 'DO_NOTHING') {
+    const nothingActor = createCharactor(actionJson.actor);
+    if (isNotWearableErorr(nothingActor)) {
+      return nothingActor;
+    }
+    if (isAcquirementNotFoundError(nothingActor)) {
+      return nothingActor;
+    }
     return {
-      actor: createCharactor(actionJson.actor),
+      actor: nothingActor,
     };
   }
   if (actionJson.type === 'TIME_PASSING') {
@@ -79,15 +125,41 @@ export const createAction: CreateAction = actionJson => {
 
 };
 
-export type CreateTurn = (turnJson: TurnJson) => Turn;
-export const createTurn: CreateTurn = turnJson => ({
-  datetime: Date.parse(turnJson.datetime),
-  action: createAction(turnJson.action),
-  sortedCharactors: turnJson.sortedCharactors.map(createCharactor),
-  field: {
+export type CreateTurn = (turnJson: TurnJson) => Turn | NotWearableErorr | AcquirementNotFoundError;
+export const createTurn: CreateTurn = turnJson => {
+  const datetime = Date.parse(turnJson.datetime);
+
+  const action = createAction(turnJson.action);
+  if (isNotWearableErorr(action)) {
+    return action;
+  }
+  if (isAcquirementNotFoundError(action)) {
+    return action;
+  }
+
+  const sortedCharactors: Charactor[] = [];
+  for (let charactorJson of turnJson.sortedCharactors) {
+    const charactor = createCharactor(charactorJson.name, charactorJson.race, charactorJson.blessing, charactorJson.clothing, charactorJson.weapon);
+    if (isNotWearableErorr(charactor)) {
+      return charactor;
+    }
+    if (isAcquirementNotFoundError(charactor)) {
+      return charactor;
+    }
+    sortedCharactors.push(charactor);
+  }
+
+  const field = {
     climate: turnJson.field.climate,
-  },
-}); 
+  };
+
+  return {
+    datetime,
+    action,
+    sortedCharactors,
+    field,
+  };
+}; 
 
 export type PropertyMissingError = {
   json: object,
@@ -102,19 +174,63 @@ export function isPropertyMissingError(obj: any) obj is PropertyMissingError {
 //TODO validationを入れる必要がある。
 //tsで型があると思いきやjsonからデータ型を作るところなのでjson propartyが足りてないことは有り得る。
 //型で守られていない部分なのでそのバリデーションの実装は必要なのと、各storeで共通のPropertyMissingErrorは用意したい。
-export type CreateBattle = (battleJson: BattleJson) => Battle;
-export const createBattle: CreateBattle = battleJson => ({
-  datetime: Date.parse(battleJson.datetime),
-  home: createParty(battleJson.home.name, battleJson.home.charactors),
-  visitor: createParty(battleJson.visitor.name, battleJson.visitor.charactors),
-  turns: battleJson.turns.map(createTurn),
-  result: battleJson.result,
-});
+
+
+
+
+export type CreateBattle = (battleJson: BattleJson) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError;
+export const createBattle: CreateBattle = battleJson => {
+  const datetime = Date.parse(battleJson.datetime);
+
+  const home = createParty(battleJson.home.name, battleJson.home.charactors);
+  if (isNotWearableErorr(home)) {
+    return home;
+  }
+  if (isAcquirementNotFoundError(home)) {
+    return home;
+  }
+  if (isCharactorDuplicationError(home)) {
+    return home;
+  }
+
+  const visitor = createParty(battleJson.visitor.name, battleJson.visitor.charactors);
+  if (isNotWearableErorr(visitor)) {
+    return visitor;
+  }
+  if (isAcquirementNotFoundError(visitor)) {
+    return visitor;
+  }
+  if (isCharactorDuplicationError(visitor)) {
+    return visitor;
+  }
+
+  const turns: Turn[] = [];
+  for (let turnJson of battleJson.turns) {
+    const turn = createTurn(turnJson);
+    if (isNotWearableErorr(turn)) {
+      return turn;
+    }
+    if (isAcquirementNotFoundError(turn)) {
+      return turn;
+    }
+    turns.push(turn);
+  }
+
+  const result = battleJson.result;
+
+  return {
+    datetime,
+    home
+    visitor,
+    turns,
+    result,
+  };
+};
 
 export type DoSkillJson = {
   type: 'DO_SKILL',
   actor: CharactorJson,
-  skill: name,
+  skill: string,
   receivers: CharactorJson[],
 };
 
@@ -294,9 +410,31 @@ export const wait: Wait = (battle, wt, datetime, randoms) => {
 
 type SortByWT = (charactors: Charactor[]) => Charactor[]
 const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
+  const leftPhysical = getPhysical(left);
+  const rightPhysical = getPhysical(right);
+  const wtDiff = left.restWt - right.restWt;
+  if (wtDiff !== 0) {
+    return wtDiff;
+  }
+  const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
+  if (agiDiff !== 0) {
+    return agiDiff;
+  }
+  const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
+  if (avdDiff !== 0) {
+    return avdDiff;
+  }
+  const hpDiff = left.hp - right.hp;
+  if (hpDiff !== 0) {
+    return hpDiff;
+  }
+  const mpDiff = left.mp - right.mp;
+  if (mpDiff !== 0) {
+    return mpDiff;
+  }
   //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
   //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
-  return left.restWt - right.restWt;
+  return 0;
 });
 
 export type Start = (homeParty: Party, visitorParty: Party, datetime: Date, randoms: Randoms) => Turn;
