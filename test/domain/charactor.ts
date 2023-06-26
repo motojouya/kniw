@@ -15,7 +15,7 @@ import type { Repository } from 'src/io/file_repository'
 
 describe('Charctor#createCharactor', function () {
   it('AcquirementNotFoundError', function () {
-    const charactor = createCharactor('sam', 'race01', 'blessing01', 'clothing01', 'weapon01');
+    const charactor = createCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01' });
     assert.equal(isAcquirementNotFoundError(charactor), true);
     if (isAcquirementNotFoundError(charactor)) {
       assert.equal(charactor.acquirementName, 'race01');
@@ -26,7 +26,7 @@ describe('Charctor#createCharactor', function () {
     }
   });
   it('NotWearableErorr', function () {
-    const charactor = createCharactor('sam', 'fairy', 'earth', 'steelArmor', 'lightSword');
+    const charactor = createCharactor({ name: 'sam', race: 'fairy', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' });
     assert.equal(isNotWearableErorr(charactor), true);
     if (isNotWearableErorr(charactor)) {
       assert.equal(charactor.acquirement.name, 'earth');
@@ -37,7 +37,7 @@ describe('Charctor#createCharactor', function () {
     }
   });
   it('ok', function () {
-    const charactor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
+    const charactor = (createCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' }) as Charactor);
     assert.equal(charactor.name, 'sam');
     assert.equal(charactor.race.name, 'human');
     assert.equal(charactor.blessing.name, 'earth');
@@ -78,7 +78,7 @@ const storeMock: Repository = {
 describe('Charctor#createStore', function () {
   it('save', async () => {
     const store = createStore(storeMock);
-    const charactor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
+    const charactor = (createCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' }) as Charactor);
     await store.save(charactor);
     assert.equal(true, true);
   });

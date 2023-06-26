@@ -18,3 +18,12 @@ export type Store<T> = {
 }
 export type CreateStore<T> = (repository: Repository) => Store<T>
 
+export type JsonSchemaUnmatchError = {
+  error: any,
+  message: string,
+};
+
+export function isJsonSchemaUnmatchError(obj: any): obj is JsonSchemaUnmatchError {
+  return !!obj && typeof obj === 'object' && 'error' in obj && 'message' in obj;
+}
+

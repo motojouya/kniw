@@ -16,17 +16,20 @@ import {
 } from 'src/domain/acquirementStore'
 import { Ability } from 'src/domain/ability'
 import { Skill } from 'src/domain/skill'
-import {
-  Save,
-  Get,
-  Remove,
-  List,
+import type {
   CreateSave,
   CreateGet,
   CreateRemove,
   CreateList,
   CreateStore,
+  JsonSchemaUnmatchError,
 } from 'src/domain/store';
+import { isJsonSchemaUnmatchError } from 'src/domain/store';
+
+import { FromSchema } from "json-schema-to-ts";
+import Ajv from "ajv"
+
+const ajv = new Ajv();
 
 const NAMESPACE = 'charactor';
 
@@ -56,6 +59,20 @@ export type Charactor = {
   restWt: number,
   isVisitor?: boolean,
 }
+
+export const charactorSchema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    race: { type: "string" },
+    blessing: { type: "string" },
+    clothing: { type: "string" },
+    weapon: { type: "string" },
+  },
+  required: ["name", "race", "blessing", "clothing", "weapon"],
+} as const;
+
+export type CharactorJson = FromSchema<typeof charactorSchema>;
 
 export type CharactorBattling = Required<Charactor>;
 
@@ -94,44 +111,54 @@ export const getPhysical: GetPhysical = charactor => addPhysicals([
   charactor.weapon.additionalPhysical,
 ]);
 
-export type CreateCharactor =
-  (name: string, raceName: string, blessingName: string, clothingName: string, weaponName: string) =>
-  Charactor | NotWearableErorr | AcquirementNotFoundError;
-export const createCharactor: CreateCharactor = (name, raceName, blessingName, clothingName, weaponName) => {
+export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | AcquirementNotFoundError;
+export const createCharactor: CreateCharactor = charactorJson => {
 
-  const race = createRace(raceName);
+  const validate = ajv.compile(charactorSchema)
+  const valid = validate(charactorJson)
+  if (!valid) {
+    console.debug(validate.errors);
+    return {
+      error: validate.errors,
+      message: 'charactorのjsonデータではありません',
+    };
+  }
+
+  const validCharactor = charactorJson as CharactorJson;
+
+  const race = createRace(validCharactor.race);
   if (!race) {
     return {
-      acquirementName: raceName,
+      acquirementName: validCharactor.race,
       type: 'race',
-      message: raceName + 'という種族は存在しません',
+      message: validCharactor.race + 'という種族は存在しません',
     };
   }
 
-  const blessing = createBlessing(blessingName);
+  const blessing = createBlessing(validCharactor.blessing);
   if (!blessing) {
     return {
-      acquirementName: blessingName,
+      acquirementName: validCharactor.blessing,
       type: 'blessing',
-      message: blessingName + 'という祝福は存在しません',
+      message: validCharactor.blessing + 'という祝福は存在しません',
     };
   }
 
-  const clothing = createClothing(clothingName);
+  const clothing = createClothing(validCharactor.clothing);
   if (!clothing) {
     return {
-      acquirementName: clothingName,
+      acquirementName: validCharactor.clothing,
       type: 'clothing',
-      message: clothingName + 'という装備は存在しません',
+      message: validCharactor.clothing + 'という装備は存在しません',
     };
   }
 
-  const weapon = createWeapon(weaponName);
+  const weapon = createWeapon(validCharactor.weapon);
   if (!weapon) {
     return {
-      acquirementName: weaponName,
+      acquirementName: validCharactor.weapon,
       type: 'weapon',
-      message: weaponName + 'という武器は存在しません',
+      message: validCharactor.weapon + 'という武器は存在しません',
     };
   }
 
@@ -184,14 +211,6 @@ const validate: Validate = (name, race, blessing, clothing, weapon) => {
   return null;
 }
 
-export type CharactorJson = {
-  name: string,
-  race: string,
-  blessing: string,
-  clothing: string,
-  weapon: string,
-};
-
 export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
 export const createCharactorJson: CreateCharactorObj = charactor => ({
   name: charactor.name,
@@ -211,14 +230,7 @@ const createGet: CreateGet<Charactor> = repository => async name => {
   if (!result) {
     return null;
   }
-  const {
-    name: charactorName,
-    race: raceName,
-    blessing: blessingName,
-    clothing: clothingName,
-    weapon: weaponName,
-  } = result;
-  const charactor = createCharactor(charactorName, raceName, blessingName, clothingName, weaponName);
+  const charactor = createCharactor(result);
   if (isNotWearableErorr(charactor) || isAcquirementNotFoundError(charactor)) {
     return Promise.reject(charactor);
   }
