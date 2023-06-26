@@ -16,6 +16,7 @@ import type {
   CreateRemove,
   CreateList,
   CreateStore,
+  JsonSchemaUnmatchError,
 } from 'src/domain/store';
 import type { Randoms } from 'src/domain/random';
 
@@ -23,6 +24,7 @@ import {
   createParty,
   createPartyJson,
   isCharactorDuplicationError,
+  partySchema,
 } from 'src/domain/party'
 import {
   createCharactor,
@@ -30,10 +32,17 @@ import {
   getPhysical,
   getAbilities,
   createCharactorJson,
+  charactorSchema,
 } from 'src/domain/charactor'
 import { changeClimate } from 'src/domain/field';
 import { isNotWearableErorr } from 'src/domain/acquirement'
 import { createSkill } from 'src/domain/skillStore'
+import { isJsonSchemaUnmatchError } from 'src/domain/store';
+
+import { FromSchema } from "json-schema-to-ts";
+import Ajv from "ajv"
+
+const ajv = new Ajv();
 
 const NAMESPACE = 'battle';
 
@@ -77,6 +86,79 @@ export type Battle = {
   result: GameResult,
 }
 
+export const doSkillSchema = {
+  type: "object",
+  properties: {
+    type: { const: "DO_SKILL" },
+    actor: charactorSchema,
+    skill: { type: "string" },
+    receivers: { type: "array", items: charactorSchema },
+  },
+  required: ["type", "actor", "skill", "receivers"],
+} as const;
+
+export type DoSkillJson = FromSchema<typeof doSkillSchema>;
+
+export const doNothingSchema = {
+  type: "object",
+  properties: {
+    type: { const: "DO_NOTHING" },
+    actor: charactorSchema,
+  },
+  required: ["type", "actor"],
+} as const;
+
+export type DoNothingJson = FromSchema<typeof doNothingSchema>;
+
+export const timePassingSchema = {
+  type: "object",
+  properties: {
+    type: { const: "TIME_PASSING" },
+    wt: { type: "integer" },
+  },
+  required: ["type", "wt"],
+} as const;
+
+export type TimePassingJson = FromSchema<typeof timePassingSchema>;
+
+const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] };
+export type ActionJson = FromSchema<typeof actionSchema>;
+//export type ActionJson = DoSkillJson | DoNothingJson | TimePassingJson
+
+export const turnSchema = {
+  type: "object",
+  properties: {
+    datetime: { type: "string", format: "date-time" },
+    action: actionSchema,
+    //action: { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] },
+    sortedCharactors: { type: "array", items: charactorSchema },
+    field: {
+      type: "object",
+      properties: {
+        climate: { type: "string" },
+      },
+      required: ["climate"],
+    },
+  },
+  required: ["datetime", "action", "sortedCharactors", "field"],
+} as const;
+
+export type TurnJson = FromSchema<typeof turnSchema>;
+
+export const battleSchema = {
+  type: "object",
+  properties: {
+    datetime: { type: "string", format: "date-time" },
+    home: partySchema,
+    visitor: partySchema,
+    turns: { type: "array", items: turnSchema },
+    result: { enum: [ GameOngoing, GameHome, GameVisitor, GameDraw ] },
+  },
+  required: ["datetime", "home", "visitor", "turns", "result"],
+} as const;
+
+export type BattleJson = FromSchema<typeof battleSchema>;
+
 export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
 export const newBattle: NewBattle = (datetime, home, visitor) => ({
   datetime,
@@ -86,24 +168,37 @@ export const newBattle: NewBattle = (datetime, home, visitor) => ({
   result: GameOngoing,
 });
 
-export type CreateAction = (actionJson: ActionJson) => Action | NotWearableErorr | AcquirementNotFoundError
+export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
 export const createAction: CreateAction = actionJson => {
-  if (actionJson.type === 'DO_SKILL') {
-    const skillActor = createCharactor(actionJson.actor);
-    if (isNotWearableErorr(skillActor)) {
-      return skillActor;
-    }
-    if (isAcquirementNotFoundError(skillActor)) {
+
+  const validateSchema = ajv.compile(actionSchema)
+  const valid = validateSchema(actionJson)
+  if (!valid) {
+    console.debug(validateSchema.errors);
+    return {
+      error: validateSchema.errors,
+      message: 'actionのjsonデータではありません',
+    };
+  }
+  const validAction = actionJson as ActionJson;
+
+
+  if (validAction.type === 'DO_SKILL') {
+    const skillActor = createCharactor(validAction.actor);
+    if (isNotWearableErorr(skillActor)
+     || isAcquirementNotFoundError(skillActor)
+     || isJsonSchemaUnmatchError(skillActor)
+    ) {
       return skillActor;
     }
 
     const receivers: Charactor[] = [];
-    for (let receiverJson of actionJson.receivers) {
-      const receiver = createCharactor(receiverJson.name, receiverJson.race, receiverJson.blessing, receiverJson.clothing, receiverJson.weapon);
-      if (isNotWearableErorr(receiver)) {
-        return receiver;
-      }
-      if (isAcquirementNotFoundError(receiver)) {
+    for (let receiverJson of validAction.receivers) {
+      const receiver = createCharactor(receiverJson);
+      if (isNotWearableErorr(receiver)
+       || isAcquirementNotFoundError(receiver)
+       || isJsonSchemaUnmatchError(receiver)
+      ) {
         return receiver;
       }
       receivers.push(receiver);
@@ -114,52 +209,70 @@ export const createAction: CreateAction = actionJson => {
       receivers: receivers,
     };
   }
-  if (actionJson.type === 'DO_NOTHING') {
-    const nothingActor = createCharactor(actionJson.actor);
-    if (isNotWearableErorr(nothingActor)) {
-      return nothingActor;
-    }
-    if (isAcquirementNotFoundError(nothingActor)) {
+
+  if (validAction.type === 'DO_NOTHING') {
+    const nothingActor = createCharactor(validAction.actor);
+    if (isNotWearableErorr(nothingActor)
+     || isAcquirementNotFoundError(nothingActor)
+     || isJsonSchemaUnmatchError(nothingActor)
+    ) {
       return nothingActor;
     }
     return {
       actor: nothingActor,
     };
   }
-  if (actionJson.type === 'TIME_PASSING') {
+
+  if (validAction.type === 'TIME_PASSING') {
     return {
-      wt: 0 + actionJson.wt,
+      wt: 0 + validAction.wt,
     };
   }
 
+  //schema validationでtypeを既にチェックして弾いているので到達不能
+  return null;
 };
 
-export type CreateTurn = (turnJson: TurnJson) => Turn | NotWearableErorr | AcquirementNotFoundError;
+export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
 export const createTurn: CreateTurn = turnJson => {
-  const datetime = Date.parse(turnJson.datetime);
 
-  const action = createAction(turnJson.action);
-  if (isNotWearableErorr(action)) {
-    return action;
+  const validateSchema = ajv.compile(turnSchema)
+  const valid = validateSchema(turnJson)
+  if (!valid) {
+    console.debug(validateSchema.errors);
+    return {
+      error: validateSchema.errors,
+      message: 'turnのjsonデータではありません',
+    };
   }
-  if (isAcquirementNotFoundError(action)) {
+  const validTurn = turnJson as TurnJson;
+
+  //TODO try catch
+  const datetime = Date.parse(validTurn.datetime);
+
+  const action = createAction(validTurn.action);
+  if (isNotWearableErorr(action)
+   || isAcquirementNotFoundError(action)
+   || isAcquirementNotFoundError(action)
+   || isJsonSchemaUnmatchError(action)
+  ) {
     return action;
   }
 
   const sortedCharactors: Charactor[] = [];
-  for (let charactorJson of turnJson.sortedCharactors) {
-    const charactor = createCharactor(charactorJson.name, charactorJson.race, charactorJson.blessing, charactorJson.clothing, charactorJson.weapon);
-    if (isNotWearableErorr(charactor)) {
-      return charactor;
-    }
-    if (isAcquirementNotFoundError(charactor)) {
+  for (let charactorJson of validTurn.sortedCharactors) {
+    const charactor = createCharactor(charactorJson);
+    if (isNotWearableErorr(charactor)
+     || isAcquirementNotFoundError(charactor)
+     || isJsonSchemaUnmatchError(charactor)
+    ) {
       return charactor;
     }
     sortedCharactors.push(charactor);
   }
 
   const field = {
-    climate: turnJson.field.climate,
+    climate: validTurn.field.climate,
   };
 
   return {
@@ -180,52 +293,54 @@ export function isPropertyMissingError(obj: any) obj is PropertyMissingError {
   return !!obj && typeof obj === 'object' && 'json' in obj && 'propertyName' in obj && 'message' in obj;
 };
 
-//TODO validationを入れる必要がある。
-//tsで型があると思いきやjsonからデータ型を作るところなのでjson propartyが足りてないことは有り得る。
-//型で守られていない部分なのでそのバリデーションの実装は必要なのと、各storeで共通のPropertyMissingErrorは用意したい。
-
-
-
-
-export type CreateBattle = (battleJson: BattleJson) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError;
+export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const createBattle: CreateBattle = battleJson => {
-  const datetime = Date.parse(battleJson.datetime);
 
-  const home = createParty(battleJson.home.name, battleJson.home.charactors);
-  if (isNotWearableErorr(home)) {
-    return home;
+  const validateSchema = ajv.compile(battleSchema)
+  const valid = validateSchema(battleJson)
+  if (!valid) {
+    console.debug(validateSchema.errors);
+    return {
+      error: validateSchema.errors,
+      message: 'battleのjsonデータではありません',
+    };
   }
-  if (isAcquirementNotFoundError(home)) {
-    return home;
-  }
-  if (isCharactorDuplicationError(home)) {
+  const validBattle = battleJson as BattleJson;
+
+  //TODO try catch
+  const datetime = Date.parse(validBattle.datetime);
+
+  const home = createParty(validBattle.home);
+  if (isNotWearableErorr(home)
+   || isAcquirementNotFoundError(home)
+   || isCharactorDuplicationError(home)
+   || isJsonSchemaUnmatchError(home)
+  ) {
     return home;
   }
 
-  const visitor = createParty(battleJson.visitor.name, battleJson.visitor.charactors);
-  if (isNotWearableErorr(visitor)) {
-    return visitor;
-  }
-  if (isAcquirementNotFoundError(visitor)) {
-    return visitor;
-  }
-  if (isCharactorDuplicationError(visitor)) {
+  const visitor = createParty(validBattle.visitor);
+  if (isNotWearableErorr(visitor)
+   || isAcquirementNotFoundError(visitor)
+   || isCharactorDuplicationError(visitor)
+   || isJsonSchemaUnmatchError(visitor)
+  ) {
     return visitor;
   }
 
   const turns: Turn[] = [];
-  for (let turnJson of battleJson.turns) {
+  for (let turnJson of validBattle.turns) {
     const turn = createTurn(turnJson);
-    if (isNotWearableErorr(turn)) {
-      return turn;
-    }
-    if (isAcquirementNotFoundError(turn)) {
+    if (isNotWearableErorr(turn)
+     || isAcquirementNotFoundError(turn)
+     || isJsonSchemaUnmatchError(turn)
+    ) {
       return turn;
     }
     turns.push(turn);
   }
 
-  const result = battleJson.result;
+  const result = validBattle.result;
 
   return {
     datetime,
@@ -235,25 +350,6 @@ export const createBattle: CreateBattle = battleJson => {
     result,
   };
 };
-
-export type DoSkillJson = {
-  type: 'DO_SKILL',
-  actor: CharactorJson,
-  skill: string,
-  receivers: CharactorJson[],
-};
-
-export type DoNothingJson = {
-  type: 'DO_NOTHING',
-  actor: CharactorJson,
-};
-
-export type TimePassingJson = {
-  type: 'TIME_PASSING',
-  wt: number,
-};
-
-export type ActionJson = DoSkillJson | DoNothingJson | TimePassingJson
 
 type CreateActionJson = (action: Action) => ActionJson;
 const createActionJson: CreateActionJson = action => {
@@ -276,15 +372,6 @@ const createActionJson: CreateActionJson = action => {
   }
 }
 
-export type TurnJson = {
-  datetime: string,
-  action: ActionJson,
-  sortedCharactors: CharactorJson[]
-  field: {
-    climate: string,
-  },
-};
-
 type CreateTurnJson = (turn: Turn) => BattleJson;
 const createTurnJson: CreateTurnJson = turn => ({
   datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
@@ -292,14 +379,6 @@ const createTurnJson: CreateTurnJson = turn => ({
   sortedCharactors: turn.sortedCharactors.map(createCharactorJson),
   field: turn.field,
 });
-
-export type BattleJson = {
-  datetime: string,
-  home: PartyJson,
-  visitor: PartyJson,
-  turns: TurnJson[],
-  result: string,
-};
 
 type CreateBattleJson = (battle: Battle) => BattleJson;
 const createBattleJson: CreateBattleJson = battle => ({

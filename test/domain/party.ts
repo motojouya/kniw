@@ -19,10 +19,10 @@ import type { Repository } from 'src/io/file_repository'
 
 describe('Party#createParty', function () {
   it('CharactorDuplicationError', function () {
-    const party = (createParty('team01', [
+    const party = (createParty({ name: 'team01', charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
-    ]) as Party);
+    ]}) as Party);
     assert.equal(isCharactorDuplicationError(party), true);
     if (isCharactorDuplicationError(party)) {
       assert.equal(party.message, 'Partyに同じ名前のキャラクターが存在します');
@@ -31,10 +31,10 @@ describe('Party#createParty', function () {
     }
   });
   it('ok', function () {
-    const party = (createParty('team01', [
+    const party = (createParty({ name: 'team01', charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
-    ]) as Party);
+    ]}) as Party);
 
     assert.equal(party.name, 'team01');
     assert.equal(party.charactors.length, 2);
@@ -60,10 +60,10 @@ const storeMock: Repository = {
 describe('Party#createStore', function () {
   it('save', async () => {
     const store = createStore(storeMock);
-    const party = (createParty('team01', [
+    const party = (createParty({ name: 'team01', charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
-    ]) as Party);
+    ]}) as Party);
     await store.save(party);
     assert.equal(true, true);
   });

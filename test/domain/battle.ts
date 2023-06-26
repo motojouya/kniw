@@ -7,7 +7,7 @@ import {
   start,
   isSettlement,
   createStore,
-  isActionTimePassing,
+  newBattle,
 } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
 import { createParty } from 'src/domain/party';
@@ -29,25 +29,25 @@ import { createParty } from 'src/domain/party';
 describe('Battle#start', function () {
   it('ok', function () {
 
-    const homeParty = (createParty('home', [
+    const homeParty = (createParty({ name: 'home', charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
-    ]) as Party);
-    const visitorParty = (createParty('visitor', [
+    ]}) as Party);
+    const visitorParty = (createParty({ name: 'visitor', charactors: [
       { name: 'tom', race: 'lizardman', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
       { name: 'chang', race: 'werewolf', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
-    ]) as Party);
+    ]}) as Party);
 
-    const now = new Date();
+    const battle = newBattle(new Date(), homeParty, visitorParty);
 
-    const turn = start(homeParty, visitorParty, now, {
+    const turn = start(battle, new Date(), {
       times: 0.1,
       damage: 0.1,
       accuracy: 0.1,
     });
 
-    assert.equal(isActionTimePassing(turn.action), true);
-    if (isActionTimePassing(turn.action)) {
+    assert.equal(turn.action.type, 'TIME_PASSING');
+    if (turn.action.type === 'TIME_PASSING') {
       assert.equal(turn.action.wt, 0);
     } else {
       assert.equal(true, false);

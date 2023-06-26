@@ -60,6 +60,8 @@ export type Charactor = {
   isVisitor?: boolean,
 }
 
+export type CharactorBattling = Required<Charactor>;
+
 export const charactorSchema = {
   type: "object",
   properties: {
@@ -73,8 +75,6 @@ export const charactorSchema = {
 } as const;
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
-
-export type CharactorBattling = Required<Charactor>;
 
 export type AcquirementNotFoundError = {
   acquirementName: string,
@@ -111,20 +111,21 @@ export const getPhysical: GetPhysical = charactor => addPhysicals([
   charactor.weapon.additionalPhysical,
 ]);
 
-export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | AcquirementNotFoundError;
+export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
 export const createCharactor: CreateCharactor = charactorJson => {
 
-  const validate = ajv.compile(charactorSchema)
-  const valid = validate(charactorJson)
+  const validateSchema = ajv.compile(charactorSchema)
+  const valid = validateSchema(charactorJson)
   if (!valid) {
-    console.debug(validate.errors);
+    console.debug(validateSchema.errors);
     return {
-      error: validate.errors,
+      error: validateSchema.errors,
       message: 'charactorのjsonデータではありません',
     };
   }
-
   const validCharactor = charactorJson as CharactorJson;
+
+  const name = validCharactor.name;
 
   const race = createRace(validCharactor.race);
   if (!race) {
@@ -212,7 +213,7 @@ const validate: Validate = (name, race, blessing, clothing, weapon) => {
 }
 
 export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
-export const createCharactorJson: CreateCharactorObj = charactor => ({
+export const createCharactorJson: CreateCharactorJson = charactor => ({
   name: charactor.name,
   race: charactor.race.name,
   blessing: charactor.blessing.name,
@@ -231,7 +232,7 @@ const createGet: CreateGet<Charactor> = repository => async name => {
     return null;
   }
   const charactor = createCharactor(result);
-  if (isNotWearableErorr(charactor) || isAcquirementNotFoundError(charactor)) {
+  if (isNotWearableErorr(charactor) || isAcquirementNotFoundError(charactor) || isJsonSchemaUnmatchError(charactor)) {
     return Promise.reject(charactor);
   }
   return charactor;

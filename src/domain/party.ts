@@ -4,6 +4,7 @@ import {
   getPhysical,
   isAcquirementNotFoundError,
   createCharactorJson,
+  charactorSchema,
 } from 'src/domain/charactor'
 import type { NotWearableErorr } from 'src/domain/acquirement'
 import { isNotWearableErorr } from 'src/domain/acquirement'
@@ -13,7 +14,14 @@ import type {
   CreateRemove,
   CreateList,
   CreateStore,
+  JsonSchemaUnmatchError,
 } from 'src/domain/store';
+import { isJsonSchemaUnmatchError } from 'src/domain/store';
+
+import { FromSchema } from "json-schema-to-ts";
+import Ajv from "ajv"
+
+const ajv = new Ajv();
 
 const NAMESPACE = 'party';
 
@@ -22,16 +30,40 @@ export type Party = {
   charactors: Charactor[],
 }
 
-export type CreateParty = (name: string, charactors: { name: string, race: string, blessing: string, clothing: string, weapon: string }[]) => Party | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError
-export const createParty: CreateParty = (name, charactors) => {
+export const partySchema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    charactors: { type: "array" , items: charactorSchema },
+  },
+  required: ["name", "charactors"],
+} as const;
+
+export type PartyJson = FromSchema<typeof partySchema>;
+
+export type CreateParty = (partyJson: any) => Party | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export const createParty: CreateParty = partyJson => {
+
+  const validateSchema = ajv.compile(partySchema)
+  const valid = validateSchema(partyJson)
+  if (!valid) {
+    console.debug(validateSchema.errors);
+    return {
+      error: validateSchema.errors,
+      message: 'partyのjsonデータではありません',
+    };
+  }
+  const validParty = partyJson as PartyJson;
+
+  const name = validParty.name;
 
   const charactorObjs: Charactor[] = [];
-  for (let charactor of charactors) {
-    const charactorObj = createCharactor(charactor.name, charactor.race, charactor.blessing, charactor.clothing, charactor.weapon);
-    if (isAcquirementNotFoundError(charactorObj)) {
-      return charactorObj;
-    }
-    if (isNotWearableErorr(charactorObj)) {
+  for (let charactor of validParty.charactors) {
+    const charactorObj = createCharactor(charactor);
+    if (isAcquirementNotFoundError(charactorObj)
+     || isNotWearableErorr(charactorObj)
+     || isJsonSchemaUnmatchError(charactorObj)
+    ) {
       return charactorObj;
     }
     charactorObjs.push(charactorObj);
@@ -78,13 +110,8 @@ const validate: Validate = (name, charactors) => {
   return null;
 };
 
-export type PartyJson = {
-  name: string,
-  charactors: CharactorJson[],
-};
-
-export type CreatePartyJson = (party: Patry) => PartyJson;
-export const createPartyJson: CreatePartyObj = party => ({
+export type CreatePartyJson = (party: Party) => PartyJson;
+export const createPartyJson: CreatePartyJson = party => ({
   name: party.name,
   charactors: party.charactors.map(createCharactorJson),
 });
@@ -92,7 +119,7 @@ export const createPartyJson: CreatePartyObj = party => ({
 const createSave: CreateSave<Party> =
   storage =>
   async obj =>
-  (await storage.save(NAMESPACE, name, createPartyJson(obj)));
+  (await storage.save(NAMESPACE, obj.name, createPartyJson(obj)));
 
 const createGet: CreateGet<Party> = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
@@ -100,15 +127,13 @@ const createGet: CreateGet<Party> = storage => async name => {
     return null;
   }
 
-  const party = createParty(result.name, result.charactors);
+  const party = createParty(result);
 
-  if (isNotWearableErorr(party)) {
-    return Promise.reject(party);
-  }
-  if (isAcquirementNotFoundError(party)) {
-    return Promise.reject(party);
-  }
-  if (isCharactorDuplicationError(party)) {
+  if (isNotWearableErorr(party)
+   || isAcquirementNotFoundError(party)
+   || isCharactorDuplicationError(party)
+   || isJsonSchemaUnmatchError(party)
+  ) {
     return Promise.reject(party);
   }
   return party;
