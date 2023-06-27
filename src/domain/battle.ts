@@ -40,7 +40,7 @@ import { createSkill } from 'src/domain/skillStore'
 import { isJsonSchemaUnmatchError } from 'src/domain/store';
 
 import { FromSchema } from "json-schema-to-ts";
-import Ajv from "ajv"
+import Ajv from "ajv";
 
 const ajv = new Ajv();
 
@@ -265,7 +265,7 @@ export const createTurn: CreateTurn = turnJson => {
   const validTurn: TurnJson = turnJson as TurnJson;
 
   //TODO try catch
-  const datetime = Date.parse(validTurn.datetime);
+  const datetime = new Date(Date.parse(validTurn.datetime));
 
   const action = createAction(validTurn.action);
   if (isNotWearableErorr(action)
@@ -326,7 +326,7 @@ export const createBattle: CreateBattle = battleJson => {
   const validBattle: BattleJson = battleJson as BattleJson;
 
   //TODO try catch
-  const datetime = Date.parse(validBattle.datetime);
+  const datetime = new Date(Date.parse(validBattle.datetime));
 
   const home = createParty(validBattle.home);
   if (isNotWearableErorr(home)
@@ -380,6 +380,7 @@ const createActionJson: CreateActionJson = action => {
       receivers: action.receivers.map(createCharactorJson),
     };
   }
+
   if (action.type === 'DO_NOTHING') {
     return {
       type: 'DO_NOTHING',
