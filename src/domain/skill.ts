@@ -7,15 +7,29 @@ export type ActionToCharactor = (self: Skill, actor: Charactor, randoms: Randoms
 export type ActionToField = (self: Skill, actor: Charactor, randoms: Randoms, field: Field) => Field;
 export type GetAccuracy = (self: Skill, actor: Charactor, field: Field, receiver: Charactor) => number;
 
-export type Skill = {
+export type SkillToCharactor = {
   name: string,
   label: string,
-  action: ActionToCharactor | ActionToField,
+  type: 'SKILL_TO_CHARACTOR',
+  action: ActionToCharactor,
   receiverCount: number,
   additionalWt: number,
   getAccuracy: GetAccuracy,
   description: string,
 };
+
+export type SkillToField = {
+  name: string,
+  label: string,
+  type: 'SKILL_TO_FIELD',
+  action: ActionToField,
+  receiverCount: 0,
+  additionalWt: number,
+  getAccuracy: GetAccuracy,
+  description: string,
+};
+
+export type Skill = SkillToCharactor | SkillToField;
 
 //dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
 //actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ

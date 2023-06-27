@@ -4,6 +4,7 @@ import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy } from 'src/domain/skil
 export const volcanoRise: Skill = {
   name: 'volcanoRise',
   label: 'Volcano Rise',
+  type: 'SKILL_TO_CHARACTOR',
   action: calcOrdinaryMagicalDamage,
   receiverCount: 5,
   additionalWt: 100,

@@ -121,7 +121,7 @@ export const timePassingSchema = {
 
 export type TimePassingJson = FromSchema<typeof timePassingSchema>;
 
-const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] };
+export const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] };
 export type ActionJson = FromSchema<typeof actionSchema>;
 //export type ActionJson = DoSkillJson | DoNothingJson | TimePassingJson
 
@@ -168,7 +168,17 @@ export const newBattle: NewBattle = (datetime, home, visitor) => ({
   result: GameOngoing,
 });
 
-export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
+export type SkillNotFoundError = {
+  skillName: string,
+  message: string,
+};
+
+export function isSkillNotFoundError(obj: any): obj is SkillNotFoundError {
+  return !!obj && typeof obj === 'object' && 'skillName' in obj && 'message' in obj;
+}
+
+
+export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createAction: CreateAction = actionJson => {
 
   const validateSchema = ajv.compile(actionSchema)
@@ -180,7 +190,7 @@ export const createAction: CreateAction = actionJson => {
       message: 'actionのjsonデータではありません',
     };
   }
-  const validAction = actionJson as ActionJson;
+  const validAction: ActionJson = actionJson as ActionJson;
 
 
   if (validAction.type === 'DO_SKILL') {
@@ -203,9 +213,19 @@ export const createAction: CreateAction = actionJson => {
       }
       receivers.push(receiver);
     }
+
+    const skill = createSkill(actionJson.skill);
+    if (!skill) {
+      return {
+        skillName: actionJson.skill,
+        message: actionJson.skill + 'というskillは存在しません',
+      };
+    }
+
     return {
+      type: 'DO_SKILL',
       actor: skillActor,
-      skill: createSkill(actionJson.skill),
+      skill: skill,
       receivers: receivers,
     };
   }
@@ -219,21 +239,18 @@ export const createAction: CreateAction = actionJson => {
       return nothingActor;
     }
     return {
+      type: 'DO_NOTHING',
       actor: nothingActor,
     };
   }
 
-  if (validAction.type === 'TIME_PASSING') {
-    return {
-      wt: 0 + validAction.wt,
-    };
-  }
-
-  //schema validationでtypeを既にチェックして弾いているので到達不能
-  return null;
+  return {
+    type: 'TIME_PASSING',
+    wt: 0 + validAction.wt,
+  };
 };
 
-export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
+export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createTurn: CreateTurn = turnJson => {
 
   const validateSchema = ajv.compile(turnSchema)
@@ -245,7 +262,7 @@ export const createTurn: CreateTurn = turnJson => {
       message: 'turnのjsonデータではありません',
     };
   }
-  const validTurn = turnJson as TurnJson;
+  const validTurn: TurnJson = turnJson as TurnJson;
 
   //TODO try catch
   const datetime = Date.parse(validTurn.datetime);
@@ -254,6 +271,7 @@ export const createTurn: CreateTurn = turnJson => {
   if (isNotWearableErorr(action)
    || isAcquirementNotFoundError(action)
    || isAcquirementNotFoundError(action)
+   || isSkillNotFoundError(action)
    || isJsonSchemaUnmatchError(action)
   ) {
     return action;
@@ -289,11 +307,11 @@ export type PropertyMissingError = {
   message: string,
 };
 
-export function isPropertyMissingError(obj: any) obj is PropertyMissingError {
+export function isPropertyMissingError(obj: any): obj is PropertyMissingError {
   return !!obj && typeof obj === 'object' && 'json' in obj && 'propertyName' in obj && 'message' in obj;
 };
 
-export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createBattle: CreateBattle = battleJson => {
 
   const validateSchema = ajv.compile(battleSchema)
@@ -305,7 +323,7 @@ export const createBattle: CreateBattle = battleJson => {
       message: 'battleのjsonデータではありません',
     };
   }
-  const validBattle = battleJson as BattleJson;
+  const validBattle: BattleJson = battleJson as BattleJson;
 
   //TODO try catch
   const datetime = Date.parse(validBattle.datetime);
@@ -333,6 +351,7 @@ export const createBattle: CreateBattle = battleJson => {
     const turn = createTurn(turnJson);
     if (isNotWearableErorr(turn)
      || isAcquirementNotFoundError(turn)
+     || isSkillNotFoundError(turn)
      || isJsonSchemaUnmatchError(turn)
     ) {
       return turn;
@@ -344,7 +363,7 @@ export const createBattle: CreateBattle = battleJson => {
 
   return {
     datetime,
-    home
+    home,
     visitor,
     turns,
     result,
@@ -355,6 +374,7 @@ type CreateActionJson = (action: Action) => ActionJson;
 const createActionJson: CreateActionJson = action => {
   if (action.type === 'DO_SKILL') {
     return {
+      type: 'DO_SKILL',
       actor: createCharactorJson(action.actor),
       skill: action.skill.name,
       receivers: action.receivers.map(createCharactorJson),
@@ -362,17 +382,18 @@ const createActionJson: CreateActionJson = action => {
   }
   if (action.type === 'DO_NOTHING') {
     return {
+      type: 'DO_NOTHING',
       actor: createCharactorJson(action.actor),
     };
   }
-  if (action.type === 'TIME_PASSING') {
-    return {
-      wt: action.wt,
-    };
-  }
+
+  return {
+    type: 'TIME_PASSING',
+    wt: action.wt,
+  };
 }
 
-type CreateTurnJson = (turn: Turn) => BattleJson;
+type CreateTurnJson = (turn: Turn) => TurnJson;
 const createTurnJson: CreateTurnJson = turn => ({
   datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
   action: createActionJson(turn.action),
@@ -385,7 +406,7 @@ const createBattleJson: CreateBattleJson = battle => ({
   datetime: battle.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
   home: createPartyJson(battle.home),
   visitor: createPartyJson(battle.visitor),
-  turns: battle.turns.map(createTurnJson);
+  turns: battle.turns.map(createTurnJson),
   result: battle.result,
 });
 
@@ -411,9 +432,10 @@ function arrayLast<T>(ary: Array<T>): T {
 export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
 export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
-  const newTurn = {
+  const newTurn: Turn = {
     datetime,
     action: {
+      type: 'DO_SKILL',
       actor,
       skill,
       receivers,
@@ -422,7 +444,7 @@ export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => 
     field: lastTurn.field,
   };
 
-  if (skill.receiverCount === 0) {
+  if (skill.type === 'SKILL_TO_FIELD') {
     newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
   } else {
     const resultReceivers = receivers.map(receiver => skill.action(skill, actor, randoms, lastTurn.field, receiver));
@@ -443,9 +465,12 @@ export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => 
 export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn
 export const stay: Stay = (battle, actor, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
-  const newTurn = {
+  const newTurn: Turn = {
     datetime,
-    action: { actor },
+    action: {
+      type: 'DO_NOTHING',
+      actor,
+    },
     sortedCharactors: lastTurn.sortedCharactors,
     field: lastTurn.field,
   };
@@ -483,12 +508,15 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
 export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn
 export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
-  const newTurn = {
+  const newTurn: Turn = {
     datetime,
-    action: { wt },
+    action: {
+      type: "TIME_PASSING",
+      wt,
+    },
     sortedCharactors: lastTurn.sortedCharactors,
     field: {
-      climate: changeClimate(randoms)
+      climate: changeClimate(randoms),
     },
   };
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => waitCharactor(charactor, wt, randoms));
@@ -528,7 +556,10 @@ const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
 export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
 export const start: Start = (battle, datetime, randoms) => ({
   datetime,
-  action: { wt: 0 },
+  action: {
+    type: 'TIME_PASSING',
+    wt: 0,
+  },
   sortedCharactors: sortByWT([...battle.home.charactors, ...battle.visitor.charactors]),
   field: {
     climate: changeClimate(randoms)
@@ -555,27 +586,36 @@ export const isSettlement: IsSettlement = battle => {
 
 //TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
 const createSave: CreateSave<Battle> =
-  storage =>
+  repository =>
   async obj =>
-  (await storage.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), createBattleJson(obj)));
+  (await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), createBattleJson(obj)));
 
-const createGet: CreateGet<Battle> = storage => async name => {
-  const result = await storage.get(NAMESPACE, name);
+const createGet: CreateGet<Battle> = repository => async name => {
+  const result = await repository.get(NAMESPACE, name);
   if (!result) {
     return null;
   }
-  return createBattle((result as BattleJson));
+  const battle = createBattle(result);
+
+  if (isNotWearableErorr(battle)
+   || isAcquirementNotFoundError(battle)
+   || isCharactorDuplicationError(battle)
+   || isJsonSchemaUnmatchError(battle)
+  ) {
+    return Promise.reject(battle);
+  }
+  return battle;
 }
 
 const createRemove: CreateRemove =
-  storage =>
+  repository =>
   async name =>
-  (await storage.remove(NAMESPACE, name));
+  (await repository.remove(NAMESPACE, name));
 
 const createList: CreateList =
-  storage =>
+  repository =>
   async () =>
-  (await storage.list(NAMESPACE));
+  (await repository.list(NAMESPACE));
 
 export const createStore: CreateStore<Battle> = repository => {
   repository.checkNamespace(NAMESPACE);
