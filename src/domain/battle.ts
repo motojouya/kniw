@@ -1,4 +1,4 @@
-import type { Field } from 'src/domain/field';
+import type { Field, Climate } from 'src/domain/field';
 import type {
   Party,
   PartyJson,
@@ -40,7 +40,7 @@ import { createSkill } from 'src/domain/skillStore'
 import { isJsonSchemaUnmatchError } from 'src/domain/store';
 
 import { FromSchema } from "json-schema-to-ts";
-import Ajv from "ajv";
+import Ajv from "ajv"
 
 const ajv = new Ajv();
 
@@ -121,7 +121,7 @@ export const timePassingSchema = {
 
 export type TimePassingJson = FromSchema<typeof timePassingSchema>;
 
-export const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] };
+export const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] } as const;
 export type ActionJson = FromSchema<typeof actionSchema>;
 //export type ActionJson = DoSkillJson | DoNothingJson | TimePassingJson
 
@@ -290,7 +290,7 @@ export const createTurn: CreateTurn = turnJson => {
   }
 
   const field = {
-    climate: validTurn.field.climate,
+    climate: (validTurn.field.climate as Climate),
   };
 
   return {

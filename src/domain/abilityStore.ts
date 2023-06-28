@@ -1,4 +1,5 @@
 import type { Ability } from 'src/domain/ability'
+import * as abilities from 'src/data/ability'
 
 type AbilityDictionary = { [name: string]: Ability };
 
