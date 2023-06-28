@@ -16,7 +16,6 @@ import type {
   CreateRemove,
   CreateList,
   CreateStore,
-  JsonSchemaUnmatchError,
 } from 'src/domain/store';
 import type { Randoms } from 'src/domain/random';
 
@@ -37,12 +36,13 @@ import {
 import { changeClimate } from 'src/domain/field';
 import { isNotWearableErorr } from 'src/domain/acquirement'
 import { createSkill } from 'src/domain/skillStore'
-import { isJsonSchemaUnmatchError } from 'src/domain/store';
+import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
+
+import { parse } from 'date-fns' 
+//import ja from 'date-fns/locale/ja'
 
 import { FromSchema } from "json-schema-to-ts";
-import Ajv from "ajv"
-
-const ajv = new Ajv();
+import { createValidationCompiler } from 'src/io/json_schema';
 
 const NAMESPACE = 'battle';
 
@@ -123,14 +123,12 @@ export type TimePassingJson = FromSchema<typeof timePassingSchema>;
 
 export const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] } as const;
 export type ActionJson = FromSchema<typeof actionSchema>;
-//export type ActionJson = DoSkillJson | DoNothingJson | TimePassingJson
 
 export const turnSchema = {
   type: "object",
   properties: {
     datetime: { type: "string", format: "date-time" },
     action: actionSchema,
-    //action: { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] },
     sortedCharactors: { type: "array", items: charactorSchema },
     field: {
       type: "object",
@@ -168,33 +166,31 @@ export const newBattle: NewBattle = (datetime, home, visitor) => ({
   result: GameOngoing,
 });
 
-export type SkillNotFoundError = {
-  skillName: string,
-  message: string,
-};
-
-export function isSkillNotFoundError(obj: any): obj is SkillNotFoundError {
-  return !!obj && typeof obj === 'object' && 'skillName' in obj && 'message' in obj;
+export class SkillNotFoundError {
+  constructor(
+    public skillName: string,
+    public message: string,
+  ) {}
 }
 
+export function isSkillNotFoundError(obj: any): obj is SkillNotFoundError {
+  return obj instanceof SkillNotFoundError;
+}
 
 export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createAction: CreateAction = actionJson => {
 
-  const validateSchema = ajv.compile(actionSchema)
-  const valid = validateSchema(actionJson)
-  if (!valid) {
-    console.debug(validateSchema.errors);
-    return {
-      error: validateSchema.errors,
-      message: 'actionのjsonデータではありません',
-    };
+  const compile = createValidationCompiler();
+  const validateSchema = compile(actionSchema)
+  if (!validateSchema(actionJson)) {
+    // @ts-ignore
+    const errors = validateSchema.errors;
+    console.debug(errors);
+    return new JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
   }
-  const validAction: ActionJson = actionJson as ActionJson;
 
-
-  if (validAction.type === 'DO_SKILL') {
-    const skillActor = createCharactor(validAction.actor);
+  if (actionJson.type === 'DO_SKILL') {
+    const skillActor = createCharactor(actionJson.actor);
     if (isNotWearableErorr(skillActor)
      || isAcquirementNotFoundError(skillActor)
      || isJsonSchemaUnmatchError(skillActor)
@@ -203,7 +199,7 @@ export const createAction: CreateAction = actionJson => {
     }
 
     const receivers: Charactor[] = [];
-    for (let receiverJson of validAction.receivers) {
+    for (let receiverJson of actionJson.receivers) {
       const receiver = createCharactor(receiverJson);
       if (isNotWearableErorr(receiver)
        || isAcquirementNotFoundError(receiver)
@@ -216,10 +212,7 @@ export const createAction: CreateAction = actionJson => {
 
     const skill = createSkill(actionJson.skill);
     if (!skill) {
-      return {
-        skillName: actionJson.skill,
-        message: actionJson.skill + 'というskillは存在しません',
-      };
+      return new SkillNotFoundError(actionJson.skill, actionJson.skill + 'というskillは存在しません');
     }
 
     return {
@@ -230,8 +223,8 @@ export const createAction: CreateAction = actionJson => {
     };
   }
 
-  if (validAction.type === 'DO_NOTHING') {
-    const nothingActor = createCharactor(validAction.actor);
+  if (actionJson.type === 'DO_NOTHING') {
+    const nothingActor = createCharactor(actionJson.actor);
     if (isNotWearableErorr(nothingActor)
      || isAcquirementNotFoundError(nothingActor)
      || isJsonSchemaUnmatchError(nothingActor)
@@ -246,28 +239,27 @@ export const createAction: CreateAction = actionJson => {
 
   return {
     type: 'TIME_PASSING',
-    wt: 0 + validAction.wt,
+    wt: 0 + actionJson.wt,
   };
 };
 
 export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createTurn: CreateTurn = turnJson => {
 
-  const validateSchema = ajv.compile(turnSchema)
-  const valid = validateSchema(turnJson)
-  if (!valid) {
-    console.debug(validateSchema.errors);
-    return {
-      error: validateSchema.errors,
-      message: 'turnのjsonデータではありません',
-    };
+  const compile = createValidationCompiler();
+  const validateSchema = compile(turnSchema)
+  if (!validateSchema(turnJson)) {
+    // @ts-ignore
+    const errors = validateSchema.errors;
+    console.debug(errors);
+    return new JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
   }
-  const validTurn: TurnJson = turnJson as TurnJson;
 
   //TODO try catch
-  const datetime = new Date(Date.parse(validTurn.datetime));
+  //const datetime = new Date(Date.parse(turnJson.datetime));
+  const datetime = parse(turnJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
 
-  const action = createAction(validTurn.action);
+  const action = createAction(turnJson.action);
   if (isNotWearableErorr(action)
    || isAcquirementNotFoundError(action)
    || isAcquirementNotFoundError(action)
@@ -278,7 +270,7 @@ export const createTurn: CreateTurn = turnJson => {
   }
 
   const sortedCharactors: Charactor[] = [];
-  for (let charactorJson of validTurn.sortedCharactors) {
+  for (let charactorJson of turnJson.sortedCharactors) {
     const charactor = createCharactor(charactorJson);
     if (isNotWearableErorr(charactor)
      || isAcquirementNotFoundError(charactor)
@@ -290,7 +282,7 @@ export const createTurn: CreateTurn = turnJson => {
   }
 
   const field = {
-    climate: (validTurn.field.climate as Climate),
+    climate: (turnJson.field.climate as Climate),
   };
 
   return {
@@ -301,34 +293,23 @@ export const createTurn: CreateTurn = turnJson => {
   };
 }; 
 
-export type PropertyMissingError = {
-  json: object,
-  propertyName: string,
-  message: string,
-};
-
-export function isPropertyMissingError(obj: any): obj is PropertyMissingError {
-  return !!obj && typeof obj === 'object' && 'json' in obj && 'propertyName' in obj && 'message' in obj;
-};
-
 export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createBattle: CreateBattle = battleJson => {
 
-  const validateSchema = ajv.compile(battleSchema)
-  const valid = validateSchema(battleJson)
-  if (!valid) {
-    console.debug(validateSchema.errors);
-    return {
-      error: validateSchema.errors,
-      message: 'battleのjsonデータではありません',
-    };
+  const compile = createValidationCompiler();
+  const validateSchema = compile(battleSchema)
+  if (!validateSchema(battleJson)) {
+    // @ts-ignore
+    const errors = validateSchema.errors;
+    console.debug(errors);
+    return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
   }
-  const validBattle: BattleJson = battleJson as BattleJson;
 
   //TODO try catch
-  const datetime = new Date(Date.parse(validBattle.datetime));
+  //const datetime = new Date(Date.parse(battleJson.datetime));
+  const datetime = parse(battleJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
 
-  const home = createParty(validBattle.home);
+  const home = createParty(battleJson.home);
   if (isNotWearableErorr(home)
    || isAcquirementNotFoundError(home)
    || isCharactorDuplicationError(home)
@@ -337,7 +318,7 @@ export const createBattle: CreateBattle = battleJson => {
     return home;
   }
 
-  const visitor = createParty(validBattle.visitor);
+  const visitor = createParty(battleJson.visitor);
   if (isNotWearableErorr(visitor)
    || isAcquirementNotFoundError(visitor)
    || isCharactorDuplicationError(visitor)
@@ -347,7 +328,7 @@ export const createBattle: CreateBattle = battleJson => {
   }
 
   const turns: Turn[] = [];
-  for (let turnJson of validBattle.turns) {
+  for (let turnJson of battleJson.turns) {
     const turn = createTurn(turnJson);
     if (isNotWearableErorr(turn)
      || isAcquirementNotFoundError(turn)
@@ -359,7 +340,7 @@ export const createBattle: CreateBattle = battleJson => {
     turns.push(turn);
   }
 
-  const result = validBattle.result;
+  const result = battleJson.result;
 
   return {
     datetime,
@@ -420,10 +401,6 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
   }
   return charactor;
 }
-
-////TODO util?
-//type ArrayLast<T> = (ary: Array<T>) => T;
-//const arrayLast: ArrayLast<T> = <T> ary => ary.slice(-1)[0];
 
 //TODO util?
 function arrayLast<T>(ary: Array<T>): T {
@@ -591,21 +568,13 @@ const createSave: CreateSave<Battle> =
   async obj =>
   (await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), createBattleJson(obj)));
 
-const createGet: CreateGet<Battle> = repository => async name => {
+type CreateGetBattle = CreateGet<Battle, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError>;
+const createGet: CreateGetBattle = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
   if (!result) {
     return null;
   }
-  const battle = createBattle(result);
-
-  if (isNotWearableErorr(battle)
-   || isAcquirementNotFoundError(battle)
-   || isCharactorDuplicationError(battle)
-   || isJsonSchemaUnmatchError(battle)
-  ) {
-    return Promise.reject(battle);
-  }
-  return battle;
+  return createBattle(result);
 }
 
 const createRemove: CreateRemove =
@@ -618,7 +587,8 @@ const createList: CreateList =
   async () =>
   (await repository.list(NAMESPACE));
 
-export const createStore: CreateStore<Battle> = repository => {
+type CreateStoreBattle = CreateStore<Battle, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError>;
+export const createStore: CreateStoreBattle = repository => {
   repository.checkNamespace(NAMESPACE);
   return {
     save: createSave(repository),

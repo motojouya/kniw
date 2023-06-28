@@ -70,9 +70,10 @@ describe('Party#createStore', function () {
   it('get', async () => {
     const store = createStore(storeMock);
     const party = await store.get('team01');
-    if (party) {
-      assert.equal(party.name, 'team01');
-      const charactors = party.charactors;
+    const typedParty = party as Party;
+    if (typedParty) {
+      assert.equal(typedParty.name, 'team01');
+      const charactors = typedParty.charactors;
       assert.equal(charactors.length, 2);
       assert.equal(charactors[0].name, 'sam');
       assert.equal(charactors[0].race.name, 'human');

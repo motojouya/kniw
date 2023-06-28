@@ -22,14 +22,11 @@ import type {
   CreateRemove,
   CreateList,
   CreateStore,
-  JsonSchemaUnmatchError,
 } from 'src/domain/store';
-import { isJsonSchemaUnmatchError } from 'src/domain/store';
+import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
 
 import { FromSchema } from "json-schema-to-ts";
-import Ajv from "ajv"
-
-const ajv = new Ajv();
+import { createValidationCompiler } from 'src/io/json_schema'
 
 const NAMESPACE = 'charactor';
 
@@ -76,14 +73,16 @@ export const charactorSchema = {
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
 
-export type AcquirementNotFoundError = {
-  acquirementName: string,
-  type: string,
-  message: string,
-};
+export class AcquirementNotFoundError {
+  constructor(
+    public acquirementName: string,
+    public type: string,
+    public message: string,
+  ) {}
+}
 
 export function isAcquirementNotFoundError(obj: any): obj is AcquirementNotFoundError {
-  return !!obj && typeof obj === 'object' && 'acquirementName' in obj && 'type' in obj && 'message' in obj;
+  return obj instanceof AcquirementNotFoundError;
 }
 
 export type GetAbilities = (charactor: Charactor) => Ability[];
@@ -114,53 +113,35 @@ export const getPhysical: GetPhysical = charactor => addPhysicals([
 export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
 export const createCharactor: CreateCharactor = charactorJson => {
 
-  const validateSchema = ajv.compile(charactorSchema)
-  const valid = validateSchema(charactorJson)
-  if (!valid) {
-    console.debug(validateSchema.errors);
-    return {
-      error: validateSchema.errors,
-      message: 'charactorのjsonデータではありません',
-    };
+  const compile = createValidationCompiler();
+  const validateSchema = compile(charactorSchema)
+  if (!validateSchema(charactorJson)) {
+    // @ts-ignore
+    const errors = validateSchema.errors;
+    console.debug(errors);
+    return new JsonSchemaUnmatchError(errors, 'charactorのjsonデータではありません');
   }
-  const validCharactor = charactorJson as CharactorJson;
 
-  const name = validCharactor.name;
+  const name = charactorJson.name;
 
-  const race = createRace(validCharactor.race);
+  const race = createRace(charactorJson.race);
   if (!race) {
-    return {
-      acquirementName: validCharactor.race,
-      type: 'race',
-      message: validCharactor.race + 'という種族は存在しません',
-    };
+    return new AcquirementNotFoundError(charactorJson.race, 'race', charactorJson.race + 'という種族は存在しません');
   }
 
-  const blessing = createBlessing(validCharactor.blessing);
+  const blessing = createBlessing(charactorJson.blessing);
   if (!blessing) {
-    return {
-      acquirementName: validCharactor.blessing,
-      type: 'blessing',
-      message: validCharactor.blessing + 'という祝福は存在しません',
-    };
+    return new AcquirementNotFoundError(charactorJson.blessing, 'blessing', charactorJson.blessing + 'という祝福は存在しません');
   }
 
-  const clothing = createClothing(validCharactor.clothing);
+  const clothing = createClothing(charactorJson.clothing);
   if (!clothing) {
-    return {
-      acquirementName: validCharactor.clothing,
-      type: 'clothing',
-      message: validCharactor.clothing + 'という装備は存在しません',
-    };
+    return new AcquirementNotFoundError(charactorJson.clothing, 'clothing', charactorJson.clothing + 'という装備は存在しません');
   }
 
-  const weapon = createWeapon(validCharactor.weapon);
+  const weapon = createWeapon(charactorJson.weapon);
   if (!weapon) {
-    return {
-      acquirementName: validCharactor.weapon,
-      type: 'weapon',
-      message: validCharactor.weapon + 'という武器は存在しません',
-    };
+    return new AcquirementNotFoundError(charactorJson.weapon, 'weapon', charactorJson.weapon + 'という武器は存在しません');
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);
@@ -226,16 +207,14 @@ const createSave: CreateSave<Charactor> =
   async obj =>
   (await repository.save(NAMESPACE, obj.name, createCharactorJson(obj)));
 
-const createGet: CreateGet<Charactor> = repository => async name => {
+
+type CreateGetCharactor = CreateGet<Charactor, NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError>;
+const createGet: CreateGetCharactor = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
   if (!result) {
     return null;
   }
-  const charactor = createCharactor(result);
-  if (isNotWearableErorr(charactor) || isAcquirementNotFoundError(charactor) || isJsonSchemaUnmatchError(charactor)) {
-    return Promise.reject(charactor);
-  }
-  return charactor;
+  return createCharactor(result);
 }
 
 const createRemove: CreateRemove =
@@ -248,7 +227,8 @@ const createList: CreateList =
   async () =>
   (await repository.list(NAMESPACE));
 
-export const createStore: CreateStore<Charactor> = repository => {
+type CreateStoreCharactor = CreateStore<Charactor, NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError>;
+export const createStore: CreateStoreCharactor = repository => {
   repository.checkNamespace(NAMESPACE);
   return {
     save: createSave(repository),

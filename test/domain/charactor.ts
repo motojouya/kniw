@@ -85,12 +85,13 @@ describe('Charctor#createStore', function () {
   it('get', async () => {
     const store = createStore(storeMock);
     const charactor = await store.get('sam');
-    if (charactor) {
-      assert.equal(charactor.name, 'sam');
-      assert.equal(charactor.race.name, 'human');
-      assert.equal(charactor.blessing.name, 'earth');
-      assert.equal(charactor.clothing.name, 'fireRobe');
-      assert.equal(charactor.weapon.name, 'fireWand');
+    const typedCharactor = charactor as Charactor;
+    if (typedCharactor) {
+      assert.equal(typedCharactor.name, 'sam');
+      assert.equal(typedCharactor.race.name, 'human');
+      assert.equal(typedCharactor.blessing.name, 'earth');
+      assert.equal(typedCharactor.clothing.name, 'fireRobe');
+      assert.equal(typedCharactor.weapon.name, 'fireWand');
     } else {
       assert.equal(true, false);
     }

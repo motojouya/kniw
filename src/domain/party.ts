@@ -14,14 +14,11 @@ import type {
   CreateRemove,
   CreateList,
   CreateStore,
-  JsonSchemaUnmatchError,
 } from 'src/domain/store';
-import { isJsonSchemaUnmatchError } from 'src/domain/store';
+import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
 
 import { FromSchema } from "json-schema-to-ts";
-import Ajv from "ajv"
-
-const ajv = new Ajv();
+import { createValidationCompiler } from 'src/io/json_schema';
 
 const NAMESPACE = 'party';
 
@@ -44,21 +41,19 @@ export type PartyJson = FromSchema<typeof partySchema>;
 export type CreateParty = (partyJson: any) => Party | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const createParty: CreateParty = partyJson => {
 
-  const validateSchema = ajv.compile(partySchema)
-  const valid = validateSchema(partyJson)
-  if (!valid) {
-    console.debug(validateSchema.errors);
-    return {
-      error: validateSchema.errors,
-      message: 'partyのjsonデータではありません',
-    };
+  const compile = createValidationCompiler();
+  const validateSchema = compile(partySchema)
+  if (!validateSchema(partyJson)) {
+    // @ts-ignore
+    const errors = validateSchema.errors;
+    console.debug(errors);
+    return new JsonSchemaUnmatchError(errors, 'partyのjsonデータではありません');
   }
-  const validParty = partyJson as PartyJson;
 
-  const name = validParty.name;
+  const name = partyJson.name;
 
   const charactorObjs: Charactor[] = [];
-  for (let charactor of validParty.charactors) {
+  for (let charactor of partyJson.charactors) {
     const charactorObj = createCharactor(charactor);
     if (isAcquirementNotFoundError(charactorObj)
      || isNotWearableErorr(charactorObj)
@@ -80,12 +75,15 @@ export const createParty: CreateParty = partyJson => {
   }
 };
 
-export type CharactorDuplicationError = {
-  message: string,
-};
+export class CharactorDuplicationError {
+  constructor(
+    public name: string,
+    public message: string,
+  ) {}
+}
 
 export function isCharactorDuplicationError(obj: any): obj is CharactorDuplicationError {
-  return !!obj && typeof obj === 'object' && 'message' in obj;
+  return obj instanceof CharactorDuplicationError;
 }
 
 type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationError | null;
@@ -103,7 +101,7 @@ const validate: Validate = (name, charactors) => {
 
   for (let name in nameCountMap) {
     if (nameCountMap[name] > 1) {
-      return { message: 'Partyに同じ名前のキャラクターが存在します' };
+      return new CharactorDuplicationError(name, 'Partyに同じ名前のキャラクターが存在します');
     }
   }
 
@@ -121,22 +119,13 @@ const createSave: CreateSave<Party> =
   async obj =>
   (await storage.save(NAMESPACE, obj.name, createPartyJson(obj)));
 
-const createGet: CreateGet<Party> = storage => async name => {
+type CreateGetParty = CreateGet<Party, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
+const createGet: CreateGetParty = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
   if (!result) {
     return null;
   }
-
-  const party = createParty(result);
-
-  if (isNotWearableErorr(party)
-   || isAcquirementNotFoundError(party)
-   || isCharactorDuplicationError(party)
-   || isJsonSchemaUnmatchError(party)
-  ) {
-    return Promise.reject(party);
-  }
-  return party;
+  return createParty(result);
 }
 
 const createRemove: CreateRemove =
@@ -149,7 +138,8 @@ const createList: CreateList =
   async () =>
   (await storage.list(NAMESPACE));
 
-export const createStore: CreateStore<Party> = storage => {
+type CreateStoreParty = CreateStore<Party, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
+export const createStore: CreateStoreParty = storage => {
   storage.checkNamespace(NAMESPACE);
   return {
     save: createSave(storage),

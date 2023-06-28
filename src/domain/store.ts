@@ -1,29 +1,31 @@
 import type { Repository } from 'src/io/file_repository';
 
 export type Save<T> = (obj: T) => Promise<void>
-export type Get<T> = (name: string) => Promise<T | null>
+export type Get<T, E> = (name: string) => Promise<T | E | null>
 export type Remove = (name: string) => Promise<void>
 export type List = () => Promise<string[]>
 
 export type CreateSave<T> = (repository: Repository) => Save<T>
-export type CreateGet<T> = (repository: Repository) => Get<T>
+export type CreateGet<T, E> = (repository: Repository) => Get<T, E>
 export type CreateRemove = (repository: Repository) => Remove
 export type CreateList = (repository: Repository) => List
 
-export type Store<T> = {
+export type Store<T, E> = {
   save: Save<T>,
   list: List,
-  get: Get<T>,
+  get: Get<T, E>,
   remove: Remove,
 }
-export type CreateStore<T> = (repository: Repository) => Store<T>
+export type CreateStore<T, E> = (repository: Repository) => Store<T, E>
 
-export type JsonSchemaUnmatchError = {
-  error: any,
-  message: string,
-};
+export class JsonSchemaUnmatchError {
+  constructor(
+    public error: any,
+    public message: string,
+  ) {}
+}
 
 export function isJsonSchemaUnmatchError(obj: any): obj is JsonSchemaUnmatchError {
-  return !!obj && typeof obj === 'object' && 'error' in obj && 'message' in obj;
+  return obj instanceof JsonSchemaUnmatchError;
 }
 

@@ -6,12 +6,14 @@ export type SelectOption = {
   label: string,
 };
 
-export type NotApplicable = {
-  message: string,
-};
+export class NotApplicable {
+  constructor(
+    public message: string,
+  ) {}
+}
 
 export function isNotApplicable(obj: any): obj is NotApplicable {
-  return !!obj && typeof obj === 'object' && 'message' in obj;
+  return obj instanceof NotApplicable;
 }
 
 type ChangeToChoice = (option: SelectOption) => Choice;
@@ -28,7 +30,7 @@ export const textInput: TextInput = async message => {
   if ('value' in response) {
     return (response.value as string);
   } else {
-    return { message: "回答がありません" };
+    return new NotApplicable('回答がありません');
   }
 };
 
@@ -43,7 +45,7 @@ export const confirm: Confirm = async message => {
   if ('value' in response) {
     return (response.value as boolean);
   } else {
-    return { message: "回答がありません" };
+    return new NotApplicable('回答がありません');
   }
 };
 
@@ -71,7 +73,7 @@ export const multiSelect: MultiSelect = async (message, limit, options) => {
   if ('value' in response) {
     return (response.value as string[]);
   } else {
-    return { message: "回答がありません" };
+    return new NotApplicable('回答がありません');
   }
 };
 
@@ -84,7 +86,7 @@ export const select: Select = async (message, options) => {
     if (response.length > 0) {
       return response[0];
     } else {
-      return { message: "回答がありません" };
+      return new NotApplicable('回答がありません');
     }
   }
 };
