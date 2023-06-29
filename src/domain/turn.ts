@@ -113,6 +113,38 @@ export function isSkillNotFoundError(obj: any): obj is SkillNotFoundError {
   return obj instanceof SkillNotFoundError;
 }
 
+export type CreateActionJson = (action: Action) => ActionJson;
+export const createActionJson: CreateActionJson = action => {
+  if (action.type === 'DO_SKILL') {
+    return {
+      type: 'DO_SKILL',
+      actor: createCharactorJson(action.actor),
+      skill: action.skill.name,
+      receivers: action.receivers.map(createCharactorJson),
+    };
+  }
+
+  if (action.type === 'DO_NOTHING') {
+    return {
+      type: 'DO_NOTHING',
+      actor: createCharactorJson(action.actor),
+    };
+  }
+
+  return {
+    type: 'TIME_PASSING',
+    wt: action.wt,
+  };
+}
+
+export type CreateTurnJson = (turn: Turn) => TurnJson;
+export const createTurnJson: CreateTurnJson = turn => ({
+  datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+  action: createActionJson(turn.action),
+  sortedCharactors: turn.sortedCharactors.map(createCharactorJson),
+  field: turn.field,
+});
+
 export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createAction: CreateAction = actionJson => {
 
@@ -228,36 +260,4 @@ export const createTurn: CreateTurn = turnJson => {
     field,
   };
 };
-
-type CreateActionJson = (action: Action) => ActionJson;
-const createActionJson: CreateActionJson = action => {
-  if (action.type === 'DO_SKILL') {
-    return {
-      type: 'DO_SKILL',
-      actor: createCharactorJson(action.actor),
-      skill: action.skill.name,
-      receivers: action.receivers.map(createCharactorJson),
-    };
-  }
-
-  if (action.type === 'DO_NOTHING') {
-    return {
-      type: 'DO_NOTHING',
-      actor: createCharactorJson(action.actor),
-    };
-  }
-
-  return {
-    type: 'TIME_PASSING',
-    wt: action.wt,
-  };
-}
-
-export type CreateTurnJson = (turn: Turn) => TurnJson;
-export const createTurnJson: CreateTurnJson = turn => ({
-  datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-  action: createActionJson(turn.action),
-  sortedCharactors: turn.sortedCharactors.map(createCharactorJson),
-  field: turn.field,
-});
 
