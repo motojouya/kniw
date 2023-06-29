@@ -1,82 +1,65 @@
-import type { Field, Climate } from 'src/domain/field';
+import type {
+  Field,
+  Climate,
+} from 'src/domain/field';
 import type {
   Party,
   PartyJson,
-  CharactorDuplicationError,
 } from 'src/domain/party'
-import type {
-  Charactor,
-  AcquirementNotFoundError,
-} from 'src/domain/charactor'
-import type { NotWearableErorr } from 'src/domain/acquirement'
+import type { Charactor } from 'src/domain/charactor'
 import type { Skill } from 'src/domain/skill'
-import type {
-  CreateSave,
-  CreateGet,
-  CreateRemove,
-  CreateList,
-  CreateStore,
-} from 'src/domain/store';
 import type { Randoms } from 'src/domain/random';
+import type {
+  Turn,
+  TurnJson,
+} from 'src/domain/turn';
 
+import {
+  createTurn,
+  createTurnJson,
+  SkillNotFoundError,
+  isSkillNotFoundError,
+  turnSchema,
+} from 'src/domain/turn';
 import {
   createParty,
   createPartyJson,
+  CharactorDuplicationError,
   isCharactorDuplicationError,
   partySchema,
 } from 'src/domain/party'
 import {
-  createCharactor,
+  AcquirementNotFoundError,
   isAcquirementNotFoundError,
   getPhysical,
   getAbilities,
-  createCharactorJson,
-  charactorSchema,
 } from 'src/domain/charactor'
 import { changeClimate } from 'src/domain/field';
-import { isNotWearableErorr } from 'src/domain/acquirement'
-import { createSkill } from 'src/domain/skillStore'
-import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
+import {
+  NotWearableErorr,
+  isNotWearableErorr,
+} from 'src/domain/acquirement'
+import {
+  JsonSchemaUnmatchError,
+  isJsonSchemaUnmatchError,
+} from 'src/domain/store';
 
-import { parse } from 'date-fns' 
+import { parse } from 'date-fns';
 //import ja from 'date-fns/locale/ja'
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema';
 
-const NAMESPACE = 'battle';
+//TODO util?
+function arrayLast<T>(ary: Array<T>): T {
+  return ary.slice(-1)[0];
+}
 
 export type GameResult = 'ONGOING' | 'HOME' | 'VISITOR' | 'DRAW';
 export const GameOngoing: GameResult = 'ONGOING';
 export const GameHome: GameResult = 'HOME';
 export const GameVisitor: GameResult = 'VISITOR';
 export const GameDraw: GameResult = 'DRAW';
-
-export type DoSkill = {
-  type: 'DO_SKILL',
-  actor: Charactor,
-  skill: Skill,
-  receivers: Charactor[],
-};
-
-export type DoNothing = {
-  type: 'DO_NOTHING',
-  actor: Charactor,
-};
-
-export type TimePassing = {
-  type: 'TIME_PASSING',
-  wt: number,
-};
-
-export type Action = TimePassing | DoNothing | DoSkill;
-
-export type Turn = {
-  datetime: Date,
-  action: Action,
-  sortedCharactors: Charactor[],
-  field: Field,
-};
 
 export type Battle = {
   datetime: Date,
@@ -85,63 +68,6 @@ export type Battle = {
   turns: Turn[],
   result: GameResult,
 }
-
-export const doSkillSchema = {
-  type: "object",
-  properties: {
-    type: { const: "DO_SKILL" },
-    actor: charactorSchema,
-    skill: { type: "string" },
-    receivers: { type: "array", items: charactorSchema },
-  },
-  required: ["type", "actor", "skill", "receivers"],
-} as const;
-
-export type DoSkillJson = FromSchema<typeof doSkillSchema>;
-
-export const doNothingSchema = {
-  type: "object",
-  properties: {
-    type: { const: "DO_NOTHING" },
-    actor: charactorSchema,
-  },
-  required: ["type", "actor"],
-} as const;
-
-export type DoNothingJson = FromSchema<typeof doNothingSchema>;
-
-export const timePassingSchema = {
-  type: "object",
-  properties: {
-    type: { const: "TIME_PASSING" },
-    wt: { type: "integer" },
-  },
-  required: ["type", "wt"],
-} as const;
-
-export type TimePassingJson = FromSchema<typeof timePassingSchema>;
-
-export const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] } as const;
-export type ActionJson = FromSchema<typeof actionSchema>;
-
-export const turnSchema = {
-  type: "object",
-  properties: {
-    datetime: { type: "string", format: "date-time" },
-    action: actionSchema,
-    sortedCharactors: { type: "array", items: charactorSchema },
-    field: {
-      type: "object",
-      properties: {
-        climate: { type: "string" },
-      },
-      required: ["climate"],
-    },
-  },
-  required: ["datetime", "action", "sortedCharactors", "field"],
-} as const;
-
-export type TurnJson = FromSchema<typeof turnSchema>;
 
 export const battleSchema = {
   type: "object",
@@ -157,141 +83,14 @@ export const battleSchema = {
 
 export type BattleJson = FromSchema<typeof battleSchema>;
 
-export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
-export const newBattle: NewBattle = (datetime, home, visitor) => ({
-  datetime,
-  home,
-  visitor,
-  turns: [],
-  result: GameOngoing,
+export type CreateBattleJson = (battle: Battle) => BattleJson;
+export const createBattleJson: CreateBattleJson = battle => ({
+  datetime: battle.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+  home: createPartyJson(battle.home),
+  visitor: createPartyJson(battle.visitor),
+  turns: battle.turns.map(createTurnJson),
+  result: battle.result,
 });
-
-export class SkillNotFoundError {
-  constructor(
-    public skillName: string,
-    public message: string,
-  ) {}
-}
-
-export function isSkillNotFoundError(obj: any): obj is SkillNotFoundError {
-  return obj instanceof SkillNotFoundError;
-}
-
-export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
-export const createAction: CreateAction = actionJson => {
-
-  const compile = createValidationCompiler();
-  const validateSchema = compile(actionSchema)
-  if (!validateSchema(actionJson)) {
-    // @ts-ignore
-    const errors = validateSchema.errors;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
-  }
-
-  if (actionJson.type === 'DO_SKILL') {
-    const skillActor = createCharactor(actionJson.actor);
-    if (isNotWearableErorr(skillActor)
-     || isAcquirementNotFoundError(skillActor)
-     || isJsonSchemaUnmatchError(skillActor)
-    ) {
-      return skillActor;
-    }
-
-    const receivers: Charactor[] = [];
-    for (let receiverJson of actionJson.receivers) {
-      const receiver = createCharactor(receiverJson);
-      if (isNotWearableErorr(receiver)
-       || isAcquirementNotFoundError(receiver)
-       || isJsonSchemaUnmatchError(receiver)
-      ) {
-        return receiver;
-      }
-      receivers.push(receiver);
-    }
-
-    const skill = createSkill(actionJson.skill);
-    if (!skill) {
-      return new SkillNotFoundError(actionJson.skill, actionJson.skill + 'というskillは存在しません');
-    }
-
-    return {
-      type: 'DO_SKILL',
-      actor: skillActor,
-      skill: skill,
-      receivers: receivers,
-    };
-  }
-
-  if (actionJson.type === 'DO_NOTHING') {
-    const nothingActor = createCharactor(actionJson.actor);
-    if (isNotWearableErorr(nothingActor)
-     || isAcquirementNotFoundError(nothingActor)
-     || isJsonSchemaUnmatchError(nothingActor)
-    ) {
-      return nothingActor;
-    }
-    return {
-      type: 'DO_NOTHING',
-      actor: nothingActor,
-    };
-  }
-
-  return {
-    type: 'TIME_PASSING',
-    wt: 0 + actionJson.wt,
-  };
-};
-
-export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
-export const createTurn: CreateTurn = turnJson => {
-
-  const compile = createValidationCompiler();
-  const validateSchema = compile(turnSchema)
-  if (!validateSchema(turnJson)) {
-    // @ts-ignore
-    const errors = validateSchema.errors;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
-  }
-
-  //TODO try catch
-  //const datetime = new Date(Date.parse(turnJson.datetime));
-  const datetime = parse(turnJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
-
-  const action = createAction(turnJson.action);
-  if (isNotWearableErorr(action)
-   || isAcquirementNotFoundError(action)
-   || isAcquirementNotFoundError(action)
-   || isSkillNotFoundError(action)
-   || isJsonSchemaUnmatchError(action)
-  ) {
-    return action;
-  }
-
-  const sortedCharactors: Charactor[] = [];
-  for (let charactorJson of turnJson.sortedCharactors) {
-    const charactor = createCharactor(charactorJson);
-    if (isNotWearableErorr(charactor)
-     || isAcquirementNotFoundError(charactor)
-     || isJsonSchemaUnmatchError(charactor)
-    ) {
-      return charactor;
-    }
-    sortedCharactors.push(charactor);
-  }
-
-  const field = {
-    climate: (turnJson.field.climate as Climate),
-  };
-
-  return {
-    datetime,
-    action,
-    sortedCharactors,
-    field,
-  };
-}; 
 
 export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
 export const createBattle: CreateBattle = battleJson => {
@@ -351,47 +150,43 @@ export const createBattle: CreateBattle = battleJson => {
   };
 };
 
-type CreateActionJson = (action: Action) => ActionJson;
-const createActionJson: CreateActionJson = action => {
-  if (action.type === 'DO_SKILL') {
-    return {
-      type: 'DO_SKILL',
-      actor: createCharactorJson(action.actor),
-      skill: action.skill.name,
-      receivers: action.receivers.map(createCharactorJson),
-    };
+type SortByWT = (charactors: Charactor[]) => Charactor[]
+const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
+  const leftPhysical = getPhysical(left);
+  const rightPhysical = getPhysical(right);
+  const wtDiff = left.restWt - right.restWt;
+  if (wtDiff !== 0) {
+    return wtDiff;
   }
-
-  if (action.type === 'DO_NOTHING') {
-    return {
-      type: 'DO_NOTHING',
-      actor: createCharactorJson(action.actor),
-    };
+  const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
+  if (agiDiff !== 0) {
+    return agiDiff;
   }
-
-  return {
-    type: 'TIME_PASSING',
-    wt: action.wt,
-  };
-}
-
-type CreateTurnJson = (turn: Turn) => TurnJson;
-const createTurnJson: CreateTurnJson = turn => ({
-  datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-  action: createActionJson(turn.action),
-  sortedCharactors: turn.sortedCharactors.map(createCharactorJson),
-  field: turn.field,
+  const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
+  if (avdDiff !== 0) {
+    return avdDiff;
+  }
+  const hpDiff = left.hp - right.hp;
+  if (hpDiff !== 0) {
+    return hpDiff;
+  }
+  const mpDiff = left.mp - right.mp;
+  if (mpDiff !== 0) {
+    return mpDiff;
+  }
+  //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
+  //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
+  return 0;
 });
 
-type CreateBattleJson = (battle: Battle) => BattleJson;
-const createBattleJson: CreateBattleJson = battle => ({
-  datetime: battle.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-  home: createPartyJson(battle.home),
-  visitor: createPartyJson(battle.visitor),
-  turns: battle.turns.map(createTurnJson),
-  result: battle.result,
+export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
+export const newBattle: NewBattle = (datetime, home, visitor) => ({
+  datetime,
+  home,
+  visitor,
+  turns: [],
+  result: GameOngoing,
 });
-
 
 type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
@@ -400,11 +195,6 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
     return receiver;
   }
   return charactor;
-}
-
-//TODO util?
-function arrayLast<T>(ary: Array<T>): T {
-  return ary.slice(-1)[0];
 }
 
 export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
@@ -502,35 +292,6 @@ export const wait: Wait = (battle, wt, datetime, randoms) => {
   return newTurn;
 };
 
-type SortByWT = (charactors: Charactor[]) => Charactor[]
-const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
-  const leftPhysical = getPhysical(left);
-  const rightPhysical = getPhysical(right);
-  const wtDiff = left.restWt - right.restWt;
-  if (wtDiff !== 0) {
-    return wtDiff;
-  }
-  const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
-  if (agiDiff !== 0) {
-    return agiDiff;
-  }
-  const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
-  if (avdDiff !== 0) {
-    return avdDiff;
-  }
-  const hpDiff = left.hp - right.hp;
-  if (hpDiff !== 0) {
-    return hpDiff;
-  }
-  const mpDiff = left.mp - right.mp;
-  if (mpDiff !== 0) {
-    return mpDiff;
-  }
-  //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
-  //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
-  return 0;
-});
-
 export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
 export const start: Start = (battle, datetime, randoms) => ({
   datetime,
@@ -560,41 +321,5 @@ export const isSettlement: IsSettlement = battle => {
     return GameVisitor;
   }
   return GameOngoing;
-};
-
-//TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
-const createSave: CreateSave<Battle> =
-  repository =>
-  async obj =>
-  (await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), createBattleJson(obj)));
-
-type CreateGetBattle = CreateGet<Battle, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError>;
-const createGet: CreateGetBattle = repository => async name => {
-  const result = await repository.get(NAMESPACE, name);
-  if (!result) {
-    return null;
-  }
-  return createBattle(result);
-}
-
-const createRemove: CreateRemove =
-  repository =>
-  async name =>
-  (await repository.remove(NAMESPACE, name));
-
-const createList: CreateList =
-  repository =>
-  async () =>
-  (await repository.list(NAMESPACE));
-
-type CreateStoreBattle = CreateStore<Battle, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError>;
-export const createStore: CreateStoreBattle = repository => {
-  repository.checkNamespace(NAMESPACE);
-  return {
-    save: createSave(repository),
-    list: createList(repository),
-    get: createGet(repository),
-    remove: createRemove(repository),
-  }
 };
 

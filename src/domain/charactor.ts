@@ -13,22 +13,13 @@ import {
   createWeapon,
   createClothing,
   createBlessing,
-} from 'src/domain/acquirementStore'
+} from 'src/store/acquirement'
 import { Ability } from 'src/domain/ability'
 import { Skill } from 'src/domain/skill'
-import type {
-  CreateSave,
-  CreateGet,
-  CreateRemove,
-  CreateList,
-  CreateStore,
-} from 'src/domain/store';
 import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema'
-
-const NAMESPACE = 'charactor';
 
 const basePhysical: Physical = {
   MaxHP: 100,
@@ -85,30 +76,40 @@ export function isAcquirementNotFoundError(obj: any): obj is AcquirementNotFound
   return obj instanceof AcquirementNotFoundError;
 }
 
-export type GetAbilities = (charactor: Charactor) => Ability[];
-export const getAbilities: GetAbilities = charactor => [
-  ...charactor.race.abilities,
-  ...charactor.blessing.abilities,
-  ...charactor.clothing.abilities,
-  ...charactor.weapon.abilities,
-];
+export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
+export const createCharactorJson: CreateCharactorJson = charactor => ({
+  name: charactor.name,
+  race: charactor.race.name,
+  blessing: charactor.blessing.name,
+  clothing: charactor.clothing.name,
+  weapon: charactor.weapon.name,
+});
 
-export type GetSkills = (charactor: Charactor) => Skill[];
-export const getSkills: GetSkills = charactor => [
-  ...charactor.race.skills,
-  ...charactor.blessing.skills,
-  ...charactor.clothing.skills,
-  ...charactor.weapon.skills,
-];
+type Validate = (name: string, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => NotWearableErorr | null;
+const validate: Validate = (name, race, blessing, clothing, weapon) => {
 
-export type GetPhysical = (charactor: Charactor) => Physical;
-export const getPhysical: GetPhysical = charactor => addPhysicals([
-  basePhysical,
-  charactor.race.additionalPhysical,
-  charactor.blessing.additionalPhysical,
-  charactor.clothing.additionalPhysical,
-  charactor.weapon.additionalPhysical,
-]);
+  const raceResult = race.validateWearable(race, blessing, clothing, weapon);
+  if (isNotWearableErorr(raceResult)) {
+    return raceResult;
+  }
+
+  const blessingResult = blessing.validateWearable(race, blessing, clothing, weapon);
+  if (isNotWearableErorr(blessingResult)) {
+    return blessingResult;
+  }
+
+  const clothingResult = clothing.validateWearable(race, blessing, clothing, weapon);
+  if (isNotWearableErorr(clothingResult)) {
+    return clothingResult;
+  }
+
+  const weaponResult = weapon.validateWearable(race, blessing, clothing, weapon);
+  if (isNotWearableErorr(weaponResult)) {
+    return weaponResult;
+  }
+
+  return null;
+}
 
 export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
 export const createCharactor: CreateCharactor = charactorJson => {
@@ -167,74 +168,28 @@ export const createCharactor: CreateCharactor = charactorJson => {
   return someone;
 };
 
-type Validate = (name: string, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => NotWearableErorr | null;
-const validate: Validate = (name, race, blessing, clothing, weapon) => {
+export type GetAbilities = (charactor: Charactor) => Ability[];
+export const getAbilities: GetAbilities = charactor => [
+  ...charactor.race.abilities,
+  ...charactor.blessing.abilities,
+  ...charactor.clothing.abilities,
+  ...charactor.weapon.abilities,
+];
 
-  const raceResult = race.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(raceResult)) {
-    return raceResult;
-  }
+export type GetSkills = (charactor: Charactor) => Skill[];
+export const getSkills: GetSkills = charactor => [
+  ...charactor.race.skills,
+  ...charactor.blessing.skills,
+  ...charactor.clothing.skills,
+  ...charactor.weapon.skills,
+];
 
-  const blessingResult = blessing.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(blessingResult)) {
-    return blessingResult;
-  }
-
-  const clothingResult = clothing.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(clothingResult)) {
-    return clothingResult;
-  }
-
-  const weaponResult = weapon.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(weaponResult)) {
-    return weaponResult;
-  }
-
-  return null;
-}
-
-export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
-export const createCharactorJson: CreateCharactorJson = charactor => ({
-  name: charactor.name,
-  race: charactor.race.name,
-  blessing: charactor.blessing.name,
-  clothing: charactor.clothing.name,
-  weapon: charactor.weapon.name,
-});
-
-const createSave: CreateSave<Charactor> =
-  repository =>
-  async obj =>
-  (await repository.save(NAMESPACE, obj.name, createCharactorJson(obj)));
-
-
-type CreateGetCharactor = CreateGet<Charactor, NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError>;
-const createGet: CreateGetCharactor = repository => async name => {
-  const result = await repository.get(NAMESPACE, name);
-  if (!result) {
-    return null;
-  }
-  return createCharactor(result);
-}
-
-const createRemove: CreateRemove =
-  repository =>
-  async name =>
-  (await repository.remove(NAMESPACE, name));
-
-const createList: CreateList =
-  repository =>
-  async () =>
-  (await repository.list(NAMESPACE));
-
-type CreateStoreCharactor = CreateStore<Charactor, NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError>;
-export const createStore: CreateStoreCharactor = repository => {
-  repository.checkNamespace(NAMESPACE);
-  return {
-    save: createSave(repository),
-    list: createList(repository),
-    get: createGet(repository),
-    remove: createRemove(repository),
-  }
-};
+export type GetPhysical = (charactor: Charactor) => Physical;
+export const getPhysical: GetPhysical = charactor => addPhysicals([
+  basePhysical,
+  charactor.race.additionalPhysical,
+  charactor.blessing.additionalPhysical,
+  charactor.clothing.additionalPhysical,
+  charactor.weapon.additionalPhysical,
+]);
 

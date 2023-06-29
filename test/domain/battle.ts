@@ -102,6 +102,7 @@ describe('Battle#start', function () {
   // });
 });
 
+//TODO test/store/battle.ts に移動
 // const storeMock: Repository = {
 //   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
 //   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' })),
