@@ -14,7 +14,7 @@ import {
 
 import { NotWearableErorr } from 'src/domain/acquirement'
 import { AcquirementNotFoundError } from 'src/domain/charactor'
-import { JsonSchemaUnmatchError } from 'src/domain/store';
+import { JsonSchemaUnmatchError } from 'src/store/store';
 
 const NAMESPACE = 'party';
 

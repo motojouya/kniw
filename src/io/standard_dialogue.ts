@@ -12,10 +12,6 @@ export class NotApplicable {
   ) {}
 }
 
-export function isNotApplicable(obj: any): obj is NotApplicable {
-  return obj instanceof NotApplicable;
-}
-
 type ChangeToChoice = (option: SelectOption) => Choice;
 const changeToChoice: ChangeToChoice = option => ({ value: option.value, title: option.label });
 
@@ -80,7 +76,7 @@ export const multiSelect: MultiSelect = async (message, limit, options) => {
 export type Select = (message: string, options: SelectOption[]) => Promise<string | NotApplicable>
 export const select: Select = async (message, options) => {
   const response = await multiSelect(message, 1, options);
-  if (isNotApplicable(response)) {
+  if (response instanceof NotApplicable) {
     return response
   } else {
     if (response.length > 0) {

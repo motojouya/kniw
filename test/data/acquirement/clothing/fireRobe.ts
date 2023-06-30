@@ -1,6 +1,5 @@
 import assert from 'assert';
-import type { NotWearableErorr } from 'src/domain/acquirement';
-import { isNotWearableErorr } from 'src/domain/acquirement';
+import { NotWearableErorr } from 'src/domain/acquirement';
 
 import { earth } from 'src/data/acquirement/blessing/earth';
 // import { mind } from 'src/data/acquirement/blessing/mind';
@@ -25,7 +24,7 @@ describe('fireRobe#validateWearable', function () {
   });
   it('ng', function () {
     const result = fireRobe.validateWearable(human, sky, fireRobe, fireWand);
-    if (isNotWearableErorr(result)) {
+    if (result instanceof NotWearableErorr) {
       assert.equal(result.acquirement.name, 'fireRobe');
       assert.equal(result.cause.name, 'sky');
       assert.equal(result.message, 'このキャラクターの設定ではfireRobeを装備できません');

@@ -12,11 +12,8 @@ import {
   createCharactorJson,
   AcquirementNotFoundError,
 } from 'src/domain/charactor';
-import {
-  NotWearableErorr,
-  isNotWearableErorr,
-} from 'src/domain/acquirement'
-import { JsonSchemaUnmatchError } from 'src/domain/store';
+import { NotWearableErorr } from 'src/domain/acquirement'
+import { JsonSchemaUnmatchError } from 'src/store/store';
 
 const NAMESPACE = 'charactor';
 

@@ -1,14 +1,13 @@
-import type { Charactor, AcquirementNotFoundError } from 'src/domain/charactor'
+import type { Charactor } from 'src/domain/charactor'
 import {
   createCharactor,
   getPhysical,
-  isAcquirementNotFoundError,
   createCharactorJson,
   charactorSchema,
+  AcquirementNotFoundError,
 } from 'src/domain/charactor'
-import type { NotWearableErorr } from 'src/domain/acquirement'
-import { isNotWearableErorr } from 'src/domain/acquirement'
-import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
+import { NotWearableErorr } from 'src/domain/acquirement'
+import { JsonSchemaUnmatchError } from 'src/store/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema';
@@ -34,10 +33,6 @@ export class CharactorDuplicationError {
     public name: string,
     public message: string,
   ) {}
-}
-
-export function isCharactorDuplicationError(obj: any): obj is CharactorDuplicationError {
-  return obj instanceof CharactorDuplicationError;
 }
 
 export type CreatePartyJson = (party: Party) => PartyJson;
@@ -85,9 +80,9 @@ export const createParty: CreateParty = partyJson => {
   const charactorObjs: Charactor[] = [];
   for (let charactor of partyJson.charactors) {
     const charactorObj = createCharactor(charactor);
-    if (isAcquirementNotFoundError(charactorObj)
-     || isNotWearableErorr(charactorObj)
-     || isJsonSchemaUnmatchError(charactorObj)
+    if (charactorObj instanceof AcquirementNotFoundError
+     || charactorObj instanceof NotWearableErorr
+     || charactorObj instanceof JsonSchemaUnmatchError
     ) {
       return charactorObj;
     }
@@ -95,7 +90,7 @@ export const createParty: CreateParty = partyJson => {
   }
 
   const validateResult = validate(name, charactorObjs);
-  if (isCharactorDuplicationError(validateResult)) {
+  if (validateResult instanceof CharactorDuplicationError) {
     return validateResult;
   }
 

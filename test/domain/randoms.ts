@@ -1,6 +1,6 @@
 import assert from 'assert';
 import {
-  isRandomRangeError,
+  RandomRangeError,
   validateRandoms,
   createRandoms,
   createAbsolute,
@@ -10,14 +10,14 @@ describe('Randoms#validateRandoms', function () {
   it('createRandoms', function () {
     const randoms = createRandoms();
     const result = validateRandoms(randoms);
-    const isError = isRandomRangeError(result);
+    const isError = result instanceof RandomRangeError;
 
     assert.equal(isError, false);
   });
   it('createAbsolute', function () {
     const randoms = createAbsolute();
     const result = validateRandoms(randoms);
-    const isError = isRandomRangeError(result);
+    const isError = result instanceof RandomRangeError;
 
     assert.equal(isError, false);
     assert.equal(randoms.times, 1);
@@ -30,7 +30,7 @@ describe('Randoms#validateRandoms', function () {
       damage: 0,
       accuracy: 0,
     });
-    const isError = isRandomRangeError(result);
+    const isError = result instanceof RandomRangeError;
 
     assert.equal(isError, false);
   });
@@ -41,7 +41,7 @@ describe('Randoms#validateRandoms', function () {
       damage: -0.1,
       accuracy: -0.1,
     });
-    if (isRandomRangeError(result)) {
+    if (result instanceof RandomRangeError) {
       assert.ok(result);
       assert.equal(result.prop, 'times');
       assert.equal(result.value, -0.1);
@@ -56,7 +56,7 @@ describe('Randoms#validateRandoms', function () {
       damage: -0.1,
       accuracy: -0.1,
     });
-    if (isRandomRangeError(result)) {
+    if (result instanceof RandomRangeError) {
       assert.ok(result);
       assert.equal(result.prop, 'damage');
       assert.equal(result.value, -0.1);
@@ -71,7 +71,7 @@ describe('Randoms#validateRandoms', function () {
       damage: 0.1,
       accuracy: -0.1,
     });
-    if (isRandomRangeError(result)) {
+    if (result instanceof RandomRangeError) {
       assert.ok(result);
       assert.equal(result.prop, 'accuracy');
       assert.equal(result.value, -0.1);
@@ -87,7 +87,7 @@ describe('Randoms#validateRandoms', function () {
       damage: 1.1,
       accuracy: 1.1,
     });
-    if (isRandomRangeError(result)) {
+    if (result instanceof RandomRangeError) {
       assert.ok(result);
       assert.equal(result.prop, 'times');
       assert.equal(result.value, 1.1);
@@ -102,7 +102,7 @@ describe('Randoms#validateRandoms', function () {
       damage: 1.1,
       accuracy: 1.1,
     });
-    if (isRandomRangeError(result)) {
+    if (result instanceof RandomRangeError) {
       assert.ok(result);
       assert.equal(result.prop, 'damage');
       assert.equal(result.value, 1.1);
@@ -117,7 +117,7 @@ describe('Randoms#validateRandoms', function () {
       damage: 0.9,
       accuracy: 1.1,
     });
-    if (isRandomRangeError(result)) {
+    if (result instanceof RandomRangeError) {
       assert.ok(result);
       assert.equal(result.prop, 'accuracy');
       assert.equal(result.value, 1.1);

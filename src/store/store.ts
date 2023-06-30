@@ -25,7 +25,3 @@ export class JsonSchemaUnmatchError {
   ) {}
 }
 
-export function isJsonSchemaUnmatchError(obj: any): obj is JsonSchemaUnmatchError {
-  return obj instanceof JsonSchemaUnmatchError;
-}
-

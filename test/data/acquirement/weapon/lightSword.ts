@@ -1,6 +1,5 @@
 import assert from 'assert';
-import type { NotWearableErorr } from 'src/domain/acquirement';
-import { isNotWearableErorr } from 'src/domain/acquirement';
+import { NotWearableErorr } from 'src/domain/acquirement';
 
 // import { earth } from 'src/data/acquirement/blessing/earth';
 // import { mind } from 'src/data/acquirement/blessing/mind';
@@ -25,7 +24,7 @@ describe('lightSword#validateWearable', function () {
   });
   it('ng', function () {
     const result = lightSword.validateWearable(human, sky, fireRobe, lightSword);
-    if (isNotWearableErorr(result)) {
+    if (result instanceof NotWearableErorr) {
       assert.equal(result.acquirement.name, 'lightSword');
       assert.equal(result.cause.name, 'fireRobe');
       assert.equal(result.message, 'このキャラクターの設定ではlightSwordを装備できません');

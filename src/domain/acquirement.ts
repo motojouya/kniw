@@ -27,10 +27,6 @@ export class NotWearableErorr {
   ) {}
 }
 
-export function isNotWearableErorr(obj: any): obj is NotWearableErorr {
-  return obj instanceof NotWearableErorr;
-}
-
 export type CreateValidateWearable = (self: Acquirement, wearableAcquirements: { wearableRaces: string[], wearableBlessings: string[], wearableClothings: string[], wearableWeapons: string[] }) => ValidateWearable;
 export const createValidateWearable: CreateValidateWearable = (self, { wearableRaces, wearableBlessings, wearableClothings, wearableWeapons }) => (race, blessing, clothing, weapon) => {
 

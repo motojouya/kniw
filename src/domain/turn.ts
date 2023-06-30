@@ -5,13 +5,12 @@ import type { Skill } from 'src/domain/skill'
 import {
   createCharactor,
   AcquirementNotFoundError,
-  isAcquirementNotFoundError,
   createCharactorJson,
   charactorSchema,
 } from 'src/domain/charactor'
-import { NotWearableErorr, isNotWearableErorr } from 'src/domain/acquirement'
+import { NotWearableErorr } from 'src/domain/acquirement'
 import { createSkill } from 'src/store/skill'
-import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
+import { JsonSchemaUnmatchError } from 'src/store/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema';
@@ -109,10 +108,6 @@ export class SkillNotFoundError {
   ) {}
 }
 
-export function isSkillNotFoundError(obj: any): obj is SkillNotFoundError {
-  return obj instanceof SkillNotFoundError;
-}
-
 export type CreateActionJson = (action: Action) => ActionJson;
 export const createActionJson: CreateActionJson = action => {
   if (action.type === 'DO_SKILL') {
@@ -159,9 +154,9 @@ export const createAction: CreateAction = actionJson => {
 
   if (actionJson.type === 'DO_SKILL') {
     const skillActor = createCharactor(actionJson.actor);
-    if (isNotWearableErorr(skillActor)
-     || isAcquirementNotFoundError(skillActor)
-     || isJsonSchemaUnmatchError(skillActor)
+    if (skillActor instanceof NotWearableErorr
+     || skillActor instanceof AcquirementNotFoundError
+     || skillActor instanceof JsonSchemaUnmatchError
     ) {
       return skillActor;
     }
@@ -169,9 +164,9 @@ export const createAction: CreateAction = actionJson => {
     const receivers: Charactor[] = [];
     for (let receiverJson of actionJson.receivers) {
       const receiver = createCharactor(receiverJson);
-      if (isNotWearableErorr(receiver)
-       || isAcquirementNotFoundError(receiver)
-       || isJsonSchemaUnmatchError(receiver)
+      if (receiver instanceof NotWearableErorr
+       || receiver instanceof AcquirementNotFoundError
+       || receiver instanceof JsonSchemaUnmatchError
       ) {
         return receiver;
       }
@@ -193,9 +188,9 @@ export const createAction: CreateAction = actionJson => {
 
   if (actionJson.type === 'DO_NOTHING') {
     const nothingActor = createCharactor(actionJson.actor);
-    if (isNotWearableErorr(nothingActor)
-     || isAcquirementNotFoundError(nothingActor)
-     || isJsonSchemaUnmatchError(nothingActor)
+    if (nothingActor instanceof NotWearableErorr
+     || nothingActor instanceof AcquirementNotFoundError
+     || nothingActor instanceof JsonSchemaUnmatchError
     ) {
       return nothingActor;
     }
@@ -228,11 +223,11 @@ export const createTurn: CreateTurn = turnJson => {
   const datetime = parse(turnJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
 
   const action = createAction(turnJson.action);
-  if (isNotWearableErorr(action)
-   || isAcquirementNotFoundError(action)
-   || isAcquirementNotFoundError(action)
-   || isSkillNotFoundError(action)
-   || isJsonSchemaUnmatchError(action)
+  if (action instanceof NotWearableErorr
+   || action instanceof AcquirementNotFoundError
+   || action instanceof AcquirementNotFoundError
+   || action instanceof SkillNotFoundError
+   || action instanceof JsonSchemaUnmatchError
   ) {
     return action;
   }
@@ -240,9 +235,9 @@ export const createTurn: CreateTurn = turnJson => {
   const sortedCharactors: Charactor[] = [];
   for (let charactorJson of turnJson.sortedCharactors) {
     const charactor = createCharactor(charactorJson);
-    if (isNotWearableErorr(charactor)
-     || isAcquirementNotFoundError(charactor)
-     || isJsonSchemaUnmatchError(charactor)
+    if (charactor instanceof NotWearableErorr
+     || charactor instanceof AcquirementNotFoundError
+     || charactor instanceof JsonSchemaUnmatchError
     ) {
       return charactor;
     }

@@ -1,4 +1,8 @@
-import { Randoms, validateRandoms, isRandomRangeError } from 'src/domain/random'
+import {
+  Randoms,
+  validateRandoms,
+  RandomRangeError,
+} from 'src/domain/random'
 
 export type Climate = 'SUNNY' | 'RAIN' | 'STORM' | 'SNOW' | 'FOGGY';
 type ClimateParcent = {
@@ -18,7 +22,7 @@ export type ChangeClimate = (randoms: Randoms) => Climate;
 export const changeClimate: ChangeClimate = randoms => {
 
   const validateResult = validateRandoms(randoms);
-  if (isRandomRangeError(validateResult)) {
+  if (validateResult instanceof RandomRangeError) {
     console.debug(validateResult);
     throw new Error(validateResult.message);
   }

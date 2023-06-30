@@ -18,31 +18,22 @@ import {
   createTurn,
   createTurnJson,
   SkillNotFoundError,
-  isSkillNotFoundError,
   turnSchema,
 } from 'src/domain/turn';
 import {
   createParty,
   createPartyJson,
   CharactorDuplicationError,
-  isCharactorDuplicationError,
   partySchema,
 } from 'src/domain/party'
 import {
   AcquirementNotFoundError,
-  isAcquirementNotFoundError,
   getPhysical,
   getAbilities,
 } from 'src/domain/charactor'
 import { changeClimate } from 'src/domain/field';
-import {
-  NotWearableErorr,
-  isNotWearableErorr,
-} from 'src/domain/acquirement'
-import {
-  JsonSchemaUnmatchError,
-  isJsonSchemaUnmatchError,
-} from 'src/domain/store';
+import { NotWearableErorr } from 'src/domain/acquirement'
+import { JsonSchemaUnmatchError } from 'src/store/store';
 
 import { parse } from 'date-fns';
 //import ja from 'date-fns/locale/ja'
@@ -51,9 +42,7 @@ import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema';
 
 //TODO util?
-function arrayLast<T>(ary: Array<T>): T {
-  return ary.slice(-1)[0];
-}
+const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
 export type GameResult = 'ONGOING' | 'HOME' | 'VISITOR' | 'DRAW';
 export const GameOngoing: GameResult = 'ONGOING';
@@ -109,19 +98,19 @@ export const createBattle: CreateBattle = battleJson => {
   const datetime = parse(battleJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
 
   const home = createParty(battleJson.home);
-  if (isNotWearableErorr(home)
-   || isAcquirementNotFoundError(home)
-   || isCharactorDuplicationError(home)
-   || isJsonSchemaUnmatchError(home)
+  if (home instanceof NotWearableErorr
+   || home instanceof AcquirementNotFoundError
+   || home instanceof CharactorDuplicationError
+   || home instanceof JsonSchemaUnmatchError
   ) {
     return home;
   }
 
   const visitor = createParty(battleJson.visitor);
-  if (isNotWearableErorr(visitor)
-   || isAcquirementNotFoundError(visitor)
-   || isCharactorDuplicationError(visitor)
-   || isJsonSchemaUnmatchError(visitor)
+  if (visitor instanceof NotWearableErorr
+   || visitor instanceof AcquirementNotFoundError
+   || visitor instanceof CharactorDuplicationError
+   || visitor instanceof JsonSchemaUnmatchError
   ) {
     return visitor;
   }
@@ -129,10 +118,10 @@ export const createBattle: CreateBattle = battleJson => {
   const turns: Turn[] = [];
   for (let turnJson of battleJson.turns) {
     const turn = createTurn(turnJson);
-    if (isNotWearableErorr(turn)
-     || isAcquirementNotFoundError(turn)
-     || isSkillNotFoundError(turn)
-     || isJsonSchemaUnmatchError(turn)
+    if (turn instanceof NotWearableErorr
+     || turn instanceof AcquirementNotFoundError
+     || turn instanceof SkillNotFoundError
+     || turn instanceof JsonSchemaUnmatchError
     ) {
       return turn;
     }

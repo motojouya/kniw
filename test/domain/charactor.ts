@@ -5,18 +5,18 @@ import type { Repository } from 'src/io/file_repository'
 
 import {
   createCharactor,
-  isAcquirementNotFoundError,
+  AcquirementNotFoundError,
   getAbilities,
   getSkills,
   getPhysical,
 } from 'src/domain/charactor';
-import { isNotWearableErorr } from 'src/domain/acquirement';
+import { NotWearableErorr } from 'src/domain/acquirement';
 
 describe('Charctor#createCharactor', function () {
   it('AcquirementNotFoundError', function () {
     const charactor = createCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01' });
-    assert.equal(isAcquirementNotFoundError(charactor), true);
-    if (isAcquirementNotFoundError(charactor)) {
+    assert.equal(charactor instanceof AcquirementNotFoundError, true);
+    if (charactor instanceof AcquirementNotFoundError) {
       assert.equal(charactor.acquirementName, 'race01');
       assert.equal(charactor.type, 'race');
       assert.equal(charactor.message, 'race01という種族は存在しません');
@@ -26,8 +26,8 @@ describe('Charctor#createCharactor', function () {
   });
   it('NotWearableErorr', function () {
     const charactor = createCharactor({ name: 'sam', race: 'fairy', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' });
-    assert.equal(isNotWearableErorr(charactor), true);
-    if (isNotWearableErorr(charactor)) {
+    assert.equal(charactor instanceof NotWearableErorr, true);
+    if (charactor instanceof NotWearableErorr) {
       assert.equal(charactor.acquirement.name, 'earth');
       assert.equal(charactor.cause.name, 'fairy');
       assert.equal(charactor.message, 'このキャラクターの設定ではearthを装備できません');

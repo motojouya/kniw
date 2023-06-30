@@ -6,7 +6,6 @@ import {
   Clothing,
   Blessing,
   NotWearableErorr,
-  isNotWearableErorr,
 } from 'src/domain/acquirement'
 import {
   createRace,
@@ -16,7 +15,7 @@ import {
 } from 'src/store/acquirement'
 import { Ability } from 'src/domain/ability'
 import { Skill } from 'src/domain/skill'
-import { JsonSchemaUnmatchError, isJsonSchemaUnmatchError } from 'src/domain/store';
+import { JsonSchemaUnmatchError } from 'src/store/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema'
@@ -72,10 +71,6 @@ export class AcquirementNotFoundError {
   ) {}
 }
 
-export function isAcquirementNotFoundError(obj: any): obj is AcquirementNotFoundError {
-  return obj instanceof AcquirementNotFoundError;
-}
-
 export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
 export const createCharactorJson: CreateCharactorJson = charactor => ({
   name: charactor.name,
@@ -89,22 +84,22 @@ type Validate = (name: string, race: Race, blessing: Blessing, clothing: Clothin
 const validate: Validate = (name, race, blessing, clothing, weapon) => {
 
   const raceResult = race.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(raceResult)) {
+  if (raceResult instanceof NotWearableErorr) {
     return raceResult;
   }
 
   const blessingResult = blessing.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(blessingResult)) {
+  if (blessingResult instanceof NotWearableErorr) {
     return blessingResult;
   }
 
   const clothingResult = clothing.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(clothingResult)) {
+  if (clothingResult instanceof NotWearableErorr) {
     return clothingResult;
   }
 
   const weaponResult = weapon.validateWearable(race, blessing, clothing, weapon);
-  if (isNotWearableErorr(weaponResult)) {
+  if (weaponResult instanceof NotWearableErorr) {
     return weaponResult;
   }
 
@@ -146,7 +141,7 @@ export const createCharactor: CreateCharactor = charactorJson => {
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);
-  if (isNotWearableErorr(validateResult)) {
+  if (validateResult instanceof NotWearableErorr) {
     return validateResult;
   }
 

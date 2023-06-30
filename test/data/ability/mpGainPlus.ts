@@ -1,6 +1,5 @@
 import assert from 'assert';
 import type { NotWearableErorr } from 'src/domain/acquirement';
-import { isNotWearableErorr } from 'src/domain/acquirement';
 
 import { Charactor, createCharactor } from 'src/domain/charactor'
 import { mpGainPlus } from 'src/data/ability/mpGainPlus';

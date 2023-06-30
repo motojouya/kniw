@@ -12,10 +12,6 @@ export class RandomRangeError {
   ) {}
 }
 
-export function isRandomRangeError(obj: any): obj is RandomRangeError {
-  return obj instanceof RandomRangeError;
-}
-
 export type ValidateRandoms = (randoms: Randoms) => null | RandomRangeError;
 export const validateRandoms: ValidateRandoms = ({ times, damage, accuracy }) => {
   if (times > 1 || times < 0) {

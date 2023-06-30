@@ -2,13 +2,12 @@ import assert from 'assert';
 import type { Party } from 'src/domain/party';
 import {
   createParty,
-  isCharactorDuplicationError,
+  CharactorDuplicationError,
 } from 'src/domain/party';
 import {
   createCharactor,
   Charactor,
 } from 'src/domain/charactor';
-import { isNotWearableErorr } from 'src/domain/acquirement';
 
 describe('Party#createParty', function () {
   it('CharactorDuplicationError', function () {
@@ -16,8 +15,8 @@ describe('Party#createParty', function () {
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
     ]}) as Party);
-    assert.equal(isCharactorDuplicationError(party), true);
-    if (isCharactorDuplicationError(party)) {
+    assert.equal(party instanceof CharactorDuplicationError, true);
+    if (party instanceof CharactorDuplicationError) {
       assert.equal(party.message, 'Partyに同じ名前のキャラクターが存在します');
     } else {
       assert.equal(true, false);

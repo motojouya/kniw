@@ -6,25 +6,25 @@ import {
   wait,
   start,
   isSettlement,
-  createStore,
   newBattle,
 } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
 import { createParty } from 'src/domain/party';
 
-// export type CreateBattle = (home: Party, visitor: Party, turns: Turn[], result: GameResult | null) => Battle;
-// export const createBattle = (datetime, home, visitor, turns, result) => ({
+// export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
+// export const createBattle: CreateBattle = battleJson => {
+// export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
+// export const newBattle: NewBattle = (datetime, home, visitor) => ({
 // export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
 // export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
 // export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn
 // export const stay: Stay = (battle, actor, datetime, randoms) => {
 // export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn
 // export const wait: Wait = (battle, wt, datetime, randoms) => {
-// export type Start = (homeParty: Party, visitorParty: Party, datetime: Date, randoms: Randoms) => Turn;
-// export const start: Start = (homeParty, visitorParty, datetime, randoms) => ({
-// export type IsSettlement = (battle: Battle) => GameResult | null;
+// export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
+// export const start: Start = (battle, datetime, randoms) => ({
+// export type IsSettlement = (battle: Battle) => GameResult;
 // export const isSettlement: IsSettlement = battle => {
-// export const createStore: CreateStore<Battle> = repository => {
 
 describe('Battle#start', function () {
   it('ok', function () {
@@ -62,8 +62,8 @@ describe('Battle#start', function () {
   });
   // it('NotWearableErorr', function () {
   //   const charactor = createCharactor('sam', 'fairy', 'earth', 'steelArmor', 'lightSword');
-  //   assert.equal(isNotWearableErorr(charactor), true);
-  //   if (isNotWearableErorr(charactor)) {
+  //   assert.equal(charactor instanceof NotWearableErorr, true);
+  //   if (charactor instanceof NotWearableErorr) {
   //     assert.equal(charactor.acquirement.name, 'earth');
   //     assert.equal(charactor.cause.name, 'fairy');
   //     assert.equal(charactor.message, 'このキャラクターの設定ではearthを装備できません');
