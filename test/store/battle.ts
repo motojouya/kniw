@@ -9,10 +9,10 @@ import {
   GameDraw
 } from 'src/domain/battle';
 import { createStore } from 'src/store/battle';
-import { parse } from 'date-fns';
+import { parse, format } from 'date-fns';
 
 export const testData = {
-  datetime: parse('2023-06-29T12:12:12', 'yyyy-MM-ddTHH:mm:ss', new Date()),
+  datetime: '2023-06-29T12:12:12',
   home: {
     name: 'home',
     charactors: [
@@ -29,7 +29,7 @@ export const testData = {
   },
   turns: [
     {
-      datetime: parse('2023-06-29T12:12:21', 'yyyy-MM-ddTHH:mm:ss', new Date()),
+      datetime: '2023-06-29T12:12:21',
       action: {
         type: 'TIME_PASSING',
         wt: 0,
@@ -56,49 +56,70 @@ const storeMock: Repository = {
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
 };
 
+
+type FormatDate = (date: Date) => string;
+const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
+
 describe('Battle#createStore', function () {
   it('save', async () => {
     const store = createStore(storeMock);
-    const party = (createParty({ name: 'team01', charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
-    ]}) as Party);
-    await store.save(party);
+    const battle = (createBattle(testData) as Battle);
+    await store.save(battle);
     assert.equal(true, true);
   });
   it('get', async () => {
     const store = createStore(storeMock);
-    const party = await store.get('team01');
-    const typedParty = party as Party;
-    if (typedParty) {
-      assert.equal(typedParty.name, 'team01');
-      const charactors = typedParty.charactors;
-      assert.equal(charactors.length, 2);
-      assert.equal(charactors[0].name, 'sam');
-      assert.equal(charactors[0].race.name, 'human');
-      assert.equal(charactors[0].blessing.name, 'earth');
-      assert.equal(charactors[0].clothing.name, 'steelArmor');
-      assert.equal(charactors[0].weapon.name, 'lightSword');
-      assert.equal(charactors[1].name, 'john');
-      assert.equal(charactors[1].race.name, 'human');
-      assert.equal(charactors[1].blessing.name, 'earth');
-      assert.equal(charactors[1].clothing.name, 'fireRobe');
-      assert.equal(charactors[1].weapon.name, 'fireWand');
+    const battle = await store.get('2023-06-29T12:12:12');
+    const typedBattle = battle as Battle;
+    if (typedBattle) {
+      assert.equal(formatDate(typedBattle.datetime), '2023-06-29T12:12:12');
+
+      const home = typedBattle.home;
+      assert.equal(home.name, 'home');
+      assert.equal(home.charactors.length, 2);
+      assert.equal(home.charactors[0].name, 'sam');
+      assert.equal(home.charactors[1].name, 'sara');
+
+      const visitor = typedBattle.visitor;
+      assert.equal(visitor.name, 'visitor');
+      assert.equal(visitor.charactors.length, 2);
+      assert.equal(visitor.charactors[0].name, 'john');
+      assert.equal(visitor.charactors[1].name, 'noa');
+
+      const turns = typedBattle.turns;
+      assert.equal(turns.length, 1);
+      assert.equal(formatDate(turns[0].datetime), '2023-06-29T12:12:21');
+      if (turns[0].action.type === 'TIME_PASSING') {
+        assert.equal(turns[0].action.type, 'TIME_PASSING');
+        assert.equal(turns[0].action.wt, 0);
+      } else {
+        assert.equal(true, false);
+      }
+
+      assert.equal(turns[0].sortedCharactors.length, 4);
+      assert.equal(turns[0].sortedCharactors[0].name, 'sam');
+      assert.equal(turns[0].sortedCharactors[1].name, 'sara');
+      assert.equal(turns[0].sortedCharactors[2].name, 'john');
+      assert.equal(turns[0].sortedCharactors[3].name, 'noa');
+
+      assert.equal(turns[0].field.climate, 'SUNNY');
+
+      assert.equal(typedBattle.result, GameOngoing);
     } else {
       assert.equal(true, false);
     }
   });
   it('remove', async () => {
     const store = createStore(storeMock);
-    await store.remove('team01');
+    await store.remove('2023-06-29T12:12:12');
     assert.equal(true, true);
   });
   it('list', async () => {
     const store = createStore(storeMock);
-    const partyList = await store.list();
-    assert.equal(partyList.length, 2);
-    assert.equal(partyList[0], 'team01');
-    assert.equal(partyList[1], 'team02');
+    const battleList = await store.list();
+    assert.equal(battleList.length, 2);
+    assert.equal(battleList[0], '2023-06-29T12:12:12');
+    assert.equal(battleList[1], '2023-06-29T15:15:15');
   });
 });
 

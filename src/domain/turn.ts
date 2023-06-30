@@ -220,7 +220,7 @@ export const createTurn: CreateTurn = turnJson => {
 
   //TODO try catch
   //const datetime = new Date(Date.parse(turnJson.datetime));
-  const datetime = parse(turnJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
+  const datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
   const action = createAction(turnJson.action);
   if (action instanceof NotWearableErorr

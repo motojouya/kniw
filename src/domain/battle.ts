@@ -95,7 +95,7 @@ export const createBattle: CreateBattle = battleJson => {
 
   //TODO try catch
   //const datetime = new Date(Date.parse(battleJson.datetime));
-  const datetime = parse(battleJson.datetime, 'yyyy-MM-ddTHH:mm:ss', new Date());
+  const datetime = parse(battleJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
   const home = createParty(battleJson.home);
   if (home instanceof NotWearableErorr
