@@ -1,3 +1,6 @@
+import type { Battle } from 'src/domain/battle';
+import type { Party } from 'src/domain/party';
+
 import assert from 'assert';
 import {
   createBattle,
@@ -7,9 +10,13 @@ import {
   start,
   isSettlement,
   newBattle,
+  GameOngoing,
+  GameHome,
+  GameVisitor,
+  GameDraw
 } from 'src/domain/battle';
-import type { Party } from 'src/domain/party';
 import { createParty } from 'src/domain/party';
+import { parse, format } from 'date-fns';
 
 // export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
 // export const createBattle: CreateBattle = battleJson => {
@@ -26,6 +33,59 @@ import { createParty } from 'src/domain/party';
 // export type IsSettlement = (battle: Battle) => GameResult;
 // export const isSettlement: IsSettlement = battle => {
 
+export const testData = {
+  datetime: '2023-06-29T12:12:12',
+  home: {
+    name: 'home',
+    charactors: [
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
+      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+    ],
+  },
+  visitor: {
+    name: 'visitor',
+    charactors: [
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
+      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+    ],
+  },
+  turns: [
+    {
+      datetime: '2023-06-29T12:12:21',
+      action: {
+        type: 'TIME_PASSING',
+        wt: 0,
+      },
+      sortedCharactors: [
+        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
+        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
+        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+      ],
+      field: {
+        climate: 'SUNNY',
+      },
+    }
+  ],
+  result: GameOngoing,
+};
+
+describe('Battle#createBattle', function () {
+  it('ok', function () {
+    const battle = createBattle(testData);
+
+    if (battle instanceof NotWearableErorr
+     || battle instanceof AcquirementNotFoundError
+     || battle instanceof CharactorDuplicationError
+     || battle instanceof SkillNotFoundError
+     || battle instanceof JsonSchemaUnmatchError
+    ) {
+      assert.equal(true, false);
+    }
+    assert.equal(battle.);
+  });
+});
+
 describe('Battle#start', function () {
   it('ok', function () {
 
@@ -39,6 +99,7 @@ describe('Battle#start', function () {
     ]}) as Party);
 
     const battle = newBattle(new Date(), homeParty, visitorParty);
+    assert.equal(battle.result, GameOngoing);
 
     const turn = start(battle, new Date(), {
       times: 0.1,
@@ -101,47 +162,4 @@ describe('Battle#start', function () {
   //   assert.equal(physical.WT, 110);
   // });
 });
-
-//TODO test/store/battle.ts に移動
-// const storeMock: Repository = {
-//   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
-//   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' })),
-//   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
-//   list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
-//   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-// };
-// 
-// describe('Charctor#createStore', function () {
-//   it('save', async () => {
-//     const store = createStore(storeMock);
-//     const charactor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-//     await store.save(charactor);
-//     assert.equal(true, true);
-//   });
-//   it('get', async () => {
-//     const store = createStore(storeMock);
-//     const charactor = await store.get('sam');
-//     if (charactor) {
-//       assert.equal(charactor.name, 'sam');
-//       assert.equal(charactor.race.name, 'human');
-//       assert.equal(charactor.blessing.name, 'earth');
-//       assert.equal(charactor.clothing.name, 'fireRobe');
-//       assert.equal(charactor.weapon.name, 'fireWand');
-//     } else {
-//       assert.equal(true, false);
-//     }
-//   });
-//   it('remove', async () => {
-//     const store = createStore(storeMock);
-//     await store.remove('sam');
-//     assert.equal(true, true);
-//   });
-//   it('list', async () => {
-//     const store = createStore(storeMock);
-//     const charactorList = await store.list();
-//     assert.equal(charactorList.length, 2);
-//     assert.equal(charactorList[0], 'sam');
-//     assert.equal(charactorList[1], 'john');
-//   });
-// });
 

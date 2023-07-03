@@ -177,6 +177,19 @@ export const newBattle: NewBattle = (datetime, home, visitor) => ({
   result: GameOngoing,
 });
 
+export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
+export const start: Start = (battle, datetime, randoms) => ({
+  datetime,
+  action: {
+    type: 'TIME_PASSING',
+    wt: 0,
+  },
+  sortedCharactors: sortByWT([...battle.home.charactors, ...battle.visitor.charactors]),
+  field: {
+    climate: changeClimate(randoms)
+  },
+});
+
 type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
   const receiver = receivers.find(receiver => charactor.name === receiver.name);
@@ -280,19 +293,6 @@ export const wait: Wait = (battle, wt, datetime, randoms) => {
 
   return newTurn;
 };
-
-export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
-export const start: Start = (battle, datetime, randoms) => ({
-  datetime,
-  action: {
-    type: 'TIME_PASSING',
-    wt: 0,
-  },
-  sortedCharactors: sortByWT([...battle.home.charactors, ...battle.visitor.charactors]),
-  field: {
-    climate: changeClimate(randoms)
-  },
-});
 
 export type IsSettlement = (battle: Battle) => GameResult;
 export const isSettlement: IsSettlement = battle => {
