@@ -223,9 +223,9 @@ export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => 
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      actor.restWt = getPhysical(actor).WT + skill.additionalWt;
+      charactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
     }
-    return actor;
+    return charactor;
   });
   newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
 

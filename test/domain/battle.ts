@@ -1,5 +1,6 @@
 import type { Battle } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
+import type { Skill } from 'src/domain/skill';
 
 import assert from 'assert';
 import {
@@ -17,6 +18,17 @@ import {
 } from 'src/domain/battle';
 import { createParty } from 'src/domain/party';
 import { parse, format } from 'date-fns';
+
+import {
+  createCharactor,
+  AcquirementNotFoundError,
+  Charactor,
+} from 'src/domain/charactor';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { SkillNotFoundError } from 'src/domain/turn';
+import { JsonSchemaUnmatchError } from 'src/store/store';
+import { createSkill } from 'src/store/skill';
 
 // export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
 // export const createBattle: CreateBattle = battleJson => {
@@ -70,6 +82,9 @@ export const testData = {
   result: GameOngoing,
 };
 
+type FormatDate = (date: Date) => string;
+const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
+
 describe('Battle#createBattle', function () {
   it('ok', function () {
     const battle = createBattle(testData);
@@ -81,8 +96,14 @@ describe('Battle#createBattle', function () {
      || battle instanceof JsonSchemaUnmatchError
     ) {
       assert.equal(true, false);
+    } else {
+      assert.equal(formatDate(battle.datetime), '2023-06-29T12:12:12');
+      assert.equal(battle.home.name, 'home');
+      assert.equal(battle.visitor.name, 'visitor');
+      assert.equal(battle.turns.length, 1);
+      assert.equal(formatDate(battle.turns[0].datetime), '2023-06-29T12:12:21');
+      assert.equal(battle.result, GameOngoing);
     }
-    assert.equal(battle.);
   });
 });
 
@@ -121,45 +142,43 @@ describe('Battle#start', function () {
     assert.equal(turn.sortedCharactors[2].name, 'sam');
     assert.equal(turn.sortedCharactors[3].name, 'tom');
   });
-  // it('NotWearableErorr', function () {
-  //   const charactor = createCharactor('sam', 'fairy', 'earth', 'steelArmor', 'lightSword');
-  //   assert.equal(charactor instanceof NotWearableErorr, true);
-  //   if (charactor instanceof NotWearableErorr) {
-  //     assert.equal(charactor.acquirement.name, 'earth');
-  //     assert.equal(charactor.cause.name, 'fairy');
-  //     assert.equal(charactor.message, 'このキャラクターの設定ではearthを装備できません');
-  //   } else {
-  //     assert.equal(true, false);
-  //   }
-  // });
-  // it('ok', function () {
-  //   const charactor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-  //   assert.equal(charactor.name, 'sam');
-  //   assert.equal(charactor.race.name, 'human');
-  //   assert.equal(charactor.blessing.name, 'earth');
-  //   assert.equal(charactor.clothing.name, 'fireRobe');
-  //   assert.equal(charactor.weapon.name, 'fireWand');
+});
 
-  //   const abilities = getAbilities(charactor);
-  //   assert.equal(abilities.length, 1);
-  //   assert.equal(abilities[0].name, 'mpGainPlus');
+describe('Battle#act', function () {
+  it('ok', function () {
+    const battle = (createBattle(testData) as Battle);
+    const actor = (createCharactor(testData.home.charactors[0]) as Charactor);
+    const receiver = (createCharactor(testData.visitor.charactors[0]) as Charactor);
+    const skill = (createSkill('chop') as Skill);
 
-  //   const skills = getSkills(charactor);
-  //   assert.equal(skills.length, 1);
-  //   assert.equal(skills[0].name, 'volcanoRise');
+    const turn = act(battle, actor, skill, [receiver], new Date(), {
+      times: 0.1,
+      damage: 0.1,
+      accuracy: 0.1,
+    });
 
-  //   const physical = getPhysical(charactor);
-  //   assert.equal(physical.MaxHP, 100);
-  //   assert.equal(physical.MaxMP, 100);
-  //   assert.equal(physical.STR, 120);
-  //   assert.equal(physical.VIT, 120);
-  //   assert.equal(physical.DEX, 100);
-  //   assert.equal(physical.AGI, 100);
-  //   assert.equal(physical.AVD, 100);
-  //   assert.equal(physical.INT, 110);
-  //   assert.equal(physical.MND, 120);
-  //   assert.equal(physical.RES, 100);
-  //   assert.equal(physical.WT, 110);
-  // });
+    assert.equal(turn.action.type, 'DO_SKILL');
+    if (turn.action.type === 'DO_SKILL') {
+      assert.equal(turn.action.actor.name, 'sam');
+      assert.equal(turn.action.skill.name, 'chop');
+      assert.equal(turn.action.receivers.length, 1);
+      assert.equal(turn.action.receivers[0].name, 'john');
+    } else {
+      assert.equal(true, false);
+    }
+
+    assert.equal(turn.field.climate, 'SUNNY');
+    assert.equal(turn.sortedCharactors.length, 4);
+    assert.equal(turn.sortedCharactors[0].name, 'sara');
+    assert.equal(turn.sortedCharactors[1].name, 'noa');
+
+    assert.equal(turn.sortedCharactors[2].name, 'john');
+    assert.equal(turn.sortedCharactors[2].hp, 99);
+    assert.equal(turn.sortedCharactors[2].restWt, 120);
+
+    assert.equal(turn.sortedCharactors[3].name, 'sam');
+    assert.equal(turn.sortedCharactors[3].hp, 100);
+    assert.equal(turn.sortedCharactors[3].restWt, 220);
+  });
 });
 
