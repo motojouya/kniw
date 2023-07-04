@@ -57,8 +57,13 @@ export const charactorSchema = {
     blessing: { type: "string" },
     clothing: { type: "string" },
     weapon: { type: "string" },
+    statuses: { type: "array", items: {} },
+    hp: { type: "integer" },
+    mp: { type: "integer" },
+    restWt: { type: "integer" },
+    isVisitor: { type: "boolean" },
   },
-  required: ["name", "race", "blessing", "clothing", "weapon"],
+  required: ["name", "race", "blessing", "clothing", "weapon", "statuses", "hp", "mp", "restWt"],
 } as const;
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
@@ -72,13 +77,27 @@ export class AcquirementNotFoundError {
 }
 
 export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
-export const createCharactorJson: CreateCharactorJson = charactor => ({
-  name: charactor.name,
-  race: charactor.race.name,
-  blessing: charactor.blessing.name,
-  clothing: charactor.clothing.name,
-  weapon: charactor.weapon.name,
-});
+export const createCharactorJson: CreateCharactorJson = charactor => {
+
+  const json = {
+    name: charactor.name,
+    race: charactor.race.name,
+    blessing: charactor.blessing.name,
+    clothing: charactor.clothing.name,
+    weapon: charactor.weapon.name,
+    statuses: Status[],
+    hp: charactor.hp,
+    mp: charactor.mp,
+    restWt: charactor.restWt,
+    isVisitor: charactor.isVisitor,
+  };
+
+  if (charactor.hasOwnProperty('isVisitor')) {
+    json.isVisitor = charactor.isVisitor;
+  }
+
+  return json;
+};
 
 type Validate = (name: string, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => NotWearableErorr | null;
 const validate: Validate = (name, race, blessing, clothing, weapon) => {
@@ -152,9 +171,9 @@ export const createCharactor: CreateCharactor = charactorJson => {
     clothing,
     weapon,
     statuses: [],
-    hp: 0,
-    mp: 0,
-    restWt: 0,
+    hp: 0 + charactorJson.hp,
+    mp: 0 + charactorJson.mp,
+    restWt: 0 + charactorJson.restWt,
   };
   const someonesPhysical = getPhysical(someone);
   someone.hp = someonesPhysical.MaxHP;

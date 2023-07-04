@@ -247,9 +247,9 @@ export const stay: Stay = (battle, actor, datetime, randoms) => {
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      actor.restWt = getPhysical(actor).WT;
+      charactor.restWt = getPhysical(charactor).WT;
     }
-    return actor;
+    return charactor;
   });
   newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
 

@@ -30,21 +30,6 @@ import { SkillNotFoundError } from 'src/domain/turn';
 import { JsonSchemaUnmatchError } from 'src/store/store';
 import { createSkill } from 'src/store/skill';
 
-// export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
-// export const createBattle: CreateBattle = battleJson => {
-// export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
-// export const newBattle: NewBattle = (datetime, home, visitor) => ({
-// export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
-// export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
-// export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn
-// export const stay: Stay = (battle, actor, datetime, randoms) => {
-// export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn
-// export const wait: Wait = (battle, wt, datetime, randoms) => {
-// export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
-// export const start: Start = (battle, datetime, randoms) => ({
-// export type IsSettlement = (battle: Battle) => GameResult;
-// export const isSettlement: IsSettlement = battle => {
-
 export const testData = {
   datetime: '2023-06-29T12:12:12',
   home: {
@@ -179,6 +164,79 @@ describe('Battle#act', function () {
     assert.equal(turn.sortedCharactors[3].name, 'sam');
     assert.equal(turn.sortedCharactors[3].hp, 100);
     assert.equal(turn.sortedCharactors[3].restWt, 220);
+  });
+});
+
+describe('Battle#stay', function () {
+  it('ok', function () {
+    const battle = (createBattle(testData) as Battle);
+    const actor = (createCharactor(testData.home.charactors[0]) as Charactor);
+
+    const turn = stay(battle, actor, new Date(), {
+      times: 0.1,
+      damage: 0.1,
+      accuracy: 0.1,
+    });
+
+    assert.equal(turn.action.type, 'DO_NOTHING');
+    if (turn.action.type === 'DO_NOTHING') {
+      assert.equal(turn.action.actor.name, 'sam');
+    } else {
+      assert.equal(true, false);
+    }
+
+    assert.equal(turn.field.climate, 'SUNNY');
+    assert.equal(turn.sortedCharactors.length, 4);
+    assert.equal(turn.sortedCharactors[0].name, 'sara');
+    assert.equal(turn.sortedCharactors[1].name, 'noa');
+    assert.equal(turn.sortedCharactors[2].name, 'sam');
+    assert.equal(turn.sortedCharactors[3].name, 'john');
+  });
+});
+
+describe('Battle#wait', function () {
+  it('ok', function () {
+    const battle = (createBattle(testData) as Battle);
+
+    const turn = wait(battle, 115, new Date(), {
+      times: 0.1,
+      damage: 0.1,
+      accuracy: 0.1,
+    });
+
+    assert.equal(turn.action.type, 'TIME_PASSING');
+    if (turn.action.type === 'TIME_PASSING') {
+      assert.equal(turn.action.wt, 115);
+    } else {
+      assert.equal(true, false);
+    }
+
+    assert.equal(turn.field.climate, 'SUNNY');
+    assert.equal(turn.sortedCharactors.length, 4);
+    assert.equal(turn.sortedCharactors[0].name, 'sam');
+    assert.equal(turn.sortedCharactors[0].restWt, 5);
+    assert.equal(turn.sortedCharactors[1].name, 'sara');
+    assert.equal(turn.sortedCharactors[1].restWt, 0);
+    assert.equal(turn.sortedCharactors[2].name, 'john');
+    assert.equal(turn.sortedCharactors[2].restWt, 5);
+    assert.equal(turn.sortedCharactors[3].name, 'noa');
+    assert.equal(turn.sortedCharactors[3].restWt, 0);
+  });
+});
+
+// export type IsSettlement = (battle: Battle) => GameResult;
+// export const isSettlement: IsSettlement = battle => {
+// return GameDraw;
+// return GameHome;
+// return GameVisitor;
+// return GameOngoing;
+describe('Battle#isSettlement', function () {
+  it('GameOngoing', function () {
+    const battle = (createBattle(testData) as Battle);
+
+    const gameResult = isSettlement(battle);
+
+    assert.equal(gameResult, 'GameOngoing');
   });
 });
 
