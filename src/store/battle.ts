@@ -14,8 +14,8 @@ import {
   DataNotFoundError,
 } from 'src/store/store';
 import {
-  createBattleJson,
-  createBattle,
+  toBattleJson,
+  toBattle,
 } from 'src/domain/battle';
 
 import { parse } from 'date-fns' 
@@ -27,7 +27,7 @@ const NAMESPACE = 'battle';
 const createSave: CreateSave<Battle> =
   repository =>
   async obj =>
-  (await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), createBattleJson(obj)));
+  (await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), toBattleJson(obj)));
 
 type CreateGetBattle = CreateGet<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 const createGet: CreateGetBattle = repository => async name => {
@@ -35,7 +35,7 @@ const createGet: CreateGetBattle = repository => async name => {
   if (!result) {
     return null;
   }
-  return createBattle(result);
+  return toBattle(result);
 }
 
 const createRemove: CreateRemove =

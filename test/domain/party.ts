@@ -1,19 +1,19 @@
 import assert from 'assert';
 import type { Party } from 'src/domain/party';
 import {
-  createParty,
+  toParty,
   CharactorDuplicationError,
 } from 'src/domain/party';
 import {
-  createCharactor,
+  toCharactor,
   Charactor,
 } from 'src/domain/charactor';
 
-describe('Party#createParty', function () {
+describe('Party#toParty', function () {
   it('CharactorDuplicationError', function () {
-    const party = (createParty({ name: 'team01', charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
+    const party = (toParty({ name: 'team01', charactors: [
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
     assert.equal(party instanceof CharactorDuplicationError, true);
     if (party instanceof CharactorDuplicationError) {
@@ -23,9 +23,9 @@ describe('Party#createParty', function () {
     }
   });
   it('ok', function () {
-    const party = (createParty({ name: 'team01', charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
+    const party = (toParty({ name: 'team01', charactors: [
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
 
     assert.equal(party.name, 'team01');

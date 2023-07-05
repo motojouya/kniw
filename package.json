@@ -10,7 +10,6 @@
     "prepare": "webpack --config webpack.config.js",
     "watch": "webpack --config webpack.dev.js --watch",
     "test": "mocha --require ts-node/register --require tsconfig-paths/register --watch-extensions ts 'test/**/*.ts'",
-    "mocha": "mocha --require ts-node/register --extensions ts,tsx --watch --watch-files src 'test/**/*.ts'",
     "testsingle": "mocha --require ts-node/register --require tsconfig-paths/register --watch-extensions ts",
     "try": "ts-node -r tsconfig-paths/register",
     "manual": "ts-node -r tsconfig-paths/register manually_test/io/standard_dialogue.ts"

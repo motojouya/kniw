@@ -3,6 +3,6 @@ import * as skills from 'src/data/skill'
 
 type SkillDictionary = { [name: string]: Skill };
 
-export type CreateSkill = (name: string) => Skill | null;
-export const createSkill: CreateSkill = name => (skills as SkillDictionary)[name];
+export type GetSkill = (name: string) => Skill | null;
+export const getSkill: GetSkill = name => (skills as SkillDictionary)[name];
 

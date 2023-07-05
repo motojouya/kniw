@@ -3,6 +3,6 @@ import * as statuses from 'src/data/status'
 
 type StatusDictionary = { [name: string]: Status };
 
-export type CreateStatus = (name: string) => Status | null;
-export const createStatus: CreateStatus = name => (statuses as StatusDictionary)[name];
+export type GetStatus = (name: string) => Status | null;
+export const getStatus: GetStatus = name => (statuses as StatusDictionary)[name];
 

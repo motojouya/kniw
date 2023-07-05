@@ -3,12 +3,12 @@ import type { Charactor } from 'src/domain/charactor'
 import type { Skill } from 'src/domain/skill'
 
 import {
-  createCharactor,
-  createCharactorJson,
+  toCharactor,
+  toCharactorJson,
   charactorSchema,
 } from 'src/domain/charactor'
 import { NotWearableErorr } from 'src/domain/acquirement'
-import { createSkill } from 'src/store/skill'
+import { getSkill } from 'src/store/skill'
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
@@ -103,21 +103,21 @@ export const turnSchema = {
 
 export type TurnJson = FromSchema<typeof turnSchema>;
 
-export type CreateActionJson = (action: Action) => ActionJson;
-export const createActionJson: CreateActionJson = action => {
+export type ToActionJson = (action: Action) => ActionJson;
+export const toActionJson: ToActionJson = action => {
   if (action.type === 'DO_SKILL') {
     return {
       type: 'DO_SKILL',
-      actor: createCharactorJson(action.actor),
+      actor: toCharactorJson(action.actor),
       skill: action.skill.name,
-      receivers: action.receivers.map(createCharactorJson),
+      receivers: action.receivers.map(toCharactorJson),
     };
   }
 
   if (action.type === 'DO_NOTHING') {
     return {
       type: 'DO_NOTHING',
-      actor: createCharactorJson(action.actor),
+      actor: toCharactorJson(action.actor),
     };
   }
 
@@ -127,16 +127,16 @@ export const createActionJson: CreateActionJson = action => {
   };
 }
 
-export type CreateTurnJson = (turn: Turn) => TurnJson;
-export const createTurnJson: CreateTurnJson = turn => ({
+export type ToTurnJson = (turn: Turn) => TurnJson;
+export const toTurnJson: ToTurnJson = turn => ({
   datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-  action: createActionJson(turn.action),
-  sortedCharactors: turn.sortedCharactors.map(createCharactorJson),
+  action: toActionJson(turn.action),
+  sortedCharactors: turn.sortedCharactors.map(toCharactorJson),
   field: turn.field,
 });
 
-export type CreateAction = (actionJson: any) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
-export const createAction: CreateAction = actionJson => {
+export type ToAction = (actionJson: any) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+export const toAction: ToAction = actionJson => {
 
   const compile = createValidationCompiler();
   const validateSchema = compile(actionSchema)
@@ -148,7 +148,7 @@ export const createAction: CreateAction = actionJson => {
   }
 
   if (actionJson.type === 'DO_SKILL') {
-    const skillActor = createCharactor(actionJson.actor);
+    const skillActor = toCharactor(actionJson.actor);
     if (skillActor instanceof NotWearableErorr
      || skillActor instanceof DataNotFoundError
      || skillActor instanceof JsonSchemaUnmatchError
@@ -158,7 +158,7 @@ export const createAction: CreateAction = actionJson => {
 
     const receivers: Charactor[] = [];
     for (let receiverJson of actionJson.receivers) {
-      const receiver = createCharactor(receiverJson);
+      const receiver = toCharactor(receiverJson);
       if (receiver instanceof NotWearableErorr
        || receiver instanceof DataNotFoundError
        || receiver instanceof JsonSchemaUnmatchError
@@ -168,7 +168,7 @@ export const createAction: CreateAction = actionJson => {
       receivers.push(receiver);
     }
 
-    const skill = createSkill(actionJson.skill);
+    const skill = getSkill(actionJson.skill);
     if (!skill) {
       return new DataNotFoundError(actionJson.skill, 'skill', actionJson.skill + 'というskillは存在しません');
     }
@@ -182,7 +182,7 @@ export const createAction: CreateAction = actionJson => {
   }
 
   if (actionJson.type === 'DO_NOTHING') {
-    const nothingActor = createCharactor(actionJson.actor);
+    const nothingActor = toCharactor(actionJson.actor);
     if (nothingActor instanceof NotWearableErorr
      || nothingActor instanceof DataNotFoundError
      || nothingActor instanceof JsonSchemaUnmatchError
@@ -201,8 +201,8 @@ export const createAction: CreateAction = actionJson => {
   };
 };
 
-export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
-export const createTurn: CreateTurn = turnJson => {
+export type ToTurn = (turnJson: any) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+export const toTurn: ToTurn = turnJson => {
 
   const compile = createValidationCompiler();
   const validateSchema = compile(turnSchema)
@@ -217,7 +217,7 @@ export const createTurn: CreateTurn = turnJson => {
   //const datetime = new Date(Date.parse(turnJson.datetime));
   const datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
-  const action = createAction(turnJson.action);
+  const action = toAction(turnJson.action);
   if (action instanceof NotWearableErorr
    || action instanceof DataNotFoundError
    || action instanceof JsonSchemaUnmatchError
@@ -227,7 +227,7 @@ export const createTurn: CreateTurn = turnJson => {
 
   const sortedCharactors: Charactor[] = [];
   for (let charactorJson of turnJson.sortedCharactors) {
-    const charactor = createCharactor(charactorJson);
+    const charactor = toCharactor(charactorJson);
     if (charactor instanceof NotWearableErorr
      || charactor instanceof DataNotFoundError
      || charactor instanceof JsonSchemaUnmatchError

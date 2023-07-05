@@ -8,8 +8,9 @@ import type {
 } from 'src/store/store';
 import type { Party } from 'src/domain/party';
 import {
-  createParty,
-  createPartyJson,
+  toParty,
+  toPartyJson,
+  CharactorDuplicationError,
 } from 'src/domain/party';
 
 import { NotWearableErorr } from 'src/domain/acquirement'
@@ -23,7 +24,7 @@ const NAMESPACE = 'party';
 const createSave: CreateSave<Party> =
   storage =>
   async obj =>
-  (await storage.save(NAMESPACE, obj.name, createPartyJson(obj)));
+  (await storage.save(NAMESPACE, obj.name, toPartyJson(obj)));
 
 type CreateGetParty = CreateGet<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 const createGet: CreateGetParty = storage => async name => {
@@ -31,7 +32,7 @@ const createGet: CreateGetParty = storage => async name => {
   if (!result) {
     return null;
   }
-  return createParty(result);
+  return toParty(result);
 }
 
 const createRemove: CreateRemove =

@@ -15,13 +15,13 @@ import type {
 } from 'src/domain/turn';
 
 import {
-  createTurn,
-  createTurnJson,
+  toTurn,
+  toTurnJson,
   turnSchema,
 } from 'src/domain/turn';
 import {
-  createParty,
-  createPartyJson,
+  toParty,
+  toPartyJson,
   CharactorDuplicationError,
   partySchema,
 } from 'src/domain/party'
@@ -73,17 +73,17 @@ export const battleSchema = {
 
 export type BattleJson = FromSchema<typeof battleSchema>;
 
-export type CreateBattleJson = (battle: Battle) => BattleJson;
-export const createBattleJson: CreateBattleJson = battle => ({
+export type ToBattleJson = (battle: Battle) => BattleJson;
+export const toBattleJson: ToBattleJson = battle => ({
   datetime: battle.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-  home: createPartyJson(battle.home),
-  visitor: createPartyJson(battle.visitor),
-  turns: battle.turns.map(createTurnJson),
+  home: toPartyJson(battle.home),
+  visitor: toPartyJson(battle.visitor),
+  turns: battle.turns.map(toTurnJson),
   result: battle.result,
 });
 
-export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
-export const createBattle: CreateBattle = battleJson => {
+export type ToBattle = (battleJson: any) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export const toBattle: ToBattle = battleJson => {
 
   const compile = createValidationCompiler();
   const validateSchema = compile(battleSchema)
@@ -98,7 +98,7 @@ export const createBattle: CreateBattle = battleJson => {
   //const datetime = new Date(Date.parse(battleJson.datetime));
   const datetime = parse(battleJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
-  const home = createParty(battleJson.home);
+  const home = toParty(battleJson.home);
   if (home instanceof NotWearableErorr
    || home instanceof DataNotFoundError
    || home instanceof CharactorDuplicationError
@@ -107,7 +107,7 @@ export const createBattle: CreateBattle = battleJson => {
     return home;
   }
 
-  const visitor = createParty(battleJson.visitor);
+  const visitor = toParty(battleJson.visitor);
   if (visitor instanceof NotWearableErorr
    || visitor instanceof DataNotFoundError
    || visitor instanceof CharactorDuplicationError
@@ -118,7 +118,7 @@ export const createBattle: CreateBattle = battleJson => {
 
   const turns: Turn[] = [];
   for (let turnJson of battleJson.turns) {
-    const turn = createTurn(turnJson);
+    const turn = toTurn(turnJson);
     if (turn instanceof NotWearableErorr
      || turn instanceof DataNotFoundError
      || turn instanceof JsonSchemaUnmatchError
@@ -168,8 +168,8 @@ const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
   return 0;
 });
 
-export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
-export const newBattle: NewBattle = (datetime, home, visitor) => {
+export type CreateBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
+export const createBattle: CreateBattle = (datetime, home, visitor) => {
   home.charactors.forEach(charactor => charactor.isVisitor = false);
   visitor.charactors.forEach(charactor => charactor.isVisitor = true);
   return {

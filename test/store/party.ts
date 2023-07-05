@@ -1,6 +1,6 @@
 import assert from 'assert';
 import type { Party } from 'src/domain/party';
-import { createParty } from 'src/domain/party';
+import { toParty } from 'src/domain/party';
 import { createStore } from 'src/store/party';
 import type { Repository } from 'src/io/file_repository'
 
@@ -9,8 +9,8 @@ const storeMock: Repository = {
   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({
     name: 'team01',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ],
   })),
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
@@ -21,9 +21,9 @@ const storeMock: Repository = {
 describe('Party#createStore', function () {
   it('save', async () => {
     const store = createStore(storeMock);
-    const party = (createParty({ name: 'team01', charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword'},
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand'},
+    const party = (toParty({ name: 'team01', charactors: [
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
     await store.save(party);
     assert.equal(true, true);

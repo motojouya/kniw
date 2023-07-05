@@ -1,7 +1,7 @@
 import assert from 'assert';
-import type { NotWearableErorr } from 'src/domain/acquirement';
+import type { Charactor } from 'src/domain/charactor';
 
-import { Charactor, createCharactor } from 'src/domain/charactor'
+import { toCharactor } from 'src/domain/charactor';
 import { mpGainPlus } from 'src/data/ability/mpGainPlus';
 
 describe('mpGainPlus#wait', function () {
@@ -11,10 +11,10 @@ describe('mpGainPlus#wait', function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charctor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-    assert.equal(charctor.mp, 0);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    assert.equal(charactor.mp, 0);
 
-    const result = mpGainPlus.wait(30, charctor, randoms);
+    const result = mpGainPlus.wait(30, charactor, randoms);
     assert.equal(result.mp, 31);
   });
   it('zero', function () {
@@ -23,10 +23,10 @@ describe('mpGainPlus#wait', function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charctor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-    assert.equal(charctor.mp, 0);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    assert.equal(charactor.mp, 0);
 
-    const result = mpGainPlus.wait(0, charctor, randoms);
+    const result = mpGainPlus.wait(0, charactor, randoms);
     assert.equal(result.mp, 0);
   });
   it('over', function () {
@@ -35,10 +35,10 @@ describe('mpGainPlus#wait', function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charctor = (createCharactor('sam', 'human', 'earth', 'fireRobe', 'fireWand') as Charactor);
-    assert.equal(charctor.mp, 0);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    assert.equal(charactor.mp, 0);
 
-    const result = mpGainPlus.wait(120, charctor, randoms);
+    const result = mpGainPlus.wait(120, charactor, randoms);
     assert.equal(result.mp, 100);
   });
 });

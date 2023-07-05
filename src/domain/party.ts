@@ -1,8 +1,8 @@
 import type { Charactor } from 'src/domain/charactor'
 import {
-  createCharactor,
+  toCharactor,
   getPhysical,
-  createCharactorJson,
+  toCharactorJson,
   charactorSchema,
 } from 'src/domain/charactor'
 import { NotWearableErorr } from 'src/domain/acquirement'
@@ -37,10 +37,10 @@ export class CharactorDuplicationError {
   ) {}
 }
 
-export type CreatePartyJson = (party: Party) => PartyJson;
-export const createPartyJson: CreatePartyJson = party => ({
+export type ToPartyJson = (party: Party) => PartyJson;
+export const toPartyJson: ToPartyJson = party => ({
   name: party.name,
-  charactors: party.charactors.map(createCharactorJson),
+  charactors: party.charactors.map(toCharactorJson),
 });
 
 type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationError | null;
@@ -65,8 +65,8 @@ const validate: Validate = (name, charactors) => {
   return null;
 };
 
-export type CreateParty = (partyJson: any) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
-export const createParty: CreateParty = partyJson => {
+export type ToParty = (partyJson: any) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export const toParty: ToParty = partyJson => {
 
   const compile = createValidationCompiler();
   const validateSchema = compile(partySchema)
@@ -81,7 +81,7 @@ export const createParty: CreateParty = partyJson => {
 
   const charactorObjs: Charactor[] = [];
   for (let charactor of partyJson.charactors) {
-    const charactorObj = createCharactor(charactor);
+    const charactorObj = toCharactor(charactor);
     if (charactorObj instanceof DataNotFoundError
      || charactorObj instanceof NotWearableErorr
      || charactorObj instanceof JsonSchemaUnmatchError

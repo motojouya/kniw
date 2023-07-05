@@ -2,7 +2,7 @@ import assert from 'assert';
 import type { Repository } from 'src/io/file_repository'
 import type { Battle } from 'src/domain/battle';
 import {
-  createBattle,
+  toBattle,
   GameOngoing,
   GameHome,
   GameVisitor,
@@ -11,20 +11,20 @@ import {
 import { createStore } from 'src/store/battle';
 import { parse, format } from 'date-fns';
 
-export const testData = {
+const testData = {
   datetime: '2023-06-29T12:12:12',
   home: {
     name: 'home',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
+      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
     ],
   },
   visitor: {
     name: 'visitor',
     charactors: [
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
+      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
     ],
   },
   turns: [
@@ -35,10 +35,10 @@ export const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
-        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
+        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
+        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
+        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
       ],
       field: {
         climate: 'SUNNY',
@@ -63,7 +63,7 @@ const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
 describe('Battle#createStore', function () {
   it('save', async () => {
     const store = createStore(storeMock);
-    const battle = (createBattle(testData) as Battle);
+    const battle = (toBattle(testData) as Battle);
     await store.save(battle);
     assert.equal(true, true);
   });

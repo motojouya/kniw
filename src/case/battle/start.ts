@@ -11,6 +11,7 @@ import {
   createStore,
   arrayLast, //TODO
   GameOngoing,
+  createBattle,
 } from 'src/model/battle';
 
 
@@ -85,7 +86,7 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
 
 export type StartBattle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => Promise<void>
 export const startBattle: StartBattle = (conversation, repository) => (home, visitor) => {
-  const battle = newBattle('TODO Date', home, visitor);
+  const battle = createBattle('TODO Date', home, visitor);
   battle.turns.push(start(battle, 'TODO Date', 'TODO random'));
 
   continueBattle(conversation, repository)(battle);

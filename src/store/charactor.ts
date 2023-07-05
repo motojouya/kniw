@@ -8,8 +8,8 @@ import type {
 import type { Charactor } from 'src/domain/charactor';
 
 import {
-  createCharactor,
-  createCharactorJson,
+  toCharactor,
+  toCharactorJson,
 } from 'src/domain/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement'
 import {
@@ -22,7 +22,7 @@ const NAMESPACE = 'charactor';
 const createSave: CreateSave<Charactor> =
   repository =>
   async obj =>
-  (await repository.save(NAMESPACE, obj.name, createCharactorJson(obj)));
+  (await repository.save(NAMESPACE, obj.name, toCharactorJson(obj)));
 
 
 type CreateGetCharactor = CreateGet<Charactor, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError>;
@@ -31,7 +31,7 @@ const createGet: CreateGetCharactor = repository => async name => {
   if (!result) {
     return null;
   }
-  return createCharactor(result);
+  return toCharactor(result);
 }
 
 const createRemove: CreateRemove =

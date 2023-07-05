@@ -4,7 +4,7 @@ import type { Charactor } from 'src/domain/charactor';
 import type { Repository } from 'src/io/file_repository'
 
 import {
-  createCharactor,
+  toCharactor,
   getAbilities,
   getSkills,
   getPhysical,
@@ -15,12 +15,12 @@ import {
   DataNotFoundError,
 } from 'src/store/store';
 
-describe('Charctor#createCharactor', function () {
+describe('Charctor#toCharactor', function () {
   it('DataNotFoundError', function () {
-    const charactor = createCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01' });
+    const charactor = toCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01', statuses: [], hp: 100, mp: 0, restWt: 120  });
     assert.equal(charactor instanceof DataNotFoundError, true);
     if (charactor instanceof DataNotFoundError) {
-      assert.equal(charactor.acquirementName, 'race01');
+      assert.equal(charactor.name, 'race01');
       assert.equal(charactor.type, 'race');
       assert.equal(charactor.message, 'race01という種族は存在しません');
     } else {
@@ -28,7 +28,7 @@ describe('Charctor#createCharactor', function () {
     }
   });
   it('NotWearableErorr', function () {
-    const charactor = createCharactor({ name: 'sam', race: 'fairy', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' });
+    const charactor = toCharactor({ name: 'sam', race: 'fairy', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 });
     assert.equal(charactor instanceof NotWearableErorr, true);
     if (charactor instanceof NotWearableErorr) {
       assert.equal(charactor.acquirement.name, 'earth');
@@ -39,7 +39,7 @@ describe('Charctor#createCharactor', function () {
     }
   });
   it('ok', function () {
-    const charactor = (createCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' }) as Charactor);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
     assert.equal(charactor.name, 'sam');
     assert.equal(charactor.race.name, 'human');
     assert.equal(charactor.blessing.name, 'earth');

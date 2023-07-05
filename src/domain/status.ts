@@ -1,6 +1,6 @@
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema'
-import { createStatus as createStatusFromStore } from 'src/store/status'
+import { getStatus } from 'src/store/status'
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
@@ -24,14 +24,14 @@ export const statusSchema = {
 
 export type StatusJson = FromSchema<typeof statusSchema>;
 
-export type CreateStatusJson = (status: Status) => StatusJson;
-export const createStatusJson: CreateStatusJson = status => ({
+export type ToStatusJson = (status: Status) => StatusJson;
+export const toStatusJson: ToStatusJson = status => ({
   name: status.name,
   restWt: status.restWt,
 });
 
-export type CreateStatus = (statusJson: any) => Status | DataNotFoundError | JsonSchemaUnmatchError;
-export const createStatus: CreateStatus = statusJson => {
+export type ToStatus = (statusJson: any) => Status | DataNotFoundError | JsonSchemaUnmatchError;
+export const toStatus: ToStatus = statusJson => {
 
   const compile = createValidationCompiler();
   const validateSchema = compile(statusSchema)
@@ -42,7 +42,7 @@ export const createStatus: CreateStatus = statusJson => {
     return new JsonSchemaUnmatchError(errors, 'statusのjsonデータではありません');
   }
 
-  const status = createStatusFromStore(statusJson.name);
+  const status = getStatus(statusJson.name);
   if (!status) {
     return new DataNotFoundError(statusJson.name, 'status', statusJson.name + 'というstatusは存在しません');
   }

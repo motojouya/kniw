@@ -12,10 +12,10 @@ import * as blessings from 'src/data/acquirement/blessing'
 
 type AcquirementDictionary = { [name: string]: Acquirement };
 
-export type CreateAcquirement<T> = (name: string) => T | null;
+export type GetAcquirement<T> = (name: string) => T | null;
 
-export const createRace: CreateAcquirement<Race> = name => (races as AcquirementDictionary)[name];
-export const createWeapon: CreateAcquirement<Weapon> = name => (weapons as AcquirementDictionary)[name];
-export const createClothing: CreateAcquirement<Clothing> = name => (clothings as AcquirementDictionary)[name];
-export const createBlessing: CreateAcquirement<Blessing> = name => (blessings as AcquirementDictionary)[name];
+export const getRace: GetAcquirement<Race> = name => (races as AcquirementDictionary)[name];
+export const getWeapon: GetAcquirement<Weapon> = name => (weapons as AcquirementDictionary)[name];
+export const getClothing: GetAcquirement<Clothing> = name => (clothings as AcquirementDictionary)[name];
+export const getBlessing: GetAcquirement<Blessing> = name => (blessings as AcquirementDictionary)[name];
 
