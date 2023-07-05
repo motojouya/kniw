@@ -25,3 +25,11 @@ export class JsonSchemaUnmatchError {
   ) {}
 }
 
+export class DataNotFoundError {
+  constructor(
+    readonly name: string,
+    readonly type: string,
+    readonly message: string,
+  ) {}
+}
+

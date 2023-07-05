@@ -4,10 +4,12 @@ import {
   getPhysical,
   createCharactorJson,
   charactorSchema,
-  AcquirementNotFoundError,
 } from 'src/domain/charactor'
 import { NotWearableErorr } from 'src/domain/acquirement'
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema';
@@ -63,7 +65,7 @@ const validate: Validate = (name, charactors) => {
   return null;
 };
 
-export type CreateParty = (partyJson: any) => Party | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export type CreateParty = (partyJson: any) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const createParty: CreateParty = partyJson => {
 
   const compile = createValidationCompiler();
@@ -80,7 +82,7 @@ export const createParty: CreateParty = partyJson => {
   const charactorObjs: Charactor[] = [];
   for (let charactor of partyJson.charactors) {
     const charactorObj = createCharactor(charactor);
-    if (charactorObj instanceof AcquirementNotFoundError
+    if (charactorObj instanceof DataNotFoundError
      || charactorObj instanceof NotWearableErorr
      || charactorObj instanceof JsonSchemaUnmatchError
     ) {

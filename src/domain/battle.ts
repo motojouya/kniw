@@ -17,7 +17,6 @@ import type {
 import {
   createTurn,
   createTurnJson,
-  SkillNotFoundError,
   turnSchema,
 } from 'src/domain/turn';
 import {
@@ -27,13 +26,15 @@ import {
   partySchema,
 } from 'src/domain/party'
 import {
-  AcquirementNotFoundError,
   getPhysical,
   getAbilities,
 } from 'src/domain/charactor'
 import { changeClimate } from 'src/domain/field';
 import { NotWearableErorr } from 'src/domain/acquirement'
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 import { parse } from 'date-fns';
 //import ja from 'date-fns/locale/ja'
@@ -81,7 +82,7 @@ export const createBattleJson: CreateBattleJson = battle => ({
   result: battle.result,
 });
 
-export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError;
+export type CreateBattle = (battleJson: any) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const createBattle: CreateBattle = battleJson => {
 
   const compile = createValidationCompiler();
@@ -99,7 +100,7 @@ export const createBattle: CreateBattle = battleJson => {
 
   const home = createParty(battleJson.home);
   if (home instanceof NotWearableErorr
-   || home instanceof AcquirementNotFoundError
+   || home instanceof DataNotFoundError
    || home instanceof CharactorDuplicationError
    || home instanceof JsonSchemaUnmatchError
   ) {
@@ -108,7 +109,7 @@ export const createBattle: CreateBattle = battleJson => {
 
   const visitor = createParty(battleJson.visitor);
   if (visitor instanceof NotWearableErorr
-   || visitor instanceof AcquirementNotFoundError
+   || visitor instanceof DataNotFoundError
    || visitor instanceof CharactorDuplicationError
    || visitor instanceof JsonSchemaUnmatchError
   ) {
@@ -119,8 +120,7 @@ export const createBattle: CreateBattle = battleJson => {
   for (let turnJson of battleJson.turns) {
     const turn = createTurn(turnJson);
     if (turn instanceof NotWearableErorr
-     || turn instanceof AcquirementNotFoundError
-     || turn instanceof SkillNotFoundError
+     || turn instanceof DataNotFoundError
      || turn instanceof JsonSchemaUnmatchError
     ) {
       return turn;
@@ -169,13 +169,17 @@ const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
 });
 
 export type NewBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
-export const newBattle: NewBattle = (datetime, home, visitor) => ({
-  datetime,
-  home,
-  visitor,
-  turns: [],
-  result: GameOngoing,
-});
+export const newBattle: NewBattle = (datetime, home, visitor) => {
+  home.charactors.forEach(charactor => charactor.isVisitor = false);
+  visitor.charactors.forEach(charactor => charactor.isVisitor = true);
+  return {
+    datetime,
+    home,
+    visitor,
+    turns: [],
+    result: GameOngoing,
+  };
+};
 
 export type Start = (battle: Battle, datetime: Date, randoms: Randoms) => Turn;
 export const start: Start = (battle, datetime, randoms) => ({

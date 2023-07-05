@@ -21,13 +21,14 @@ import { parse, format } from 'date-fns';
 
 import {
   createCharactor,
-  AcquirementNotFoundError,
   Charactor,
 } from 'src/domain/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { CharactorDuplicationError } from 'src/domain/party';
-import { SkillNotFoundError } from 'src/domain/turn';
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 import { createSkill } from 'src/store/skill';
 
 export const testData = {
@@ -35,15 +36,15 @@ export const testData = {
   home: {
     name: 'home',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', isVisitor: false },
+      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', isVisitor: false },
     ],
   },
   visitor: {
     name: 'visitor',
     charactors: [
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', isVisitor: true },
+      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', isVisitor: true },
     ],
   },
   turns: [
@@ -54,10 +55,10 @@ export const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
-        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword' },
-        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand' },
+        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', isVisitor: false },
+        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', isVisitor: false },
+        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', isVisitor: true },
+        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', isVisitor: true },
       ],
       field: {
         climate: 'SUNNY',
@@ -75,9 +76,8 @@ describe('Battle#createBattle', function () {
     const battle = createBattle(testData);
 
     if (battle instanceof NotWearableErorr
-     || battle instanceof AcquirementNotFoundError
+     || battle instanceof DataNotFoundError
      || battle instanceof CharactorDuplicationError
-     || battle instanceof SkillNotFoundError
      || battle instanceof JsonSchemaUnmatchError
     ) {
       assert.equal(true, false);

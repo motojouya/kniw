@@ -5,18 +5,21 @@ import type { Repository } from 'src/io/file_repository'
 
 import {
   createCharactor,
-  AcquirementNotFoundError,
   getAbilities,
   getSkills,
   getPhysical,
 } from 'src/domain/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 describe('Charctor#createCharactor', function () {
-  it('AcquirementNotFoundError', function () {
+  it('DataNotFoundError', function () {
     const charactor = createCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01' });
-    assert.equal(charactor instanceof AcquirementNotFoundError, true);
-    if (charactor instanceof AcquirementNotFoundError) {
+    assert.equal(charactor instanceof DataNotFoundError, true);
+    if (charactor instanceof DataNotFoundError) {
       assert.equal(charactor.acquirementName, 'race01');
       assert.equal(charactor.type, 'race');
       assert.equal(charactor.message, 'race01という種族は存在しません');

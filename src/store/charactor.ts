@@ -10,10 +10,12 @@ import type { Charactor } from 'src/domain/charactor';
 import {
   createCharactor,
   createCharactorJson,
-  AcquirementNotFoundError,
 } from 'src/domain/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement'
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 const NAMESPACE = 'charactor';
 
@@ -23,7 +25,7 @@ const createSave: CreateSave<Charactor> =
   (await repository.save(NAMESPACE, obj.name, createCharactorJson(obj)));
 
 
-type CreateGetCharactor = CreateGet<Charactor, NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError>;
+type CreateGetCharactor = CreateGet<Charactor, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError>;
 const createGet: CreateGetCharactor = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
   if (!result) {
@@ -42,7 +44,7 @@ const createList: CreateList =
   async () =>
   (await repository.list(NAMESPACE));
 
-type CreateStoreCharactor = CreateStore<Charactor, NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError>;
+type CreateStoreCharactor = CreateStore<Charactor, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError>;
 export const createStore: CreateStoreCharactor = repository => {
   repository.checkNamespace(NAMESPACE);
   return {

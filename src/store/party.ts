@@ -13,8 +13,10 @@ import {
 } from 'src/domain/party';
 
 import { NotWearableErorr } from 'src/domain/acquirement'
-import { AcquirementNotFoundError } from 'src/domain/charactor'
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 const NAMESPACE = 'party';
 
@@ -23,7 +25,7 @@ const createSave: CreateSave<Party> =
   async obj =>
   (await storage.save(NAMESPACE, obj.name, createPartyJson(obj)));
 
-type CreateGetParty = CreateGet<Party, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
+type CreateGetParty = CreateGet<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 const createGet: CreateGetParty = storage => async name => {
   const result = await storage.get(NAMESPACE, name);
   if (!result) {
@@ -42,7 +44,7 @@ const createList: CreateList =
   async () =>
   (await storage.list(NAMESPACE));
 
-type CreateStoreParty = CreateStore<Party, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
+type CreateStoreParty = CreateStore<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 export const createStore: CreateStoreParty = storage => {
   storage.checkNamespace(NAMESPACE);
   return {

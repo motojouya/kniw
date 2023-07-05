@@ -8,10 +8,11 @@ import type {
 import type { Battle } from 'src/domain/battle';
 
 import { CharactorDuplicationError } from 'src/domain/party'
-import { AcquirementNotFoundError } from 'src/domain/charactor'
 import { NotWearableErorr } from 'src/domain/acquirement'
-import { SkillNotFoundError } from 'src/domain/turn';
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 import {
   createBattleJson,
   createBattle,
@@ -28,7 +29,7 @@ const createSave: CreateSave<Battle> =
   async obj =>
   (await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), createBattleJson(obj)));
 
-type CreateGetBattle = CreateGet<Battle, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError>;
+type CreateGetBattle = CreateGet<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 const createGet: CreateGetBattle = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
   if (!result) {
@@ -47,7 +48,7 @@ const createList: CreateList =
   async () =>
   (await repository.list(NAMESPACE));
 
-type CreateStoreBattle = CreateStore<Battle, NotWearableErorr | AcquirementNotFoundError | CharactorDuplicationError | SkillNotFoundError | JsonSchemaUnmatchError>;
+type CreateStoreBattle = CreateStore<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 export const createStore: CreateStoreBattle = repository => {
   repository.checkNamespace(NAMESPACE);
   return {

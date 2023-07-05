@@ -4,13 +4,15 @@ import type { Skill } from 'src/domain/skill'
 
 import {
   createCharactor,
-  AcquirementNotFoundError,
   createCharactorJson,
   charactorSchema,
 } from 'src/domain/charactor'
 import { NotWearableErorr } from 'src/domain/acquirement'
 import { createSkill } from 'src/store/skill'
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema';
@@ -101,13 +103,6 @@ export const turnSchema = {
 
 export type TurnJson = FromSchema<typeof turnSchema>;
 
-export class SkillNotFoundError {
-  constructor(
-    public skillName: string,
-    public message: string,
-  ) {}
-}
-
 export type CreateActionJson = (action: Action) => ActionJson;
 export const createActionJson: CreateActionJson = action => {
   if (action.type === 'DO_SKILL') {
@@ -140,7 +135,7 @@ export const createTurnJson: CreateTurnJson = turn => ({
   field: turn.field,
 });
 
-export type CreateAction = (actionJson: any) => Action | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
+export type CreateAction = (actionJson: any) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const createAction: CreateAction = actionJson => {
 
   const compile = createValidationCompiler();
@@ -155,7 +150,7 @@ export const createAction: CreateAction = actionJson => {
   if (actionJson.type === 'DO_SKILL') {
     const skillActor = createCharactor(actionJson.actor);
     if (skillActor instanceof NotWearableErorr
-     || skillActor instanceof AcquirementNotFoundError
+     || skillActor instanceof DataNotFoundError
      || skillActor instanceof JsonSchemaUnmatchError
     ) {
       return skillActor;
@@ -165,7 +160,7 @@ export const createAction: CreateAction = actionJson => {
     for (let receiverJson of actionJson.receivers) {
       const receiver = createCharactor(receiverJson);
       if (receiver instanceof NotWearableErorr
-       || receiver instanceof AcquirementNotFoundError
+       || receiver instanceof DataNotFoundError
        || receiver instanceof JsonSchemaUnmatchError
       ) {
         return receiver;
@@ -175,7 +170,7 @@ export const createAction: CreateAction = actionJson => {
 
     const skill = createSkill(actionJson.skill);
     if (!skill) {
-      return new SkillNotFoundError(actionJson.skill, actionJson.skill + 'というskillは存在しません');
+      return new DataNotFoundError(actionJson.skill, 'skill', actionJson.skill + 'というskillは存在しません');
     }
 
     return {
@@ -189,7 +184,7 @@ export const createAction: CreateAction = actionJson => {
   if (actionJson.type === 'DO_NOTHING') {
     const nothingActor = createCharactor(actionJson.actor);
     if (nothingActor instanceof NotWearableErorr
-     || nothingActor instanceof AcquirementNotFoundError
+     || nothingActor instanceof DataNotFoundError
      || nothingActor instanceof JsonSchemaUnmatchError
     ) {
       return nothingActor;
@@ -206,7 +201,7 @@ export const createAction: CreateAction = actionJson => {
   };
 };
 
-export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | AcquirementNotFoundError | SkillNotFoundError | JsonSchemaUnmatchError;
+export type CreateTurn = (turnJson: any) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const createTurn: CreateTurn = turnJson => {
 
   const compile = createValidationCompiler();
@@ -224,9 +219,7 @@ export const createTurn: CreateTurn = turnJson => {
 
   const action = createAction(turnJson.action);
   if (action instanceof NotWearableErorr
-   || action instanceof AcquirementNotFoundError
-   || action instanceof AcquirementNotFoundError
-   || action instanceof SkillNotFoundError
+   || action instanceof DataNotFoundError
    || action instanceof JsonSchemaUnmatchError
   ) {
     return action;
@@ -236,7 +229,7 @@ export const createTurn: CreateTurn = turnJson => {
   for (let charactorJson of turnJson.sortedCharactors) {
     const charactor = createCharactor(charactorJson);
     if (charactor instanceof NotWearableErorr
-     || charactor instanceof AcquirementNotFoundError
+     || charactor instanceof DataNotFoundError
      || charactor instanceof JsonSchemaUnmatchError
     ) {
       return charactor;

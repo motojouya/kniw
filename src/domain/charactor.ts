@@ -1,5 +1,6 @@
 import { Physical, addPhysicals } from 'src/domain/physical'
-import { Status } from 'src/domain/status'
+import type { Status } from 'src/domain/status'
+import { createStatus, createStatusJson } from 'src/domain/status'
 import {
   Race,
   Weapon,
@@ -15,7 +16,10 @@ import {
 } from 'src/store/acquirement'
 import { Ability } from 'src/domain/ability'
 import { Skill } from 'src/domain/skill'
-import { JsonSchemaUnmatchError } from 'src/store/store';
+import {
+  JsonSchemaUnmatchError,
+  DataNotFoundError,
+} from 'src/store/store';
 
 import { FromSchema } from "json-schema-to-ts";
 import { createValidationCompiler } from 'src/io/json_schema'
@@ -68,14 +72,6 @@ export const charactorSchema = {
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
 
-export class AcquirementNotFoundError {
-  constructor(
-    public acquirementName: string,
-    public type: string,
-    public message: string,
-  ) {}
-}
-
 export type CreateCharactorJson = (charactor: Charactor) => CharactorJson;
 export const createCharactorJson: CreateCharactorJson = charactor => {
 
@@ -85,7 +81,7 @@ export const createCharactorJson: CreateCharactorJson = charactor => {
     blessing: charactor.blessing.name,
     clothing: charactor.clothing.name,
     weapon: charactor.weapon.name,
-    statuses: Status[],
+    statuses: charactor.statuses.map(createStatusJson),
     hp: charactor.hp,
     mp: charactor.mp,
     restWt: charactor.restWt,
@@ -125,7 +121,7 @@ const validate: Validate = (name, race, blessing, clothing, weapon) => {
   return null;
 }
 
-export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | AcquirementNotFoundError | JsonSchemaUnmatchError;
+export type CreateCharactor = (charactorJson: any) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const createCharactor: CreateCharactor = charactorJson => {
 
   const compile = createValidationCompiler();
@@ -141,27 +137,39 @@ export const createCharactor: CreateCharactor = charactorJson => {
 
   const race = createRace(charactorJson.race);
   if (!race) {
-    return new AcquirementNotFoundError(charactorJson.race, 'race', charactorJson.race + 'という種族は存在しません');
+    return new DataNotFoundError(charactorJson.race, 'race', charactorJson.race + 'という種族は存在しません');
   }
 
   const blessing = createBlessing(charactorJson.blessing);
   if (!blessing) {
-    return new AcquirementNotFoundError(charactorJson.blessing, 'blessing', charactorJson.blessing + 'という祝福は存在しません');
+    return new DataNotFoundError(charactorJson.blessing, 'blessing', charactorJson.blessing + 'という祝福は存在しません');
   }
 
   const clothing = createClothing(charactorJson.clothing);
   if (!clothing) {
-    return new AcquirementNotFoundError(charactorJson.clothing, 'clothing', charactorJson.clothing + 'という装備は存在しません');
+    return new DataNotFoundError(charactorJson.clothing, 'clothing', charactorJson.clothing + 'という装備は存在しません');
   }
 
   const weapon = createWeapon(charactorJson.weapon);
   if (!weapon) {
-    return new AcquirementNotFoundError(charactorJson.weapon, 'weapon', charactorJson.weapon + 'という武器は存在しません');
+    return new DataNotFoundError(charactorJson.weapon, 'weapon', charactorJson.weapon + 'という武器は存在しません');
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);
   if (validateResult instanceof NotWearableErorr) {
     return validateResult;
+  }
+
+  const statuses: Status[] = [];
+  for (let status of charactorJson.statuses) {
+    const statusObj = createStatus(status);
+
+    if (statusObj instanceof JsonSchemaUnmatchError
+     || statusObj instanceof DataNotFoundError
+    ) {
+      return statusObj;
+    }
+    statuses.push(statusObj);
   }
 
   const someone: Charactor = {
@@ -170,14 +178,23 @@ export const createCharactor: CreateCharactor = charactorJson => {
     blessing,
     clothing,
     weapon,
-    statuses: [],
+    statuses,
     hp: 0 + charactorJson.hp,
     mp: 0 + charactorJson.mp,
     restWt: 0 + charactorJson.restWt,
   };
+
   const someonesPhysical = getPhysical(someone);
-  someone.hp = someonesPhysical.MaxHP;
-  someone.restWt = someonesPhysical.WT;
+  if (someone.hp === 0) {
+    someone.hp = someonesPhysical.MaxHP;
+  }
+  if (someone.restWt === 0) {
+    someone.hp = someonesPhysical.WT;
+  }
+
+  if (charactorJson.hasOwnProperty('isVisitor')) {
+    someone.isVisitor = charactorJson.isVisitor;
+  }
 
   return someone;
 };
