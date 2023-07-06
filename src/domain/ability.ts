@@ -6,5 +6,4 @@ export type Ability = {
 };
 
 export type Wait = (wt: number, charactor: Charactor, randoms: Randoms) => Charactor;
-export const justWait: Wait = (wt, charactor, randoms) => charactor; // eslint-disable-line
-// ignored @typescript-eslint/no-unsafe-return @typescript-eslint/no-unused-vars
+export const justWait: Wait = (wt, charactor, randoms) => charactor; // eslint-disable-line @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unused-vars
