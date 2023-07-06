@@ -23,6 +23,6 @@ const wait: Wait = (wt, charactor, randoms) => {
 export const mpGainPlus: Ability = {
   name: 'mpGainPlus',
   label: 'MP回復強化',
-  wait: wait,
+  wait,
   description: 'MPの回復速度が早くなる',
 };

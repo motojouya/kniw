@@ -6,7 +6,7 @@ import figlet from 'figlet';
 
 const test = () => console.log('test');
 
-//yargs(hideBin(process.argv))
+// yargs(hideBin(process.argv))
 //  .command('serve [port]', 'start the server', (yargs) => {
 //    return yargs
 //      .positional('port', {
@@ -24,7 +24,7 @@ const test = () => console.log('test');
 //  })
 //  .parse()
 //
-//inquirer
+// inquirer
 //  .prompt([
 //    /* Pass your questions in here */
 //  ])
@@ -41,14 +41,14 @@ const test = () => console.log('test');
 
 // 実際のフォントを読んで参考にするらしく、フォントのファイルが無いとできないっぽい
 
-//figlet.text('KNIW', function(err: any, data: any) {
+// figlet.text('KNIW', function(err: any, data: any) {
 //    if (err) {
 //        console.log('Something went wrong...');
 //        console.dir(err);
 //        return;
 //    }
 //    console.log(data)
-//});
+// });
 
 // const num : number = +process.argv[2];
 // console.log(fizzbuzz(num));

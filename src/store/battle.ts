@@ -7,13 +7,13 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { toBattleJson, toBattle } from 'src/domain/battle';
 
 import { parse } from 'date-fns';
-//import ja from 'date-fns/locale/ja'
+// import ja from 'date-fns/locale/ja'
 
 const NAMESPACE = 'battle';
 
-//TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
+// TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
 const createSave: CreateSave<Battle> = repository => async obj =>
-  await repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), toBattleJson(obj));
+  repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), toBattleJson(obj));
 
 type CreateGetBattle = CreateGet<
   Battle,
@@ -27,9 +27,9 @@ const createGet: CreateGetBattle = repository => async name => {
   return toBattle(result);
 };
 
-const createRemove: CreateRemove = repository => async name => await repository.remove(NAMESPACE, name);
+const createRemove: CreateRemove = repository => async name => repository.remove(NAMESPACE, name);
 
-const createList: CreateList = repository => async () => await repository.list(NAMESPACE);
+const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
 type CreateStoreBattle = CreateStore<
   Battle,

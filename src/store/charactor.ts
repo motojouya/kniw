@@ -8,7 +8,7 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 const NAMESPACE = 'charactor';
 
 const createSave: CreateSave<Charactor> = repository => async obj =>
-  await repository.save(NAMESPACE, obj.name, toCharactorJson(obj));
+  repository.save(NAMESPACE, obj.name, toCharactorJson(obj));
 
 type CreateGetCharactor = CreateGet<Charactor, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError>;
 const createGet: CreateGetCharactor = repository => async name => {
@@ -19,9 +19,9 @@ const createGet: CreateGetCharactor = repository => async name => {
   return toCharactor(result);
 };
 
-const createRemove: CreateRemove = repository => async name => await repository.remove(NAMESPACE, name);
+const createRemove: CreateRemove = repository => async name => repository.remove(NAMESPACE, name);
 
-const createList: CreateList = repository => async () => await repository.list(NAMESPACE);
+const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
 type CreateStoreCharactor = CreateStore<Charactor, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError>;
 export const createStore: CreateStoreCharactor = repository => {

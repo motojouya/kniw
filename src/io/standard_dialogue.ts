@@ -18,7 +18,7 @@ export const textInput: TextInput = async message => {
   const response: Answers<'value'> = await prompts({
     type: 'text',
     name: 'value',
-    message: message,
+    message,
   });
 
   if ('value' in response) {
@@ -33,7 +33,7 @@ export const confirm: Confirm = async message => {
   const response: Answers<'value'> = await prompts({
     type: 'confirm',
     name: 'value',
-    message: message,
+    message,
   });
 
   if ('value' in response) {
@@ -53,7 +53,7 @@ export const clear: Clear = async () => {
   console.clear();
 };
 
-//10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
+// 10以上の選択肢の場合は、自動的にautocmpleteに変わる形でいい。default10までが1ページなので
 export type MultiSelect = (
   message: string,
   limit: number,
@@ -63,7 +63,7 @@ export const multiSelect: MultiSelect = async (message, limit, options) => {
   const response: Answers<'value'> = await prompts({
     type: options.length > 10 ? 'autocompleteMultiselect' : 'multiselect',
     name: 'value',
-    message: message,
+    message,
     choices: options.map(changeToChoice),
     max: limit,
   });

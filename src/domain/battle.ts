@@ -13,12 +13,12 @@ import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 import { parse } from 'date-fns';
-//import ja from 'date-fns/locale/ja'
+// import ja from 'date-fns/locale/ja'
 
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
-//TODO util?
+// TODO util?
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
 export type GameResult = 'ONGOING' | 'HOME' | 'VISITOR' | 'DRAW';
@@ -66,13 +66,13 @@ export const toBattle: ToBattle = battleJson => {
   const validateSchema = compile(battleSchema);
   if (!validateSchema(battleJson)) {
     // @ts-ignore
-    const errors = validateSchema.errors;
+    const {errors} = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
   }
 
-  //TODO try catch
-  //const datetime = new Date(Date.parse(battleJson.datetime));
+  // TODO try catch
+  // const datetime = new Date(Date.parse(battleJson.datetime));
   const datetime = parse(battleJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
   const home = toParty(battleJson.home);
@@ -96,7 +96,7 @@ export const toBattle: ToBattle = battleJson => {
   }
 
   const turns: Turn[] = [];
-  for (let turnJson of battleJson.turns) {
+  for (const turnJson of battleJson.turns) {
     const turn = toTurn(turnJson);
     if (
       turn instanceof NotWearableErorr ||
@@ -108,7 +108,7 @@ export const toBattle: ToBattle = battleJson => {
     turns.push(turn);
   }
 
-  const result = battleJson.result;
+  const {result} = battleJson;
 
   return {
     datetime,
@@ -144,8 +144,8 @@ const sortByWT: SortByWT = charactors =>
     if (mpDiff !== 0) {
       return mpDiff;
     }
-    //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
-    //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
+    // TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
+    // 最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
     return 0;
   });
 
@@ -264,8 +264,8 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
   return newCharactor;
 };
 
-//ターン経過による状態変化を起こす関数
-//これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
+// ターン経過による状態変化を起こす関数
+// これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
 export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn;
 export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);

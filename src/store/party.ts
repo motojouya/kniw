@@ -8,7 +8,7 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 const NAMESPACE = 'party';
 
-const createSave: CreateSave<Party> = storage => async obj => await storage.save(NAMESPACE, obj.name, toPartyJson(obj));
+const createSave: CreateSave<Party> = storage => async obj => storage.save(NAMESPACE, obj.name, toPartyJson(obj));
 
 type CreateGetParty = CreateGet<
   Party,
@@ -22,9 +22,9 @@ const createGet: CreateGetParty = storage => async name => {
   return toParty(result);
 };
 
-const createRemove: CreateRemove = storage => async name => await storage.remove(NAMESPACE, name);
+const createRemove: CreateRemove = storage => async name => storage.remove(NAMESPACE, name);
 
-const createList: CreateList = storage => async () => await storage.list(NAMESPACE);
+const createList: CreateList = storage => async () => storage.list(NAMESPACE);
 
 type CreateStoreParty = CreateStore<
   Party,

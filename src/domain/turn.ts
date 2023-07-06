@@ -11,7 +11,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
 import { parse } from 'date-fns';
-//import ja from 'date-fns/locale/ja'
+// import ja from 'date-fns/locale/ja'
 
 export type DoSkill = {
   type: 'DO_SKILL';
@@ -134,7 +134,7 @@ export const toAction: ToAction = actionJson => {
   const validateSchema = compile(actionSchema);
   if (!validateSchema(actionJson)) {
     // @ts-ignore
-    const errors = validateSchema.errors;
+    const {errors} = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
   }
@@ -150,7 +150,7 @@ export const toAction: ToAction = actionJson => {
     }
 
     const receivers: Charactor[] = [];
-    for (let receiverJson of actionJson.receivers) {
+    for (const receiverJson of actionJson.receivers) {
       const receiver = toCharactor(receiverJson);
       if (
         receiver instanceof NotWearableErorr ||
@@ -164,14 +164,14 @@ export const toAction: ToAction = actionJson => {
 
     const skill = getSkill(actionJson.skill);
     if (!skill) {
-      return new DataNotFoundError(actionJson.skill, 'skill', actionJson.skill + 'というskillは存在しません');
+      return new DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill  }というskillは存在しません`);
     }
 
     return {
       type: 'DO_SKILL',
       actor: skillActor,
-      skill: skill,
-      receivers: receivers,
+      skill,
+      receivers,
     };
   }
 
@@ -202,13 +202,13 @@ export const toTurn: ToTurn = turnJson => {
   const validateSchema = compile(turnSchema);
   if (!validateSchema(turnJson)) {
     // @ts-ignore
-    const errors = validateSchema.errors;
+    const {errors} = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
   }
 
-  //TODO try catch
-  //const datetime = new Date(Date.parse(turnJson.datetime));
+  // TODO try catch
+  // const datetime = new Date(Date.parse(turnJson.datetime));
   const datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
   const action = toAction(turnJson.action);
@@ -221,7 +221,7 @@ export const toTurn: ToTurn = turnJson => {
   }
 
   const sortedCharactors: Charactor[] = [];
-  for (let charactorJson of turnJson.sortedCharactors) {
+  for (const charactorJson of turnJson.sortedCharactors) {
     const charactor = toCharactor(charactorJson);
     if (
       charactor instanceof NotWearableErorr ||

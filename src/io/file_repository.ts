@@ -3,7 +3,7 @@ import path from 'path';
 
 export type KeyValue = { [name: string]: any };
 
-//TODO データ保存の選択肢が増えたら、型だけ別ファイルに移動
+// TODO データ保存の選択肢が増えたら、型だけ別ファイルに移動
 export type CheckNamespace = (namespace: string) => Promise<void>;
 export type Save = (namespace: string, objctKey: string, data: KeyValue) => Promise<void>;
 export type List = (namespace: string) => Promise<string[]>;
@@ -26,17 +26,17 @@ export type Repository = {
 
 export type CreateRepository = (basePath: string) => Promise<Repository>;
 
-//以下実装と、ファイル保存の固有の型
+// 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
 
 type IsDataFile = (basePath: string, dirName: string, file: string) => boolean;
 const isDataFile: IsDataFile = (basePath, dirName, file) =>
-  fs.statSync(path.join(basePath, dirName, file)).isFile() && new RegExp('.*' + FILE_EXTENSION).test(file);
+  fs.statSync(path.join(basePath, dirName, file)).isFile() && new RegExp(`.*${  FILE_EXTENSION}`).test(file);
 
 type CreateDirctory = (dirName: string) => Promise<void>;
 const createDirctory: CreateDirctory = async dirName => {
   if (!fs.existsSync(dirName)) {
-    return await fs.promises.mkdir(dirName);
+    return fs.promises.mkdir(dirName);
   }
 };
 

@@ -119,16 +119,16 @@ export const toCharactor: ToCharactor = charactorJson => {
   const validateSchema = compile(charactorSchema);
   if (!validateSchema(charactorJson)) {
     // @ts-ignore
-    const errors = validateSchema.errors;
+    const {errors} = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'charactorのjsonデータではありません');
   }
 
-  const name = charactorJson.name;
+  const {name} = charactorJson;
 
   const race = getRace(charactorJson.race);
   if (!race) {
-    return new DataNotFoundError(charactorJson.race, 'race', charactorJson.race + 'という種族は存在しません');
+    return new DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race  }という種族は存在しません`);
   }
 
   const blessing = getBlessing(charactorJson.blessing);
@@ -136,7 +136,7 @@ export const toCharactor: ToCharactor = charactorJson => {
     return new DataNotFoundError(
       charactorJson.blessing,
       'blessing',
-      charactorJson.blessing + 'という祝福は存在しません',
+      `${charactorJson.blessing  }という祝福は存在しません`,
     );
   }
 
@@ -145,13 +145,13 @@ export const toCharactor: ToCharactor = charactorJson => {
     return new DataNotFoundError(
       charactorJson.clothing,
       'clothing',
-      charactorJson.clothing + 'という装備は存在しません',
+      `${charactorJson.clothing  }という装備は存在しません`,
     );
   }
 
   const weapon = getWeapon(charactorJson.weapon);
   if (!weapon) {
-    return new DataNotFoundError(charactorJson.weapon, 'weapon', charactorJson.weapon + 'という武器は存在しません');
+    return new DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon  }という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);
@@ -160,7 +160,7 @@ export const toCharactor: ToCharactor = charactorJson => {
   }
 
   const statuses: Status[] = [];
-  for (let status of charactorJson.statuses) {
+  for (const status of charactorJson.statuses) {
     const statusObj = toStatus(status);
 
     if (statusObj instanceof JsonSchemaUnmatchError || statusObj instanceof DataNotFoundError) {

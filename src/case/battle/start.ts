@@ -9,7 +9,7 @@ import {
   start,
   isSettlement,
   createStore,
-  arrayLast, //TODO
+  arrayLast, // TODO
   GameOngoing,
   createBattle,
 } from 'src/model/battle';
@@ -31,10 +31,10 @@ const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Ch
       return;
     }
 
-    const receiverCount = skill.receiverCount;
+    const {receiverCount} = skill;
     const receiverOptions = receivers.map(receiver => ({ value: receiver, label: receiver.name }));
     const receivers = await conversation.multiSelect(
-      '対象を' + receiverCount + '体まで選んでください。未選択でSkillを選び直せます',
+      `対象を${  receiverCount  }体まで選んでください。未選択でSkillを選び直せます`,
       receiverOptions,
     );
 
@@ -49,7 +49,7 @@ const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Ch
     if (!isExecute) {
       continue;
     } else {
-      return; //something
+      return; // something
     }
   }
 };
@@ -75,7 +75,7 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
         break;
       case SURRENDER:
         break;
-      default: //do nothing
+      default: // do nothing
     }
   }
 
@@ -109,9 +109,9 @@ export const continueBattle: ContinueBattle = (conversation, repository) => batt
     turns.push(wait(battle, firstWaiting.restWt, 'TODO Date', 'TODO random'));
 
     const actor = arrayLast(turns).sortedCharactors[0];
-    //TODO actionの確認
-    //降参とかもできるので、その分岐も
-    //conversation変数からできる感じで
+    // TODO actionの確認
+    // 降参とかもできるので、その分岐も
+    // conversation変数からできる感じで
     if (true) {
       turns.push(act(battle, actor, skill, receivers, 'TODO Date', 'TODO random'));
     } else {
@@ -128,12 +128,12 @@ export const continueBattle: ContinueBattle = (conversation, repository) => batt
 
   battleStore.save(battle);
 
-  //TODO console.logも会話コンテキストに含めたい
+  // TODO console.logも会話コンテキストに含めたい
   if (!battle.result) {
     console.log('勝負は無効となりました');
   }
   if (battle.result === 'HOME' || battle.result === 'VISITOR') {
-    console.log(battle.result + 'プレイヤーの勝利です');
+    console.log(`${battle.result  }プレイヤーの勝利です`);
   }
   if (battle.result === 'DRAW') {
     console.log('勝負は引き分けです');

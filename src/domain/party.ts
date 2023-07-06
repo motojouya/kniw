@@ -50,7 +50,7 @@ const validate: Validate = (name, charactors) => {
     {} as { [name: string]: number },
   );
 
-  for (let name in nameCountMap) {
+  for (const name in nameCountMap) {
     if (nameCountMap[name] > 1) {
       return new CharactorDuplicationError(name, 'Partyに同じ名前のキャラクターが存在します');
     }
@@ -67,15 +67,15 @@ export const toParty: ToParty = partyJson => {
   const validateSchema = compile(partySchema);
   if (!validateSchema(partyJson)) {
     // @ts-ignore
-    const errors = validateSchema.errors;
+    const {errors} = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'partyのjsonデータではありません');
   }
 
-  const name = partyJson.name;
+  const {name} = partyJson;
 
   const charactorObjs: Charactor[] = [];
-  for (let charactor of partyJson.charactors) {
+  for (const charactor of partyJson.charactors) {
     const charactorObj = toCharactor(charactor);
     if (
       charactorObj instanceof DataNotFoundError ||

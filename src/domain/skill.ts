@@ -37,8 +37,8 @@ export type SkillToField = {
 
 export type Skill = SkillToCharactor | SkillToField;
 
-//dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
-//actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ
+// dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
+// actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ
 
 type CalcDirectAttack = (attacker: Charactor) => number;
 const calcDirectAttack: CalcDirectAttack = attacker => {
