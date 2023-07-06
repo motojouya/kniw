@@ -16,7 +16,7 @@ export type Store<T, E> = {
   get: Get<T, E>;
   remove: Remove;
 };
-export type CreateStore<T, E> = (repository: Repository) => Store<T, E>;
+export type CreateStore<T, E> = (repository: Repository) => Promise<Store<T, E>>;
 
 export class JsonSchemaUnmatchError {
   constructor(

@@ -20,7 +20,7 @@ const storeMock: Repository = {
 
 describe('Party#createStore', function () {
   it('save', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const party = (toParty({ name: 'team01', charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
@@ -29,7 +29,7 @@ describe('Party#createStore', function () {
     assert.equal(true, true);
   });
   it('get', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const party = await store.get('team01');
     const typedParty = party as Party;
     if (typedParty) {
@@ -51,12 +51,12 @@ describe('Party#createStore', function () {
     }
   });
   it('remove', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     await store.remove('team01');
     assert.equal(true, true);
   });
   it('list', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const partyList = await store.list();
     assert.equal(partyList.length, 2);
     assert.equal(partyList[0], 'team01');

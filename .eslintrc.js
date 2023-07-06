@@ -24,5 +24,6 @@ module.exports = {
     "import/prefer-default-export": "off",
     "no-else-return": "off",
     "no-lonely-if": "off",
+    "max-classes-per-file": "off",
   },
 };

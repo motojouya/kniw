@@ -62,13 +62,13 @@ const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
 
 describe('Battle#createStore', function () {
   it('save', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const battle = (toBattle(testData) as Battle);
     await store.save(battle);
     assert.equal(true, true);
   });
   it('get', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const battle = await store.get('2023-06-29T12:12:12');
     const typedBattle = battle as Battle;
     if (typedBattle) {
@@ -110,12 +110,12 @@ describe('Battle#createStore', function () {
     }
   });
   it('remove', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     await store.remove('2023-06-29T12:12:12');
     assert.equal(true, true);
   });
   it('list', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const battleList = await store.list();
     assert.equal(battleList.length, 2);
     assert.equal(battleList[0], '2023-06-29T12:12:12');

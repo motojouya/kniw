@@ -35,8 +35,8 @@ type CreateStoreBattle = CreateStore<
   Battle,
   NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
 >;
-export const createStore: CreateStoreBattle = repository => {
-  repository.checkNamespace(NAMESPACE);
+export const createStore: CreateStoreBattle = async repository => {
+  await repository.checkNamespace(NAMESPACE);
   return {
     save: createSave(repository),
     list: createList(repository),

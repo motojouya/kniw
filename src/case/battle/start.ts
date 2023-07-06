@@ -102,8 +102,8 @@ export const restartBattle: RestartBattle = (conversation, repository) => battle
 };
 
 export type ContinueBattle = (conversation: Conversation, repository: Repository) => (battle: Battle) => Promise<void>;
-export const continueBattle: ContinueBattle = (conversation, repository) => battle => {
-  const battleStore = createStore<Battle>(repository);
+export const continueBattle: ContinueBattle = (conversation, repository) => async battle => {
+  const battleStore = await createStore<Battle>(repository);
   while (true) {
     const firstWaiting = arrayLast(turns).sortedCharactors[0];
     turns.push(wait(battle, firstWaiting.restWt, 'TODO Date', 'TODO random'));

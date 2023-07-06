@@ -15,13 +15,13 @@ const storeMock: Repository = {
 
 describe('Charctor#createStore', function () {
   it('save', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
     await store.save(charactor);
     assert.equal(true, true);
   });
   it('get', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const charactor = await store.get('sam');
     const typedCharactor = charactor as Charactor;
     if (typedCharactor) {
@@ -35,12 +35,12 @@ describe('Charctor#createStore', function () {
     }
   });
   it('remove', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     await store.remove('sam');
     assert.equal(true, true);
   });
   it('list', async () => {
-    const store = createStore(storeMock);
+    const store = await createStore(storeMock);
     const charactorList = await store.list();
     assert.equal(charactorList.length, 2);
     assert.equal(charactorList[0], 'sam');

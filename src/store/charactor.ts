@@ -24,8 +24,8 @@ const createRemove: CreateRemove = repository => async name => repository.remove
 const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
 type CreateStoreCharactor = CreateStore<Charactor, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError>;
-export const createStore: CreateStoreCharactor = repository => {
-  repository.checkNamespace(NAMESPACE);
+export const createStore: CreateStoreCharactor = async repository => {
+  await repository.checkNamespace(NAMESPACE);
   return {
     save: createSave(repository),
     list: createList(repository),

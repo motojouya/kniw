@@ -1,4 +1,3 @@
-import type { Charactor } from 'src/domain/charactor';
 import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateStore } from 'src/store/store';
 import type { Party } from 'src/domain/party';
 import { toParty, toPartyJson, CharactorDuplicationError } from 'src/domain/party';
@@ -30,8 +29,8 @@ type CreateStoreParty = CreateStore<
   Party,
   NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
 >;
-export const createStore: CreateStoreParty = storage => {
-  storage.checkNamespace(NAMESPACE);
+export const createStore: CreateStoreParty = async storage => {
+  await storage.checkNamespace(NAMESPACE);
   return {
     save: createSave(storage),
     list: createList(storage),
