@@ -66,7 +66,7 @@ export const toBattle: ToBattle = battleJson => {
   const validateSchema = compile(battleSchema);
   if (!validateSchema(battleJson)) {
     // @ts-ignore
-    const {errors} = validateSchema;
+    const { errors } = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
   }
@@ -108,7 +108,7 @@ export const toBattle: ToBattle = battleJson => {
     turns.push(turn);
   }
 
-  const {result} = battleJson;
+  const { result } = battleJson;
 
   return {
     datetime,

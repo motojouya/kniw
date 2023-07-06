@@ -47,28 +47,28 @@ export const createValidateWearable: CreateValidateWearable =
     if (wearableRaces.length > 0 && !!race) {
       const raceWearable = wearableRaces.includes(race.name);
       if (!raceWearable) {
-        return new NotWearableErorr(self, race, `このキャラクターの設定では${  self.name  }を装備できません`);
+        return new NotWearableErorr(self, race, `このキャラクターの設定では${self.name}を装備できません`);
       }
     }
 
     if (wearableBlessings.length > 0 && !!blessing) {
       const blessingWearable = wearableBlessings.includes(blessing.name);
       if (!blessingWearable) {
-        return new NotWearableErorr(self, blessing, `このキャラクターの設定では${  self.name  }を装備できません`);
+        return new NotWearableErorr(self, blessing, `このキャラクターの設定では${self.name}を装備できません`);
       }
     }
 
     if (wearableClothings.length > 0 && !!clothing) {
       const clothingWearable = wearableClothings.includes(clothing.name);
       if (!clothingWearable) {
-        return new NotWearableErorr(self, clothing, `このキャラクターの設定では${  self.name  }を装備できません`);
+        return new NotWearableErorr(self, clothing, `このキャラクターの設定では${self.name}を装備できません`);
       }
     }
 
     if (wearableWeapons.length > 0 && !!weapon) {
       const weaponWearable = wearableWeapons.includes(weapon.name);
       if (!weaponWearable) {
-        return new NotWearableErorr(self, weapon, `このキャラクターの設定では${  self.name  }を装備できません`);
+        return new NotWearableErorr(self, weapon, `このキャラクターの設定では${self.name}を装備できません`);
       }
     }
 

@@ -33,14 +33,14 @@ export const toStatus: ToStatus = statusJson => {
   const validateSchema = compile(statusSchema);
   if (!validateSchema(statusJson)) {
     // @ts-ignore
-    const {errors} = validateSchema;
+    const { errors } = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'statusのjsonデータではありません');
   }
 
   const status = getStatus(statusJson.name);
   if (!status) {
-    return new DataNotFoundError(statusJson.name, 'status', `${statusJson.name  }というstatusは存在しません`);
+    return new DataNotFoundError(statusJson.name, 'status', `${statusJson.name}というstatusは存在しません`);
   }
 
   status.restWt = statusJson.restWt;

@@ -67,12 +67,12 @@ export const toParty: ToParty = partyJson => {
   const validateSchema = compile(partySchema);
   if (!validateSchema(partyJson)) {
     // @ts-ignore
-    const {errors} = validateSchema;
+    const { errors } = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'partyのjsonデータではありません');
   }
 
-  const {name} = partyJson;
+  const { name } = partyJson;
 
   const charactorObjs: Charactor[] = [];
   for (const charactor of partyJson.charactors) {

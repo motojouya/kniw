@@ -134,7 +134,7 @@ export const toAction: ToAction = actionJson => {
   const validateSchema = compile(actionSchema);
   if (!validateSchema(actionJson)) {
     // @ts-ignore
-    const {errors} = validateSchema;
+    const { errors } = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
   }
@@ -164,7 +164,7 @@ export const toAction: ToAction = actionJson => {
 
     const skill = getSkill(actionJson.skill);
     if (!skill) {
-      return new DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill  }というskillは存在しません`);
+      return new DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill}というskillは存在しません`);
     }
 
     return {
@@ -202,7 +202,7 @@ export const toTurn: ToTurn = turnJson => {
   const validateSchema = compile(turnSchema);
   if (!validateSchema(turnJson)) {
     // @ts-ignore
-    const {errors} = validateSchema;
+    const { errors } = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
   }

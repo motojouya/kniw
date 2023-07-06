@@ -31,10 +31,10 @@ const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Ch
       return;
     }
 
-    const {receiverCount} = skill;
+    const { receiverCount } = skill;
     const receiverOptions = receivers.map(receiver => ({ value: receiver, label: receiver.name }));
     const receivers = await conversation.multiSelect(
-      `対象を${  receiverCount  }体まで選んでください。未選択でSkillを選び直せます`,
+      `対象を${receiverCount}体まで選んでください。未選択でSkillを選び直せます`,
       receiverOptions,
     );
 
@@ -133,7 +133,7 @@ export const continueBattle: ContinueBattle = (conversation, repository) => batt
     console.log('勝負は無効となりました');
   }
   if (battle.result === 'HOME' || battle.result === 'VISITOR') {
-    console.log(`${battle.result  }プレイヤーの勝利です`);
+    console.log(`${battle.result}プレイヤーの勝利です`);
   }
   if (battle.result === 'DRAW') {
     console.log('勝負は引き分けです');

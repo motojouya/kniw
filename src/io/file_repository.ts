@@ -31,7 +31,7 @@ const FILE_EXTENSION = '.json';
 
 type IsDataFile = (basePath: string, dirName: string, file: string) => boolean;
 const isDataFile: IsDataFile = (basePath, dirName, file) =>
-  fs.statSync(path.join(basePath, dirName, file)).isFile() && new RegExp(`.*${  FILE_EXTENSION}`).test(file);
+  fs.statSync(path.join(basePath, dirName, file)).isFile() && new RegExp(`.*${FILE_EXTENSION}`).test(file);
 
 type CreateDirctory = (dirName: string) => Promise<void>;
 const createDirctory: CreateDirctory = async dirName => {
