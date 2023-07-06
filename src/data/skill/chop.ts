@@ -1,5 +1,5 @@
-import type { Skill } from 'src/domain/skill'
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy } from 'src/domain/skill'
+import type { Skill } from 'src/domain/skill';
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy } from 'src/domain/skill';
 
 export const chop: Skill = {
   name: 'chop',
@@ -11,4 +11,3 @@ export const chop: Skill = {
   getAccuracy: calcOrdinaryAccuracy,
   description: '斬りつける',
 };
-

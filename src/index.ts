@@ -52,7 +52,7 @@ const test = () => console.log('test');
 
 // const num : number = +process.argv[2];
 // console.log(fizzbuzz(num));
-// 
+//
 // function fizzbuzz(num : number) : string {
 //   if (num % 15 == 0) {
 //     return "FizBuz";

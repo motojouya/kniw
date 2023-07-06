@@ -28,4 +28,3 @@ charactor
 program.parse(process.argv);
 
 //export program;
-

@@ -1,5 +1,5 @@
-import type { Race } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
 
 export const golem: Race = {
   name: 'golem',
@@ -30,4 +30,3 @@ export const golem: Race = {
   },
   description: 'ゴーレム。とにかく堅い。',
 };
-

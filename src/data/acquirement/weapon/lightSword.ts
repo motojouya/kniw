@@ -1,6 +1,6 @@
-import type { Weapon } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
-import { chop } from 'src/data/skill/chop'
+import type { Weapon } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
+import { chop } from 'src/data/skill/chop';
 
 export const lightSword: Weapon = {
   name: 'lightSword',
@@ -31,4 +31,3 @@ export const lightSword: Weapon = {
   },
   description: '光の剣。特に特別なわけではないが軽い。',
 };
-

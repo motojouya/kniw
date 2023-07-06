@@ -1,5 +1,5 @@
-import type { Skill } from 'src/domain/skill'
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy } from 'src/domain/skill'
+import type { Skill } from 'src/domain/skill';
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy } from 'src/domain/skill';
 
 export const volcanoRise: Skill = {
   name: 'volcanoRise',
@@ -11,4 +11,3 @@ export const volcanoRise: Skill = {
   getAccuracy: calcOrdinaryAccuracy,
   description: '噴火',
 };
-

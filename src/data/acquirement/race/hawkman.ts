@@ -1,5 +1,5 @@
-import type { Race } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
 
 export const hawkman: Race = {
   name: 'hawkman',
@@ -30,4 +30,3 @@ export const hawkman: Race = {
   },
   description: 'ホークマン。飛行移動ができる。',
 };
-

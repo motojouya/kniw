@@ -1,5 +1,5 @@
-import type { Race } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
 
 export const merman: Race = {
   name: 'merman',
@@ -30,4 +30,3 @@ export const merman: Race = {
   },
   description: 'マーマン。魔法防御力が高い。',
 };
-

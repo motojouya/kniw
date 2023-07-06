@@ -1,28 +1,14 @@
-import { Physical, addPhysicals } from 'src/domain/physical'
-import type { Status } from 'src/domain/status'
-import { toStatus, toStatusJson } from 'src/domain/status'
-import {
-  Race,
-  Weapon,
-  Clothing,
-  Blessing,
-  NotWearableErorr,
-} from 'src/domain/acquirement'
-import {
-  getRace,
-  getWeapon,
-  getClothing,
-  getBlessing,
-} from 'src/store/acquirement'
-import { Ability } from 'src/domain/ability'
-import { Skill } from 'src/domain/skill'
-import {
-  JsonSchemaUnmatchError,
-  DataNotFoundError,
-} from 'src/store/store';
+import { Physical, addPhysicals } from 'src/domain/physical';
+import type { Status } from 'src/domain/status';
+import { toStatus, toStatusJson } from 'src/domain/status';
+import { Race, Weapon, Clothing, Blessing, NotWearableErorr } from 'src/domain/acquirement';
+import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
+import { Ability } from 'src/domain/ability';
+import { Skill } from 'src/domain/skill';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
-import { FromSchema } from "json-schema-to-ts";
-import { createValidationCompiler } from 'src/io/json_schema'
+import { FromSchema } from 'json-schema-to-ts';
+import { createValidationCompiler } from 'src/io/json_schema';
 
 const basePhysical: Physical = {
   MaxHP: 100,
@@ -39,42 +25,41 @@ const basePhysical: Physical = {
 };
 
 export type Charactor = {
-  name: string,
-  weapon: Weapon,
-  clothing: Clothing,
-  blessing: Blessing,
-  race: Race,
-  statuses: Status[],
-  hp: number,
-  mp: number,
-  restWt: number,
-  isVisitor?: boolean,
-}
+  name: string;
+  weapon: Weapon;
+  clothing: Clothing;
+  blessing: Blessing;
+  race: Race;
+  statuses: Status[];
+  hp: number;
+  mp: number;
+  restWt: number;
+  isVisitor?: boolean;
+};
 
 export type CharactorBattling = Required<Charactor>;
 
 export const charactorSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    name: { type: "string" },
-    race: { type: "string" },
-    blessing: { type: "string" },
-    clothing: { type: "string" },
-    weapon: { type: "string" },
-    statuses: { type: "array", items: {} },
-    hp: { type: "integer" },
-    mp: { type: "integer" },
-    restWt: { type: "integer" },
-    isVisitor: { type: "boolean" },
+    name: { type: 'string' },
+    race: { type: 'string' },
+    blessing: { type: 'string' },
+    clothing: { type: 'string' },
+    weapon: { type: 'string' },
+    statuses: { type: 'array', items: {} },
+    hp: { type: 'integer' },
+    mp: { type: 'integer' },
+    restWt: { type: 'integer' },
+    isVisitor: { type: 'boolean' },
   },
-  required: ["name", "race", "blessing", "clothing", "weapon", "statuses", "hp", "mp", "restWt"],
+  required: ['name', 'race', 'blessing', 'clothing', 'weapon', 'statuses', 'hp', 'mp', 'restWt'],
 } as const;
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
 
 export type ToCharactorJson = (charactor: Charactor) => CharactorJson;
 export const toCharactorJson: ToCharactorJson = charactor => {
-
   const json = {
     name: charactor.name,
     race: charactor.race.name,
@@ -95,9 +80,14 @@ export const toCharactorJson: ToCharactorJson = charactor => {
   return json;
 };
 
-type Validate = (name: string, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => NotWearableErorr | null;
+type Validate = (
+  name: string,
+  race: Race,
+  blessing: Blessing,
+  clothing: Clothing,
+  weapon: Weapon,
+) => NotWearableErorr | null;
 const validate: Validate = (name, race, blessing, clothing, weapon) => {
-
   const raceResult = race.validateWearable(race, blessing, clothing, weapon);
   if (raceResult instanceof NotWearableErorr) {
     return raceResult;
@@ -119,13 +109,14 @@ const validate: Validate = (name, race, blessing, clothing, weapon) => {
   }
 
   return null;
-}
+};
 
-export type ToCharactor = (charactorJson: any) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+export type ToCharactor = (
+  charactorJson: any,
+) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toCharactor: ToCharactor = charactorJson => {
-
   const compile = createValidationCompiler();
-  const validateSchema = compile(charactorSchema)
+  const validateSchema = compile(charactorSchema);
   if (!validateSchema(charactorJson)) {
     // @ts-ignore
     const errors = validateSchema.errors;
@@ -142,12 +133,20 @@ export const toCharactor: ToCharactor = charactorJson => {
 
   const blessing = getBlessing(charactorJson.blessing);
   if (!blessing) {
-    return new DataNotFoundError(charactorJson.blessing, 'blessing', charactorJson.blessing + 'という祝福は存在しません');
+    return new DataNotFoundError(
+      charactorJson.blessing,
+      'blessing',
+      charactorJson.blessing + 'という祝福は存在しません',
+    );
   }
 
   const clothing = getClothing(charactorJson.clothing);
   if (!clothing) {
-    return new DataNotFoundError(charactorJson.clothing, 'clothing', charactorJson.clothing + 'という装備は存在しません');
+    return new DataNotFoundError(
+      charactorJson.clothing,
+      'clothing',
+      charactorJson.clothing + 'という装備は存在しません',
+    );
   }
 
   const weapon = getWeapon(charactorJson.weapon);
@@ -164,9 +163,7 @@ export const toCharactor: ToCharactor = charactorJson => {
   for (let status of charactorJson.statuses) {
     const statusObj = toStatus(status);
 
-    if (statusObj instanceof JsonSchemaUnmatchError
-     || statusObj instanceof DataNotFoundError
-    ) {
+    if (statusObj instanceof JsonSchemaUnmatchError || statusObj instanceof DataNotFoundError) {
       return statusObj;
     }
     statuses.push(statusObj);
@@ -191,9 +188,14 @@ export const toCharactor: ToCharactor = charactorJson => {
   return someone;
 };
 
-export type CreateCharactor = (name: string, race: Race, blessing: Blessing, clothing: Clothing, weapon: Weapon) => Charactor | NotWearableErorr | DataNotFoundError;
+export type CreateCharactor = (
+  name: string,
+  race: Race,
+  blessing: Blessing,
+  clothing: Clothing,
+  weapon: Weapon,
+) => Charactor | NotWearableErorr | DataNotFoundError;
 export const createCharactor: CreateCharactor = (name, race, blessing, clothing, weapon) => {
-
   const validateResult = validate(name, race, blessing, clothing, weapon);
   if (validateResult instanceof NotWearableErorr) {
     return validateResult;
@@ -235,11 +237,11 @@ export const getSkills: GetSkills = charactor => [
 ];
 
 export type GetPhysical = (charactor: Charactor) => Physical;
-export const getPhysical: GetPhysical = charactor => addPhysicals([
-  basePhysical,
-  charactor.race.additionalPhysical,
-  charactor.blessing.additionalPhysical,
-  charactor.clothing.additionalPhysical,
-  charactor.weapon.additionalPhysical,
-]);
-
+export const getPhysical: GetPhysical = charactor =>
+  addPhysicals([
+    basePhysical,
+    charactor.race.additionalPhysical,
+    charactor.blessing.additionalPhysical,
+    charactor.clothing.additionalPhysical,
+    charactor.weapon.additionalPhysical,
+  ]);

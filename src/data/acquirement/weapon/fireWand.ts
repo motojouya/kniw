@@ -1,6 +1,6 @@
-import type { Weapon } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
-import { volcanoRise } from 'src/data/skill/volcanoRise'
+import type { Weapon } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
+import { volcanoRise } from 'src/data/skill/volcanoRise';
 
 export const fireWand: Weapon = {
   name: 'fireWand',
@@ -31,4 +31,3 @@ export const fireWand: Weapon = {
   },
   description: '炎の杖。大地属性で炎の魔法が打てる杖。',
 };
-

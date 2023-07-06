@@ -1,45 +1,21 @@
-import type {
-  Field,
-  Climate,
-} from 'src/domain/field';
-import type {
-  Party,
-  PartyJson,
-} from 'src/domain/party'
-import type { Charactor } from 'src/domain/charactor'
-import type { Skill } from 'src/domain/skill'
+import type { Field, Climate } from 'src/domain/field';
+import type { Party, PartyJson } from 'src/domain/party';
+import type { Charactor } from 'src/domain/charactor';
+import type { Skill } from 'src/domain/skill';
 import type { Randoms } from 'src/domain/random';
-import type {
-  Turn,
-  TurnJson,
-} from 'src/domain/turn';
+import type { Turn, TurnJson } from 'src/domain/turn';
 
-import {
-  toTurn,
-  toTurnJson,
-  turnSchema,
-} from 'src/domain/turn';
-import {
-  toParty,
-  toPartyJson,
-  CharactorDuplicationError,
-  partySchema,
-} from 'src/domain/party'
-import {
-  getPhysical,
-  getAbilities,
-} from 'src/domain/charactor'
+import { toTurn, toTurnJson, turnSchema } from 'src/domain/turn';
+import { toParty, toPartyJson, CharactorDuplicationError, partySchema } from 'src/domain/party';
+import { getPhysical, getAbilities } from 'src/domain/charactor';
 import { changeClimate } from 'src/domain/field';
-import { NotWearableErorr } from 'src/domain/acquirement'
-import {
-  JsonSchemaUnmatchError,
-  DataNotFoundError,
-} from 'src/store/store';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 import { parse } from 'date-fns';
 //import ja from 'date-fns/locale/ja'
 
-import { FromSchema } from "json-schema-to-ts";
+import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
 //TODO util?
@@ -52,23 +28,23 @@ export const GameVisitor: GameResult = 'VISITOR';
 export const GameDraw: GameResult = 'DRAW';
 
 export type Battle = {
-  datetime: Date,
-  home: Party,
-  visitor: Party,
-  turns: Turn[],
-  result: GameResult,
-}
+  datetime: Date;
+  home: Party;
+  visitor: Party;
+  turns: Turn[];
+  result: GameResult;
+};
 
 export const battleSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    datetime: { type: "string", format: "date-time" },
+    datetime: { type: 'string', format: 'date-time' },
     home: partySchema,
     visitor: partySchema,
-    turns: { type: "array", items: turnSchema },
-    result: { enum: [ GameOngoing, GameHome, GameVisitor, GameDraw ] },
+    turns: { type: 'array', items: turnSchema },
+    result: { enum: [GameOngoing, GameHome, GameVisitor, GameDraw] },
   },
-  required: ["datetime", "home", "visitor", "turns", "result"],
+  required: ['datetime', 'home', 'visitor', 'turns', 'result'],
 } as const;
 
 export type BattleJson = FromSchema<typeof battleSchema>;
@@ -82,11 +58,12 @@ export const toBattleJson: ToBattleJson = battle => ({
   result: battle.result,
 });
 
-export type ToBattle = (battleJson: any) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export type ToBattle = (
+  battleJson: any,
+) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toBattle: ToBattle = battleJson => {
-
   const compile = createValidationCompiler();
-  const validateSchema = compile(battleSchema)
+  const validateSchema = compile(battleSchema);
   if (!validateSchema(battleJson)) {
     // @ts-ignore
     const errors = validateSchema.errors;
@@ -99,19 +76,21 @@ export const toBattle: ToBattle = battleJson => {
   const datetime = parse(battleJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
   const home = toParty(battleJson.home);
-  if (home instanceof NotWearableErorr
-   || home instanceof DataNotFoundError
-   || home instanceof CharactorDuplicationError
-   || home instanceof JsonSchemaUnmatchError
+  if (
+    home instanceof NotWearableErorr ||
+    home instanceof DataNotFoundError ||
+    home instanceof CharactorDuplicationError ||
+    home instanceof JsonSchemaUnmatchError
   ) {
     return home;
   }
 
   const visitor = toParty(battleJson.visitor);
-  if (visitor instanceof NotWearableErorr
-   || visitor instanceof DataNotFoundError
-   || visitor instanceof CharactorDuplicationError
-   || visitor instanceof JsonSchemaUnmatchError
+  if (
+    visitor instanceof NotWearableErorr ||
+    visitor instanceof DataNotFoundError ||
+    visitor instanceof CharactorDuplicationError ||
+    visitor instanceof JsonSchemaUnmatchError
   ) {
     return visitor;
   }
@@ -119,9 +98,10 @@ export const toBattle: ToBattle = battleJson => {
   const turns: Turn[] = [];
   for (let turnJson of battleJson.turns) {
     const turn = toTurn(turnJson);
-    if (turn instanceof NotWearableErorr
-     || turn instanceof DataNotFoundError
-     || turn instanceof JsonSchemaUnmatchError
+    if (
+      turn instanceof NotWearableErorr ||
+      turn instanceof DataNotFoundError ||
+      turn instanceof JsonSchemaUnmatchError
     ) {
       return turn;
     }
@@ -139,39 +119,40 @@ export const toBattle: ToBattle = battleJson => {
   };
 };
 
-type SortByWT = (charactors: Charactor[]) => Charactor[]
-const sortByWT: SortByWT = charactors => charactors.sort((left, right) => {
-  const leftPhysical = getPhysical(left);
-  const rightPhysical = getPhysical(right);
-  const wtDiff = left.restWt - right.restWt;
-  if (wtDiff !== 0) {
-    return wtDiff;
-  }
-  const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
-  if (agiDiff !== 0) {
-    return agiDiff;
-  }
-  const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
-  if (avdDiff !== 0) {
-    return avdDiff;
-  }
-  const hpDiff = left.hp - right.hp;
-  if (hpDiff !== 0) {
-    return hpDiff;
-  }
-  const mpDiff = left.mp - right.mp;
-  if (mpDiff !== 0) {
-    return mpDiff;
-  }
-  //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
-  //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
-  return 0;
-});
+type SortByWT = (charactors: Charactor[]) => Charactor[];
+const sortByWT: SortByWT = charactors =>
+  charactors.sort((left, right) => {
+    const leftPhysical = getPhysical(left);
+    const rightPhysical = getPhysical(right);
+    const wtDiff = left.restWt - right.restWt;
+    if (wtDiff !== 0) {
+      return wtDiff;
+    }
+    const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
+    if (agiDiff !== 0) {
+      return agiDiff;
+    }
+    const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
+    if (avdDiff !== 0) {
+      return avdDiff;
+    }
+    const hpDiff = left.hp - right.hp;
+    if (hpDiff !== 0) {
+      return hpDiff;
+    }
+    const mpDiff = left.mp - right.mp;
+    if (mpDiff !== 0) {
+      return mpDiff;
+    }
+    //TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
+    //最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
+    return 0;
+  });
 
 export type CreateBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
 export const createBattle: CreateBattle = (datetime, home, visitor) => {
-  home.charactors.forEach(charactor => charactor.isVisitor = false);
-  visitor.charactors.forEach(charactor => charactor.isVisitor = true);
+  home.charactors.forEach(charactor => (charactor.isVisitor = false));
+  visitor.charactors.forEach(charactor => (charactor.isVisitor = true));
   return {
     datetime,
     home,
@@ -190,7 +171,7 @@ export const start: Start = (battle, datetime, randoms) => ({
   },
   sortedCharactors: sortByWT([...battle.home.charactors, ...battle.visitor.charactors]),
   field: {
-    climate: changeClimate(randoms)
+    climate: changeClimate(randoms),
   },
 });
 
@@ -201,9 +182,16 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
     return receiver;
   }
   return charactor;
-}
+};
 
-export type Act = (battle: Battle, actor: Charactor, skill: Skill, receivers: Charactor[], datetime: Date, randoms: Randoms) => Turn
+export type Act = (
+  battle: Battle,
+  actor: Charactor,
+  skill: Skill,
+  receivers: Charactor[],
+  datetime: Date,
+  randoms: Randoms,
+) => Turn;
 export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
@@ -236,7 +224,7 @@ export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => 
   return newTurn;
 };
 
-export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn
+export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn;
 export const stay: Stay = (battle, actor, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
@@ -262,7 +250,6 @@ export const stay: Stay = (battle, actor, datetime, randoms) => {
 
 type WaitCharactor = (charactor: Charactor, wt: number, randoms: Randoms) => Charactor;
 const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
-
   const abilities = getAbilities(charactor);
   const newCharactor = abilities.reduce((charactor, ability) => ability.wait(wt, charactor, randoms), { ...charactor });
 
@@ -273,19 +260,19 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
     })
     .filter(status => status.restWt > 0);
 
-  newCharactor.restWt = Math.max((newCharactor.restWt - wt), 0);
+  newCharactor.restWt = Math.max(newCharactor.restWt - wt, 0);
   return newCharactor;
 };
 
 //ターン経過による状態変化を起こす関数
 //これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
-export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn
+export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn;
 export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
     datetime,
     action: {
-      type: "TIME_PASSING",
+      type: 'TIME_PASSING',
       wt,
     },
     sortedCharactors: lastTurn.sortedCharactors,
@@ -315,4 +302,3 @@ export const isSettlement: IsSettlement = battle => {
   }
   return GameOngoing;
 };
-

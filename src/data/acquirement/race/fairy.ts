@@ -1,5 +1,5 @@
-import type { Race } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
 
 export const fairy: Race = {
   name: 'fairy',
@@ -30,4 +30,3 @@ export const fairy: Race = {
   },
   description: 'フェアリー。魔法攻撃力が高い。',
 };
-

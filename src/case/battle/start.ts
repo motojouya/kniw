@@ -14,7 +14,6 @@ import {
   createBattle,
 } from 'src/model/battle';
 
-
 const SKILL = 'SKILL';
 const LIST = 'LIST';
 const CHARACTOR = 'CHARACTOR';
@@ -23,10 +22,9 @@ const SURRENDER = 'SURRENDER';
 const BACK = 'BACK';
 
 const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Charactor[]) => {
-
   while (true) {
     const skills = getSkills(actor);
-    const skillOptions = skills.map(skill => ({ value: skill, label: skill.name }))
+    const skillOptions = skills.map(skill => ({ value: skill, label: skill.name }));
     skillOptions.push({ value: 'BACK', label: '戻る' });
     const skill = await conversation.select('Skillを選んでください', skillOptions);
     if (skill === BACK) {
@@ -34,8 +32,11 @@ const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Ch
     }
 
     const receiverCount = skill.receiverCount;
-    const receiverOptions = receivers.map(receiver => ({ value: receiver, label: receiver.name }))
-    const receivers = await conversation.multiSelect('対象を' + receiverCount + '体まで選んでください。未選択でSkillを選び直せます', receiverOptions);
+    const receiverOptions = receivers.map(receiver => ({ value: receiver, label: receiver.name }));
+    const receivers = await conversation.multiSelect(
+      '対象を' + receiverCount + '体まで選んでください。未選択でSkillを選び直せます',
+      receiverOptions,
+    );
 
     if (receivers.length === 0) {
       continue;
@@ -54,7 +55,6 @@ const skillSelect = (conversation: Conversation, actor: Charactor, receivers: Ch
 };
 
 const playerSelect = (conversation: Conversation, actor: Charactor) => {
-
   while (true) {
     const select = await conversation.select('どうしますか？', [
       { value: 'SKILL', label: 'Skillを選ぶ' },
@@ -65,26 +65,27 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
     ]);
 
     switch (select) {
-    case SKILL: 
-      break;
-    case LIST: 
-      break;
-    case CHARACTOR: 
-      break;
-    case INTERRUPTION: 
-      break;
-    case SURRENDER: 
-      break;
-    default: //do nothing
+      case SKILL:
+        break;
+      case LIST:
+        break;
+      case CHARACTOR:
+        break;
+      case INTERRUPTION:
+        break;
+      case SURRENDER:
+        break;
+      default: //do nothing
     }
   }
 
-
-  await conversation.autoCompleteMultiSelect('')
-
+  await conversation.autoCompleteMultiSelect('');
 };
 
-export type StartBattle = (conversation: Conversation, repository: Repository) => (home: Party, visitor: Party) => Promise<void>
+export type StartBattle = (
+  conversation: Conversation,
+  repository: Repository,
+) => (home: Party, visitor: Party) => Promise<void>;
 export const startBattle: StartBattle = (conversation, repository) => (home, visitor) => {
   const battle = createBattle('TODO Date', home, visitor);
   battle.turns.push(start(battle, 'TODO Date', 'TODO random'));
@@ -92,13 +93,16 @@ export const startBattle: StartBattle = (conversation, repository) => (home, vis
   continueBattle(conversation, repository)(battle);
 };
 
-export type RestartBattle = (conversation: Conversation, repository: Repository) => (battleJson: BattleJson) => Promise<void>
-export const restartBattle: RestartBattle = (conversation, repository) => (battleJson) => {
+export type RestartBattle = (
+  conversation: Conversation,
+  repository: Repository,
+) => (battleJson: BattleJson) => Promise<void>;
+export const restartBattle: RestartBattle = (conversation, repository) => battleJson => {
   continueBattle(conversation, repository)(createBattle(battleJson));
 };
 
-export type ContinueBattle = (conversation: Conversation, repository: Repository) => (battle: Battle) => Promise<void>
-export const continueBattle: ContinueBattle = (conversation, repository) => (battle) => {
+export type ContinueBattle = (conversation: Conversation, repository: Repository) => (battle: Battle) => Promise<void>;
+export const continueBattle: ContinueBattle = (conversation, repository) => battle => {
   const battleStore = createStore<Battle>(repository);
   while (true) {
     const firstWaiting = arrayLast(turns).sortedCharactors[0];
@@ -135,4 +139,3 @@ export const continueBattle: ContinueBattle = (conversation, repository) => (bat
     console.log('勝負は引き分けです');
   }
 };
-

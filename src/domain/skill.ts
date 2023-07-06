@@ -1,32 +1,38 @@
-import { Field } from 'src/domain/field'
-import { Randoms } from 'src/domain/random'
-import { Charactor, getPhysical } from 'src/domain/charactor'
-import * as skills from 'src/data/skill'
+import { Field } from 'src/domain/field';
+import { Randoms } from 'src/domain/random';
+import { Charactor, getPhysical } from 'src/domain/charactor';
+import * as skills from 'src/data/skill';
 
-export type ActionToCharactor = (self: Skill, actor: Charactor, randoms: Randoms, field: Field, receiver: Charactor) => Charactor;
+export type ActionToCharactor = (
+  self: Skill,
+  actor: Charactor,
+  randoms: Randoms,
+  field: Field,
+  receiver: Charactor,
+) => Charactor;
 export type ActionToField = (self: Skill, actor: Charactor, randoms: Randoms, field: Field) => Field;
 export type GetAccuracy = (self: Skill, actor: Charactor, field: Field, receiver: Charactor) => number;
 
 export type SkillToCharactor = {
-  name: string,
-  label: string,
-  type: 'SKILL_TO_CHARACTOR',
-  action: ActionToCharactor,
-  receiverCount: number,
-  additionalWt: number,
-  getAccuracy: GetAccuracy,
-  description: string,
+  name: string;
+  label: string;
+  type: 'SKILL_TO_CHARACTOR';
+  action: ActionToCharactor;
+  receiverCount: number;
+  additionalWt: number;
+  getAccuracy: GetAccuracy;
+  description: string;
 };
 
 export type SkillToField = {
-  name: string,
-  label: string,
-  type: 'SKILL_TO_FIELD',
-  action: ActionToField,
-  receiverCount: 0,
-  additionalWt: number,
-  getAccuracy: GetAccuracy,
-  description: string,
+  name: string;
+  label: string;
+  type: 'SKILL_TO_FIELD';
+  action: ActionToField;
+  receiverCount: 0;
+  additionalWt: number;
+  getAccuracy: GetAccuracy;
+  description: string;
 };
 
 export type Skill = SkillToCharactor | SkillToField;
@@ -62,7 +68,7 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
     ...receiver,
     hp: restHp,
   };
-}
+};
 
 type CalcMagicalAttack = (attacker: Charactor) => number;
 const calcMagicalAttack: CalcMagicalAttack = attacker => {
@@ -77,7 +83,6 @@ const calcMagicalDefence: CalcMagicalDefence = defencer => {
 };
 
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-
   let damage = calcMagicalAttack(actor) - calcMagicalDefence(receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;
   if (damage < 1) {
@@ -93,7 +98,7 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
     ...receiver,
     hp: restHp,
   };
-}
+};
 
 type CalcAttackAccuracy = (attacker: Charactor) => number;
 const calcAttackAccuracy: CalcAttackAccuracy = attacker => {
@@ -107,5 +112,5 @@ const calcDefenceAccuracy: CalcDefenceAccuracy = defencer => {
   return (physical.DEX + physical.AVD) / 2;
 };
 
-export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) => (100 + calcAttackAccuracy(actor) - calcDefenceAccuracy(receiver)) / 100;
-
+export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) =>
+  (100 + calcAttackAccuracy(actor) - calcDefenceAccuracy(receiver)) / 100;

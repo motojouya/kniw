@@ -1,4 +1,4 @@
-import type { Ability, justWait } from 'src/domain/ability'
+import type { Ability, justWait } from 'src/domain/ability';
 
 export const shootingGuard: Ability = {
   name: 'shootingGuard',
@@ -6,4 +6,3 @@ export const shootingGuard: Ability = {
   wait: justWait,
   description: '弓矢の攻撃を受けない',
 };
-

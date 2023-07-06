@@ -1,5 +1,5 @@
-import type { Race } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
+import type { Race } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
 
 export const human: Race = {
   name: 'human',
@@ -30,4 +30,3 @@ export const human: Race = {
   },
   description: 'ヒト。装備の制約が少なく、できることも多いが逆に言えば器用貧乏',
 };
-

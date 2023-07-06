@@ -1,5 +1,5 @@
-import type { Ability, Wait } from 'src/domain/ability'
-import { getPhysical } from 'src/domain/charactor'
+import type { Ability, Wait } from 'src/domain/ability';
+import { getPhysical } from 'src/domain/charactor';
 
 const wait: Wait = (wt, charactor, randoms) => {
   const turnAdd = wt;
@@ -26,4 +26,3 @@ export const mpGainPlus: Ability = {
   wait: wait,
   description: 'MPの回復速度が早くなる',
 };
-

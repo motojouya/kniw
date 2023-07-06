@@ -1,5 +1,5 @@
-import type { Blessing } from 'src/domain/acquirement'
-import { createValidateWearable } from 'src/domain/acquirement'
+import type { Blessing } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
 
 export const mind: Blessing = {
   name: 'mind',
@@ -30,4 +30,3 @@ export const mind: Blessing = {
   },
   description: '心の祝福',
 };
-

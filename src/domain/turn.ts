@@ -1,104 +1,97 @@
 import type { Field, Climate } from 'src/domain/field';
-import type { Charactor } from 'src/domain/charactor'
-import type { Skill } from 'src/domain/skill'
+import type { Charactor } from 'src/domain/charactor';
+import type { Skill } from 'src/domain/skill';
 
-import {
-  toCharactor,
-  toCharactorJson,
-  charactorSchema,
-} from 'src/domain/charactor'
-import { NotWearableErorr } from 'src/domain/acquirement'
-import { getSkill } from 'src/store/skill'
-import {
-  JsonSchemaUnmatchError,
-  DataNotFoundError,
-} from 'src/store/store';
+import { toCharactor, toCharactorJson, charactorSchema } from 'src/domain/charactor';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { getSkill } from 'src/store/skill';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
-import { FromSchema } from "json-schema-to-ts";
+import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
 import { parse } from 'date-fns';
 //import ja from 'date-fns/locale/ja'
 
 export type DoSkill = {
-  type: 'DO_SKILL',
-  actor: Charactor,
-  skill: Skill,
-  receivers: Charactor[],
+  type: 'DO_SKILL';
+  actor: Charactor;
+  skill: Skill;
+  receivers: Charactor[];
 };
 
 export type DoNothing = {
-  type: 'DO_NOTHING',
-  actor: Charactor,
+  type: 'DO_NOTHING';
+  actor: Charactor;
 };
 
 export type TimePassing = {
-  type: 'TIME_PASSING',
-  wt: number,
+  type: 'TIME_PASSING';
+  wt: number;
 };
 
 export type Action = TimePassing | DoNothing | DoSkill;
 
 export type Turn = {
-  datetime: Date,
-  action: Action,
-  sortedCharactors: Charactor[],
-  field: Field,
+  datetime: Date;
+  action: Action;
+  sortedCharactors: Charactor[];
+  field: Field;
 };
 
 export const doSkillSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    type: { const: "DO_SKILL" },
+    type: { const: 'DO_SKILL' },
     actor: charactorSchema,
-    skill: { type: "string" },
-    receivers: { type: "array", items: charactorSchema },
+    skill: { type: 'string' },
+    receivers: { type: 'array', items: charactorSchema },
   },
-  required: ["type", "actor", "skill", "receivers"],
+  required: ['type', 'actor', 'skill', 'receivers'],
 } as const;
 
 export type DoSkillJson = FromSchema<typeof doSkillSchema>;
 
 export const doNothingSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    type: { const: "DO_NOTHING" },
+    type: { const: 'DO_NOTHING' },
     actor: charactorSchema,
   },
-  required: ["type", "actor"],
+  required: ['type', 'actor'],
 } as const;
 
 export type DoNothingJson = FromSchema<typeof doNothingSchema>;
 
 export const timePassingSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    type: { const: "TIME_PASSING" },
-    wt: { type: "integer" },
+    type: { const: 'TIME_PASSING' },
+    wt: { type: 'integer' },
   },
-  required: ["type", "wt"],
+  required: ['type', 'wt'],
 } as const;
 
 export type TimePassingJson = FromSchema<typeof timePassingSchema>;
 
-export const actionSchema = { anyOf: [ doSkillSchema, doNothingSchema, timePassingSchema ] } as const;
+export const actionSchema = { anyOf: [doSkillSchema, doNothingSchema, timePassingSchema] } as const;
 export type ActionJson = FromSchema<typeof actionSchema>;
 
 export const turnSchema = {
-  type: "object",
+  type: 'object',
   properties: {
-    datetime: { type: "string", format: "date-time" },
+    datetime: { type: 'string', format: 'date-time' },
     action: actionSchema,
-    sortedCharactors: { type: "array", items: charactorSchema },
+    sortedCharactors: { type: 'array', items: charactorSchema },
     field: {
-      type: "object",
+      type: 'object',
       properties: {
-        climate: { type: "string" },
+        climate: { type: 'string' },
       },
-      required: ["climate"],
+      required: ['climate'],
     },
   },
-  required: ["datetime", "action", "sortedCharactors", "field"],
+  required: ['datetime', 'action', 'sortedCharactors', 'field'],
 } as const;
 
 export type TurnJson = FromSchema<typeof turnSchema>;
@@ -125,7 +118,7 @@ export const toActionJson: ToActionJson = action => {
     type: 'TIME_PASSING',
     wt: action.wt,
   };
-}
+};
 
 export type ToTurnJson = (turn: Turn) => TurnJson;
 export const toTurnJson: ToTurnJson = turn => ({
@@ -137,9 +130,8 @@ export const toTurnJson: ToTurnJson = turn => ({
 
 export type ToAction = (actionJson: any) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toAction: ToAction = actionJson => {
-
   const compile = createValidationCompiler();
-  const validateSchema = compile(actionSchema)
+  const validateSchema = compile(actionSchema);
   if (!validateSchema(actionJson)) {
     // @ts-ignore
     const errors = validateSchema.errors;
@@ -149,9 +141,10 @@ export const toAction: ToAction = actionJson => {
 
   if (actionJson.type === 'DO_SKILL') {
     const skillActor = toCharactor(actionJson.actor);
-    if (skillActor instanceof NotWearableErorr
-     || skillActor instanceof DataNotFoundError
-     || skillActor instanceof JsonSchemaUnmatchError
+    if (
+      skillActor instanceof NotWearableErorr ||
+      skillActor instanceof DataNotFoundError ||
+      skillActor instanceof JsonSchemaUnmatchError
     ) {
       return skillActor;
     }
@@ -159,9 +152,10 @@ export const toAction: ToAction = actionJson => {
     const receivers: Charactor[] = [];
     for (let receiverJson of actionJson.receivers) {
       const receiver = toCharactor(receiverJson);
-      if (receiver instanceof NotWearableErorr
-       || receiver instanceof DataNotFoundError
-       || receiver instanceof JsonSchemaUnmatchError
+      if (
+        receiver instanceof NotWearableErorr ||
+        receiver instanceof DataNotFoundError ||
+        receiver instanceof JsonSchemaUnmatchError
       ) {
         return receiver;
       }
@@ -183,9 +177,10 @@ export const toAction: ToAction = actionJson => {
 
   if (actionJson.type === 'DO_NOTHING') {
     const nothingActor = toCharactor(actionJson.actor);
-    if (nothingActor instanceof NotWearableErorr
-     || nothingActor instanceof DataNotFoundError
-     || nothingActor instanceof JsonSchemaUnmatchError
+    if (
+      nothingActor instanceof NotWearableErorr ||
+      nothingActor instanceof DataNotFoundError ||
+      nothingActor instanceof JsonSchemaUnmatchError
     ) {
       return nothingActor;
     }
@@ -203,9 +198,8 @@ export const toAction: ToAction = actionJson => {
 
 export type ToTurn = (turnJson: any) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toTurn: ToTurn = turnJson => {
-
   const compile = createValidationCompiler();
-  const validateSchema = compile(turnSchema)
+  const validateSchema = compile(turnSchema);
   if (!validateSchema(turnJson)) {
     // @ts-ignore
     const errors = validateSchema.errors;
@@ -218,9 +212,10 @@ export const toTurn: ToTurn = turnJson => {
   const datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
 
   const action = toAction(turnJson.action);
-  if (action instanceof NotWearableErorr
-   || action instanceof DataNotFoundError
-   || action instanceof JsonSchemaUnmatchError
+  if (
+    action instanceof NotWearableErorr ||
+    action instanceof DataNotFoundError ||
+    action instanceof JsonSchemaUnmatchError
   ) {
     return action;
   }
@@ -228,9 +223,10 @@ export const toTurn: ToTurn = turnJson => {
   const sortedCharactors: Charactor[] = [];
   for (let charactorJson of turnJson.sortedCharactors) {
     const charactor = toCharactor(charactorJson);
-    if (charactor instanceof NotWearableErorr
-     || charactor instanceof DataNotFoundError
-     || charactor instanceof JsonSchemaUnmatchError
+    if (
+      charactor instanceof NotWearableErorr ||
+      charactor instanceof DataNotFoundError ||
+      charactor instanceof JsonSchemaUnmatchError
     ) {
       return charactor;
     }
@@ -238,7 +234,7 @@ export const toTurn: ToTurn = turnJson => {
   }
 
   const field = {
-    climate: (turnJson.field.climate as Climate),
+    climate: turnJson.field.climate as Climate,
   };
 
   return {
@@ -248,4 +244,3 @@ export const toTurn: ToTurn = turnJson => {
     field,
   };
 };
-

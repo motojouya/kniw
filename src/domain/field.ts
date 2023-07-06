@@ -1,13 +1,9 @@
-import {
-  Randoms,
-  validateRandoms,
-  RandomRangeError,
-} from 'src/domain/random'
+import { Randoms, validateRandoms, RandomRangeError } from 'src/domain/random';
 
 export type Climate = 'SUNNY' | 'RAIN' | 'STORM' | 'SNOW' | 'FOGGY';
 type ClimateParcent = {
-  name: Climate,
-  parcent: number,
+  name: Climate;
+  parcent: number;
 };
 
 const climateParcent: ClimateParcent[] = [
@@ -20,7 +16,6 @@ const climateParcent: ClimateParcent[] = [
 
 export type ChangeClimate = (randoms: Randoms) => Climate;
 export const changeClimate: ChangeClimate = randoms => {
-
   const validateResult = validateRandoms(randoms);
   if (validateResult instanceof RandomRangeError) {
     console.debug(validateResult);
@@ -47,8 +42,8 @@ export const changeClimate: ChangeClimate = randoms => {
   } else {
     return 'SUNNY';
   }
-}
+};
 
 export type Field = {
-  climate: Climate,
-}
+  climate: Climate;
+};
