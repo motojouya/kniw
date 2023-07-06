@@ -23,5 +23,6 @@ module.exports = {
   rules: {
     "import/prefer-default-export": "off",
     "no-else-return": "off",
+    "no-lonely-if": "off",
   },
 };
