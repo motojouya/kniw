@@ -24,8 +24,8 @@ export type PartyJson = FromSchema<typeof partySchema>;
 
 export class CharactorDuplicationError {
   constructor(
-    public name: string,
-    public message: string,
+    readonly name: string,
+    readonly message: string,
   ) {}
 }
 

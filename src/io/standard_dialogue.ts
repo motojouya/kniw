@@ -7,7 +7,7 @@ export type SelectOption = {
 };
 
 export class NotApplicable {
-  constructor(public message: string) {}
+  constructor(readonly message: string) {}
 }
 
 type ChangeToChoice = (option: SelectOption) => Choice;

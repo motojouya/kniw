@@ -20,8 +20,8 @@ export type CreateStore<T, E> = (repository: Repository) => Store<T, E>;
 
 export class JsonSchemaUnmatchError {
   constructor(
-    public error: any,
-    public message: string,
+    readonly error: any,
+    readonly message: string,
   ) {}
 }
 

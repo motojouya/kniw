@@ -6,9 +6,9 @@ export type Randoms = {
 
 export class RandomRangeError {
   constructor(
-    public prop: string,
-    public value: number,
-    public message: string,
+    readonly prop: string,
+    readonly value: number,
+    readonly message: string,
   ) {}
 }
 

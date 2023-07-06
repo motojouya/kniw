@@ -26,9 +26,9 @@ export type Blessing = Acquirement;
 
 export class NotWearableErorr {
   constructor(
-    public acquirement: Acquirement,
-    public cause: Acquirement,
-    public message: string,
+    readonly acquirement: Acquirement,
+    readonly cause: Acquirement,
+    readonly message: string,
   ) {}
 }
 
