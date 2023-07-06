@@ -36,7 +36,7 @@ const isDataFile: IsDataFile = (basePath, dirName, file) =>
 type CreateDirctory = (dirName: string) => Promise<void>;
 const createDirctory: CreateDirctory = async dirName => {
   if (!fs.existsSync(dirName)) {
-    return fs.promises.mkdir(dirName);
+    await fs.promises.mkdir(dirName);
   }
 };
 
@@ -55,8 +55,8 @@ const createList: CreateList = basePath => async namespace => {
     const files = await fs.promises.readdir(path.join(basePath, namespace));
     return files.filter(file => isDataFile(basePath, namespace, file)).map(file => path.basename(file, FILE_EXTENSION));
   } catch (e) {
-    const error = e as any;
-    if (error.code === 'ENOENT') {
+    const error = e as any; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+    if (error.code === 'ENOENT') { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
       return [];
     } else {
       throw e;
@@ -69,10 +69,10 @@ const createGet: CreateGet = basePath => async (namespace, objctKey) => {
     const contents = await fs.promises.readFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), {
       encoding: 'utf8',
     });
-    return await JSON.parse(contents);
+    return JSON.parse(contents); // eslint-disable-line @typescript-eslint/no-unsafe-return
   } catch (e) {
-    const error = e as any;
-    if (error.code === 'ENOENT') {
+    const error = e as any; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+    if (error.code === 'ENOENT') { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
       return null;
     } else {
       throw e;
@@ -84,8 +84,8 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   try {
     await fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
   } catch (e) {
-    const error = e as any;
-    if (error.code !== 'ENOENT') {
+    const error = e as any; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
+    if (error.code !== 'ENOENT') { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
       throw e;
     }
   }

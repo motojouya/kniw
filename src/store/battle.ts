@@ -6,9 +6,6 @@ import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { toBattleJson, toBattle } from 'src/domain/battle';
 
-import { parse } from 'date-fns';
-// import ja from 'date-fns/locale/ja'
-
 const NAMESPACE = 'battle';
 
 // TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも

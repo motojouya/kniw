@@ -1,6 +1,7 @@
 import type { Ability, Wait } from 'src/domain/ability';
 import { getPhysical } from 'src/domain/charactor';
 
+/* eslint-disable */
 const wait: Wait = (wt, charactor, randoms) => {
   const turnAdd = wt;
   let randomAdd = Math.ceil(randoms.damage * 5);
@@ -19,6 +20,7 @@ const wait: Wait = (wt, charactor, randoms) => {
     mp,
   };
 };
+/* eslint-enable */
 
 export const mpGainPlus: Ability = {
   name: 'mpGainPlus',

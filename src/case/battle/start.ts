@@ -115,7 +115,7 @@ export const continueBattle: ContinueBattle = (conversation, repository) => asyn
     if (true) {
       turns.push(act(battle, actor, skill, receivers, 'TODO Date', 'TODO random'));
     } else {
-      turns.push(stay(battle, actor, 'TODO Date', 'TODO random'));
+      turns.push(stay(battle, actor, 'TODO Date'));
     }
 
     battle.result = isSettlement(battle);

@@ -177,11 +177,7 @@ describe('Battle#stay', function () {
     const battle = (toBattle(testData) as Battle);
     const actor = (toCharactor(testData.home.charactors[0]) as Charactor);
 
-    const turn = stay(battle, actor, new Date(), {
-      times: 0.1,
-      damage: 0.1,
-      accuracy: 0.1,
-    });
+    const turn = stay(battle, actor, new Date());
 
     assert.equal(turn.action.type, 'DO_NOTHING');
     if (turn.action.type === 'DO_NOTHING') {

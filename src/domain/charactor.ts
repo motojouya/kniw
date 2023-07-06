@@ -58,6 +58,32 @@ export const charactorSchema = {
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
 
+export type GetAbilities = (charactor: Charactor) => Ability[];
+export const getAbilities: GetAbilities = charactor => [
+  ...charactor.race.abilities,
+  ...charactor.blessing.abilities,
+  ...charactor.clothing.abilities,
+  ...charactor.weapon.abilities,
+];
+
+export type GetSkills = (charactor: Charactor) => Skill[];
+export const getSkills: GetSkills = charactor => [
+  ...charactor.race.skills,
+  ...charactor.blessing.skills,
+  ...charactor.clothing.skills,
+  ...charactor.weapon.skills,
+];
+
+export type GetPhysical = (charactor: Charactor) => Physical;
+export const getPhysical: GetPhysical = charactor =>
+  addPhysicals([
+    basePhysical,
+    charactor.race.additionalPhysical,
+    charactor.blessing.additionalPhysical,
+    charactor.clothing.additionalPhysical,
+    charactor.weapon.additionalPhysical,
+  ]);
+
 export type ToCharactorJson = (charactor: Charactor) => CharactorJson;
 export const toCharactorJson: ToCharactorJson = charactor => {
   const json = {
@@ -73,7 +99,7 @@ export const toCharactorJson: ToCharactorJson = charactor => {
     isVisitor: charactor.isVisitor,
   };
 
-  if (charactor.hasOwnProperty('isVisitor')) {
+  if (Object.prototype.hasOwnProperty.call(charactor, 'isVisitor')) {
     json.isVisitor = charactor.isVisitor;
   }
 
@@ -181,7 +207,7 @@ export const toCharactor: ToCharactor = charactorJson => {
     restWt: 0 + charactorJson.restWt,
   };
 
-  if (charactorJson.hasOwnProperty('isVisitor')) {
+  if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
     someone.isVisitor = charactorJson.isVisitor;
   }
 
@@ -220,28 +246,3 @@ export const createCharactor: CreateCharactor = (name, race, blessing, clothing,
   return someone;
 };
 
-export type GetAbilities = (charactor: Charactor) => Ability[];
-export const getAbilities: GetAbilities = charactor => [
-  ...charactor.race.abilities,
-  ...charactor.blessing.abilities,
-  ...charactor.clothing.abilities,
-  ...charactor.weapon.abilities,
-];
-
-export type GetSkills = (charactor: Charactor) => Skill[];
-export const getSkills: GetSkills = charactor => [
-  ...charactor.race.skills,
-  ...charactor.blessing.skills,
-  ...charactor.clothing.skills,
-  ...charactor.weapon.skills,
-];
-
-export type GetPhysical = (charactor: Charactor) => Physical;
-export const getPhysical: GetPhysical = charactor =>
-  addPhysicals([
-    basePhysical,
-    charactor.race.additionalPhysical,
-    charactor.blessing.additionalPhysical,
-    charactor.clothing.additionalPhysical,
-    charactor.weapon.additionalPhysical,
-  ]);

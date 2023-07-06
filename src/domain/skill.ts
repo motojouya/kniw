@@ -1,7 +1,6 @@
 import { Field } from 'src/domain/field';
 import { Randoms } from 'src/domain/random';
 import { Charactor, getPhysical } from 'src/domain/charactor';
-import * as skills from 'src/data/skill';
 
 export type ActionToCharactor = (
   self: Skill,

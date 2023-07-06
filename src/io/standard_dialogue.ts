@@ -43,13 +43,13 @@ export const confirm: Confirm = async message => {
   }
 };
 
-export type Message = (message: string) => Promise<void>;
-export const message: Message = async message => {
+export type Notice = (message: string) => Promise<void>;
+export const notice: Notice = message => {
   console.log(message);
 };
 
 export type Clear = () => Promise<void>;
-export const clear: Clear = async () => {
+export const clear: Clear = () => {
   console.clear();
 };
 

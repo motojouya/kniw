@@ -1,5 +1,5 @@
 import type { Charactor } from 'src/domain/charactor';
-import { toCharactor, getPhysical, toCharactorJson, charactorSchema } from 'src/domain/charactor';
+import { toCharactor, toCharactorJson, charactorSchema } from 'src/domain/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
@@ -50,9 +50,9 @@ const validate: Validate = (name, charactors) => {
     {} as { [name: string]: number },
   );
 
-  for (const name in nameCountMap) {
-    if (nameCountMap[name] > 1) {
-      return new CharactorDuplicationError(name, 'Partyに同じ名前のキャラクターが存在します');
+  for (const nameKey in nameCountMap) {
+    if (nameCountMap[nameKey] > 1) {
+      return new CharactorDuplicationError(nameKey, 'Partyに同じ名前のキャラクターが存在します');
     }
   }
 

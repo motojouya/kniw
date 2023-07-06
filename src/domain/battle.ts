@@ -1,9 +1,8 @@
-import type { Field, Climate } from 'src/domain/field';
-import type { Party, PartyJson } from 'src/domain/party';
+import type { Party } from 'src/domain/party';
 import type { Charactor } from 'src/domain/charactor';
 import type { Skill } from 'src/domain/skill';
 import type { Randoms } from 'src/domain/random';
-import type { Turn, TurnJson } from 'src/domain/turn';
+import type { Turn } from 'src/domain/turn';
 
 import { toTurn, toTurnJson, turnSchema } from 'src/domain/turn';
 import { toParty, toPartyJson, CharactorDuplicationError, partySchema } from 'src/domain/party';
@@ -151,8 +150,8 @@ const sortByWT: SortByWT = charactors =>
 
 export type CreateBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
 export const createBattle: CreateBattle = (datetime, home, visitor) => {
-  home.charactors.forEach(charactor => (charactor.isVisitor = false));
-  visitor.charactors.forEach(charactor => (charactor.isVisitor = true));
+  home.charactors.forEach(charactor => { charactor.isVisitor = false; }); // eslint-disable-line no-param-reassign
+  visitor.charactors.forEach(charactor => { charactor.isVisitor = true; }); // eslint-disable-line no-param-reassign
   return {
     datetime,
     home,
@@ -177,9 +176,9 @@ export const start: Start = (battle, datetime, randoms) => ({
 
 type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
-  const receiver = receivers.find(receiver => charactor.name === receiver.name);
-  if (receiver) {
-    return receiver;
+  const foundReceiver = receivers.find(receiver => charactor.name === receiver.name);
+  if (foundReceiver) {
+    return foundReceiver;
   }
   return charactor;
 };
@@ -214,18 +213,19 @@ export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => 
   }
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+    const newCharactor = { ...charactor };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      charactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
+      newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
     }
-    return charactor;
+    return newCharactor;
   });
   newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
 
   return newTurn;
 };
 
-export type Stay = (battle: Battle, actor: Charactor, datetime: Date, randoms: Randoms) => Turn;
-export const stay: Stay = (battle, actor, datetime, randoms) => {
+export type Stay = (battle: Battle, actor: Charactor, datetime: Date) => Turn;
+export const stay: Stay = (battle, actor, datetime) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
     datetime,
@@ -238,10 +238,11 @@ export const stay: Stay = (battle, actor, datetime, randoms) => {
   };
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+    const newCharactor = { ...charactor };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      charactor.restWt = getPhysical(charactor).WT;
+      newCharactor.restWt = getPhysical(charactor).WT;
     }
-    return charactor;
+    return newCharactor;
   });
   newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
 
@@ -251,12 +252,15 @@ export const stay: Stay = (battle, actor, datetime, randoms) => {
 type WaitCharactor = (charactor: Charactor, wt: number, randoms: Randoms) => Charactor;
 const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
   const abilities = getAbilities(charactor);
-  const newCharactor = abilities.reduce((charactor, ability) => ability.wait(wt, charactor, randoms), { ...charactor });
+  const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), { ...charactor } as Charactor); // eslint-disable-line @typescript-eslint/no-unsafe-return
 
   newCharactor.statuses = newCharactor.statuses
     .map(status => {
-      status.restWt -= wt;
-      return status;
+      const restWt = status.restWt - wt;
+      return {
+        ...status,
+        restWt,
+      };
     })
     .filter(status => status.restWt > 0);
 

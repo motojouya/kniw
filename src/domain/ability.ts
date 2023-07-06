@@ -1,6 +1,3 @@
-import { Ability } from 'src/model/ability';
-import * as abilities from 'src/data/ability';
-
 export type Ability = {
   name: string;
   label: string;
@@ -9,4 +6,5 @@ export type Ability = {
 };
 
 export type Wait = (wt: number, charactor: Charactor, randoms: Randoms) => Charactor;
-export const justWait: Wait = (wt, charactor, randoms) => charactor;
+export const justWait: Wait = (wt, charactor, randoms) => charactor; // eslint-disable-line
+// ignored @typescript-eslint/no-unsafe-return @typescript-eslint/no-unused-vars
