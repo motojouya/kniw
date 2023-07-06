@@ -245,4 +245,3 @@ export const createCharactor: CreateCharactor = (name, race, blessing, clothing,
 
   return someone;
 };
-
