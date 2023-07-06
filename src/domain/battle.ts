@@ -150,8 +150,10 @@ const sortByWT: SortByWT = charactors =>
 
 export type CreateBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
 export const createBattle: CreateBattle = (datetime, home, visitor) => {
-  home.charactors.forEach(charactor => { charactor.isVisitor = false; }); // eslint-disable-line no-param-reassign
-  visitor.charactors.forEach(charactor => { charactor.isVisitor = true; }); // eslint-disable-line no-param-reassign
+  // eslint-disable-next-line no-param-reassign
+  home.charactors.forEach(charactor => { charactor.isVisitor = false; });
+  // eslint-disable-next-line no-param-reassign
+  visitor.charactors.forEach(charactor => { charactor.isVisitor = true; });
   return {
     datetime,
     home,
@@ -252,7 +254,8 @@ export const stay: Stay = (battle, actor, datetime) => {
 type WaitCharactor = (charactor: Charactor, wt: number, randoms: Randoms) => Charactor;
 const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
   const abilities = getAbilities(charactor);
-  const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), { ...charactor } as Charactor); // eslint-disable-line @typescript-eslint/no-unsafe-return
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), { ...charactor } as Charactor);
 
   newCharactor.statuses = newCharactor.statuses
     .map(status => {

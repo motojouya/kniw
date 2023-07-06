@@ -55,8 +55,10 @@ const createList: CreateList = basePath => async namespace => {
     const files = await fs.promises.readdir(path.join(basePath, namespace));
     return files.filter(file => isDataFile(basePath, namespace, file)).map(file => path.basename(file, FILE_EXTENSION));
   } catch (e) {
-    const error = e as any; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
-    if (error.code === 'ENOENT') { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const error = e as any;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (error.code === 'ENOENT') {
       return [];
     } else {
       throw e;
@@ -69,10 +71,13 @@ const createGet: CreateGet = basePath => async (namespace, objctKey) => {
     const contents = await fs.promises.readFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), {
       encoding: 'utf8',
     });
-    return JSON.parse(contents); // eslint-disable-line @typescript-eslint/no-unsafe-return
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return JSON.parse(contents);
   } catch (e) {
-    const error = e as any; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
-    if (error.code === 'ENOENT') { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const error = e as any;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (error.code === 'ENOENT') {
       return null;
     } else {
       throw e;
@@ -84,8 +89,10 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   try {
     await fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
   } catch (e) {
-    const error = e as any; // eslint-disable-line @typescript-eslint/no-unsafe-assignment
-    if (error.code !== 'ENOENT') { // eslint-disable-line @typescript-eslint/no-unsafe-member-access
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const error = e as any;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (error.code !== 'ENOENT') {
       throw e;
     }
   }
