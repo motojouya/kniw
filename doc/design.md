@@ -34,13 +34,22 @@ kniwコマンドに対して、以下のサブコマンドと、それぞれに�
   - resume <log-path>
 - ability
   - list
-  - show
+  - show <name>
 - skill
   - list
-  - show
-- equipment
+  - show <name>
+- race
   - list
-  - show
+  - show <name>
+- blessing
+  - list
+  - show <name>
+- clothing
+  - list
+  - show <name>
+- weapon
+  - list
+  - show <name>
 
 ### charactor
 戦闘に出すキャラクターを作るコマンド。
