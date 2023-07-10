@@ -1,30 +1,43 @@
-#!/usr/bin/env node
-
-// const commander = require('commander'); // (normal include)
-// const commander = require('../'); // include commander in git clone of commander repo
 import commander from 'commander';
+import { list } from 'src/case/charactor/list';
+import { notice } from 'src/io/standard_dialogue';
+import { createRepository, repositoryDirectory } from 'src/io/file_repository';
 
 const program = new commander.Command();
 
 const charactor = program.command('charactor');
 
 charactor
+  .command('list')
+  .description('hire charactor as you like')
+  .action(async () => {
+    const repository = await createRepository(repositoryDirectory);
+    await list(notice, repository);
+  });
+
+charactor
   .command('hire')
   .argument('<name>', 'hiring charactor name')
   .description('hire charactor as you like')
-  .action(name => console.log(`You hire ${name}!`)); // eslint-disable-line @typescript-eslint/restrict-template-expressions
+  .action(name => console.log(`You hire ${name}!`));
 
 charactor
   .command('status')
   .argument('<name>', 'charactor name you looking')
   .description('look charactor as you like')
-  .action(name => console.log(`This is ${name}!`)); // eslint-disable-line @typescript-eslint/restrict-template-expressions
+  .action(name => console.log(`This is ${name}!`));
+
+charactor
+  .command('change')
+  .argument('<name>', 'firing charactor name')
+  .description('fire charactor as you like')
+  .action(name => console.log(`You fire ${name}`));
 
 charactor
   .command('fire')
   .argument('<name>', 'firing charactor name')
   .description('fire charactor as you like')
-  .action(name => console.log(`You fire ${name}`)); // eslint-disable-line @typescript-eslint/restrict-template-expressions
+  .action(name => console.log(`You fire ${name}`));
 
 program.parse(process.argv);
 

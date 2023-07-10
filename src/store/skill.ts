@@ -5,3 +5,4 @@ type SkillDictionary = { [name: string]: Skill };
 
 export type GetSkill = (name: string) => Skill | null;
 export const getSkill: GetSkill = name => (skills as SkillDictionary)[name];
+export const skillNames: string[] = Object.keys(skills as SkillDictionary);

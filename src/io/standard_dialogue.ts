@@ -44,12 +44,12 @@ export const confirm: Confirm = async message => {
 };
 
 export type Notice = (message: string) => Promise<void>;
-export const notice: Notice = message => {
+export const notice: Notice = async message => {
   console.log(message);
 };
 
 export type Clear = () => Promise<void>;
-export const clear: Clear = () => {
+export const clear: Clear = async () => {
   console.clear();
 };
 
