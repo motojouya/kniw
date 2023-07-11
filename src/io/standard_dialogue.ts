@@ -88,3 +88,21 @@ export const select: Select = async (message, options) => {
     }
   }
 };
+
+export type Dialogue = {
+  textInput: TextInput,
+  confirm: Confirm,
+  notice: Notice,
+  clear: Clear,
+  multiSelect: MultiSelect,
+  select: Select,
+};
+export const dialogue: Dialogue = {
+  textInput,
+  confirm,
+  notice,
+  clear,
+  multiSelect,
+  select,
+};
+

@@ -1,6 +1,9 @@
 import commander from 'commander';
 import { list } from 'src/case/charactor/list';
-import { notice } from 'src/io/standard_dialogue';
+import { showStatus } from 'src/case/charactor/showStatus';
+import { fire } from 'src/case/charactor/fire';
+import { hire } from 'src/case/charactor/hire';
+import { dialogue } from 'src/io/standard_dialogue';
 import { createRepository, repositoryDirectory } from 'src/io/file_repository';
 
 const program = new commander.Command();
@@ -12,32 +15,35 @@ charactor
   .description('hire charactor as you like')
   .action(async () => {
     const repository = await createRepository(repositoryDirectory);
-    await list(notice, repository);
+    await list(dialogue, repository);
   });
 
 charactor
   .command('hire')
   .argument('<name>', 'hiring charactor name')
   .description('hire charactor as you like')
-  .action(name => console.log(`You hire ${name}!`));
+  .action(async name => {
+    const repository = await createRepository(repositoryDirectory);
+    await hire(dialogue, repository)(name);
+  });
 
 charactor
   .command('status')
   .argument('<name>', 'charactor name you looking')
   .description('look charactor as you like')
-  .action(name => console.log(`This is ${name}!`));
-
-charactor
-  .command('change')
-  .argument('<name>', 'firing charactor name')
-  .description('fire charactor as you like')
-  .action(name => console.log(`You fire ${name}`));
+  .action(async name => {
+    const repository = await createRepository(repositoryDirectory);
+    await showStatus(dialogue, repository)(name);
+  });
 
 charactor
   .command('fire')
   .argument('<name>', 'firing charactor name')
   .description('fire charactor as you like')
-  .action(name => console.log(`You fire ${name}`));
+  .action(async name => {
+    const repository = await createRepository(repositoryDirectory);
+    await fire(dialogue, repository)(name);
+  });
 
 program.parse(process.argv);
 
