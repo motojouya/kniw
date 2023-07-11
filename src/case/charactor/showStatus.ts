@@ -46,9 +46,9 @@ export const showStatus: ShowStatus =
 
     const abilities = getAbilities(characor);
     await notice('アビリティ:');
-    abilities.forEach(async ability => await notice(`  - ${ability.label}`));
+    abilities.forEach(async ability => notice(`  - ${ability.label}`));
 
     const skills = getSkills(characor);
     await notice('スキル:');
-    skills.forEach(async skill => await notice(`  - ${skill.label}`));
+    skills.forEach(async skill => notice(`  - ${skill.label}`));
   };

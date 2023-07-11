@@ -6,5 +6,5 @@ export type List = (dialogue: Dialogue, repository: Repository) => Promise<void>
 export const list: List = async (dialogue, repository) => {
   const store = await createStore(repository);
   const characorList = await store.list();
-  characorList.forEach(async name => await dialogue.notice(`- ${name}`));
+  characorList.forEach(async name => dialogue.notice(`- ${name}`));
 };

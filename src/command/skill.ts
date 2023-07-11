@@ -10,13 +10,13 @@ export const skill = program.command('skill');
 skill
   .command('list')
   .description('show list of skill')
-  .action(async () => await list(notice));
+  .action(async () => list(notice));
 
 skill
   .command('show')
   .argument('<name>', 'skill name you looking')
   .description('look skill as you like')
-  .action(async name => await show(notice)(name));
+  .action(async name => show(notice)(name));
 
 program.parse(process.argv);
 
