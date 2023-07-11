@@ -24,7 +24,7 @@ charactor
   .description('hire charactor as you like')
   .action(async name => {
     const repository = await createRepository(repositoryDirectory);
-    await hire(dialogue, repository)(name);
+    await hire(dialogue, repository)(name as string);
   });
 
 charactor
@@ -33,7 +33,7 @@ charactor
   .description('look charactor as you like')
   .action(async name => {
     const repository = await createRepository(repositoryDirectory);
-    await showStatus(dialogue, repository)(name);
+    await showStatus(dialogue, repository)(name as string);
   });
 
 charactor
@@ -42,7 +42,7 @@ charactor
   .description('fire charactor as you like')
   .action(async name => {
     const repository = await createRepository(repositoryDirectory);
-    await fire(dialogue, repository)(name);
+    await fire(dialogue, repository)(name as string);
   });
 
 program.parse(process.argv);

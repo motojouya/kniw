@@ -2,7 +2,6 @@ import type { Dialogue, SelectOption } from 'src/io/standard_dialogue';
 import type { Repository } from 'src/io/file_repository';
 import { NotApplicable } from 'src/io/standard_dialogue';
 import { createStore } from 'src/store/charactor';
-import { createRandoms } from 'src/domain/random';
 import {
   getRace,
   getBlessing,

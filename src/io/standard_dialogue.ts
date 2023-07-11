@@ -44,11 +44,13 @@ export const confirm: Confirm = async message => {
 };
 
 export type Notice = (message: string) => Promise<void>;
+// eslint-disable-next-line @typescript-eslint/require-await
 export const notice: Notice = async message => {
   console.log(message);
 };
 
 export type Clear = () => Promise<void>;
+// eslint-disable-next-line @typescript-eslint/require-await
 export const clear: Clear = async () => {
   console.clear();
 };

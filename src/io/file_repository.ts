@@ -29,7 +29,7 @@ export type CreateRepository = (basePath: string) => Promise<Repository>;
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
 
-const userHome = process.env[process.platform == 'win32' ? 'USERPROFILE' : 'HOME'];
+const userHome = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
 export const repositoryDirectory = path.join(userHome || '', '.kniw');
 
 type IsDataFile = (basePath: string, dirName: string, file: string) => boolean;
