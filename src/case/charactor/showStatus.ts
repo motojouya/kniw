@@ -46,15 +46,9 @@ export const showStatus: ShowStatus =
 
     const abilities = getAbilities(characor);
     await notice('アビリティ:');
-    await abilities.reduce(
-      (p, ability) => p.then(() => notice(`  - ${ability.label}`)),
-      Promise.resolve()
-    );
+    await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
     const skills = getSkills(characor);
     await notice('スキル:');
-    await skills.reduce(
-      (p, skill) => p.then(() => notice(`  - ${skill.label}`)),
-      Promise.resolve()
-    );
+    await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
   };
