@@ -2,10 +2,12 @@ import type { Dialogue } from 'src/io/standard_dialogue';
 import type { Repository } from 'src/io/file_repository';
 import { createStore } from 'src/store/charactor';
 import { getPhysical, getAbilities, getSkills }  from 'src/domain/charactor';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 export type ShowStatus = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
 export const showStatus: ShowStatus = ({ notice }, repository) => async name => {
-  const store = createStore(repository);
+  const store = await createStore(repository);
   const characor = await store.get(name);
   if (!characor) {
     await notice(`${name}というcharactorは存在しません`);
@@ -42,10 +44,10 @@ export const showStatus: ShowStatus = ({ notice }, repository) => async name => 
 
   const abilities = getAbilities(characor);
   await notice('アビリティ:');
-  abilities.forEach(ability => await notice(`  - ${ability.label}`));
+  abilities.forEach(async ability => await notice(`  - ${ability.label}`));
 
   const skills = getSkills(characor);
   await notice('スキル:');
-  skills.forEach(skill => await notice(`  - ${skill.label}`));
+  skills.forEach(async skill => await notice(`  - ${skill.label}`));
 };
 

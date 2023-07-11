@@ -30,7 +30,7 @@ export type CreateRepository = (basePath: string) => Promise<Repository>;
 const FILE_EXTENSION = '.json';
 
 const userHome = process.env[process.platform == "win32" ? "USERPROFILE" : "HOME"];
-export const repositoryDirectory = path.join(userHome, '.kniw');
+export const repositoryDirectory = path.join(userHome || '', '.kniw');
 
 type IsDataFile = (basePath: string, dirName: string, file: string) => boolean;
 const isDataFile: IsDataFile = (basePath, dirName, file) =>

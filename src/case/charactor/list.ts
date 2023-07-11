@@ -4,7 +4,7 @@ import { createStore } from 'src/store/charactor';
 
 export type List = (dialogue: Dialogue, repository: Repository) => Promise<void>;
 export const list: List = async (dialogue, repository) => {
-  const store = createStore(repository);
+  const store = await createStore(repository);
   const characorList = await store.list();
-  characorList.forEach(name => dialogue.notice(`- ${name}`));
+  characorList.forEach(async name => await dialogue.notice(`- ${name}`));
 };

@@ -13,8 +13,8 @@ const byebyeMessages = [
 ];
 
 export type Fire = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
-export const fire: Fire = async (dialogue, repository) => name => {
-  const store = createStore(repository);
+export const fire: Fire = (dialogue, repository) => async name => {
+  const store = await createStore(repository);
   const confirmAnswer = await dialogue.confirm(`本当に${name}を解雇してもよろしいですか？`);
   if (!confirmAnswer || confirmAnswer instanceof NotApplicable) {
     return;
