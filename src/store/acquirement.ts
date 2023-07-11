@@ -23,4 +23,3 @@ export const allClothings: Clothing[] = Object.values(clothings as AcquirementDi
 export const getBlessing: GetAcquirement<Blessing> = name => (blessings as AcquirementDictionary)[name];
 export const blessingNames: string[] = Object.keys(blessings as AcquirementDictionary);
 export const allBlessings: Blessing[] = Object.values(blessings as AcquirementDictionary);
-

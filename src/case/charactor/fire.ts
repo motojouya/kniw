@@ -27,5 +27,3 @@ export const fire: Fire = (dialogue, repository) => async name => {
   const message = byebyeMessages[Math.floor(randoms.accuracy * byebyeMessages.length)];
   await dialogue.notice(`「${message}」とのことです。`);
 };
-
-

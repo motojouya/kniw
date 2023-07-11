@@ -38,7 +38,10 @@ export const hire: Hire = (dialogue, repository) => async name => {
     return;
   }
 
-  const blessingOptions: SelectOption[] = allBlessings.map(blessing => ({ value: blessing.name, label: blessing.label }));
+  const blessingOptions: SelectOption[] = allBlessings.map(blessing => ({
+    value: blessing.name,
+    label: blessing.label,
+  }));
   const blessingName = await select('種族を選んでください', blessingOptions);
   if (!blessingName || blessingName instanceof NotApplicable) {
     return;
@@ -49,7 +52,10 @@ export const hire: Hire = (dialogue, repository) => async name => {
     return;
   }
 
-  const clothingOptions: SelectOption[] = allClothings.map(clothing => ({ value: clothing.name, label: clothing.label }));
+  const clothingOptions: SelectOption[] = allClothings.map(clothing => ({
+    value: clothing.name,
+    label: clothing.label,
+  }));
   const clothingName = await select('種族を選んでください', clothingOptions);
   if (!clothingName || clothingName instanceof NotApplicable) {
     return;
@@ -73,10 +79,7 @@ export const hire: Hire = (dialogue, repository) => async name => {
 
   const charactor = createCharactor(name, race, blessing, clothing, weapon);
 
-  if (
-    charactor instanceof NotWearableErorr ||
-    charactor instanceof DataNotFoundError
-  ) {
+  if (charactor instanceof NotWearableErorr || charactor instanceof DataNotFoundError) {
     await notice(charactor.message);
     return;
   }
@@ -84,5 +87,3 @@ export const hire: Hire = (dialogue, repository) => async name => {
   await store.save(charactor);
   await notice(`${name}を雇いました`);
 };
-
-
