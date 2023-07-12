@@ -26,13 +26,11 @@ export const show: Show =
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
 
-    const abilities = blessing.abilities;
     await notice('アビリティ:');
-    await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
+    await blessing.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
-    const skills = blessing.skills;
     await notice('スキル:');
-    await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
+    await blessing.skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
 
     await notice(`説明: ${blessing.description}`);
   };

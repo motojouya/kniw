@@ -26,13 +26,11 @@ export const show: Show =
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
 
-    const abilities = race.abilities;
     await notice('アビリティ:');
-    await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
+    await race.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
-    const skills = race.skills;
     await notice('スキル:');
-    await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
+    await race.skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
 
     await notice(`説明: ${race.description}`);
   };
