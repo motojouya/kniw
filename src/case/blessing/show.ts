@@ -36,4 +36,3 @@ export const show: Show =
 
     await notice(`説明: ${blessing.description}`);
   };
-
