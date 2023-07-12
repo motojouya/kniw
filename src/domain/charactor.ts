@@ -220,7 +220,7 @@ export type CreateCharactor = (
   blessing: Blessing,
   clothing: Clothing,
   weapon: Weapon,
-) => Charactor | NotWearableErorr | DataNotFoundError;
+) => Charactor | NotWearableErorr;
 export const createCharactor: CreateCharactor = (name, race, blessing, clothing, weapon) => {
   const validateResult = validate(name, race, blessing, clothing, weapon);
   if (validateResult instanceof NotWearableErorr) {

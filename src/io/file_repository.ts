@@ -1,6 +1,14 @@
 import fs from 'fs';
 import path from 'path';
 
+export class CopyFailError {
+  constructor(
+    readonly fileName: string,
+    readonly exception: any,
+    readonly message: string,
+  ) {}
+}
+
 export type KeyValue = { [name: string]: any };
 
 // TODO データ保存の選択肢が増えたら、型だけ別ファイルに移動
@@ -9,12 +17,14 @@ export type Save = (namespace: string, objctKey: string, data: KeyValue) => Prom
 export type List = (namespace: string) => Promise<string[]>;
 export type Get = (namespace: string, objctKey: string) => Promise<KeyValue | null>;
 export type Remove = (namespace: string, objctKey: string) => Promise<void>;
+export type Copy = (namespace: string, objctKey: string, path: string) => Promise<null | CopyFailError>;
 
 export type CreateCheckNamespace = (basePath: string) => CheckNamespace;
 export type CreateSave = (basePath: string) => Save;
 export type CreateList = (basePath: string) => List;
 export type CreateGet = (basePath: string) => Get;
 export type CreateRemove = (basePath: string) => Remove;
+export type CreateCopy = (basePath: string) => Copy;
 
 export type Repository = {
   checkNamespace: CheckNamespace;
@@ -22,6 +32,7 @@ export type Repository = {
   list: List;
   get: Get;
   remove: Remove;
+  copy: Copy
 };
 
 export type CreateRepository = (basePath: string) => Promise<Repository>;
@@ -101,6 +112,20 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   }
 };
 
+//TODO エラーが粗いので細かくしたい
+const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
+  try {
+    await fs.promises.copyFile(
+      resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
+      fileName,
+      fs.constants.COPYFILE_EXCL
+    );
+    return null;
+  } catch (e) {
+    return new CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
+  }
+};
+
 export const createRepository: CreateRepository = async basePath => {
   await createDirctory(basePath);
   return {
@@ -109,5 +134,6 @@ export const createRepository: CreateRepository = async basePath => {
     list: createList(basePath),
     get: createGet(basePath),
     remove: createRemove(basePath),
+    copy: createCopy(basePath),
   };
 };

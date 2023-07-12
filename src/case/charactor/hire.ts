@@ -78,7 +78,7 @@ export const hire: Hire = (dialogue, repository) => async name => {
 
   const charactor = createCharactor(name, race, blessing, clothing, weapon);
 
-  if (charactor instanceof NotWearableErorr || charactor instanceof DataNotFoundError) {
+  if (charactor instanceof NotWearableErorr) {
     await notice(charactor.message);
     return;
   }
