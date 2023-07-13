@@ -32,7 +32,7 @@ export type Repository = {
   list: List;
   get: Get;
   remove: Remove;
-  copy: Copy
+  copy: Copy;
 };
 
 export type CreateRepository = (basePath: string) => Promise<Repository>;
@@ -118,7 +118,7 @@ const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName)
     await fs.promises.copyFile(
       resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
       fileName,
-      fs.constants.COPYFILE_EXCL
+      fs.constants.COPYFILE_EXCL,
     );
     return null;
   } catch (e) {

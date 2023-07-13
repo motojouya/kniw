@@ -100,7 +100,6 @@ export const toParty: ToParty = partyJson => {
 
 export type CreateParty = (name: string, charactors: Charactor[]) => Party | CharactorDuplicationError;
 export const createParty: CreateParty = (name, charactors) => {
-
   const validateResult = validate(name, charactors);
   if (validateResult instanceof CharactorDuplicationError) {
     return validateResult;

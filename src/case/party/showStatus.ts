@@ -28,13 +28,14 @@ export const showStatus: ShowStatus =
     await notice(`名前: ${party.name}`);
     await notice('メンバー:');
     await party.charactors.reduce(
-      (p, charactor) => p.then(async () => {
-        await notice(`  - ${charactor.name}`);
-        await notice(`    種族: ${charactor.race.label}`);
-        await notice(`    祝福: ${charactor.blessing.label}`);
-        await notice(`    装備: ${charactor.clothing.label}`);
-        await notice(`    武器: ${charactor.weapon.label}`);
-      }),
-      Promise.resolve()
+      (p, charactor) =>
+        p.then(async () => {
+          await notice(`  - ${charactor.name}`);
+          await notice(`    種族: ${charactor.race.label}`);
+          await notice(`    祝福: ${charactor.blessing.label}`);
+          await notice(`    装備: ${charactor.clothing.label}`);
+          await notice(`    武器: ${charactor.weapon.label}`);
+        }),
+      Promise.resolve(),
     );
   };

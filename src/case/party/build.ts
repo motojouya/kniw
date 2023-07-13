@@ -10,7 +10,6 @@ import { createParty, CharactorDuplicationError } from 'src/domain/party';
 
 export type Build = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
 export const build: Build = (dialogue, repository) => async name => {
-
   const { notice, multiSelect } = dialogue;
   const partyStore = await createPartyStore(repository);
   const charactorStore = await createCharactorStore(repository);
@@ -23,7 +22,11 @@ export const build: Build = (dialogue, repository) => async name => {
   const charactorNames = await charactorStore.list();
   const charactorOptions: SelectOption[] = charactorNames.map(name => ({ value: name, label: name }));
 
-  const selectedNames = await multiSelect('メンバーを複数選択してください。partyの最大は12名までです。', 12, charactorOptions);
+  const selectedNames = await multiSelect(
+    'メンバーを複数選択してください。partyの最大は12名までです。',
+    12,
+    charactorOptions,
+  );
   if (selectedNames instanceof NotApplicable || selectedNames.length === 0) {
     return;
   }

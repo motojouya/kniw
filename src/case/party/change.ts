@@ -10,7 +10,6 @@ import { createParty, CharactorDuplicationError } from 'src/domain/party';
 
 export type Change = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
 export const change: Change = (dialogue, repository) => async name => {
-
   const { notice, multiSelect } = dialogue;
   const partyStore = await createPartyStore(repository);
   const charactorStore = await createCharactorStore(repository);
@@ -32,7 +31,10 @@ export const change: Change = (dialogue, repository) => async name => {
 
   let newCharactors: string[] = party.charactors.map(charactor => charactor.name);
 
-  const fireOptions: SelectOption[] = party.charactors.map(charactor => ({ value: charactor.name, label: charactor.name }));
+  const fireOptions: SelectOption[] = party.charactors.map(charactor => ({
+    value: charactor.name,
+    label: charactor.name,
+  }));
   const fireNames = await multiSelect('解雇するメンバーを複数選択してください。', fireOptions.length, fireOptions);
   if (!(fireNames instanceof NotApplicable) && fireNames.length !== 0) {
     newCharactors = newCharactors.filter(name => !fireNames.includes(name));
@@ -43,7 +45,11 @@ export const change: Change = (dialogue, repository) => async name => {
     .filter(name => !newCharactors.includes(name))
     .map(name => ({ value: name, label: name }));
   const hirableCount = 12 - newCharactors.length;
-  const hireNames = await multiSelect(`雇うメンバーを複数選択してください。partyの残席は${hirableCount}名です。`, hirableCount, hireOptions);
+  const hireNames = await multiSelect(
+    `雇うメンバーを複数選択してください。partyの残席は${hirableCount}名です。`,
+    hirableCount,
+    hireOptions,
+  );
   if (!(hireNames instanceof NotApplicable) && hireNames.length !== 0) {
     newCharactors = newCharactors.concat(hireNames);
   }
