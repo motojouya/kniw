@@ -20,7 +20,7 @@ export const build: Build = (dialogue, repository) => async name => {
   }
 
   const charactorNames = await charactorStore.list();
-  const charactorOptions: SelectOption[] = charactorNames.map(name => ({ value: name, label: name }));
+  const charactorOptions: SelectOption[] = charactorNames.map(charactorName => ({ value: charactorName, label: charactorName }));
 
   const selectedNames = await multiSelect(
     'メンバーを複数選択してください。partyの最大は12名までです。',
@@ -32,10 +32,12 @@ export const build: Build = (dialogue, repository) => async name => {
   }
 
   const charactors: Charactor[] = [];
-  for (const name of selectedNames) {
-    const charactor = await charactorStore.get(name);
+  for (const selectedName of selectedNames) {
+    // eslint-disable-next-line no-await-in-loop
+    const charactor = await charactorStore.get(selectedName);
     if (!charactor) {
-      await notice(`${name}というキャラクターはいません`);
+      // eslint-disable-next-line no-await-in-loop
+      await notice(`${selectedName}というキャラクターはいません`);
       return;
     }
     if (
@@ -43,6 +45,7 @@ export const build: Build = (dialogue, repository) => async name => {
       charactor instanceof DataNotFoundError ||
       charactor instanceof JsonSchemaUnmatchError
     ) {
+      // eslint-disable-next-line no-await-in-loop
       await notice(charactor.message);
       return;
     }

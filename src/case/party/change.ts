@@ -37,13 +37,13 @@ export const change: Change = (dialogue, repository) => async name => {
   }));
   const fireNames = await multiSelect('解雇するメンバーを複数選択してください。', fireOptions.length, fireOptions);
   if (!(fireNames instanceof NotApplicable) && fireNames.length !== 0) {
-    newCharactors = newCharactors.filter(name => !fireNames.includes(name));
+    newCharactors = newCharactors.filter(newName => !fireNames.includes(newName));
   }
 
   const charactorNames = await charactorStore.list();
   const hireOptions: SelectOption[] = charactorNames
-    .filter(name => !newCharactors.includes(name))
-    .map(name => ({ value: name, label: name }));
+    .filter(charactorName => !newCharactors.includes(charactorName))
+    .map(charactorName => ({ value: charactorName, label: charactorName }));
   const hirableCount = 12 - newCharactors.length;
   const hireNames = await multiSelect(
     `雇うメンバーを複数選択してください。partyの残席は${hirableCount}名です。`,
@@ -55,10 +55,12 @@ export const change: Change = (dialogue, repository) => async name => {
   }
 
   const charactors: Charactor[] = [];
-  for (const name of newCharactors) {
-    const charactor = await charactorStore.get(name);
+  for (const newName of newCharactors) {
+    // eslint-disable-next-line no-await-in-loop
+    const charactor = await charactorStore.get(newName);
     if (!charactor) {
-      await notice(`${name}というキャラクターはいません`);
+      // eslint-disable-next-line no-await-in-loop
+      await notice(`${newName}というキャラクターはいません`);
       return;
     }
     if (
@@ -66,6 +68,7 @@ export const change: Change = (dialogue, repository) => async name => {
       charactor instanceof DataNotFoundError ||
       charactor instanceof JsonSchemaUnmatchError
     ) {
+      // eslint-disable-next-line no-await-in-loop
       await notice(charactor.message);
       return;
     }

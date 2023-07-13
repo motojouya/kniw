@@ -112,7 +112,7 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   }
 };
 
-//TODO エラーが粗いので細かくしたい
+// TODO エラーが粗いので細かくしたい
 const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
   try {
     await fs.promises.copyFile(

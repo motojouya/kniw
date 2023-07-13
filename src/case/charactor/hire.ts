@@ -13,7 +13,6 @@ import {
   allBlessings,
 } from 'src/store/acquirement';
 import { NotWearableErorr } from 'src/domain/acquirement';
-import { DataNotFoundError } from 'src/store/store';
 import { createCharactor } from 'src/domain/charactor';
 
 export type Hire = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
