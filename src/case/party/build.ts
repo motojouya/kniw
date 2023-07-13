@@ -20,7 +20,10 @@ export const build: Build = (dialogue, repository) => async name => {
   }
 
   const charactorNames = await charactorStore.list();
-  const charactorOptions: SelectOption[] = charactorNames.map(charactorName => ({ value: charactorName, label: charactorName }));
+  const charactorOptions: SelectOption[] = charactorNames.map(charactorName => ({
+    value: charactorName,
+    label: charactorName,
+  }));
 
   const selectedNames = await multiSelect(
     'メンバーを複数選択してください。partyの最大は12名までです。',
