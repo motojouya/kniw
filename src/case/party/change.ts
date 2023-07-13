@@ -18,6 +18,7 @@ export const change: Change = (dialogue, repository) => async name => {
   const party = await partyStore.get(name);
   if (!party) {
     await notice(`${name}というpartyは存在しません`);
+    return;
   }
   if (
     party instanceof NotWearableErorr ||
@@ -26,13 +27,14 @@ export const change: Change = (dialogue, repository) => async name => {
     party instanceof JsonSchemaUnmatchError
   ) {
     await notice(`${name}は不正なデータです。取り出せません。`);
+    return;
   }
 
-  let newCharactors: string[] = party.charctors.map(charctor => charctor.name);
+  let newCharactors: string[] = party.charactors.map(charactor => charactor.name);
 
-  const fireOptions: SelectOption[] = party.charctors.map(charctor => ({ value: charctors.name, label: charctors.name }));
+  const fireOptions: SelectOption[] = party.charactors.map(charactor => ({ value: charactor.name, label: charactor.name }));
   const fireNames = await multiSelect('解雇するメンバーを複数選択してください。', fireOptions.length, fireOptions);
-  if (!fireNames instanceof NotApplicable && fireNames.length !== 0) {
+  if (!(fireNames instanceof NotApplicable) && fireNames.length !== 0) {
     newCharactors = newCharactors.filter(name => !fireNames.includes(name));
   }
 
@@ -42,13 +44,17 @@ export const change: Change = (dialogue, repository) => async name => {
     .map(name => ({ value: name, label: name }));
   const hirableCount = 12 - newCharactors.length;
   const hireNames = await multiSelect(`雇うメンバーを複数選択してください。partyの残席は${hirableCount}名です。`, hirableCount, hireOptions);
-  if (!hireNames instanceof NotApplicable && hireNames.length !== 0) {
+  if (!(hireNames instanceof NotApplicable) && hireNames.length !== 0) {
     newCharactors = newCharactors.concat(hireNames);
   }
 
   const charactors: Charactor[] = [];
   for (const name of newCharactors) {
     const charactor = await charactorStore.get(name);
+    if (!charactor) {
+      await notice(`${name}というキャラクターはいません`);
+      return;
+    }
     if (
       charactor instanceof NotWearableErorr ||
       charactor instanceof DataNotFoundError ||
@@ -60,12 +66,12 @@ export const change: Change = (dialogue, repository) => async name => {
     charactors.push(charactor);
   }
 
-  const party = createParty(name, charactors);
-  if (party instanceof CharactorDuplicationError) {
-    await notice(party.message);
+  const newParty = createParty(name, charactors);
+  if (newParty instanceof CharactorDuplicationError) {
+    await notice(newParty.message);
     return;
   }
 
-  await store.save(party);
+  await partyStore.save(newParty);
   await notice(`${name}を組み直しました`);
 };

@@ -16,10 +16,10 @@ export const showStatus: ShowStatus =
       return;
     }
     if (
-      characor instanceof NotWearableErorr ||
-      characor instanceof DataNotFoundError ||
-      characor instanceof CharactorDuplicationError ||
-      characor instanceof JsonSchemaUnmatchError
+      party instanceof NotWearableErorr ||
+      party instanceof DataNotFoundError ||
+      party instanceof CharactorDuplicationError ||
+      party instanceof JsonSchemaUnmatchError
     ) {
       await notice(`${name}は不正なデータです。取り出せません。`);
       return;
@@ -30,10 +30,10 @@ export const showStatus: ShowStatus =
     await party.charactors.reduce(
       (p, charactor) => p.then(async () => {
         await notice(`  - ${charactor.name}`);
-        await notice(`    種族: ${characor.race.label}`);
-        await notice(`    祝福: ${characor.blessing.label}`);
-        await notice(`    装備: ${characor.clothing.label}`);
-        await notice(`    武器: ${characor.weapon.label}`);
+        await notice(`    種族: ${charactor.race.label}`);
+        await notice(`    祝福: ${charactor.blessing.label}`);
+        await notice(`    装備: ${charactor.clothing.label}`);
+        await notice(`    武器: ${charactor.weapon.label}`);
       }),
       Promise.resolve()
     );

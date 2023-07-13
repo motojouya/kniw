@@ -16,6 +16,7 @@ const storeMock: Repository = {
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['team01', 'team02'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
+  copy: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
 describe('Party#createStore', function () {

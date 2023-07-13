@@ -11,6 +11,7 @@ const storeMock: Repository = {
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
+  copy: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
 describe('Charctor#createStore', function () {

@@ -31,6 +31,10 @@ export const build: Build = (dialogue, repository) => async name => {
   const charactors: Charactor[] = [];
   for (const name of selectedNames) {
     const charactor = await charactorStore.get(name);
+    if (!charactor) {
+      await notice(`${name}というキャラクターはいません`);
+      return;
+    }
     if (
       charactor instanceof NotWearableErorr ||
       charactor instanceof DataNotFoundError ||
@@ -48,6 +52,6 @@ export const build: Build = (dialogue, repository) => async name => {
     return;
   }
 
-  await store.save(party);
+  await partyStore.save(party);
   await notice(`${name}を組みました`);
 };
