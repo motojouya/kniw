@@ -67,7 +67,7 @@ export const toBattle: ToBattle = battleJson => {
     return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
   }
 
-  const {title} = battleJson;
+  const { title } = battleJson;
 
   const home = toParty(battleJson.home);
   if (

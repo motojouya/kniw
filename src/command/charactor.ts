@@ -19,19 +19,19 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .command('hire')
     .argument('<name>', 'hiring charactor name')
     .description('hire charactor as you like')
-    .action(async name => hire(dialogue, repository)(name ));
+    .action(async name => hire(dialogue, repository)(name));
 
   charactor
     .command('status')
     .argument('<name>', 'charactor name you looking')
     .description('look charactor as you like')
-    .action(async name => showStatus(dialogue, repository)(name ));
+    .action(async name => showStatus(dialogue, repository)(name));
 
   charactor
     .command('fire')
     .argument('<name>', 'firing charactor name')
     .description('fire charactor as you like')
-    .action(async name => fire(dialogue, repository)(name ));
+    .action(async name => fire(dialogue, repository)(name));
 
   return charactor;
 };

@@ -16,7 +16,7 @@ export const makeCommand = (dialogue: Dialogue) => {
     .command('show')
     .argument('<name>', 'skill name you looking')
     .description('look skill as you like')
-    .action(async name => show(dialogue)(name ));
+    .action(async name => show(dialogue)(name));
 
   return skill;
 };

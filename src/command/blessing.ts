@@ -16,7 +16,7 @@ export const makeCommand = (dialogue: Dialogue) => {
     .command('show')
     .argument('<name>', 'blessing name you looking')
     .description('look blessing as you like')
-    .action(async name => show(dialogue)(name ));
+    .action(async name => show(dialogue)(name));
 
   return blessing;
 };

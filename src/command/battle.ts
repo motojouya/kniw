@@ -19,7 +19,7 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .command('history')
     .argument('<title>', 'party name you looking')
     .description('look party as you like')
-    .action(async title => showHistory(dialogue, repository)(title ));
+    .action(async title => showHistory(dialogue, repository)(title));
 
   // battle
   //   .command('start')
@@ -40,7 +40,7 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .argument('<title>', 'export party name')
     .argument('<file>', 'export file')
     .description('export party as you like')
-    .action(async (title, file) => exportJson(dialogue, repository)(title , file ));
+    .action(async (title, file) => exportJson(dialogue, repository)(title, file));
 
   return battle;
 };
