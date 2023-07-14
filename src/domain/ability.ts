@@ -1,3 +1,6 @@
+import type { Charactor } from 'src/domain/charactor';
+import type { Randoms } from 'src/domain/random';
+
 export type Ability = {
   name: string;
   label: string;

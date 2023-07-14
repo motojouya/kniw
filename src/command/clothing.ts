@@ -1,23 +1,22 @@
-import commander from 'commander';
+import type { Dialogue } from 'src/io/standard_dialogue';
+
+import { Command } from '@commander-js/extra-typings';
 import { list } from 'src/case/clothing/list';
 import { show } from 'src/case/clothing/show';
-import { dialogue } from 'src/io/standard_dialogue';
 
-const program = new commander.Command();
+export const makeCommand = (dialogue: Dialogue) => {
+  const clothing = new Command('clothing');
 
-export const clothing = program.command('clothing');
+  clothing
+    .command('list')
+    .description('show list of clothing')
+    .action(async () => list(dialogue));
 
-clothing
-  .command('list')
-  .description('show list of clothing')
-  .action(async () => list(dialogue));
+  clothing
+    .command('show')
+    .argument('<name>', 'clothing name you looking')
+    .description('look clothing as you like')
+    .action(async name => show(dialogue)(name as string));
 
-clothing
-  .command('show')
-  .argument('<name>', 'clothing name you looking')
-  .description('look clothing as you like')
-  .action(async name => show(dialogue)(name as string));
-
-program.parse(process.argv);
-
-// export program;
+  return clothing;
+}
