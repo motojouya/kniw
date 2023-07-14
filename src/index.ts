@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import { makeCommand } from 'src/command/index';
 import { dialogue } from 'src/io/standard_dialogue';
 import { createRepository, repositoryDirectory } from 'src/io/file_repository';
@@ -10,6 +12,3 @@ const run = async () => {
 
 // eslint-disable-next-line @typescript-eslint/no-floating-promises
 run();
-
-// TODO
-// #!/usr/bin/env node
