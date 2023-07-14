@@ -91,17 +91,13 @@ export type Start = (
   repository: Repository,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, repository) => (home, visitor) => {
-   
   const battle = createBattle(title, home, visitor);
   battle.turns.push(startBattle(battle, 'TODO Date', 'TODO random'));
 
   continueBattle(conversation, repository)(battle);
 };
 
-export type Resume = (
-  dialogue: Dialogue,
-  repository: Repository,
-) => (title: string) => Promise<void>;
+export type Resume = (dialogue: Dialogue, repository: Repository) => (title: string) => Promise<void>;
 export const resume: Resume = (dialogue, repository) => battleJson => {
   continueBattle(conversation, repository)(createBattle(battleJson));
 };

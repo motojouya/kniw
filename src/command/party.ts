@@ -49,4 +49,4 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .action(async (name, file) => exportJson(dialogue, repository)(name as string, file as string));
 
   return party;
-}
+};

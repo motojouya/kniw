@@ -43,4 +43,4 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .action(async (title, file) => exportJson(dialogue, repository)(title as string, file as string));
 
   return battle;
-}
+};

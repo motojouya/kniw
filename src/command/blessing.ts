@@ -19,4 +19,4 @@ export const makeCommand = (dialogue: Dialogue) => {
     .action(async name => show(dialogue)(name as string));
 
   return blessing;
-}
+};

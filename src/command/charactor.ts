@@ -34,4 +34,4 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .action(async name => fire(dialogue, repository)(name as string));
 
   return charactor;
-}
+};
