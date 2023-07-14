@@ -27,7 +27,7 @@ export const GameVisitor: GameResult = 'VISITOR';
 export const GameDraw: GameResult = 'DRAW';
 
 export type Battle = {
-  datetime: Date;
+  title: string;
   home: Party;
   visitor: Party;
   turns: Turn[];
@@ -37,20 +37,20 @@ export type Battle = {
 export const battleSchema = {
   type: 'object',
   properties: {
-    datetime: { type: 'string', format: 'date-time' },
+    title: { type: 'string' },
     home: partySchema,
     visitor: partySchema,
     turns: { type: 'array', items: turnSchema },
     result: { enum: [GameOngoing, GameHome, GameVisitor, GameDraw] },
   },
-  required: ['datetime', 'home', 'visitor', 'turns', 'result'],
+  required: ['title', 'home', 'visitor', 'turns', 'result'],
 } as const;
 
 export type BattleJson = FromSchema<typeof battleSchema>;
 
 export type ToBattleJson = (battle: Battle) => BattleJson;
 export const toBattleJson: ToBattleJson = battle => ({
-  datetime: battle.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+  title: battle.title,
   home: toPartyJson(battle.home),
   visitor: toPartyJson(battle.visitor),
   turns: battle.turns.map(toTurnJson),
@@ -70,9 +70,7 @@ export const toBattle: ToBattle = battleJson => {
     return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
   }
 
-  // TODO try catch
-  // const datetime = new Date(Date.parse(battleJson.datetime));
-  const datetime = parse(battleJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+  const title = battleJson.title;
 
   const home = toParty(battleJson.home);
   if (
@@ -110,7 +108,7 @@ export const toBattle: ToBattle = battleJson => {
   const { result } = battleJson;
 
   return {
-    datetime,
+    title,
     home,
     visitor,
     turns,
@@ -148,8 +146,8 @@ const sortByWT: SortByWT = charactors =>
     return 0;
   });
 
-export type CreateBattle = (datetime: Date, home: Party, visitor: Party) => Battle;
-export const createBattle: CreateBattle = (datetime, home, visitor) => {
+export type CreateBattle = (title: string, home: Party, visitor: Party) => Battle;
+export const createBattle: CreateBattle = (title, home, visitor) => {
   /* eslint-disable no-param-reassign */
   home.charactors.forEach(charactor => {
     charactor.isVisitor = false;
@@ -159,7 +157,7 @@ export const createBattle: CreateBattle = (datetime, home, visitor) => {
   });
   /* eslint-enable no-param-reassign */
   return {
-    datetime,
+    title,
     home,
     visitor,
     turns: [],

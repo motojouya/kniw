@@ -1,3 +1,5 @@
+import type { Dialogue } from 'src/io/standard_dialogue';
+import type { Repository } from 'src/io/file_repository';
 import {
   GameResult,
   Turn,
@@ -6,13 +8,15 @@ import {
   act,
   stay,
   wait,
-  start,
+  start as startBattle,
   isSettlement,
   createStore,
   arrayLast, // TODO
   GameOngoing,
   createBattle,
-} from 'src/model/battle';
+} from 'src/domain/battle';
+import { createStore as createBattleStore } from 'src/store/battle';
+import { createStore as createPartyStore } from 'src/store/party';
 
 const SKILL = 'SKILL';
 const LIST = 'LIST';
@@ -82,22 +86,23 @@ const playerSelect = (conversation: Conversation, actor: Charactor) => {
   await conversation.autoCompleteMultiSelect('');
 };
 
-export type StartBattle = (
-  conversation: Conversation,
+export type Start = (
+  dialogue: Dialogue,
   repository: Repository,
-) => (home: Party, visitor: Party) => Promise<void>;
-export const startBattle: StartBattle = (conversation, repository) => (home, visitor) => {
-  const battle = createBattle('TODO Date', home, visitor);
-  battle.turns.push(start(battle, 'TODO Date', 'TODO random'));
+) => (title: string, home: string, visitor: string) => Promise<void>;
+export const start: Start = (dialogue, repository) => (home, visitor) => {
+   
+  const battle = createBattle(title, home, visitor);
+  battle.turns.push(startBattle(battle, 'TODO Date', 'TODO random'));
 
   continueBattle(conversation, repository)(battle);
 };
 
-export type RestartBattle = (
-  conversation: Conversation,
+export type Resume = (
+  dialogue: Dialogue,
   repository: Repository,
-) => (battleJson: BattleJson) => Promise<void>;
-export const restartBattle: RestartBattle = (conversation, repository) => battleJson => {
+) => (title: string) => Promise<void>;
+export const resume: Resume = (dialogue, repository) => battleJson => {
   continueBattle(conversation, repository)(createBattle(battleJson));
 };
 

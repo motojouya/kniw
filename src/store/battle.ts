@@ -1,4 +1,4 @@
-import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateStore } from 'src/store/store';
+import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateCopy, CreateStore } from 'src/store/store';
 import type { Battle } from 'src/domain/battle';
 
 import { CharactorDuplicationError } from 'src/domain/party';
@@ -8,9 +8,8 @@ import { toBattleJson, toBattle } from 'src/domain/battle';
 
 const NAMESPACE = 'battle';
 
-// TODO Date型がUTCで時間を保持するので、save時にJSTに変換する必要がある。get時のutcへの戻しも
 const createSave: CreateSave<Battle> = repository => async obj =>
-  repository.save(NAMESPACE, obj.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }), toBattleJson(obj));
+  repository.save(NAMESPACE, obj.title, toBattleJson(obj));
 
 type CreateGetBattle = CreateGet<
   Battle,
@@ -28,6 +27,8 @@ const createRemove: CreateRemove = repository => async name => repository.remove
 
 const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
+const createCopy: CreateCopy = repository => async (name, file) => repository.copy(NAMESPACE, name, file);
+
 type CreateStoreBattle = CreateStore<
   Battle,
   NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
@@ -39,5 +40,6 @@ export const createStore: CreateStoreBattle = async repository => {
     list: createList(repository),
     get: createGet(repository),
     remove: createRemove(repository),
+    copy: createCopy(repository),
   };
 };

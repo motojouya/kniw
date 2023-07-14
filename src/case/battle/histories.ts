@@ -1,10 +1,10 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
 import type { Repository } from 'src/io/file_repository';
-import { createStore } from 'src/store/party';
+import { createStore } from 'src/store/battle';
 
-export type List = (dialogue: Dialogue, repository: Repository) => Promise<void>;
-export const list: List = async (dialogue, repository) => {
+export type Histories = (dialogue: Dialogue, repository: Repository) => Promise<void>;
+export const histories: Histories = async (dialogue, repository) => {
   const store = await createStore(repository);
-  const partyList = await store.list();
-  await partyList.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+  const battleList = await store.list();
+  await battleList.reduce((p, title) => p.then(() => dialogue.notice(`- ${title}`)), Promise.resolve());
 };

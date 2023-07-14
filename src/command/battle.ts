@@ -2,51 +2,45 @@ import type { Dialogue } from 'src/io/standard_dialogue';
 import type { Repository } from 'src/io/file_repository';
 
 import { Command } from '@commander-js/extra-typings';
-import { list } from 'src/case/party/list';
-import { showStatus } from 'src/case/party/showStatus';
-import { build } from 'src/case/party/build';
-import { change } from 'src/case/party/change';
-import { dismiss } from 'src/case/party/dismiss';
-import { exportJson } from 'src/case/party/exportJson';
+import { histories } from 'src/case/battle/histories';
+import { showHistory } from 'src/case/battle/showHistory';
+//import { start, resume } from 'src/case/battle/battle';
+import { exportJson } from 'src/case/battle/exportJson';
 
 export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
-  const party = new Command('party');
+  const battle = new Command('battle');
 
-  party
-    .command('list')
+  battle
+    .command('histories')
     .description('list parties')
-    .action(async () => list(dialogue, repository));
+    .action(async () => histories(dialogue, repository));
 
-  party
-    .command('build')
-    .argument('<name>', 'building party name')
-    .description('build a party as you like')
-    .action(async name => build(dialogue, repository)(name as string));
-
-  party
-    .command('status')
-    .argument('<name>', 'party name you looking')
+  battle
+    .command('history')
+    .argument('<title>', 'party name you looking')
     .description('look party as you like')
-    .action(async name => showStatus(dialogue, repository)(name as string));
+    .action(async title => showHistory(dialogue, repository)(title as string));
 
-  party
-    .command('change')
-    .argument('<name>', 'changing party name')
-    .description('change a party as you like')
-    .action(async name => change(dialogue, repository)(name as string));
+  // battle
+  //   .command('start')
+  //   .argument('<title>', 'building party name')
+  //   .argument('<home>', 'building party name')
+  //   .argument('<vistor>', 'building party name')
+  //   .description('build a party as you like')
+  //   .action(async (title, home, visitor) => start(dialogue, repository)(title as string, home as string, visitor as string));
 
-  party
-    .command('dismiss')
-    .argument('<name>', 'dismiss party name')
-    .description('dismiss party as you like')
-    .action(async name => dismiss(dialogue, repository)(name as string));
+  // battle
+  //   .command('resume')
+  //   .argument('<title>', 'changing party name')
+  //   .description('change a party as you like')
+  //   .action(async title => resume(dialogue, repository)(title as string));
 
-  party
+  battle
     .command('export')
-    .argument('<name>', 'export party name')
+    .argument('<title>', 'export party name')
     .argument('<file>', 'export file')
     .description('export party as you like')
-    .action(async (name, file) => exportJson(dialogue, repository)(name as string, file as string));
+    .action(async (title, file) => exportJson(dialogue, repository)(title as string, file as string));
 
-  return party;
+  return battle;
 }
