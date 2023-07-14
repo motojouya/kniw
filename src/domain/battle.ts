@@ -11,9 +11,6 @@ import { changeClimate } from 'src/domain/field';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
-import { parse } from 'date-fns';
-// import ja from 'date-fns/locale/ja'
-
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
@@ -70,7 +67,7 @@ export const toBattle: ToBattle = battleJson => {
     return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
   }
 
-  const title = battleJson.title;
+  const {title} = battleJson;
 
   const home = toParty(battleJson.home);
   if (

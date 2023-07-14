@@ -4,7 +4,7 @@ import type { Repository } from 'src/io/file_repository';
 import { Command } from '@commander-js/extra-typings';
 import { histories } from 'src/case/battle/histories';
 import { showHistory } from 'src/case/battle/showHistory';
-//import { start, resume } from 'src/case/battle/battle';
+// import { start, resume } from 'src/case/battle/battle';
 import { exportJson } from 'src/case/battle/exportJson';
 
 export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
@@ -19,7 +19,7 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .command('history')
     .argument('<title>', 'party name you looking')
     .description('look party as you like')
-    .action(async title => showHistory(dialogue, repository)(title as string));
+    .action(async title => showHistory(dialogue, repository)(title ));
 
   // battle
   //   .command('start')
@@ -40,7 +40,7 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .argument('<title>', 'export party name')
     .argument('<file>', 'export file')
     .description('export party as you like')
-    .action(async (title, file) => exportJson(dialogue, repository)(title as string, file as string));
+    .action(async (title, file) => exportJson(dialogue, repository)(title , file ));
 
   return battle;
 };

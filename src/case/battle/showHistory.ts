@@ -12,7 +12,7 @@ export const showHistory: ShowHistory =
     const store = await createStore(repository);
     const battle = await store.get(title);
     if (!battle) {
-      await notice(`${battle}という名前のタイトルは存在しません`);
+      await notice(`${title}という名前のタイトルは存在しません`);
       return;
     }
     if (

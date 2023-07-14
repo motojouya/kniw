@@ -16,7 +16,7 @@ export const makeCommand = (dialogue: Dialogue) => {
     .command('show')
     .argument('<name>', 'clothing name you looking')
     .description('look clothing as you like')
-    .action(async name => show(dialogue)(name as string));
+    .action(async name => show(dialogue)(name ));
 
   return clothing;
 };

@@ -21,32 +21,32 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .command('build')
     .argument('<name>', 'building party name')
     .description('build a party as you like')
-    .action(async name => build(dialogue, repository)(name as string));
+    .action(async name => build(dialogue, repository)(name ));
 
   party
     .command('status')
     .argument('<name>', 'party name you looking')
     .description('look party as you like')
-    .action(async name => showStatus(dialogue, repository)(name as string));
+    .action(async name => showStatus(dialogue, repository)(name ));
 
   party
     .command('change')
     .argument('<name>', 'changing party name')
     .description('change a party as you like')
-    .action(async name => change(dialogue, repository)(name as string));
+    .action(async name => change(dialogue, repository)(name ));
 
   party
     .command('dismiss')
     .argument('<name>', 'dismiss party name')
     .description('dismiss party as you like')
-    .action(async name => dismiss(dialogue, repository)(name as string));
+    .action(async name => dismiss(dialogue, repository)(name ));
 
   party
     .command('export')
     .argument('<name>', 'export party name')
     .argument('<file>', 'export file')
     .description('export party as you like')
-    .action(async (name, file) => exportJson(dialogue, repository)(name as string, file as string));
+    .action(async (name, file) => exportJson(dialogue, repository)(name , file ));
 
   return party;
 };
