@@ -184,7 +184,7 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
   return charactor;
 };
 
-export type Act = (
+export type ActToCharactor = (
   battle: Battle,
   actor: Charactor,
   skill: Skill,
@@ -192,7 +192,11 @@ export type Act = (
   datetime: Date,
   randoms: Randoms,
 ) => Turn;
-export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => {
+export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
+  if (skill.type === 'SKILL_TO_FIELD') {
+    throw new Error('invalid skill type');
+  }
+
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
     datetime,
@@ -206,12 +210,47 @@ export const act: Act = (battle, actor, skill, receivers, datetime, randoms) => 
     field: lastTurn.field,
   };
 
-  if (skill.type === 'SKILL_TO_FIELD') {
-    newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
-  } else {
-    const resultReceivers = receivers.map(receiver => skill.action(skill, actor, randoms, lastTurn.field, receiver));
-    newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
+  const resultReceivers = receivers.map(receiver => skill.action(skill, actor, randoms, lastTurn.field, receiver));
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
+
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+    const newCharactor = { ...charactor };
+    if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
+      newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
+    }
+    return newCharactor;
+  });
+  newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
+
+  return newTurn;
+};
+
+export type ActToField = (
+  battle: Battle,
+  actor: Charactor,
+  skill: Skill,
+  datetime: Date,
+  randoms: Randoms,
+) => Turn;
+export const actToField: ActToField = (battle, actor, skill, datetime, randoms) => {
+  if (skill.type === 'SKILL_TO_CHARACTOR') {
+    throw new Error('invalid skill type');
   }
+
+  const lastTurn = arrayLast(battle.turns);
+  const newTurn: Turn = {
+    datetime,
+    action: {
+      type: 'DO_SKILL',
+      actor,
+      skill,
+      receivers,
+    },
+    sortedCharactors: lastTurn.sortedCharactors,
+    field: lastTurn.field,
+  };
+
+  newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     const newCharactor = { ...charactor };

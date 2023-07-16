@@ -126,6 +126,26 @@ const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName)
   }
 };
 
+export type ReadJson = (fileName: string) => Promise<object | null>
+export const readJson: ReadJson = async (fileName) => {
+  try {
+    const contents = await fs.promises.readFile(fileName, {
+      encoding: 'utf8',
+    });
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    return JSON.parse(contents);
+  } catch (e) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const error = e as any;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
+    if (error.code === 'ENOENT') {
+      return null;
+    } else {
+      throw e;
+    }
+  }
+};
+
 export const createRepository: CreateRepository = async basePath => {
   await createDirctory(basePath);
   return {
