@@ -7,55 +7,54 @@ on:
       - main
 
 jobs:
-# check out -> npm cache -> npm ci -> 各種テスト
-# テストはjobを分けるので、npmをキャッシュして共有したいが
-# mocha
-# prettier --check
-# eslint --max-warning=0
-# build -> git diff --name-only | wc -l -> test -ne 0
-  create_gce:
+
+  prettier:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      - id: 'auth'
-        name: 'Authenticate to Google Cloud'
-        uses: google-github-actions/auth@v1
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          workload_identity_provider: ${{ vars.WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run prettier_check
 
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v2
+  eslint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          terraform_version: 1.4.2
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run eslint_check
 
-      - name: Terraform fmt
-        run: terraform fmt -check -recursive
-        continue-on-error: true
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run test
 
-      - name: Terraform Init
-        run: terraform init -backend-config="bucket=$TF_BUCKET_NAME" -backend-config="prefix=$TF_BUCKET_PREFIX"
-
-      - name: Terraform Validate
-        run: terraform validate
-
-      - name: Terraform Plan
-        id: plan
-        run: terraform plan -no-color -lock-timeout=60m
-        continue-on-error: true
-
-      - name: Terraform Plan Status
-        if: steps.plan.outcome == 'failure'
-        run: exit 1
-
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main' && ((github.event_name == 'schedule' && github.event.schedule == '30 23 * * 0-4') || (github.event_name == 'workflow_dispatch' && inputs.do_apply))
-        run: terraform apply -auto-approve -input=false
-
-      - name: Terraform Destroy
-        if: github.ref == 'refs/heads/main' && ((github.event_name == 'schedule' && github.event.schedule == '0 1 * * 1-5') || (github.event_name == 'workflow_dispatch' && !inputs.do_apply))
-        run: terraform destroy -auto-approve -input=false
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '20.x'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run build
+      - name: check build diff
+        run: |
+        build_diff=$(git diff --name-only | wc -l)
+        if [ "$build_diff" -ne 0 ]; then
+          exit 1
+        fi
 

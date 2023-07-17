@@ -12,7 +12,9 @@
     "try": "ts-node -r tsconfig-paths/register",
     "manual": "ts-node -r tsconfig-paths/register manually_test/io/standard_dialogue.ts",
     "prettier": "npx prettier --write 'src/**/*.ts'",
-    "eslint": "eslint --fix --ext .ts src"
+    "eslint": "eslint --fix --ext .ts src",
+    "prettier_check": "npx prettier --check 'src/**/*.ts'",
+    "eslint_check": "eslint --max-warnings=0 --ext .ts src"
   },
   "private": true,
   "devDependencies": {
