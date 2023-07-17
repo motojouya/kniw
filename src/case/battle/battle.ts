@@ -83,16 +83,14 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       const newTurn = actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createAbsolute());
 
       await dialogue.notice('効果');
-      await selectedReceivers.reduce((p, receiver) => {
-        return p.then(async () => {
+      await selectedReceivers.reduce((p, receiver) => p.then(async () => {
           const selectedReceiver = newTurn.sortedCharactors.find(
             charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
           );
           if (selectedReceiver) {
             await dialogue.notice(`${selectedReceiver.name}: hp: ${selectedReceiver.hp}`);
           }
-        });
-      }, Promise.resolve());
+        }), Promise.resolve());
 
       if (confirm('実行しますか？')) {
         return actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createRandoms());
@@ -207,9 +205,9 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
         showCharactorStatus(dialogue)(battle);
         break;
       case NOTHING:
-        return await stay(battle, actor, new Date());
+        return stay(battle, actor, new Date());
       case SURRENDER:
-        return await surrender(battle, actor, new Date());
+        return surrender(battle, actor, new Date());
       case INTERRUPTION:
         return null;
         break;
@@ -223,7 +221,7 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
 export type ContinueBattle = (dialogue: Dialogue, repository: Repository) => (battle: Battle) => Promise<void>;
 export const continueBattle: ContinueBattle = (dialogue, repository) => async battle => {
   const battleStore = await createBattleStore(repository);
-  const turns = battle.turns;
+  const {turns} = battle;
 
   while (true) {
     const firstWaiting = nextActor(battle);
