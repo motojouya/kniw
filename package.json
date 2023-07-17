@@ -6,10 +6,7 @@
   "main": "index.js",
   "scripts": {
     "kniw": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start": "node dist/main.js",
     "build": "webpack",
-    "prepare": "webpack --config webpack.config.js",
-    "watch": "webpack --config webpack.dev.js --watch",
     "test": "mocha --require ts-node/register --require tsconfig-paths/register --watch-extensions ts 'test/**/*.ts'",
     "testsingle": "mocha --require ts-node/register --require tsconfig-paths/register --watch-extensions ts",
     "try": "ts-node -r tsconfig-paths/register",
@@ -31,6 +28,7 @@
     "prettier": "^3.0.0",
     "ts-loader": "^9.3.0",
     "tsconfig-paths": "^4.2.0",
+    "tsconfig-paths-webpack-plugin": "^4.1.0",
     "typescript": "^4.6.4",
     "webpack": "^5.72.1",
     "webpack-cli": "^4.9.2",
@@ -46,6 +44,7 @@
     "date-fns": "^2.30.0",
     "json-schema-to-ts": "^2.9.1",
     "prompts": "^2.4.2",
+    "shebang-loader": "^0.0.1",
     "ts-node": "^10.9.1"
   }
 }
