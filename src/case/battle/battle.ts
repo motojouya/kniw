@@ -29,7 +29,6 @@ import {
   selectCharactor,
 } from 'src/domain/charactor';
 import { createStore as createBattleStore } from 'src/store/battle';
-import { createStore as createPartyStore } from 'src/store/party';
 import { toParty, CharactorDuplicationError } from 'src/domain/party';
 import { createAbsolute, createRandoms } from 'src/domain/random';
 import { getSkill } from 'src/store/skill';
@@ -47,7 +46,8 @@ const BACK = 'BACK';
 type ActSkill = (dialogue: Dialogue) => (actor: Charactor, battle: Battle) => Promise<Turn | null>;
 const actSkill: ActSkill = dialogue => async (actor, battle) => {
   const lastTurn = getLastTurn(battle);
-  while (true) {
+  /* eslint-disable no-await-in-loop */
+  for (;;) {
     const skills = getSkills(actor);
     const skillOptions = skills.map(skill => ({ value: skill.name, label: skill.name }));
     skillOptions.push({ value: BACK, label: '戻る' });
@@ -59,7 +59,7 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
     const selectedSkill = getSkill(selectedName);
     if (!selectedSkill) {
       await dialogue.notice(`${selectedName}というskillはありません`);
-      continue;
+      return null;
     }
 
     if (selectedSkill.type === 'SKILL_TO_CHARACTOR') {
@@ -72,6 +72,7 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       );
 
       if (selectedReceiverNames instanceof NotApplicable || selectedReceiverNames.length === 0) {
+        // eslint-disable-next-line no-continue
         continue;
       }
 
@@ -96,7 +97,8 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
         Promise.resolve(),
       );
 
-      if (confirm('実行しますか？')) {
+      const isExec = await dialogue.confirm('実行しますか？');
+      if (!(isExec instanceof NotApplicable) && isExec) {
         return actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createRandoms());
       }
     } else {
@@ -105,11 +107,13 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       await dialogue.notice('効果');
       await dialogue.notice(`天候: ${newTurn.field.climate}`);
 
-      if (confirm('実行しますか？')) {
+      const isExec = await dialogue.confirm('実行しますか？');
+      if (!(isExec instanceof NotApplicable) && isExec) {
         return actToField(battle, actor, selectedSkill, new Date(), createRandoms());
       }
     }
   }
+  /* eslint-enable no-await-in-loop */
 };
 
 type ShowSortedCharactors = (dialogue: Dialogue) => (battle: Battle) => Promise<void>;
@@ -185,7 +189,8 @@ const showCharactorStatus: ShowCharactorStatus =
 
 type PlayerSelect = (dialogue: Dialogue) => (actor: Charactor, battle: Battle) => Promise<Turn | null>;
 const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
-  while (true) {
+  /* eslint-disable no-await-in-loop */
+  for (;;) {
     const select = await dialogue.select('どうしますか？', [
       { value: SKILL, label: 'Skillを選ぶ' },
       { value: LIST, label: '一覧を見る' },
@@ -196,30 +201,36 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
     ]);
 
     switch (select) {
-      case SKILL:
+      case SKILL: {
         const newTurn = await actSkill(dialogue)(actor, battle);
         if (newTurn) {
           return newTurn;
         }
         break;
+      }
       case LIST:
         await showSortedCharactors(dialogue)(battle);
         break;
       case CHARACTOR:
-        showCharactorStatus(dialogue)(battle);
+        await showCharactorStatus(dialogue)(battle);
         break;
       case NOTHING:
         return stay(battle, actor, new Date());
-      case SURRENDER:
-        return surrender(battle, actor, new Date());
+      case SURRENDER: {
+        const isSurrender = await dialogue.confirm('降参してもよいですか？');
+        if (!(isSurrender instanceof NotApplicable) && isSurrender) {
+          return surrender(battle, actor, new Date());
+        }
+        break;
+      }
       case INTERRUPTION:
         return null;
-        break;
       default:
       // 選択されなかった場合
       // do nothing
     }
   }
+  /* eslint-enable no-await-in-loop */
 };
 
 export type ContinueBattle = (dialogue: Dialogue, repository: Repository) => (battle: Battle) => Promise<void>;
@@ -227,7 +238,8 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
   const battleStore = await createBattleStore(repository);
   const { turns } = battle;
 
-  while (true) {
+  /* eslint-disable no-await-in-loop */
+  for (;;) {
     const firstWaiting = nextActor(battle);
     turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
 
@@ -237,15 +249,17 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
       break;
     }
     turns.push(turn);
-    battleStore.save(battle);
+    await battleStore.save(battle);
 
+    // eslint-disable-next-line no-param-reassign
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
       break;
     }
   }
+  /* eslint-enable no-await-in-loop */
 
-  battleStore.save(battle);
+  await battleStore.save(battle);
 
   if (battle.result === GameOngoing) {
     await dialogue.notice('勝負を中断しました');
@@ -263,7 +277,7 @@ export type Start = (
   repository: Repository,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, repository) => async (title, home, visitor) => {
-  const homeJson = readJson(home);
+  const homeJson = await readJson(home);
   if (!homeJson) {
     await dialogue.notice(`homeのデータがありません`);
     return;
@@ -279,7 +293,7 @@ export const start: Start = (dialogue, repository) => async (title, home, visito
     return;
   }
 
-  const visitorJson = readJson(visitor);
+  const visitorJson = await readJson(visitor);
   if (!visitorJson) {
     await dialogue.notice(`visitorのデータがありません`);
   }
