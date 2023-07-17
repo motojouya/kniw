@@ -21,7 +21,13 @@ import {
   GameOngoing,
   getLastTurn,
 } from 'src/domain/battle';
-import { getSkills, getPhysical, getAbilities, getSelectOption as charactorSelectOption, selectCharactor } from 'src/domain/charactor';
+import {
+  getSkills,
+  getPhysical,
+  getAbilities,
+  getSelectOption as charactorSelectOption,
+  selectCharactor,
+} from 'src/domain/charactor';
 import { createStore as createBattleStore } from 'src/store/battle';
 import { createStore as createPartyStore } from 'src/store/party';
 import { toParty, CharactorDuplicationError } from 'src/domain/party';
@@ -42,7 +48,6 @@ type ActSkill = (dialogue: Dialogue) => (actor: Charactor, battle: Battle) => Pr
 const actSkill: ActSkill = dialogue => async (actor, battle) => {
   const lastTurn = getLastTurn(battle);
   while (true) {
-
     const skills = getSkills(actor);
     const skillOptions = skills.map(skill => ({ value: skill.name, label: skill.name }));
     skillOptions.push({ value: BACK, label: '戻る' });
@@ -78,22 +83,20 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       const newTurn = actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createAbsolute());
 
       await dialogue.notice('効果');
-      await selectedReceivers.reduce(
-        (p, receiver) => {
-          return p.then(async () => {
-            const selectedReceiver = newTurn.sortedCharactors.find(charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name);
-            if (selectedReceiver) {
-              await dialogue.notice(`${selectedReceiver.name}: hp: ${selectedReceiver.hp}`);
-            }
-          })
-        },
-        Promise.resolve()
-      );
+      await selectedReceivers.reduce((p, receiver) => {
+        return p.then(async () => {
+          const selectedReceiver = newTurn.sortedCharactors.find(
+            charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
+          );
+          if (selectedReceiver) {
+            await dialogue.notice(`${selectedReceiver.name}: hp: ${selectedReceiver.hp}`);
+          }
+        });
+      }, Promise.resolve());
 
       if (confirm('実行しますか？')) {
         return actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createRandoms());
       }
-
     } else {
       const newTurn = actToField(battle, actor, selectedSkill, new Date(), createAbsolute());
 
@@ -113,62 +116,72 @@ const showSortedCharactors: ShowSortedCharactors = dialogue => async battle => {
   await dialogue.notice('以下の順番でターンが進みます');
   await lastTurn.sortedCharactors.reduce(
     (p, charactor, index) =>
-      p.then(async () => await dialogue.notice(`${index + 1}. ${charactor.name}(${charactor.isVisitor ? 'VISITOR' : 'HOME'}) hp:${charactor.hp} mp:${charactor.mp}`)),
-    Promise.resolve()
+      p.then(
+        async () => {
+          const team = charactor.isVisitor ? 'VISITOR' : 'HOME';
+          await dialogue.notice(`${index + 1}. ${charactor.name}(${team}) hp:${charactor.hp} mp:${charactor.mp}`);
+        }
+      ),
+    Promise.resolve(),
   );
 };
 
 type ShowCharactorStatus = (dialogue: Dialogue) => (battle: Battle) => Promise<void>;
-const showCharactorStatus: ShowCharactorStatus = ({ select, notice }) => async battle => {
-  const lastTurn = getLastTurn(battle);
-  const charactorOptions = lastTurn.sortedCharactors.map(charactor => charactorSelectOption(charactor));
-  const selectedCharactorName = await select(`対象を選んでください`, charactorOptions);
+const showCharactorStatus: ShowCharactorStatus =
+  ({ select, notice }) =>
+  async battle => {
+    const lastTurn = getLastTurn(battle);
+    const charactorOptions = lastTurn.sortedCharactors.map(charactor => charactorSelectOption(charactor));
+    const selectedCharactorName = await select(`対象を選んでください`, charactorOptions);
 
-  if (selectedCharactorName instanceof NotApplicable || !selectedCharactorName) {
-    return;
-  }
+    if (selectedCharactorName instanceof NotApplicable || !selectedCharactorName) {
+      return;
+    }
 
-  const selectedCharactors = selectCharactor(lastTurn.sortedCharactors, [selectedCharactorName]);
-  if (selectedCharactors.length !== 1) {
-    throw new Error('選択したキャラクターが存在しません');
-  }
+    const selectedCharactors = selectCharactor(lastTurn.sortedCharactors, [selectedCharactorName]);
+    if (selectedCharactors.length !== 1) {
+      throw new Error('選択したキャラクターが存在しません');
+    }
 
-  const charactor = selectedCharactors[0];
-  await notice(`名前: ${charactor.name}`);
-  await notice(`HP: ${charactor.hp}`);
-  await notice(`MP: ${charactor.mp}`);
-  await notice(`WT: ${charactor.restWt}`);
+    const charactor = selectedCharactors[0];
+    await notice(`名前: ${charactor.name}`);
+    await notice(`HP: ${charactor.hp}`);
+    await notice(`MP: ${charactor.mp}`);
+    await notice(`WT: ${charactor.restWt}`);
 
-  await notice('ステータス:');
-  await charactor.statuses.reduce((p, status) => p.then(() => notice(`  - ${status.label}(${status.restWt})`)), Promise.resolve());
+    await notice('ステータス:');
+    await charactor.statuses.reduce(
+      (p, status) => p.then(() => notice(`  - ${status.label}(${status.restWt})`)),
+      Promise.resolve(),
+    );
 
-  await notice(`種族: ${charactor.race.label}`);
-  await notice(`祝福: ${charactor.blessing.label}`);
-  await notice(`装備: ${charactor.clothing.label}`);
-  await notice(`武器: ${charactor.weapon.label}`);
+    await notice(`種族: ${charactor.race.label}`);
+    await notice(`祝福: ${charactor.blessing.label}`);
+    await notice(`装備: ${charactor.clothing.label}`);
+    await notice(`武器: ${charactor.weapon.label}`);
 
-  const physical = getPhysical(charactor);
-  await notice('能力:');
-  await notice(`  MaxHP: ${physical.MaxHP}`);
-  await notice(`  MaxMP: ${physical.MaxMP}`);
-  await notice(`  STR: ${physical.STR}`);
-  await notice(`  VIT: ${physical.VIT}`);
-  await notice(`  DEX: ${physical.DEX}`);
-  await notice(`  AGI: ${physical.AGI}`);
-  await notice(`  AVD: ${physical.AVD}`);
-  await notice(`  INT: ${physical.INT}`);
-  await notice(`  MND: ${physical.MND}`);
-  await notice(`  RES: ${physical.RES}`);
-  await notice(`  WT: ${physical.WT}`);
+    const physical = getPhysical(charactor);
+    await notice('能力:');
+    await notice(`  MaxHP: ${physical.MaxHP}`);
+    await notice(`  MaxMP: ${physical.MaxMP}`);
+    await notice(`  STR: ${physical.STR}`);
+    await notice(`  VIT: ${physical.VIT}`);
+    await notice(`  DEX: ${physical.DEX}`);
+    await notice(`  AGI: ${physical.AGI}`);
+    await notice(`  AVD: ${physical.AVD}`);
+    await notice(`  INT: ${physical.INT}`);
+    await notice(`  MND: ${physical.MND}`);
+    await notice(`  RES: ${physical.RES}`);
+    await notice(`  WT: ${physical.WT}`);
 
-  const abilities = getAbilities(charactor);
-  await notice('アビリティ:');
-  await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
+    const abilities = getAbilities(charactor);
+    await notice('アビリティ:');
+    await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
-  const skills = getSkills(charactor);
-  await notice('スキル:');
-  await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
-};
+    const skills = getSkills(charactor);
+    await notice('スキル:');
+    await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
+  };
 
 type PlayerSelect = (dialogue: Dialogue) => (actor: Charactor, battle: Battle) => Promise<Turn | null>;
 const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
@@ -203,8 +216,8 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
         return null;
         break;
       default:
-        // 選択されなかった場合
-        // do nothing
+      // 選択されなかった場合
+      // do nothing
     }
   }
 };
@@ -250,7 +263,6 @@ export type Start = (
   repository: Repository,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, repository) => async (title, home, visitor) => {
-
   const homeJson = readJson(home);
   if (!homeJson) {
     await dialogue.notice(`homeのデータがありません`);

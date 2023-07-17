@@ -126,8 +126,8 @@ const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName)
   }
 };
 
-export type ReadJson = (fileName: string) => Promise<object | null>
-export const readJson: ReadJson = async (fileName) => {
+export type ReadJson = (fileName: string) => Promise<object | null>;
+export const readJson: ReadJson = async fileName => {
   try {
     const contents = await fs.promises.readFile(fileName, {
       encoding: 'utf8',

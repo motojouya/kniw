@@ -27,7 +27,9 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .argument('<home>', 'building party file path')
     .argument('<vistor>', 'building party file path')
     .description('build a party as you like')
-    .action(async (title, home, visitor) => start(dialogue, repository)(title as string, home as string, visitor as string));
+    .action(async (title, home, visitor) =>
+      start(dialogue, repository)(title as string, home as string, visitor as string),
+    );
 
   battle
     .command('resume')

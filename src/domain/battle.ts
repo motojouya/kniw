@@ -231,13 +231,7 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   return newTurn;
 };
 
-export type ActToField = (
-  battle: Battle,
-  actor: Charactor,
-  skill: Skill,
-  datetime: Date,
-  randoms: Randoms,
-) => Turn;
+export type ActToField = (battle: Battle, actor: Charactor, skill: Skill, datetime: Date, randoms: Randoms) => Turn;
 export const actToField: ActToField = (battle, actor, skill, datetime, randoms) => {
   if (skill.type === 'SKILL_TO_CHARACTOR') {
     throw new Error('invalid skill type');
