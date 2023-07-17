@@ -1,50 +1,17 @@
+
 # KNIW
 
-A Board Game like "Tactics Ogre: Let Us Cling Together", computer SRPG game.
+タクティクスオウガを、ボードゲームでしたくて作りました。
 
-## design
+## 遊び方
+`kniw`コマンドと、[フィールド]()を自分で用意して遊びます。
 
-### command
-- check
-  初期入力データのチェック
-- start
-  ゲームの開始
+フィールドは、レゴなどで用意すればよりタクティクスオウガっぽくなりますが、お金がかかるので、紙に書いても構いません。
+ゲーム上で動かすキャラクターも同時に必要です。
 
-#### command action
-- action
-  技選択 -> ターゲット選択 -> 実行 -> ターンエンド
-  勝敗が決まれば結果
-  決まってなければ次のユニットを表示
-- next
-  actionを行わず次のユニットへ
-- status
-  - hp
-  - mp
-  - 順番
-- parson
-  人を選択
-- quit
-  ゲーム終了
+`kniw`コマンドは、[こちら]()からダウンロードできますが、現在はlinuxでしか動作の確認ができていない状態です。
+以下のコマンドを叩くと、ゲームが開始され、kniwコマンドに従ってゲームを進行します。
+`kniw battle start <game-title> <path/to/home/party> <path/to/visitor/party>`
 
-### data
-初期入力データ
-こんな感じを想定
-TypeScriptで型を定義したい
-
-```
-{
-  "name": {
-    "blessing": "",
-    "race": "",
-    "main_weapon": "",
-    "sub_weapon": "",
-    "armor": ""
-  },
-  ...
-}
-```
-
-## memos
-`npm ts-node index.ts`
-
+フィールド上のコマは`kniw`コマンドの管理外なので、プレーヤーがルールに従って動かしていきます。
 
