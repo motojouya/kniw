@@ -53,8 +53,8 @@ jobs:
       - run: npm run build
       - name: check build diff
         run: |
-        build_diff=$(git diff --name-only | wc -l)
-        if [ "$build_diff" -ne 0 ]; then
-          exit 1
-        fi
+          build_diff=$(git diff --name-only | wc -l)
+          if [ "$build_diff" -ne 0 ]; then
+            exit 1
+          fi
 
