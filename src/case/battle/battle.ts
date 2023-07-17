@@ -116,12 +116,10 @@ const showSortedCharactors: ShowSortedCharactors = dialogue => async battle => {
   await dialogue.notice('以下の順番でターンが進みます');
   await lastTurn.sortedCharactors.reduce(
     (p, charactor, index) =>
-      p.then(
-        async () => {
-          const team = charactor.isVisitor ? 'VISITOR' : 'HOME';
-          await dialogue.notice(`${index + 1}. ${charactor.name}(${team}) hp:${charactor.hp} mp:${charactor.mp}`);
-        }
-      ),
+      p.then(async () => {
+        const team = charactor.isVisitor ? 'VISITOR' : 'HOME';
+        await dialogue.notice(`${index + 1}. ${charactor.name}(${team}) hp:${charactor.hp} mp:${charactor.mp}`);
+      }),
     Promise.resolve(),
   );
 };
