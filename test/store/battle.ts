@@ -12,7 +12,7 @@ import { createStore } from 'src/store/battle';
 import { parse, format } from 'date-fns';
 
 const testData = {
-  datetime: '2023-06-29T12:12:12',
+  title: 'first-title',
   home: {
     name: 'home',
     charactors: [
@@ -73,7 +73,7 @@ describe('Battle#createStore', function () {
     const battle = await store.get('2023-06-29T12:12:12');
     const typedBattle = battle as Battle;
     if (typedBattle) {
-      assert.equal(formatDate(typedBattle.datetime), '2023-06-29T12:12:12');
+      assert.equal(typedBattle.title, 'first-title');
 
       const home = typedBattle.home;
       assert.equal(home.name, 'home');

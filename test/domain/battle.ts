@@ -5,7 +5,8 @@ import type { Skill } from 'src/domain/skill';
 import assert from 'assert';
 import {
   toBattle,
-  act,
+  actToCharactor,
+  actToField,
   stay,
   wait,
   start,
@@ -33,7 +34,7 @@ import {
 import { getSkill } from 'src/store/skill';
 
 const testData = {
-  datetime: '2023-06-29T12:12:12',
+  title: 'first-title',
   home: {
     name: 'home',
     charactors: [
@@ -83,7 +84,7 @@ describe('Battle#toBattle', function () {
     ) {
       assert.equal(true, false);
     } else {
-      assert.equal(formatDate(battle.datetime), '2023-06-29T12:12:12');
+      assert.equal(battle.title, 'first-title');
       assert.equal(battle.home.name, 'home');
       assert.equal(battle.visitor.name, 'visitor');
       assert.equal(battle.turns.length, 1);
@@ -105,7 +106,7 @@ describe('Battle#start', function () {
       { name: 'chang', race: 'werewolf', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 110 },
     ]}) as Party);
 
-    const battle = createBattle(new Date(), homeParty, visitorParty);
+    const battle = createBattle('first-title', homeParty, visitorParty);
     assert.equal(battle.result, GameOngoing);
 
     const turn = start(battle, new Date(), {
@@ -135,13 +136,13 @@ describe('Battle#start', function () {
 });
 
 describe('Battle#act', function () {
-  it('ok', function () {
+  it('charactor', function () {
     const battle = (toBattle(testData) as Battle);
     const actor = (toCharactor(testData.home.charactors[0]) as Charactor);
     const receiver = (toCharactor(testData.visitor.charactors[0]) as Charactor);
     const skill = (getSkill('chop') as Skill);
 
-    const turn = act(battle, actor, skill, [receiver], new Date(), {
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
       times: 0.1,
       damage: 0.1,
       accuracy: 0.1,
