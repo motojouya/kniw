@@ -1,5 +1,6 @@
-import { Physical, addPhysicals } from 'src/domain/physical';
 import type { Status } from 'src/domain/status';
+import type { SelectOption } from 'src/io/standard_dialogue';
+import { Physical, addPhysicals } from 'src/domain/physical';
 import { toStatus, toStatusJson } from 'src/domain/status';
 import { Race, Weapon, Clothing, Blessing, NotWearableErorr } from 'src/domain/acquirement';
 import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
@@ -57,6 +58,12 @@ export const charactorSchema = {
 } as const;
 
 export type CharactorJson = FromSchema<typeof charactorSchema>;
+
+export type GetSelectOption = (charactor: Charactor) => SelectOption
+export const getSelectOption: GetSelectOption = charactor => ({ label: `${charactor.isVisitor ? 'V' : 'H'}:${charactor.name}`, value: `${charactor.isVisitor ? 'V' : 'H'}:${charactor.name}` });
+
+export type SelectCharactor = (candidates: Charactor[], values: string[]) => Charactor[];
+export const selectCharactor: SelectCharactor = (candidates, values) => candidates.filter(candidate => values.includes(`${candidate.isVisitor ? 'V' : 'H'}:${candidate.name}`));
 
 export type GetAbilities = (charactor: Charactor) => Ability[];
 export const getAbilities: GetAbilities = charactor => [

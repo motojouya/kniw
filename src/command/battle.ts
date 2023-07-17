@@ -12,7 +12,7 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
 
   battle
     .command('histories')
-    .description('list parties')
+    .description('list histories')
     .action(async () => histories(dialogue, repository));
 
   battle
@@ -24,22 +24,22 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
   battle
     .command('start')
     .argument('<title>', 'building party name')
-    .argument('<home>', 'building party name')
-    .argument('<vistor>', 'building party name')
+    .argument('<home>', 'building party file path')
+    .argument('<vistor>', 'building party file path')
     .description('build a party as you like')
     .action(async (title, home, visitor) => start(dialogue, repository)(title as string, home as string, visitor as string));
 
   battle
     .command('resume')
-    .argument('<title>', 'changing party name')
-    .description('change a party as you like')
+    .argument('<title>', 'resume battle title')
+    .description('resume battle')
     .action(async title => resume(dialogue, repository)(title as string));
 
   battle
     .command('export')
-    .argument('<title>', 'export party name')
+    .argument('<title>', 'export battle history')
     .argument('<file>', 'export file')
-    .description('export party as you like')
+    .description('export battle history')
     .action(async (title, file) => exportJson(dialogue, repository)(title, file));
 
   return battle;

@@ -113,6 +113,12 @@ export const toBattle: ToBattle = battleJson => {
   };
 };
 
+export type GetLastTurn = (battle: Battle) => Turn;
+export const getLastTurn: GetLastTurn = battle => arrayLast(battle.turns);
+
+export type NextActor = (battle: Battle) => Charactor;
+export const nextActor: NextActor = battle => arrayLast(battle.turns).sortedCharactors[0];
+
 type SortByWT = (charactors: Charactor[]) => Charactor[];
 const sortByWT: SortByWT = charactors =>
   charactors.sort((left, right) => {
@@ -244,7 +250,7 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
       type: 'DO_SKILL',
       actor,
       skill,
-      receivers,
+      receivers: [],
     },
     sortedCharactors: lastTurn.sortedCharactors,
     field: lastTurn.field,
@@ -287,6 +293,20 @@ export const stay: Stay = (battle, actor, datetime) => {
   newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
 
   return newTurn;
+};
+
+export type Surrender = (battle: Battle, actor: Charactor, datetime: Date) => Turn;
+export const surrender: Surrender = (battle, actor, datetime) => {
+  const lastTurn = arrayLast(battle.turns);
+  return {
+    datetime,
+    action: {
+      type: 'SURRENDER',
+      actor,
+    },
+    sortedCharactors: lastTurn.sortedCharactors,
+    field: lastTurn.field,
+  };
 };
 
 type WaitCharactor = (charactor: Charactor, wt: number, randoms: Randoms) => Charactor;
@@ -336,6 +356,14 @@ export const wait: Wait = (battle, wt, datetime, randoms) => {
 export type IsSettlement = (battle: Battle) => GameResult;
 export const isSettlement: IsSettlement = battle => {
   const lastestTurn = arrayLast(battle.turns);
+  if (lastestTurn.action.type === 'SURRENDER') {
+    if (lastestTurn.action.actor.isVisitor) {
+      return GameHome;
+    } else {
+      return GameVisitor;
+    }
+  }
+
   const homeCharactors = lastestTurn.sortedCharactors.filter(charactor => !charactor.isVisitor && charactor.hp);
   const visitorCharactors = lastestTurn.sortedCharactors.filter(charactor => charactor.isVisitor && charactor.hp);
 

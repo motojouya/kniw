@@ -25,12 +25,17 @@ export type DoNothing = {
   actor: Charactor;
 };
 
+export type Surrender = {
+  type: 'SURRENDER';
+  actor: Charactor;
+};
+
 export type TimePassing = {
   type: 'TIME_PASSING';
   wt: number;
 };
 
-export type Action = TimePassing | DoNothing | DoSkill;
+export type Action = TimePassing | DoNothing | DoSkill | Surrender;
 
 export type Turn = {
   datetime: Date;
@@ -38,6 +43,17 @@ export type Turn = {
   sortedCharactors: Charactor[];
   field: Field;
 };
+
+export const surrenderSchema = {
+  type: 'object',
+  properties: {
+    type: { const: 'SURRENDER' },
+    actor: charactorSchema,
+  },
+  required: ['type', 'actor'],
+} as const;
+
+export type SurrenderJson = FromSchema<typeof surrenderSchema>;
 
 export const doSkillSchema = {
   type: 'object',
@@ -74,7 +90,7 @@ export const timePassingSchema = {
 
 export type TimePassingJson = FromSchema<typeof timePassingSchema>;
 
-export const actionSchema = { anyOf: [doSkillSchema, doNothingSchema, timePassingSchema] } as const;
+export const actionSchema = { anyOf: [doSkillSchema, doNothingSchema, timePassingSchema, surrenderSchema] } as const;
 export type ActionJson = FromSchema<typeof actionSchema>;
 
 export const turnSchema = {
@@ -104,6 +120,13 @@ export const toActionJson: ToActionJson = action => {
       actor: toCharactorJson(action.actor),
       skill: action.skill.name,
       receivers: action.receivers.map(toCharactorJson),
+    };
+  }
+
+  if (action.type === 'SURRENDER') {
+    return {
+      type: 'SURRENDER',
+      actor: toCharactorJson(action.actor),
     };
   }
 
@@ -172,6 +195,21 @@ export const toAction: ToAction = actionJson => {
       actor: skillActor,
       skill,
       receivers,
+    };
+  }
+
+  if (actionJson.type === 'SURRENDER') {
+    const surrenderActor = toCharactor(actionJson.actor);
+    if (
+      surrenderActor instanceof NotWearableErorr ||
+      surrenderActor instanceof DataNotFoundError ||
+      surrenderActor instanceof JsonSchemaUnmatchError
+    ) {
+      return surrenderActor;
+    }
+    return {
+      type: 'SURRENDER',
+      actor: surrenderActor,
     };
   }
 
