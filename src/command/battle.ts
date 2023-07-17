@@ -27,15 +27,13 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
     .argument('<home>', 'building party file path')
     .argument('<vistor>', 'building party file path')
     .description('build a party as you like')
-    .action(async (title, home, visitor) =>
-      start(dialogue, repository)(title , home , visitor ),
-    );
+    .action(async (title, home, visitor) => start(dialogue, repository)(title, home, visitor));
 
   battle
     .command('resume')
     .argument('<title>', 'resume battle title')
     .description('resume battle')
-    .action(async title => resume(dialogue, repository)(title ));
+    .action(async title => resume(dialogue, repository)(title));
 
   battle
     .command('export')
