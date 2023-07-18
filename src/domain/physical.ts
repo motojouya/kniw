@@ -11,6 +11,7 @@ export type Physical = {
   RES: number; // 魔法耐性 魔法に対する防御力に影響
   WT: number;
 };
+// TODO 移動範囲、移動高さの概念を追加したい。コード上は関係ないがゲーム時に任意で参照する。
 
 const zeroPhysical: Physical = {
   MaxHP: 0,

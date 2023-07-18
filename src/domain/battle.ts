@@ -190,6 +190,7 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
   return charactor;
 };
 
+// TODO mp消費の概念が実装されてない
 export type ActToCharactor = (
   battle: Battle,
   actor: Charactor,
@@ -328,6 +329,7 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
 
 // ターン経過による状態変化を起こす関数
 // これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
+// TODO mp回復の概念が実装されてない。ターン経過ごとにMPが回復しないといつまでも0のまま
 export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn;
 export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
