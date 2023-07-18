@@ -36,9 +36,6 @@ export type SkillToField = {
 
 export type Skill = SkillToCharactor | SkillToField;
 
-// dryrun関数の中では、ramdomsが固定でactionTimesが>1でも1回のみ実行
-// actionTimesが0の場合はfieldに影響を及ぼすタイプのやつ
-
 type CalcDirectAttack = (attacker: Charactor) => number;
 const calcDirectAttack: CalcDirectAttack = attacker => {
   const physical = getPhysical(attacker);
@@ -81,6 +78,7 @@ const calcMagicalDefence: CalcMagicalDefence = defencer => {
   return (physical.VIT + physical.MND) / 2;
 };
 
+// TODO blessingに心、大地、海、空があり、空->海->大地->空という力関係なので、ダメージ計算にも反映させたい。心は力関係がない。
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   let damage = calcMagicalAttack(actor) - calcMagicalDefence(receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;

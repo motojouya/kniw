@@ -12,7 +12,9 @@
 
 `kniw`コマンドは、[こちら](dist/kniw)からダウンロードできます。  
 以下のコマンドを叩くと、ゲームが開始され、kniwコマンドに従ってゲームを進行します。  
-`kniw battle start <game-title> <path/to/home/party> <path/to/visitor/party>`
+```
+kniw battle start <game-title> <path/to/home/party> <path/to/visitor/party>
+```
 ※現在はlinuxでのみ動作の確認ができています。
 
 フィールド上のコマは`kniw`コマンドの管理外なので、プレーヤーがルールに従って動かしていきます。  
