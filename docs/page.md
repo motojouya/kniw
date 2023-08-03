@@ -16,14 +16,19 @@
 ## dir
 
 root
-- index.tsx
-- party
+- pages
   - index.tsx
-  - [name].tsx
-  - new.tsx
-- battle
-  - index.tsx
-  - [title].tsx
+  - party
+    - index.tsx
+    - [name].tsx
+    - new.tsx
+  - battle
+    - index.tsx
+    - [title].tsx
+- componnents
+  - party
+    - edit.ts
+- hooks
 
 ### index.tsx
 - 軽い説明
