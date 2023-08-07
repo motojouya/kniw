@@ -16,6 +16,15 @@ const basePhysical: Physical = {
   MND: 100,
   RES: 100,
   WT: 100,
+  StabResistance: 0,
+  SlashResistance: 0,
+  BlowResistance: 0,
+  FireSuitable: 0,
+  RockSuitable: 0,
+  WaterSuitable: 0,
+  IceSuitable: 0,
+  AirSuitable: 0,
+  ThunderSuitable: 0,
 };
 
 describe('Physical#addPhysicals', function () {
@@ -34,6 +43,15 @@ describe('Physical#addPhysicals', function () {
         MND: 10,
         RES: 10,
         WT: 10,
+        StabResistance: 10,
+        SlashResistance: 10,
+        BlowResistance: 10,
+        FireSuitable: 10,
+        RockSuitable: 10,
+        WaterSuitable: 10,
+        IceSuitable: 10,
+        AirSuitable: 10,
+        ThunderSuitable: 10,
       },
       {
         MaxHP: 1,
@@ -47,6 +65,15 @@ describe('Physical#addPhysicals', function () {
         MND: 1,
         RES: 1,
         WT: 1,
+        StabResistance: 1,
+        SlashResistance: 1,
+        BlowResistance: 1,
+        FireSuitable: 1,
+        RockSuitable: 1,
+        WaterSuitable: 1,
+        IceSuitable: 1,
+        AirSuitable: 1,
+        ThunderSuitable: 1,
       },
     ]);
 
@@ -61,6 +88,15 @@ describe('Physical#addPhysicals', function () {
     assert.equal(result.MND, 111);
     assert.equal(result.RES, 111);
     assert.equal(result.WT, 111);
+    assert.equal(result.StabResistance, 11);
+    assert.equal(result.SlashResistance, 11);
+    assert.equal(result.BlowResistance, 11);
+    assert.equal(result.FireSuitable, 11);
+    assert.equal(result.RockSuitable, 11);
+    assert.equal(result.WaterSuitable, 11);
+    assert.equal(result.IceSuitable, 11);
+    assert.equal(result.AirSuitable, 11);
+    assert.equal(result.ThunderSuitable, 11);
   });
 
   it('minus', function () {
@@ -78,6 +114,15 @@ describe('Physical#addPhysicals', function () {
         MND: -10,
         RES: -10,
         WT: -10,
+        StabResistance: 10,
+        SlashResistance: 10,
+        BlowResistance: 10,
+        FireSuitable: 10,
+        RockSuitable: 10,
+        WaterSuitable: 10,
+        IceSuitable: 10,
+        AirSuitable: 10,
+        ThunderSuitable: 10,
       },
       {
         MaxHP: 1,
@@ -91,6 +136,15 @@ describe('Physical#addPhysicals', function () {
         MND: 1,
         RES: 1,
         WT: 1,
+        StabResistance: -1,
+        SlashResistance: -1,
+        BlowResistance: -1,
+        FireSuitable: -1,
+        RockSuitable: -1,
+        WaterSuitable: -1,
+        IceSuitable: -1,
+        AirSuitable: -1,
+        ThunderSuitable: -1,
       },
     ]);
 
@@ -105,6 +159,15 @@ describe('Physical#addPhysicals', function () {
     assert.equal(result.MND, 91);
     assert.equal(result.RES, 91);
     assert.equal(result.WT, 91);
+    assert.equal(result.StabResistance, 9);
+    assert.equal(result.SlashResistance, 9);
+    assert.equal(result.BlowResistance, 9);
+    assert.equal(result.FireSuitable, 9);
+    assert.equal(result.RockSuitable, 9);
+    assert.equal(result.WaterSuitable, 9);
+    assert.equal(result.IceSuitable, 9);
+    assert.equal(result.AirSuitable, 9);
+    assert.equal(result.ThunderSuitable, 9);
   });
 });
 

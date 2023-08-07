@@ -10,6 +10,15 @@ export type Physical = {
   MND: number; // 精神力 魔法の攻守やスペシャルスキルの威力に影響
   RES: number; // 魔法耐性 魔法に対する防御力に影響
   WT: number;
+  StabResistance: number;
+  SlashResistance: number;
+  BlowResistance: number;
+  FireSuitable: number;
+  RockSuitable: number;
+  WaterSuitable: number;
+  IceSuitable: number;
+  AirSuitable: number;
+  ThunderSuitable: number;
 };
 // TODO 移動範囲、移動高さの概念を追加したい。コード上は関係ないがゲーム時に任意で参照する。
 
@@ -25,6 +34,15 @@ const zeroPhysical: Physical = {
   MND: 0,
   RES: 0,
   WT: 0,
+  StabResistance: 0,
+  SlashResistance: 0,
+  BlowResistance: 0,
+  FireSuitable: 0,
+  RockSuitable: 0,
+  WaterSuitable: 0,
+  IceSuitable: 0,
+  AirSuitable: 0,
+  ThunderSuitable: 0,
 };
 
 type AddPhysical = (left: Physical, right: Physical) => Physical;
@@ -40,6 +58,15 @@ const addPhysical: AddPhysical = (left, right) => ({
   MND: left.MND + right.MND,
   RES: left.RES + right.RES,
   WT: left.WT + right.WT,
+  StabResistance: left.StabResistance + right.StabResistance,
+  SlashResistance: left.SlashResistance + right.SlashResistance,
+  BlowResistance: left.BlowResistance + right.BlowResistance,
+  FireSuitable: left.FireSuitable + right.FireSuitable,
+  RockSuitable: left.RockSuitable + right.RockSuitable,
+  WaterSuitable: left.WaterSuitable + right.WaterSuitable,
+  IceSuitable: left.IceSuitable + right.IceSuitable,
+  AirSuitable: left.AirSuitable + right.AirSuitable,
+  ThunderSuitable: left.ThunderSuitable + right.ThunderSuitable,
 });
 
 export type AddPhysicals = (physicals: Physical[]) => Physical;
