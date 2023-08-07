@@ -23,6 +23,15 @@ const basePhysical: Physical = {
   MND: 100,
   RES: 100,
   WT: 100,
+  StabResistance: 0,
+  SlashResistance: 0,
+  BlowResistance: 0,
+  FireSuitable: 0,
+  RockSuitable: 0,
+  WaterSuitable: 0,
+  IceSuitable: 0,
+  AirSuitable: 0,
+  ThunderSuitable: 0,
 };
 
 export type Charactor = {

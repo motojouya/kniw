@@ -18,6 +18,15 @@ export const fairy: Race = {
     MND: 0,
     RES: 0,
     WT: 0,
+    StabResistance: 0,
+    SlashResistance: 0,
+    BlowResistance: 0,
+    FireSuitable: 0,
+    RockSuitable: 0,
+    WaterSuitable: 0,
+    IceSuitable: 0,
+    AirSuitable: 0,
+    ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(fairy, {
