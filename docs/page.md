@@ -8,6 +8,8 @@
 - UIライブラリ
   - material uiはややこしい感じがする
   - やることは単純なので凝ったことできなくていいし、テーマとかいらないが
+- formライブラリ
+  - なんかいいのあれば
 - storage
   - indexed dbを使う  
   - file_repositoryもKVSな構造をしているので、自然と使えると思う

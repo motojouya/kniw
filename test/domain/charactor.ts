@@ -52,7 +52,7 @@ describe('Charctor#toCharactor', function () {
 
     const skills = getSkills(charactor);
     assert.equal(skills.length, 1);
-    assert.equal(skills[0].name, 'volcanoRise');
+    assert.equal(skills[0].name, 'flameFall');
 
     const physical = getPhysical(charactor);
     assert.equal(physical.MaxHP, 100);

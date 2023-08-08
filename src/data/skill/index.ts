@@ -1,2 +1,2 @@
 export { chop } from 'src/data/skill/chop';
-export { volcanoRise } from 'src/data/skill/volcanoRise';
+export { flameFall } from 'src/data/skill/flameFall';

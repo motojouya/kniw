@@ -1,11 +1,11 @@
 import type { Weapon } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { volcanoRise } from 'src/data/skill/volcanoRise';
+import { flameFall } from 'src/data/skill/flameFall';
 
 export const fireWand: Weapon = {
   name: 'fireWand',
   label: '炎の杖',
-  skills: [volcanoRise],
+  skills: [flameFall],
   abilities: [],
   additionalPhysical: {
     MaxHP: 0,
