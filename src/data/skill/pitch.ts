@@ -1,8 +1,8 @@
 import type { Skill } from 'src/domain/skill';
 import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy } from 'src/domain/skill';
 
-export const throw: Skill = {
-  name: 'throw',
+export const pitch: Skill = {
+  name: 'pitch',
   label: '投げる',
   type: 'SKILL_TO_CHARACTOR',
   action: calcOrdinaryDirectDamage,
