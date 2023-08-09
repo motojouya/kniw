@@ -1,11 +1,11 @@
 import type { Clothing } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { coldFeet } from 'src/data/skill/coldFeet';
+import { concentration } from 'src/data/skill/concentration';
 
-export const steelArmor: Clothing = {
-  name: 'steelArmor',
-  label: '鋼鉄の鎧',
-  skills: [coldFeet],
+export const mithrilArmor: Clothing = {
+  name: 'mithrilArmor',
+  label: 'ミスリルの鎧',
+  skills: [concentration],
   abilities: [],
   additionalPhysical: {
     MaxHP: 0,
@@ -19,18 +19,18 @@ export const steelArmor: Clothing = {
     MND: 10,
     RES: 0,
     WT: 10,
-    StabResistance: 30,
+    StabResistance: 0,
     SlashResistance: 0,
     BlowResistance: 0,
-    FireSuitable: 0,
-    RockSuitable: 0,
-    WaterSuitable: 0,
-    IceSuitable: 0,
-    AirSuitable: 0,
-    ThunderSuitable: 0,
+    FireSuitable: 10,
+    RockSuitable: 10,
+    WaterSuitable: 10,
+    IceSuitable: 10,
+    AirSuitable: 10,
+    ThunderSuitable: 10,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(steelArmor, {
+    const validate = createValidateWearable(mithrilArmor, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: [],
@@ -38,5 +38,5 @@ export const steelArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鋼鉄の鎧。刺突耐性がある',
+  description: 'ミスリルの鎧。魔法属性が高い',
 };

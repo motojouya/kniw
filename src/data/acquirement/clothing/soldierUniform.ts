@@ -1,24 +1,23 @@
-import type { Weapon } from 'src/domain/acquirement';
+import type { Clothing } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { chop } from 'src/data/skill/chop';
 
-export const lightSword: Weapon = {
-  name: 'lightSword',
-  label: '光の剣',
-  skills: [chop],
+export const soldierUniform: Clothing = {
+  name: 'soldierUniform',
+  label: '軍人の制服',
+  skills: [],
   abilities: [],
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
-    STR: 20,
+    STR: 0,
     VIT: 10,
     DEX: 0,
     AGI: 0,
     AVD: 0,
-    INT: 0,
-    MND: 0,
+    INT: 10,
+    MND: 20,
     RES: 0,
-    WT: 10,
+    WT: 5,
     StabResistance: 0,
     SlashResistance: 0,
     BlowResistance: 0,
@@ -30,13 +29,13 @@ export const lightSword: Weapon = {
     ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(lightSword, {
+    const validate = createValidateWearable(soldierUniform, {
       wearableRaces: [],
       wearableBlessings: [],
-      wearableClothings: ['steelArmor'],
+      wearableClothings: [],
       wearableWeapons: [],
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '光の剣。特に特別なわけではないが軽い。',
+  description: '軍人の制服。動きやすい',
 };

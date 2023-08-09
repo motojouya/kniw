@@ -1,2 +1,10 @@
-export { fireRobe } from 'src/data/acquirement/clothing/fireRobe';
+export { bishopRobe } from 'src/data/acquirement/clothing/bishopRobe';
+export { blueRobe } from 'src/data/acquirement/clothing/blueRobe';
+export { chainMail } from 'src/data/acquirement/clothing/chainMail';
+export { furAironArmor } from 'src/data/acquirement/clothing/furAironArmor';
+export { furArmor } from 'src/data/acquirement/clothing/furArmor';
+export { greenRobe } from 'src/data/acquirement/clothing/greenRobe';
+export { mithrilArmor } from 'src/data/acquirement/clothing/mithrilArmor';
+export { redRobe } from 'src/data/acquirement/clothing/redRobe';
+export { soldierUniform } from 'src/data/acquirement/clothing/soldierUniform';
 export { steelArmor } from 'src/data/acquirement/clothing/steelArmor';

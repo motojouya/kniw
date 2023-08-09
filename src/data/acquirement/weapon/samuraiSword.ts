@@ -1,25 +1,28 @@
-import type { Clothing } from 'src/domain/acquirement';
+import type { Weapon } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { coldFeet } from 'src/data/skill/coldFeet';
+import { chop } from 'src/data/skill/chop';
+import { guillotineOfGiant } from 'src/data/skill/guillotineOfGiant';
+import { overbear } from 'src/data/skill/overbear';
+import { rampartForce } from 'src/data/ability/rampartForce';
 
-export const steelArmor: Clothing = {
-  name: 'steelArmor',
-  label: '鋼鉄の鎧',
-  skills: [coldFeet],
-  abilities: [],
+export const samuraiSword: Weapon = {
+  name: 'samuraiSword',
+  label: '刀',
+  skills: [chop, guillotineOfGiant, overbear],
+  abilities: [rampartForce],
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
-    STR: 0,
-    VIT: 20,
+    STR: 20,
+    VIT: 10,
     DEX: 0,
     AGI: 0,
     AVD: 0,
     INT: 0,
-    MND: 10,
+    MND: 0,
     RES: 0,
     WT: 10,
-    StabResistance: 30,
+    StabResistance: 0,
     SlashResistance: 0,
     BlowResistance: 0,
     FireSuitable: 0,
@@ -30,7 +33,7 @@ export const steelArmor: Clothing = {
     ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(steelArmor, {
+    const validate = createValidateWearable(samuraiSword, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: [],
@@ -38,5 +41,5 @@ export const steelArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鋼鉄の鎧。刺突耐性がある',
+  description: '刀。重くて強い',
 };

@@ -1,2 +1,11 @@
-export { fireWand } from 'src/data/acquirement/weapon/fireWand';
-export { lightSword } from 'src/data/acquirement/weapon/lightSword';
+export { emeraldRod } from 'src/data/acquirement/weapon/emeraldRod';
+export { emeraldSaber } from 'src/data/acquirement/weapon/emeraldSaber';
+export { morningStar } from 'src/data/acquirement/weapon/morningStar';
+export { rapier } from 'src/data/acquirement/weapon/rapier';
+export { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
+export { rubySaber } from 'src/data/acquirement/weapon/rubySaber';
+export { samuraiBow } from 'src/data/acquirement/weapon/samuraiBow';
+export { samuraiSword } from 'src/data/acquirement/weapon/samuraiSword';
+export { sapphireRod } from 'src/data/acquirement/weapon/sapphireRod';
+export { sapphireSaber } from 'src/data/acquirement/weapon/sapphireSaber';
+export { swordAndShield } from 'src/data/acquirement/weapon/swordAndShield';

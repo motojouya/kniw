@@ -24976,7 +24976,7 @@ $.autocomplete = args => {
 
 /***/ }),
 
-/***/ 3556:
+/***/ 7501:
 /***/ ((module) => {
 
 "use strict";
@@ -25144,7 +25144,7 @@ module.exports = figures;
 
 
 module.exports = {
-  action: __webpack_require__(3556),
+  action: __webpack_require__(7501),
   clear: __webpack_require__(8296),
   style: __webpack_require__(2052),
   strip: __webpack_require__(7734),
@@ -28536,7 +28536,7 @@ exports.resume = resume;
 
 /***/ }),
 
-/***/ 1865:
+/***/ 9494:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -29277,7 +29277,7 @@ exports.list = list;
 
 /***/ }),
 
-/***/ 6300:
+/***/ 5445:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -29355,7 +29355,7 @@ const extra_typings_1 = __webpack_require__(6641);
 const histories_1 = __webpack_require__(4138);
 const showHistory_1 = __webpack_require__(9522);
 const battle_1 = __webpack_require__(1569);
-const exportJson_1 = __webpack_require__(1865);
+const exportJson_1 = __webpack_require__(9494);
 const makeCommand = (dialogue, repository) => {
     const battle = new extra_typings_1.Command('battle');
     battle
@@ -29642,7 +29642,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.makeCommand = void 0;
 const extra_typings_1 = __webpack_require__(6641);
 const list_1 = __webpack_require__(6837);
-const show_1 = __webpack_require__(6300);
+const show_1 = __webpack_require__(5445);
 const makeCommand = (dialogue) => {
     const weapon = new extra_typings_1.Command('weapon');
     weapon
@@ -29667,11 +29667,13 @@ exports.makeCommand = makeCommand;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.shootingGuard = exports.mpGainPlus = void 0;
+exports.rampartForce = exports.shootingGuard = exports.mpGainPlus = void 0;
 var mpGainPlus_1 = __webpack_require__(3440);
 Object.defineProperty(exports, "mpGainPlus", ({ enumerable: true, get: function () { return mpGainPlus_1.mpGainPlus; } }));
 var shootingGuard_1 = __webpack_require__(7775);
 Object.defineProperty(exports, "shootingGuard", ({ enumerable: true, get: function () { return shootingGuard_1.shootingGuard; } }));
+var rampartForce_1 = __webpack_require__(3222);
+Object.defineProperty(exports, "rampartForce", ({ enumerable: true, get: function () { return rampartForce_1.rampartForce; } }));
 
 
 /***/ }),
@@ -29704,6 +29706,24 @@ exports.mpGainPlus = {
     label: 'MP回復強化',
     wait,
     description: 'MPの回復速度が早くなる',
+};
+
+
+/***/ }),
+
+/***/ 3222:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.rampartForce = void 0;
+const ability_1 = __webpack_require__(3490);
+exports.rampartForce = {
+    name: 'rampartForce',
+    label: 'ランパートフォース',
+    wait: ability_1.justWait,
+    description: '隣を通る際に一旦停止する',
 };
 
 
@@ -29946,18 +29966,18 @@ exports.sky = {
 
 /***/ }),
 
-/***/ 9494:
+/***/ 9362:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.fireRobe = void 0;
+exports.bishopRobe = void 0;
 const acquirement_1 = __webpack_require__(8826);
 const mpGainPlus_1 = __webpack_require__(3440);
-exports.fireRobe = {
-    name: 'fireRobe',
-    label: '炎の衣',
+exports.bishopRobe = {
+    name: 'bishopRobe',
+    label: '司教の服',
     skills: [],
     abilities: [mpGainPlus_1.mpGainPlus],
     additionalPhysical: {
@@ -29983,15 +30003,271 @@ exports.fireRobe = {
         ThunderSuitable: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
-        const validate = (0, acquirement_1.createValidateWearable)(exports.fireRobe, {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.bishopRobe, {
             wearableRaces: [],
-            wearableBlessings: ['mind', 'earth'],
+            wearableBlessings: [],
             wearableClothings: [],
             wearableWeapons: [],
         });
         return validate(race, blessing, clothing, weapon);
     },
-    description: '炎の衣。魔法耐久が高い',
+    description: 'スキルがないが性能が高い',
+};
+
+
+/***/ }),
+
+/***/ 5105:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.blueRobe = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const mpGainPlus_1 = __webpack_require__(3440);
+const waterCutter_1 = __webpack_require__(5841);
+exports.blueRobe = {
+    name: 'blueRobe',
+    label: '青の衣',
+    skills: [waterCutter_1.waterCutter],
+    abilities: [mpGainPlus_1.mpGainPlus],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 10,
+        MND: 20,
+        RES: 0,
+        WT: 5,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 30,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.blueRobe, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '青の衣。水属性',
+};
+
+
+/***/ }),
+
+/***/ 7340:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.chainMail = void 0;
+const acquirement_1 = __webpack_require__(8826);
+exports.chainMail = {
+    name: 'chainMail',
+    label: '鎖帷子',
+    skills: [],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 20,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 10,
+        RES: 0,
+        WT: 0,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.chainMail, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '鎖帷子。何の耐性もないがWTが低い',
+};
+
+
+/***/ }),
+
+/***/ 2025:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.furAironArmor = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const concentration_1 = __webpack_require__(8585);
+exports.furAironArmor = {
+    name: 'furAironArmor',
+    label: '革と鉄の鎧',
+    skills: [concentration_1.concentration],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 20,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 10,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 30,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.furAironArmor, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '革と鉄の鎧。斬撃耐性がある',
+};
+
+
+/***/ }),
+
+/***/ 6387:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.furArmor = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const coldFeet_1 = __webpack_require__(7418);
+exports.furArmor = {
+    name: 'furArmor',
+    label: '毛皮の鎧',
+    skills: [coldFeet_1.coldFeet],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 20,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 10,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 30,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.furArmor, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '毛皮の鎧。打撃耐性がある',
+};
+
+
+/***/ }),
+
+/***/ 9929:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.greenRobe = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const mpGainPlus_1 = __webpack_require__(3440);
+const quick_1 = __webpack_require__(1138);
+exports.greenRobe = {
+    name: 'greenRobe',
+    label: '緑の衣',
+    skills: [quick_1.quick],
+    abilities: [mpGainPlus_1.mpGainPlus],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 10,
+        MND: 20,
+        RES: 0,
+        WT: 5,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 30,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.greenRobe, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '緑の衣。風属性',
 };
 
 
@@ -30003,27 +30279,44 @@ exports.fireRobe = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.steelArmor = exports.fireRobe = void 0;
-var fireRobe_1 = __webpack_require__(9494);
-Object.defineProperty(exports, "fireRobe", ({ enumerable: true, get: function () { return fireRobe_1.fireRobe; } }));
+exports.steelArmor = exports.soldierUniform = exports.redRobe = exports.mithrilArmor = exports.greenRobe = exports.furArmor = exports.furAironArmor = exports.chainMail = exports.blueRobe = exports.bishopRobe = void 0;
+var bishopRobe_1 = __webpack_require__(9362);
+Object.defineProperty(exports, "bishopRobe", ({ enumerable: true, get: function () { return bishopRobe_1.bishopRobe; } }));
+var blueRobe_1 = __webpack_require__(5105);
+Object.defineProperty(exports, "blueRobe", ({ enumerable: true, get: function () { return blueRobe_1.blueRobe; } }));
+var chainMail_1 = __webpack_require__(7340);
+Object.defineProperty(exports, "chainMail", ({ enumerable: true, get: function () { return chainMail_1.chainMail; } }));
+var furAironArmor_1 = __webpack_require__(2025);
+Object.defineProperty(exports, "furAironArmor", ({ enumerable: true, get: function () { return furAironArmor_1.furAironArmor; } }));
+var furArmor_1 = __webpack_require__(6387);
+Object.defineProperty(exports, "furArmor", ({ enumerable: true, get: function () { return furArmor_1.furArmor; } }));
+var greenRobe_1 = __webpack_require__(9929);
+Object.defineProperty(exports, "greenRobe", ({ enumerable: true, get: function () { return greenRobe_1.greenRobe; } }));
+var mithrilArmor_1 = __webpack_require__(251);
+Object.defineProperty(exports, "mithrilArmor", ({ enumerable: true, get: function () { return mithrilArmor_1.mithrilArmor; } }));
+var redRobe_1 = __webpack_require__(8364);
+Object.defineProperty(exports, "redRobe", ({ enumerable: true, get: function () { return redRobe_1.redRobe; } }));
+var soldierUniform_1 = __webpack_require__(6393);
+Object.defineProperty(exports, "soldierUniform", ({ enumerable: true, get: function () { return soldierUniform_1.soldierUniform; } }));
 var steelArmor_1 = __webpack_require__(888);
 Object.defineProperty(exports, "steelArmor", ({ enumerable: true, get: function () { return steelArmor_1.steelArmor; } }));
 
 
 /***/ }),
 
-/***/ 888:
+/***/ 251:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.steelArmor = void 0;
+exports.mithrilArmor = void 0;
 const acquirement_1 = __webpack_require__(8826);
-exports.steelArmor = {
-    name: 'steelArmor',
-    label: '鋼鉄の鎧',
-    skills: [],
+const concentration_1 = __webpack_require__(8585);
+exports.mithrilArmor = {
+    name: 'mithrilArmor',
+    label: 'ミスリルの鎧',
+    skills: [concentration_1.concentration],
     abilities: [],
     additionalPhysical: {
         MaxHP: 0,
@@ -30040,6 +30333,159 @@ exports.steelArmor = {
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
+        FireSuitable: 10,
+        RockSuitable: 10,
+        WaterSuitable: 10,
+        IceSuitable: 10,
+        AirSuitable: 10,
+        ThunderSuitable: 10,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.mithrilArmor, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'ミスリルの鎧。魔法属性が高い',
+};
+
+
+/***/ }),
+
+/***/ 8364:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.redRobe = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const mpGainPlus_1 = __webpack_require__(3440);
+const fireWall_1 = __webpack_require__(2916);
+exports.redRobe = {
+    name: 'redRobe',
+    label: '赤の衣',
+    skills: [fireWall_1.fireWall],
+    abilities: [mpGainPlus_1.mpGainPlus],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 10,
+        MND: 20,
+        RES: 0,
+        WT: 5,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 30,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.redRobe, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '赤の衣。火属性',
+};
+
+
+/***/ }),
+
+/***/ 6393:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.soldierUniform = void 0;
+const acquirement_1 = __webpack_require__(8826);
+exports.soldierUniform = {
+    name: 'soldierUniform',
+    label: '軍人の制服',
+    skills: [],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 10,
+        MND: 20,
+        RES: 0,
+        WT: 5,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.soldierUniform, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '軍人の制服。動きやすい',
+};
+
+
+/***/ }),
+
+/***/ 888:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.steelArmor = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const coldFeet_1 = __webpack_require__(7418);
+exports.steelArmor = {
+    name: 'steelArmor',
+    label: '鋼鉄の鎧',
+    skills: [coldFeet_1.coldFeet],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 0,
+        VIT: 20,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 10,
+        RES: 0,
+        WT: 10,
+        StabResistance: 30,
+        SlashResistance: 0,
+        BlowResistance: 0,
         FireSuitable: 0,
         RockSuitable: 0,
         WaterSuitable: 0,
@@ -30049,14 +30495,14 @@ exports.steelArmor = {
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.steelArmor, {
-            wearableRaces: ['human', 'lizardman', 'merman', 'werewolf'],
+            wearableRaces: [],
             wearableBlessings: [],
             wearableClothings: [],
             wearableWeapons: [],
         });
         return validate(race, blessing, clothing, weapon);
     },
-    description: '鋼鉄の鎧。物理耐久が高い',
+    description: '鋼鉄の鎧。刺突耐性がある',
 };
 
 
@@ -30437,19 +30883,21 @@ exports.werewolf = {
 
 /***/ }),
 
-/***/ 8603:
+/***/ 6247:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.fireWand = void 0;
+exports.emeraldRod = void 0;
 const acquirement_1 = __webpack_require__(8826);
-const flameFall_1 = __webpack_require__(6518);
-exports.fireWand = {
-    name: 'fireWand',
-    label: '炎の杖',
-    skills: [flameFall_1.flameFall],
+const windEdge_1 = __webpack_require__(944);
+const heavyWind_1 = __webpack_require__(9062);
+const tornade_1 = __webpack_require__(5042);
+exports.emeraldRod = {
+    name: 'emeraldRod',
+    label: 'エメラルドロッド',
+    skills: [windEdge_1.windEdge, heavyWind_1.heavyWind, tornade_1.tornade],
     abilities: [],
     additionalPhysical: {
         MaxHP: 0,
@@ -30470,19 +30918,73 @@ exports.fireWand = {
         RockSuitable: 0,
         WaterSuitable: 0,
         IceSuitable: 0,
-        AirSuitable: 0,
+        AirSuitable: 20,
         ThunderSuitable: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
-        const validate = (0, acquirement_1.createValidateWearable)(exports.fireWand, {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.emeraldRod, {
             wearableRaces: [],
             wearableBlessings: [],
-            wearableClothings: ['fireRobe'],
+            wearableClothings: [],
             wearableWeapons: [],
         });
         return validate(race, blessing, clothing, weapon);
     },
-    description: '炎の杖。大地属性で炎の魔法が打てる杖。',
+    description: 'エメラルドロッド。風属性',
+};
+
+
+/***/ }),
+
+/***/ 8864:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.emeraldSaber = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const chop_1 = __webpack_require__(858);
+const dazzle_1 = __webpack_require__(8497);
+const windEdge_1 = __webpack_require__(944);
+const rampartForce_1 = __webpack_require__(3222);
+exports.emeraldSaber = {
+    name: 'emeraldSaber',
+    label: 'エメラルドサーベル',
+    skills: [chop_1.chop, windEdge_1.windEdge, dazzle_1.dazzle],
+    abilities: [rampartForce_1.rampartForce],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 10,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.emeraldSaber, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'エメラルドサーベル。風属性',
 };
 
 
@@ -30494,28 +30996,263 @@ exports.fireWand = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.lightSword = exports.fireWand = void 0;
-var fireWand_1 = __webpack_require__(8603);
-Object.defineProperty(exports, "fireWand", ({ enumerable: true, get: function () { return fireWand_1.fireWand; } }));
-var lightSword_1 = __webpack_require__(9736);
-Object.defineProperty(exports, "lightSword", ({ enumerable: true, get: function () { return lightSword_1.lightSword; } }));
+exports.swordAndShield = exports.sapphireSaber = exports.sapphireRod = exports.samuraiSword = exports.samuraiBow = exports.rubySaber = exports.rubyRod = exports.rapier = exports.morningStar = exports.emeraldSaber = exports.emeraldRod = void 0;
+var emeraldRod_1 = __webpack_require__(6247);
+Object.defineProperty(exports, "emeraldRod", ({ enumerable: true, get: function () { return emeraldRod_1.emeraldRod; } }));
+var emeraldSaber_1 = __webpack_require__(8864);
+Object.defineProperty(exports, "emeraldSaber", ({ enumerable: true, get: function () { return emeraldSaber_1.emeraldSaber; } }));
+var morningStar_1 = __webpack_require__(8348);
+Object.defineProperty(exports, "morningStar", ({ enumerable: true, get: function () { return morningStar_1.morningStar; } }));
+var rapier_1 = __webpack_require__(745);
+Object.defineProperty(exports, "rapier", ({ enumerable: true, get: function () { return rapier_1.rapier; } }));
+var rubyRod_1 = __webpack_require__(6308);
+Object.defineProperty(exports, "rubyRod", ({ enumerable: true, get: function () { return rubyRod_1.rubyRod; } }));
+var rubySaber_1 = __webpack_require__(5579);
+Object.defineProperty(exports, "rubySaber", ({ enumerable: true, get: function () { return rubySaber_1.rubySaber; } }));
+var samuraiBow_1 = __webpack_require__(8181);
+Object.defineProperty(exports, "samuraiBow", ({ enumerable: true, get: function () { return samuraiBow_1.samuraiBow; } }));
+var samuraiSword_1 = __webpack_require__(8556);
+Object.defineProperty(exports, "samuraiSword", ({ enumerable: true, get: function () { return samuraiSword_1.samuraiSword; } }));
+var sapphireRod_1 = __webpack_require__(6657);
+Object.defineProperty(exports, "sapphireRod", ({ enumerable: true, get: function () { return sapphireRod_1.sapphireRod; } }));
+var sapphireSaber_1 = __webpack_require__(3556);
+Object.defineProperty(exports, "sapphireSaber", ({ enumerable: true, get: function () { return sapphireSaber_1.sapphireSaber; } }));
+var swordAndShield_1 = __webpack_require__(9674);
+Object.defineProperty(exports, "swordAndShield", ({ enumerable: true, get: function () { return swordAndShield_1.swordAndShield; } }));
 
 
 /***/ }),
 
-/***/ 9736:
+/***/ 8348:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.lightSword = void 0;
+exports.morningStar = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const blow_1 = __webpack_require__(7745);
+const dazzle_1 = __webpack_require__(8497);
+const gravelWall_1 = __webpack_require__(9094);
+const rampartForce_1 = __webpack_require__(3222);
+exports.morningStar = {
+    name: 'morningStar',
+    label: 'モーニングスター',
+    skills: [blow_1.blow, gravelWall_1.gravelWall, dazzle_1.dazzle],
+    abilities: [rampartForce_1.rampartForce],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.morningStar, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'モーニングスター。打撃武器',
+};
+
+
+/***/ }),
+
+/***/ 745:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.rapier = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const stab_1 = __webpack_require__(4706);
+const dazzle_1 = __webpack_require__(8497);
+const saturnRing_1 = __webpack_require__(4747);
+const rampartForce_1 = __webpack_require__(3222);
+exports.rapier = {
+    name: 'rapier',
+    label: 'レイピア',
+    skills: [stab_1.stab, saturnRing_1.saturnRing, dazzle_1.dazzle],
+    abilities: [rampartForce_1.rampartForce],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.rapier, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'レイピア。刺突武器',
+};
+
+
+/***/ }),
+
+/***/ 6308:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.rubyRod = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const flameFall_1 = __webpack_require__(6518);
+const smallHeat_1 = __webpack_require__(1151);
+const ghostFire_1 = __webpack_require__(7403);
+exports.rubyRod = {
+    name: 'rubyRod',
+    label: 'ルビーロッド',
+    skills: [flameFall_1.flameFall, smallHeat_1.smallHeat, ghostFire_1.ghostFire],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 20,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.rubyRod, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'ルビーロッド。火属性',
+};
+
+
+/***/ }),
+
+/***/ 5579:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.rubySaber = void 0;
 const acquirement_1 = __webpack_require__(8826);
 const chop_1 = __webpack_require__(858);
-exports.lightSword = {
-    name: 'lightSword',
-    label: '光の剣',
-    skills: [chop_1.chop],
+const flameFall_1 = __webpack_require__(6518);
+const dazzle_1 = __webpack_require__(8497);
+const rampartForce_1 = __webpack_require__(3222);
+exports.rubySaber = {
+    name: 'rubySaber',
+    label: 'ルビーサーベル',
+    skills: [chop_1.chop, flameFall_1.flameFall, dazzle_1.dazzle],
+    abilities: [rampartForce_1.rampartForce],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 10,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.rubySaber, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'ルビーサーベル。火属性',
+};
+
+
+/***/ }),
+
+/***/ 8181:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.samuraiBow = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const shot_1 = __webpack_require__(2350);
+const hardRain_1 = __webpack_require__(7655);
+const overbear_1 = __webpack_require__(3728);
+exports.samuraiBow = {
+    name: 'samuraiBow',
+    label: '和弓',
+    skills: [shot_1.shot, hardRain_1.hardRain, overbear_1.overbear],
     abilities: [],
     additionalPhysical: {
         MaxHP: 0,
@@ -30540,15 +31277,275 @@ exports.lightSword = {
         ThunderSuitable: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
-        const validate = (0, acquirement_1.createValidateWearable)(exports.lightSword, {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.samuraiBow, {
             wearableRaces: [],
             wearableBlessings: [],
-            wearableClothings: ['steelArmor'],
+            wearableClothings: [],
             wearableWeapons: [],
         });
         return validate(race, blessing, clothing, weapon);
     },
-    description: '光の剣。特に特別なわけではないが軽い。',
+    description: '和弓。威力が高い',
+};
+
+
+/***/ }),
+
+/***/ 8556:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.samuraiSword = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const chop_1 = __webpack_require__(858);
+const guillotineOfGiant_1 = __webpack_require__(6300);
+const overbear_1 = __webpack_require__(3728);
+const rampartForce_1 = __webpack_require__(3222);
+exports.samuraiSword = {
+    name: 'samuraiSword',
+    label: '刀',
+    skills: [chop_1.chop, guillotineOfGiant_1.guillotineOfGiant, overbear_1.overbear],
+    abilities: [rampartForce_1.rampartForce],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.samuraiSword, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '刀。重くて強い',
+};
+
+
+/***/ }),
+
+/***/ 6657:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sapphireRod = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const gunWater_1 = __webpack_require__(9634);
+const quench_1 = __webpack_require__(195);
+const downRushing_1 = __webpack_require__(7181);
+exports.sapphireRod = {
+    name: 'sapphireRod',
+    label: 'サファイアロッド',
+    skills: [gunWater_1.gunWater, downRushing_1.downRushing, quench_1.quench],
+    abilities: [],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 20,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.sapphireRod, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'サファイアロッド。水属性',
+};
+
+
+/***/ }),
+
+/***/ 3556:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sapphireSaber = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const chop_1 = __webpack_require__(858);
+const gunWater_1 = __webpack_require__(9634);
+const dazzle_1 = __webpack_require__(8497);
+const rampartForce_1 = __webpack_require__(3222);
+exports.sapphireSaber = {
+    name: 'sapphireSaber',
+    label: 'サファイアサーベル',
+    skills: [chop_1.chop, gunWater_1.gunWater, dazzle_1.dazzle],
+    abilities: [rampartForce_1.rampartForce],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 10,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.sapphireSaber, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: 'サファイアサーベル。水属性',
+};
+
+
+/***/ }),
+
+/***/ 9674:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.swordAndShield = void 0;
+const acquirement_1 = __webpack_require__(8826);
+const chop_1 = __webpack_require__(858);
+const push_1 = __webpack_require__(998);
+const dazzle_1 = __webpack_require__(8497);
+const shootingGuard_1 = __webpack_require__(7775);
+const rampartForce_1 = __webpack_require__(3222);
+exports.swordAndShield = {
+    name: 'swordAndShield',
+    label: '剣と盾',
+    skills: [chop_1.chop, push_1.push, dazzle_1.dazzle],
+    abilities: [rampartForce_1.rampartForce, shootingGuard_1.shootingGuard],
+    additionalPhysical: {
+        MaxHP: 0,
+        MaxMP: 0,
+        STR: 20,
+        VIT: 10,
+        DEX: 0,
+        AGI: 0,
+        AVD: 0,
+        INT: 0,
+        MND: 0,
+        RES: 0,
+        WT: 10,
+        StabResistance: 0,
+        SlashResistance: 0,
+        BlowResistance: 0,
+        FireSuitable: 0,
+        RockSuitable: 0,
+        WaterSuitable: 0,
+        IceSuitable: 0,
+        AirSuitable: 0,
+        ThunderSuitable: 0,
+    },
+    validateWearable: (race, blessing, clothing, weapon) => {
+        const validate = (0, acquirement_1.createValidateWearable)(exports.swordAndShield, {
+            wearableRaces: [],
+            wearableBlessings: [],
+            wearableClothings: [],
+            wearableWeapons: [],
+        });
+        return validate(race, blessing, clothing, weapon);
+    },
+    description: '剣と盾のセット',
+};
+
+
+/***/ }),
+
+/***/ 8379:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.blindBull = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.blindBull = {
+    name: 'blindBull',
+    label: '盲牛の突き',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '刺突における強攻撃',
+};
+
+
+/***/ }),
+
+/***/ 7745:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.blow = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.blow = {
+    name: 'blow',
+    label: '殴る',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '打撃攻撃',
 };
 
 
@@ -30576,6 +31573,204 @@ exports.chop = {
 
 /***/ }),
 
+/***/ 7826:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.clearCloud = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.clearCloud = {
+    name: 'clearCloud',
+    label: '晴れ',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '天候操作。晴れにする',
+};
+
+
+/***/ }),
+
+/***/ 7418:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.coldFeet = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.coldFeet = {
+    name: 'coldFeet',
+    label: '逃げ腰',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '対象の回避率をあげる',
+};
+
+
+/***/ }),
+
+/***/ 8585:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.concentration = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.concentration = {
+    name: 'concentration',
+    label: '精神集中',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '対象の攻撃命中率をあげる',
+};
+
+
+/***/ }),
+
+/***/ 846:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.crossFire = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.crossFire = {
+    name: 'crossFire',
+    label: '交差する炎',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '火の範囲魔法',
+};
+
+
+/***/ }),
+
+/***/ 8720:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.danceLeaves = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.danceLeaves = {
+    name: 'danceLeaves',
+    label: '木の葉乱舞',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '風の範囲魔法',
+};
+
+
+/***/ }),
+
+/***/ 8497:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.dazzle = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.dazzle = {
+    name: 'dazzle',
+    label: '幻惑',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '対象の攻撃命中率を下げる',
+};
+
+
+/***/ }),
+
+/***/ 7181:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.downRushing = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.downRushing = {
+    name: 'downRushing',
+    label: '落下する滝',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '水の強魔法',
+};
+
+
+/***/ }),
+
+/***/ 2916:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.fireWall = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.fireWall = {
+    name: 'fireWall',
+    label: '炎の壁',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '魔法防御up',
+};
+
+
+/***/ }),
+
+/***/ 3724:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.flameDigger = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.flameDigger = {
+    name: 'flameDigger',
+    label: '炎で穿つ',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '魔法防御down',
+};
+
+
+/***/ }),
+
 /***/ 6518:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -30598,17 +31793,625 @@ exports.flameFall = {
 
 /***/ }),
 
+/***/ 6630:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.flashFlood = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.flashFlood = {
+    name: 'flashFlood',
+    label: '鉄砲水',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '水の範囲魔法',
+};
+
+
+/***/ }),
+
+/***/ 7403:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.ghostFire = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.ghostFire = {
+    name: 'ghostFire',
+    label: '鬼火',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '恐怖の付与',
+};
+
+
+/***/ }),
+
+/***/ 9094:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.gravelWall = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.gravelWall = {
+    name: 'gravelWall',
+    label: '礫の壁',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '打撃の範囲攻撃',
+};
+
+
+/***/ }),
+
+/***/ 6300:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.guillotineOfGiant = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.guillotineOfGiant = {
+    name: 'guillotineOfGiant',
+    label: '巨人の首絶ち',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '斬撃の強攻撃',
+};
+
+
+/***/ }),
+
+/***/ 9634:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.gunWater = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.gunWater = {
+    name: 'gunWater',
+    label: '水鉄砲',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '水の基本魔法',
+};
+
+
+/***/ }),
+
+/***/ 7655:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.hardRain = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.hardRain = {
+    name: 'hardRain',
+    label: '堅い雨',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '弓矢の強攻撃',
+};
+
+
+/***/ }),
+
+/***/ 9062:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.heavyWind = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.heavyWind = {
+    name: 'heavyWind',
+    label: '春の暁',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '眠りの付与',
+};
+
+
+/***/ }),
+
 /***/ 2057:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.flameFall = exports.chop = void 0;
+exports.windEdge = exports.waterCutter = exports.tornade = exports.swordDance = exports.stickyRain = exports.stab = exports.smallHeat = exports.shot = exports.saturnRing = exports.quick = exports.quench = exports.push = exports.pitch = exports.overbear = exports.multiShot = exports.lightMeteor = exports.heavyWind = exports.hardRain = exports.gunWater = exports.guillotineOfGiant = exports.gravelWall = exports.ghostFire = exports.flashFlood = exports.flameFall = exports.flameDigger = exports.fireWall = exports.downRushing = exports.dazzle = exports.danceLeaves = exports.crossFire = exports.concentration = exports.coldFeet = exports.clearCloud = exports.chop = exports.blow = exports.blindBull = void 0;
+var blindBull_1 = __webpack_require__(8379);
+Object.defineProperty(exports, "blindBull", ({ enumerable: true, get: function () { return blindBull_1.blindBull; } }));
+var blow_1 = __webpack_require__(7745);
+Object.defineProperty(exports, "blow", ({ enumerable: true, get: function () { return blow_1.blow; } }));
 var chop_1 = __webpack_require__(858);
 Object.defineProperty(exports, "chop", ({ enumerable: true, get: function () { return chop_1.chop; } }));
+var clearCloud_1 = __webpack_require__(7826);
+Object.defineProperty(exports, "clearCloud", ({ enumerable: true, get: function () { return clearCloud_1.clearCloud; } }));
+var coldFeet_1 = __webpack_require__(7418);
+Object.defineProperty(exports, "coldFeet", ({ enumerable: true, get: function () { return coldFeet_1.coldFeet; } }));
+var concentration_1 = __webpack_require__(8585);
+Object.defineProperty(exports, "concentration", ({ enumerable: true, get: function () { return concentration_1.concentration; } }));
+var crossFire_1 = __webpack_require__(846);
+Object.defineProperty(exports, "crossFire", ({ enumerable: true, get: function () { return crossFire_1.crossFire; } }));
+var danceLeaves_1 = __webpack_require__(8720);
+Object.defineProperty(exports, "danceLeaves", ({ enumerable: true, get: function () { return danceLeaves_1.danceLeaves; } }));
+var dazzle_1 = __webpack_require__(8497);
+Object.defineProperty(exports, "dazzle", ({ enumerable: true, get: function () { return dazzle_1.dazzle; } }));
+var downRushing_1 = __webpack_require__(7181);
+Object.defineProperty(exports, "downRushing", ({ enumerable: true, get: function () { return downRushing_1.downRushing; } }));
+var fireWall_1 = __webpack_require__(2916);
+Object.defineProperty(exports, "fireWall", ({ enumerable: true, get: function () { return fireWall_1.fireWall; } }));
+var flameDigger_1 = __webpack_require__(3724);
+Object.defineProperty(exports, "flameDigger", ({ enumerable: true, get: function () { return flameDigger_1.flameDigger; } }));
 var flameFall_1 = __webpack_require__(6518);
 Object.defineProperty(exports, "flameFall", ({ enumerable: true, get: function () { return flameFall_1.flameFall; } }));
+var flashFlood_1 = __webpack_require__(6630);
+Object.defineProperty(exports, "flashFlood", ({ enumerable: true, get: function () { return flashFlood_1.flashFlood; } }));
+var ghostFire_1 = __webpack_require__(7403);
+Object.defineProperty(exports, "ghostFire", ({ enumerable: true, get: function () { return ghostFire_1.ghostFire; } }));
+var gravelWall_1 = __webpack_require__(9094);
+Object.defineProperty(exports, "gravelWall", ({ enumerable: true, get: function () { return gravelWall_1.gravelWall; } }));
+var guillotineOfGiant_1 = __webpack_require__(6300);
+Object.defineProperty(exports, "guillotineOfGiant", ({ enumerable: true, get: function () { return guillotineOfGiant_1.guillotineOfGiant; } }));
+var gunWater_1 = __webpack_require__(9634);
+Object.defineProperty(exports, "gunWater", ({ enumerable: true, get: function () { return gunWater_1.gunWater; } }));
+var hardRain_1 = __webpack_require__(7655);
+Object.defineProperty(exports, "hardRain", ({ enumerable: true, get: function () { return hardRain_1.hardRain; } }));
+var heavyWind_1 = __webpack_require__(9062);
+Object.defineProperty(exports, "heavyWind", ({ enumerable: true, get: function () { return heavyWind_1.heavyWind; } }));
+var lightMeteor_1 = __webpack_require__(601);
+Object.defineProperty(exports, "lightMeteor", ({ enumerable: true, get: function () { return lightMeteor_1.lightMeteor; } }));
+var multiShot_1 = __webpack_require__(7504);
+Object.defineProperty(exports, "multiShot", ({ enumerable: true, get: function () { return multiShot_1.multiShot; } }));
+var overbear_1 = __webpack_require__(3728);
+Object.defineProperty(exports, "overbear", ({ enumerable: true, get: function () { return overbear_1.overbear; } }));
+var pitch_1 = __webpack_require__(414);
+Object.defineProperty(exports, "pitch", ({ enumerable: true, get: function () { return pitch_1.pitch; } }));
+var push_1 = __webpack_require__(998);
+Object.defineProperty(exports, "push", ({ enumerable: true, get: function () { return push_1.push; } }));
+var quench_1 = __webpack_require__(195);
+Object.defineProperty(exports, "quench", ({ enumerable: true, get: function () { return quench_1.quench; } }));
+var quick_1 = __webpack_require__(1138);
+Object.defineProperty(exports, "quick", ({ enumerable: true, get: function () { return quick_1.quick; } }));
+var saturnRing_1 = __webpack_require__(4747);
+Object.defineProperty(exports, "saturnRing", ({ enumerable: true, get: function () { return saturnRing_1.saturnRing; } }));
+var shot_1 = __webpack_require__(2350);
+Object.defineProperty(exports, "shot", ({ enumerable: true, get: function () { return shot_1.shot; } }));
+var smallHeat_1 = __webpack_require__(1151);
+Object.defineProperty(exports, "smallHeat", ({ enumerable: true, get: function () { return smallHeat_1.smallHeat; } }));
+var stab_1 = __webpack_require__(4706);
+Object.defineProperty(exports, "stab", ({ enumerable: true, get: function () { return stab_1.stab; } }));
+var stickyRain_1 = __webpack_require__(7809);
+Object.defineProperty(exports, "stickyRain", ({ enumerable: true, get: function () { return stickyRain_1.stickyRain; } }));
+var swordDance_1 = __webpack_require__(5161);
+Object.defineProperty(exports, "swordDance", ({ enumerable: true, get: function () { return swordDance_1.swordDance; } }));
+var tornade_1 = __webpack_require__(5042);
+Object.defineProperty(exports, "tornade", ({ enumerable: true, get: function () { return tornade_1.tornade; } }));
+var waterCutter_1 = __webpack_require__(5841);
+Object.defineProperty(exports, "waterCutter", ({ enumerable: true, get: function () { return waterCutter_1.waterCutter; } }));
+var windEdge_1 = __webpack_require__(944);
+Object.defineProperty(exports, "windEdge", ({ enumerable: true, get: function () { return windEdge_1.windEdge; } }));
+
+
+/***/ }),
+
+/***/ 601:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.lightMeteor = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.lightMeteor = {
+    name: 'lightMeteor',
+    label: '軽量隕石',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '',
+};
+
+
+/***/ }),
+
+/***/ 7504:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.multiShot = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.multiShot = {
+    name: 'multiShot',
+    label: '複数射撃',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '弓矢の範囲攻撃',
+};
+
+
+/***/ }),
+
+/***/ 3728:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.overbear = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.overbear = {
+    name: 'overbear',
+    label: '威圧',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '対象の回避率を下げる',
+};
+
+
+/***/ }),
+
+/***/ 414:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.pitch = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.pitch = {
+    name: 'pitch',
+    label: '投げる',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '投げる',
+};
+
+
+/***/ }),
+
+/***/ 998:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.push = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.push = {
+    name: 'push',
+    label: '押す',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '盾の基本攻撃',
+};
+
+
+/***/ }),
+
+/***/ 195:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.quench = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.quench = {
+    name: 'quench',
+    label: '恵みの雨',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '回復',
+};
+
+
+/***/ }),
+
+/***/ 1138:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.quick = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.quick = {
+    name: 'quick',
+    label: 'クイック',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: 'クイック状態の付与',
+};
+
+
+/***/ }),
+
+/***/ 4747:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.saturnRing = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.saturnRing = {
+    name: 'saturnRing',
+    label: '土星の輪',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '刺突の範囲攻撃',
+};
+
+
+/***/ }),
+
+/***/ 2350:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.shot = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.shot = {
+    name: 'shot',
+    label: '射る',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '弓矢の基本攻撃',
+};
+
+
+/***/ }),
+
+/***/ 1151:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.smallHeat = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.smallHeat = {
+    name: 'smallHeat',
+    label: '黒点顕現',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '火の強魔法',
+};
+
+
+/***/ }),
+
+/***/ 4706:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.stab = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.stab = {
+    name: 'stab',
+    label: '突く',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '刺突の基本攻撃',
+};
+
+
+/***/ }),
+
+/***/ 7809:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.stickyRain = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.stickyRain = {
+    name: 'stickyRain',
+    label: '酸性雨',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '物理攻撃down',
+};
+
+
+/***/ }),
+
+/***/ 5161:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.swordDance = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.swordDance = {
+    name: 'swordDance',
+    label: '剣の舞',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryDirectDamage,
+    receiverCount: 1,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '斬撃の範囲攻撃',
+};
+
+
+/***/ }),
+
+/***/ 5042:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.tornade = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.tornade = {
+    name: 'tornade',
+    label: '大竜巻',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '風の強魔法',
+};
+
+
+/***/ }),
+
+/***/ 5841:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.waterCutter = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.waterCutter = {
+    name: 'waterCutter',
+    label: '水刃の鎖',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '物理攻撃up',
+};
+
+
+/***/ }),
+
+/***/ 944:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.windEdge = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.windEdge = {
+    name: 'windEdge',
+    label: '辻風',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '風の基本魔法',
+};
+
+
+/***/ }),
+
+/***/ 6836:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.accuracyDown = void 0;
+exports.accuracyDown = {
+    name: 'accuracyDown',
+    label: '命中down',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 9099:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.accuracyUp = void 0;
+exports.accuracyUp = {
+    name: 'accuracyUp',
+    label: '命中up',
+    restWt: 500,
+    description: 'desc',
+};
 
 
 /***/ }),
@@ -30630,15 +32433,323 @@ exports.acid = {
 
 /***/ }),
 
+/***/ 6933:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.avoidDown = void 0;
+exports.avoidDown = {
+    name: 'avoidDown',
+    label: '回避down',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 5210:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.avoidUp = void 0;
+exports.avoidUp = {
+    name: 'avoidUp',
+    label: '回避up',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 6938:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.directAttackDown = void 0;
+exports.directAttackDown = {
+    name: 'directAttackDown',
+    label: '物理攻撃down',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 4570:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.directAttackUp = void 0;
+exports.directAttackUp = {
+    name: 'directAttackUp',
+    label: '物理攻撃up',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 3010:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.directDiffenceDown = void 0;
+exports.directDiffenceDown = {
+    name: 'directDiffenceDown',
+    label: '物理防御down',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 6062:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.directDiffenceUp = void 0;
+exports.directDiffenceUp = {
+    name: 'directDiffenceUp',
+    label: '物理防御up',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 2933:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.fear = void 0;
+exports.fear = {
+    name: 'fear',
+    label: '恐怖',
+    restWt: 500,
+    description: '物理攻撃、物理防御が両方downする',
+};
+
+
+/***/ }),
+
 /***/ 9538:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.acid = void 0;
+exports.slow = exports.sleep = exports.silent = exports.quick = exports.paralysis = exports.magicDiffenceUp = exports.magicDiffenceDown = exports.magicAttackUp = exports.magicAttackDown = exports.fear = exports.directDiffenceUp = exports.directDiffenceDown = exports.directAttackUp = exports.directAttackDown = exports.avoidUp = exports.avoidDown = exports.acid = exports.accuracyUp = exports.accuracyDown = void 0;
+var accuracyDown_1 = __webpack_require__(6836);
+Object.defineProperty(exports, "accuracyDown", ({ enumerable: true, get: function () { return accuracyDown_1.accuracyDown; } }));
+var accuracyUp_1 = __webpack_require__(9099);
+Object.defineProperty(exports, "accuracyUp", ({ enumerable: true, get: function () { return accuracyUp_1.accuracyUp; } }));
 var acid_1 = __webpack_require__(4504);
 Object.defineProperty(exports, "acid", ({ enumerable: true, get: function () { return acid_1.acid; } }));
+var avoidDown_1 = __webpack_require__(6933);
+Object.defineProperty(exports, "avoidDown", ({ enumerable: true, get: function () { return avoidDown_1.avoidDown; } }));
+var avoidUp_1 = __webpack_require__(5210);
+Object.defineProperty(exports, "avoidUp", ({ enumerable: true, get: function () { return avoidUp_1.avoidUp; } }));
+var directAttackDown_1 = __webpack_require__(6938);
+Object.defineProperty(exports, "directAttackDown", ({ enumerable: true, get: function () { return directAttackDown_1.directAttackDown; } }));
+var directAttackUp_1 = __webpack_require__(4570);
+Object.defineProperty(exports, "directAttackUp", ({ enumerable: true, get: function () { return directAttackUp_1.directAttackUp; } }));
+var directDiffenceDown_1 = __webpack_require__(3010);
+Object.defineProperty(exports, "directDiffenceDown", ({ enumerable: true, get: function () { return directDiffenceDown_1.directDiffenceDown; } }));
+var directDiffenceUp_1 = __webpack_require__(6062);
+Object.defineProperty(exports, "directDiffenceUp", ({ enumerable: true, get: function () { return directDiffenceUp_1.directDiffenceUp; } }));
+var fear_1 = __webpack_require__(2933);
+Object.defineProperty(exports, "fear", ({ enumerable: true, get: function () { return fear_1.fear; } }));
+var magicAttackDown_1 = __webpack_require__(9748);
+Object.defineProperty(exports, "magicAttackDown", ({ enumerable: true, get: function () { return magicAttackDown_1.magicAttackDown; } }));
+var magicAttackUp_1 = __webpack_require__(8004);
+Object.defineProperty(exports, "magicAttackUp", ({ enumerable: true, get: function () { return magicAttackUp_1.magicAttackUp; } }));
+var magicDiffenceDown_1 = __webpack_require__(9198);
+Object.defineProperty(exports, "magicDiffenceDown", ({ enumerable: true, get: function () { return magicDiffenceDown_1.magicDiffenceDown; } }));
+var magicDiffenceUp_1 = __webpack_require__(9377);
+Object.defineProperty(exports, "magicDiffenceUp", ({ enumerable: true, get: function () { return magicDiffenceUp_1.magicDiffenceUp; } }));
+var paralysis_1 = __webpack_require__(563);
+Object.defineProperty(exports, "paralysis", ({ enumerable: true, get: function () { return paralysis_1.paralysis; } }));
+var quick_1 = __webpack_require__(3813);
+Object.defineProperty(exports, "quick", ({ enumerable: true, get: function () { return quick_1.quick; } }));
+var silent_1 = __webpack_require__(5876);
+Object.defineProperty(exports, "silent", ({ enumerable: true, get: function () { return silent_1.silent; } }));
+var sleep_1 = __webpack_require__(6120);
+Object.defineProperty(exports, "sleep", ({ enumerable: true, get: function () { return sleep_1.sleep; } }));
+var slow_1 = __webpack_require__(3126);
+Object.defineProperty(exports, "slow", ({ enumerable: true, get: function () { return slow_1.slow; } }));
+
+
+/***/ }),
+
+/***/ 9748:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.magicAttackDown = void 0;
+exports.magicAttackDown = {
+    name: 'magicAttackDown',
+    label: '魔法攻撃down',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 8004:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.magicAttackUp = void 0;
+exports.magicAttackUp = {
+    name: 'magicAttackUp',
+    label: '魔法攻撃up',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 9198:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.magicDiffenceDown = void 0;
+exports.magicDiffenceDown = {
+    name: 'magicDiffenceDown',
+    label: '魔法防御down',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 9377:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.magicDiffenceUp = void 0;
+exports.magicDiffenceUp = {
+    name: 'magicDiffenceUp',
+    label: '魔法防御up',
+    restWt: 500,
+    description: 'desc',
+};
+
+
+/***/ }),
+
+/***/ 563:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.paralysis = void 0;
+exports.paralysis = {
+    name: 'paralysis',
+    label: '麻痺',
+    restWt: 500,
+    description: '確率で行動できない',
+};
+
+
+/***/ }),
+
+/***/ 3813:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.quick = void 0;
+exports.quick = {
+    name: 'quick',
+    label: 'クイック',
+    restWt: 500,
+    description: 'WTの消費が1.5倍になる',
+};
+
+
+/***/ }),
+
+/***/ 5876:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.silent = void 0;
+exports.silent = {
+    name: 'silent',
+    label: '沈黙',
+    restWt: 500,
+    description: '魔法攻撃ができない',
+};
+
+
+/***/ }),
+
+/***/ 6120:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.sleep = void 0;
+exports.sleep = {
+    name: 'sleep',
+    label: '眠り',
+    restWt: 500,
+    description: '行動不能',
+};
+
+
+/***/ }),
+
+/***/ 3126:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.slow = void 0;
+exports.slow = {
+    name: 'slow',
+    label: 'スロウ',
+    restWt: 500,
+    description: 'WTの消費が2/3になる',
+};
 
 
 /***/ }),

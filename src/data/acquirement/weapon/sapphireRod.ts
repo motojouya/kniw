@@ -1,36 +1,38 @@
-import type { Clothing } from 'src/domain/acquirement';
+import type { Weapon } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { coldFeet } from 'src/data/skill/coldFeet';
+import { gunWater } from 'src/data/skill/gunWater';
+import { quench } from 'src/data/skill/quench';
+import { downRushing } from 'src/data/skill/downRushing';
 
-export const steelArmor: Clothing = {
-  name: 'steelArmor',
-  label: '鋼鉄の鎧',
-  skills: [coldFeet],
+export const sapphireRod: Weapon = {
+  name: 'sapphireRod',
+  label: 'サファイアロッド',
+  skills: [gunWater, downRushing, quench],
   abilities: [],
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
-    STR: 0,
-    VIT: 20,
+    STR: 20,
+    VIT: 10,
     DEX: 0,
     AGI: 0,
     AVD: 0,
     INT: 0,
-    MND: 10,
+    MND: 0,
     RES: 0,
     WT: 10,
-    StabResistance: 30,
+    StabResistance: 0,
     SlashResistance: 0,
     BlowResistance: 0,
     FireSuitable: 0,
     RockSuitable: 0,
-    WaterSuitable: 0,
+    WaterSuitable: 20,
     IceSuitable: 0,
     AirSuitable: 0,
     ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(steelArmor, {
+    const validate = createValidateWearable(sapphireRod, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: [],
@@ -38,5 +40,5 @@ export const steelArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鋼鉄の鎧。刺突耐性がある',
+  description: 'サファイアロッド。水属性',
 };

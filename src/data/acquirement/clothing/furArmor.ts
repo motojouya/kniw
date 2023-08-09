@@ -2,9 +2,9 @@ import type { Clothing } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
 import { coldFeet } from 'src/data/skill/coldFeet';
 
-export const steelArmor: Clothing = {
-  name: 'steelArmor',
-  label: '鋼鉄の鎧',
+export const furArmor: Clothing = {
+  name: 'furArmor',
+  label: '毛皮の鎧',
   skills: [coldFeet],
   abilities: [],
   additionalPhysical: {
@@ -19,9 +19,9 @@ export const steelArmor: Clothing = {
     MND: 10,
     RES: 0,
     WT: 10,
-    StabResistance: 30,
+    StabResistance: 0,
     SlashResistance: 0,
-    BlowResistance: 0,
+    BlowResistance: 30,
     FireSuitable: 0,
     RockSuitable: 0,
     WaterSuitable: 0,
@@ -30,7 +30,7 @@ export const steelArmor: Clothing = {
     ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(steelArmor, {
+    const validate = createValidateWearable(furArmor, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: [],
@@ -38,5 +38,5 @@ export const steelArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鋼鉄の鎧。刺突耐性がある',
+  description: '毛皮の鎧。打撃耐性がある',
 };
