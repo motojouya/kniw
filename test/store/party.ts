@@ -9,8 +9,8 @@ const storeMock: Repository = {
   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({
     name: 'team01',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ],
   })),
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
@@ -23,8 +23,8 @@ describe('Party#createStore', function () {
   it('save', async () => {
     const store = await createStore(storeMock);
     const party = (toParty({ name: 'team01', charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'lightSword', statuses: [], hp: 100, mp: 0, restWt: 120 },
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
     await store.save(party);
     assert.equal(true, true);
@@ -41,12 +41,12 @@ describe('Party#createStore', function () {
       assert.equal(charactors[0].race.name, 'human');
       assert.equal(charactors[0].blessing.name, 'earth');
       assert.equal(charactors[0].clothing.name, 'steelArmor');
-      assert.equal(charactors[0].weapon.name, 'lightSword');
+      assert.equal(charactors[0].weapon.name, 'swordAndShield');
       assert.equal(charactors[1].name, 'john');
       assert.equal(charactors[1].race.name, 'human');
       assert.equal(charactors[1].blessing.name, 'earth');
-      assert.equal(charactors[1].clothing.name, 'fireRobe');
-      assert.equal(charactors[1].weapon.name, 'fireWand');
+      assert.equal(charactors[1].clothing.name, 'redRobe');
+      assert.equal(charactors[1].weapon.name, 'rubyRod');
     } else {
       assert.equal(true, false);
     }

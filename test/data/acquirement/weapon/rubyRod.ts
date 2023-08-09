@@ -15,9 +15,9 @@ import { human } from 'src/data/acquirement/race/human';
 // import { merman } from 'src/data/acquirement/race/merman';
 // import { werewolf } from 'src/data/acquirement/race/werewolf';
 import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
-// import { lightSword } from 'src/data/acquirement/weapon/lightSword';
+// import { swordAndShield } from 'src/data/acquirement/weapon/swordAndShield';
 
-describe('fireWand#validateWearable', function () {
+describe('rubyRod#validateWearable', function () {
   it('ok', function () {
     const result = rubyRod.validateWearable(human, sky, redRobe, rubyRod);
     assert.equal(result, null);
@@ -25,9 +25,9 @@ describe('fireWand#validateWearable', function () {
   //it('ng', function () {
   //  const result = rubyRod.validateWearable(human, sky, steelArmor, rubyRod);
   //  if (result instanceof NotWearableErorr) {
-  //    assert.equal(result.acquirement.name, 'fireWand');
+  //    assert.equal(result.acquirement.name, 'rubyRod');
   //    assert.equal(result.cause.name, 'steelArmor');
-  //    assert.equal(result.message, 'このキャラクターの設定ではfireWandを装備できません');
+  //    assert.equal(result.message, 'このキャラクターの設定ではrubyRodを装備できません');
   //  } else {
   //    assert.equal(true, false);
   //  }

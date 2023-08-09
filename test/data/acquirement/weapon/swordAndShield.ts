@@ -14,10 +14,10 @@ import { human } from 'src/data/acquirement/race/human';
 // import { lizardman } from 'src/data/acquirement/race/lizardman';
 // import { merman } from 'src/data/acquirement/race/merman';
 // import { werewolf } from 'src/data/acquirement/race/werewolf';
-// import { fireWand } from 'src/data/acquirement/weapon/fireWand';
+// import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
 import { swordAndShield } from 'src/data/acquirement/weapon/swordAndShield';
 
-describe('lightSword#validateWearable', function () {
+describe('swordAndShield#validateWearable', function () {
   it('ok', function () {
     const result = swordAndShield.validateWearable(human, sky, steelArmor, swordAndShield);
     assert.equal(result, null);
@@ -25,9 +25,9 @@ describe('lightSword#validateWearable', function () {
   //it('ng', function () {
   //  const result = swordAndShield.validateWearable(human, sky, redRobe, swordAndShield);
   //  if (result instanceof NotWearableErorr) {
-  //    assert.equal(result.acquirement.name, 'lightSword');
-  //    assert.equal(result.cause.name, 'fireRobe');
-  //    assert.equal(result.message, 'このキャラクターの設定ではlightSwordを装備できません');
+  //    assert.equal(result.acquirement.name, 'swordAndShield');
+  //    assert.equal(result.cause.name, 'redRobe');
+  //    assert.equal(result.message, 'このキャラクターの設定ではswordAndShieldを装備できません');
   //  } else {
   //    assert.equal(true, false);
   //  }

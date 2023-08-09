@@ -15,7 +15,7 @@ import { human } from 'src/data/acquirement/race/human';
 // import { merman } from 'src/data/acquirement/race/merman';
 // import { werewolf } from 'src/data/acquirement/race/werewolf';
 import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
-// import { lightSword } from 'src/data/acquirement/weapon/lightSword';
+// import { swordAndShield } from 'src/data/acquirement/weapon/swordAndShield';
 
 describe('redRobe#validateWearable', function () {
   it('ok', function () {
@@ -25,9 +25,9 @@ describe('redRobe#validateWearable', function () {
   //it('ng', function () {
   //  const result = redRobe.validateWearable(human, sky, redRobe, rubyRod);
   //  if (result instanceof NotWearableErorr) {
-  //    assert.equal(result.acquirement.name, 'fireRobe');
+  //    assert.equal(result.acquirement.name, 'redRobe');
   //    assert.equal(result.cause.name, 'sky');
-  //    assert.equal(result.message, 'このキャラクターの設定ではfireRobeを装備できません');
+  //    assert.equal(result.message, 'このキャラクターの設定ではredRobeを装備できません');
   //  } else {
   //    assert.equal(true, false);
   //  }
