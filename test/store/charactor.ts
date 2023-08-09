@@ -7,7 +7,7 @@ import type { Repository } from 'src/io/file_repository'
 
 const storeMock: Repository = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
-  get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 })),
+  get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
@@ -17,7 +17,7 @@ const storeMock: Repository = {
 describe('Charctor#createStore', function () {
   it('save', async () => {
     const store = await createStore(storeMock);
-    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'fireRobe', weapon: 'fireWand', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
     await store.save(charactor);
     assert.equal(true, true);
   });
@@ -29,8 +29,8 @@ describe('Charctor#createStore', function () {
       assert.equal(typedCharactor.name, 'sam');
       assert.equal(typedCharactor.race.name, 'human');
       assert.equal(typedCharactor.blessing.name, 'earth');
-      assert.equal(typedCharactor.clothing.name, 'fireRobe');
-      assert.equal(typedCharactor.weapon.name, 'fireWand');
+      assert.equal(typedCharactor.clothing.name, 'redRobe');
+      assert.equal(typedCharactor.weapon.name, 'rubyRod');
     } else {
       assert.equal(true, false);
     }

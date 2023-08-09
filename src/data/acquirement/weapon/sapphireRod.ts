@@ -1,0 +1,44 @@
+import type { Weapon } from 'src/domain/acquirement';
+import { createValidateWearable } from 'src/domain/acquirement';
+import { gunWater } from 'src/data/skill/gunWater';
+import { quench } from 'src/data/skill/quench';
+import { downRushing } from 'src/data/skill/downRushing';
+
+export const sapphireRod: Weapon = {
+  name: 'sapphireRod',
+  label: 'サファイアロッド',
+  skills: [gunWater, downRushing, quench],
+  abilities: [],
+  additionalPhysical: {
+    MaxHP: 0,
+    MaxMP: 0,
+    STR: 20,
+    VIT: 10,
+    DEX: 0,
+    AGI: 0,
+    AVD: 0,
+    INT: 0,
+    MND: 0,
+    RES: 0,
+    WT: 10,
+    StabResistance: 0,
+    SlashResistance: 0,
+    BlowResistance: 0,
+    FireSuitable: 0,
+    RockSuitable: 0,
+    WaterSuitable: 20,
+    IceSuitable: 0,
+    AirSuitable: 0,
+    ThunderSuitable: 0,
+  },
+  validateWearable: (race, blessing, clothing, weapon) => {
+    const validate = createValidateWearable(sapphireRod, {
+      wearableRaces: [],
+      wearableBlessings: [],
+      wearableClothings: [],
+      wearableWeapons: [],
+    });
+    return validate(race, blessing, clothing, weapon);
+  },
+  description: 'サファイアロッド。水属性',
+};

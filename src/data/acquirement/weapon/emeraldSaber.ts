@@ -1,12 +1,15 @@
 import type { Weapon } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { volcanoRise } from 'src/data/skill/volcanoRise';
+import { chop } from 'src/data/skill/chop';
+import { dazzle } from 'src/data/skill/dazzle';
+import { windEdge } from 'src/data/skill/windEdge';
+import { rampartForce } from 'src/data/ability/rampartForce';
 
-export const fireWand: Weapon = {
-  name: 'fireWand',
-  label: '炎の杖',
-  skills: [volcanoRise],
-  abilities: [],
+export const emeraldSaber: Weapon = {
+  name: 'emeraldSaber',
+  label: 'エメラルドサーベル',
+  skills: [chop, windEdge, dazzle],
+  abilities: [rampartForce],
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
@@ -26,17 +29,17 @@ export const fireWand: Weapon = {
     RockSuitable: 0,
     WaterSuitable: 0,
     IceSuitable: 0,
-    AirSuitable: 0,
+    AirSuitable: 10,
     ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(fireWand, {
+    const validate = createValidateWearable(emeraldSaber, {
       wearableRaces: [],
       wearableBlessings: [],
-      wearableClothings: ['fireRobe'],
+      wearableClothings: [],
       wearableWeapons: [],
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '炎の杖。大地属性で炎の魔法が打てる杖。',
+  description: 'エメラルドサーベル。風属性',
 };

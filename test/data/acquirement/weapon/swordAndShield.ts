@@ -5,7 +5,7 @@ import { NotWearableErorr } from 'src/domain/acquirement';
 // import { mind } from 'src/data/acquirement/blessing/mind';
 // import { sea } from 'src/data/acquirement/blessing/sea';
 import { sky } from 'src/data/acquirement/blessing/sky';
-import { fireRobe } from 'src/data/acquirement/clothing/fireRobe';
+import { redRobe } from 'src/data/acquirement/clothing/redRobe';
 import { steelArmor } from 'src/data/acquirement/clothing/steelArmor';
 // import { fairy } from 'src/data/acquirement/race/fairy';
 // import { golem } from 'src/data/acquirement/race/golem';
@@ -14,23 +14,23 @@ import { human } from 'src/data/acquirement/race/human';
 // import { lizardman } from 'src/data/acquirement/race/lizardman';
 // import { merman } from 'src/data/acquirement/race/merman';
 // import { werewolf } from 'src/data/acquirement/race/werewolf';
-// import { fireWand } from 'src/data/acquirement/weapon/fireWand';
-import { lightSword } from 'src/data/acquirement/weapon/lightSword';
+// import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
+import { swordAndShield } from 'src/data/acquirement/weapon/swordAndShield';
 
-describe('lightSword#validateWearable', function () {
+describe('swordAndShield#validateWearable', function () {
   it('ok', function () {
-    const result = lightSword.validateWearable(human, sky, steelArmor, lightSword);
+    const result = swordAndShield.validateWearable(human, sky, steelArmor, swordAndShield);
     assert.equal(result, null);
   });
-  it('ng', function () {
-    const result = lightSword.validateWearable(human, sky, fireRobe, lightSword);
-    if (result instanceof NotWearableErorr) {
-      assert.equal(result.acquirement.name, 'lightSword');
-      assert.equal(result.cause.name, 'fireRobe');
-      assert.equal(result.message, 'このキャラクターの設定ではlightSwordを装備できません');
-    } else {
-      assert.equal(true, false);
-    }
-  });
+  //it('ng', function () {
+  //  const result = swordAndShield.validateWearable(human, sky, redRobe, swordAndShield);
+  //  if (result instanceof NotWearableErorr) {
+  //    assert.equal(result.acquirement.name, 'swordAndShield');
+  //    assert.equal(result.cause.name, 'redRobe');
+  //    assert.equal(result.message, 'このキャラクターの設定ではswordAndShieldを装備できません');
+  //  } else {
+  //    assert.equal(true, false);
+  //  }
+  //});
 });
 

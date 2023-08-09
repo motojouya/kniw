@@ -1,24 +1,26 @@
-import type { Clothing } from 'src/domain/acquirement';
+import type { Weapon } from 'src/domain/acquirement';
 import { createValidateWearable } from 'src/domain/acquirement';
-import { mpGainPlus } from 'src/data/ability/mpGainPlus';
+import { shot } from 'src/data/skill/shot';
+import { hardRain } from 'src/data/skill/hardRain';
+import { overbear } from 'src/data/skill/overbear';
 
-export const fireRobe: Clothing = {
-  name: 'fireRobe',
-  label: '炎の衣',
-  skills: [],
-  abilities: [mpGainPlus],
+export const samuraiBow: Weapon = {
+  name: 'samuraiBow',
+  label: '和弓',
+  skills: [shot, hardRain, overbear],
+  abilities: [],
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
-    STR: 0,
+    STR: 20,
     VIT: 10,
     DEX: 0,
     AGI: 0,
     AVD: 0,
-    INT: 10,
-    MND: 20,
+    INT: 0,
+    MND: 0,
     RES: 0,
-    WT: 5,
+    WT: 10,
     StabResistance: 0,
     SlashResistance: 0,
     BlowResistance: 0,
@@ -30,13 +32,13 @@ export const fireRobe: Clothing = {
     ThunderSuitable: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(fireRobe, {
+    const validate = createValidateWearable(samuraiBow, {
       wearableRaces: [],
-      wearableBlessings: ['mind', 'earth'],
+      wearableBlessings: [],
       wearableClothings: [],
       wearableWeapons: [],
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '炎の衣。魔法耐久が高い',
+  description: '和弓。威力が高い',
 };
