@@ -620,7 +620,7 @@ HP回復状態
     - flash flood  
       通常ダメージ  
       対象5  
-    - small shower  
+    - down rushing  
       高ダメージ  
       対象1  
     - quench  

@@ -30445,11 +30445,11 @@ exports.werewolf = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.fireWand = void 0;
 const acquirement_1 = __webpack_require__(8826);
-const volcanoRise_1 = __webpack_require__(5156);
+const flameFall_1 = __webpack_require__(6518);
 exports.fireWand = {
     name: 'fireWand',
     label: '炎の杖',
-    skills: [volcanoRise_1.volcanoRise],
+    skills: [flameFall_1.flameFall],
     abilities: [],
     additionalPhysical: {
         MaxHP: 0,
@@ -30576,39 +30576,39 @@ exports.chop = {
 
 /***/ }),
 
+/***/ 6518:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.flameFall = void 0;
+const skill_1 = __webpack_require__(8841);
+exports.flameFall = {
+    name: 'flameFall',
+    label: 'Flame Fall',
+    type: 'SKILL_TO_CHARACTOR',
+    action: skill_1.calcOrdinaryMagicalDamage,
+    receiverCount: 5,
+    additionalWt: 100,
+    getAccuracy: skill_1.calcOrdinaryAccuracy,
+    description: '基本魔法',
+};
+
+
+/***/ }),
+
 /***/ 2057:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.volcanoRise = exports.chop = void 0;
+exports.flameFall = exports.chop = void 0;
 var chop_1 = __webpack_require__(858);
 Object.defineProperty(exports, "chop", ({ enumerable: true, get: function () { return chop_1.chop; } }));
-var volcanoRise_1 = __webpack_require__(5156);
-Object.defineProperty(exports, "volcanoRise", ({ enumerable: true, get: function () { return volcanoRise_1.volcanoRise; } }));
-
-
-/***/ }),
-
-/***/ 5156:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.volcanoRise = void 0;
-const skill_1 = __webpack_require__(8841);
-exports.volcanoRise = {
-    name: 'volcanoRise',
-    label: 'Volcano Rise',
-    type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
-    receiverCount: 5,
-    additionalWt: 100,
-    getAccuracy: skill_1.calcOrdinaryAccuracy,
-    description: '噴火',
-};
+var flameFall_1 = __webpack_require__(6518);
+Object.defineProperty(exports, "flameFall", ({ enumerable: true, get: function () { return flameFall_1.flameFall; } }));
 
 
 /***/ }),
