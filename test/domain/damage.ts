@@ -71,20 +71,51 @@ import { getSkill } from 'src/store/skill';
  * 装備、武器は物理相性のために変更パターンあり
 */
 
+
+/* テストケース
+ * - レイピア(弱め武器)
+ *   - 前衛
+ *     - 耐性あり
+ *     - 耐性なし
+ *   - 弓使い
+ *   - 魔法使い
+ * - 和弓(強め武器)
+ *   - 前衛
+ *     - 耐性あり
+ *     - 耐性なし
+ *   - 弓使い
+ *   - 魔法使い
+ * - 基本魔法
+ *   - 前衛
+ *   - 弓使い
+ *   - 魔法使い
+ *     - 属性相性よい
+ *     - 属性相性悪い
+ *     - 属性相性なし
+ * 
+ * これだけキャラを用意する
+ * - 前衛 レイピア 鋼鉄の鎧
+ * - 前衛 レイピア 毛皮の鎧
+ * - 弓使い 和弓 軍人の制服 * 2
+ * - 魔法使い 火セット * 2
+ * - 魔法使い 水セット
+ * - 魔法使い 風セット
+ */
+
 const testData = {
   title: 'first-title',
   home: {
     name: 'home',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
+      { name: 'sam', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
+      { name: 'sara', race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
     ],
   },
   visitor: {
     name: 'visitor',
     charactors: [
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+      { name: 'john', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
+      { name: 'noa', race: 'human', blessing: 'mind', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
     ],
   },
   turns: [
@@ -95,10 +126,10 @@ const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
-        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+        { name: 'sam', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
+        { name: 'sara', race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
+        { name: 'john', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
+        { name: 'noa', race: 'human', blessing: 'mind', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
       ],
       field: {
         climate: 'SUNNY',
@@ -110,68 +141,6 @@ const testData = {
 
 type FormatDate = (date: Date) => string;
 const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
-
-describe('Battle#toBattle', function () {
-  it('ok', function () {
-    const battle = toBattle(testData);
-
-    if (battle instanceof NotWearableErorr
-     || battle instanceof DataNotFoundError
-     || battle instanceof CharactorDuplicationError
-     || battle instanceof JsonSchemaUnmatchError
-    ) {
-      assert.equal(true, false);
-    } else {
-      assert.equal(battle.title, 'first-title');
-      assert.equal(battle.home.name, 'home');
-      assert.equal(battle.visitor.name, 'visitor');
-      assert.equal(battle.turns.length, 1);
-      assert.equal(formatDate(battle.turns[0].datetime), '2023-06-29T12:12:21');
-      assert.equal(battle.result, GameOngoing);
-    }
-  });
-});
-
-describe('Battle#start', function () {
-  it('ok', function () {
-
-    const homeParty = (toParty({ name: 'home', charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
-    ]}) as Party);
-    const visitorParty = (toParty({ name: 'visitor', charactors: [
-      { name: 'tom', race: 'lizardman', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130 },
-      { name: 'chang', race: 'werewolf', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110 },
-    ]}) as Party);
-
-    const battle = createBattle('first-title', homeParty, visitorParty);
-    assert.equal(battle.result, GameOngoing);
-
-    const turn = start(battle, new Date(), {
-      times: 0.1,
-      damage: 0.1,
-      accuracy: 0.1,
-    });
-
-    assert.equal(turn.action.type, 'TIME_PASSING');
-    if (turn.action.type === 'TIME_PASSING') {
-      assert.equal(turn.action.wt, 0);
-    } else {
-      assert.equal(true, false);
-    }
-
-    assert.equal(turn.field.climate, 'SUNNY');
-    assert.equal(turn.sortedCharactors.length, 4);
-    assert.equal(turn.sortedCharactors[0].name, 'chang');
-    assert.equal(turn.sortedCharactors[0].isVisitor, true);
-    assert.equal(turn.sortedCharactors[1].name, 'john');
-    assert.equal(turn.sortedCharactors[1].isVisitor, false);
-    assert.equal(turn.sortedCharactors[2].name, 'sam');
-    assert.equal(turn.sortedCharactors[2].isVisitor, false);
-    assert.equal(turn.sortedCharactors[3].name, 'tom');
-    assert.equal(turn.sortedCharactors[3].isVisitor, true);
-  });
-});
 
 describe('Battle#act', function () {
   it('charactor', function () {
@@ -207,134 +176,7 @@ describe('Battle#act', function () {
 
     assert.equal(turn.sortedCharactors[3].name, 'sam');
     assert.equal(turn.sortedCharactors[3].hp, 100);
-    assert.equal(turn.sortedCharactors[3].restWt, 220);
-  });
-});
-
-describe('Battle#stay', function () {
-  it('ok', function () {
-    const battle = (toBattle(testData) as Battle);
-    const actor = (toCharactor(testData.home.charactors[0]) as Charactor);
-
-    const turn = stay(battle, actor, new Date());
-
-    assert.equal(turn.action.type, 'DO_NOTHING');
-    if (turn.action.type === 'DO_NOTHING') {
-      assert.equal(turn.action.actor.name, 'sam');
-    } else {
-      assert.equal(true, false);
-    }
-
-    assert.equal(turn.field.climate, 'SUNNY');
-    assert.equal(turn.sortedCharactors.length, 4);
-    assert.equal(turn.sortedCharactors[0].name, 'noa');
-    assert.equal(turn.sortedCharactors[1].name, 'sara');
-    assert.equal(turn.sortedCharactors[2].name, 'sam');
-    assert.equal(turn.sortedCharactors[3].name, 'john');
-  });
-});
-
-describe('Battle#wait', function () {
-  it('ok', function () {
-    const battle = (toBattle(testData) as Battle);
-
-    const turn = wait(battle, 115, new Date(), {
-      times: 0.1,
-      damage: 0.1,
-      accuracy: 0.1,
-    });
-
-    assert.equal(turn.action.type, 'TIME_PASSING');
-    if (turn.action.type === 'TIME_PASSING') {
-      assert.equal(turn.action.wt, 115);
-    } else {
-      assert.equal(true, false);
-    }
-
-    assert.equal(turn.field.climate, 'SUNNY');
-    assert.equal(turn.sortedCharactors.length, 4);
-    assert.equal(turn.sortedCharactors[0].name, 'sam');
-    assert.equal(turn.sortedCharactors[0].restWt, 5);
-    assert.equal(turn.sortedCharactors[1].name, 'sara');
-    assert.equal(turn.sortedCharactors[1].restWt, 0);
-    assert.equal(turn.sortedCharactors[2].name, 'john');
-    assert.equal(turn.sortedCharactors[2].restWt, 15);
-    assert.equal(turn.sortedCharactors[3].name, 'noa');
-    assert.equal(turn.sortedCharactors[3].restWt, 0);
-  });
-});
-
-// export type IsSettlement = (battle: Battle) => GameResult;
-// export const isSettlement: IsSettlement = battle => {
-// return GameDraw;
-// return GameHome;
-// return GameVisitor;
-// return GameOngoing;
-describe('Battle#isSettlement', function () {
-  it('GameOngoing', function () {
-    const battle = (toBattle(testData) as Battle);
-    const gameResult = isSettlement(battle);
-    assert.equal(gameResult, GameOngoing);
-  });
-  it('GameHome', function () {
-    const data = {
-      ...testData,
-      turns: [
-        {
-          ...(testData.turns[0]),
-          sortedCharactors: [
-            { ...(testData.turns[0].sortedCharactors[0]) },
-            { ...(testData.turns[0].sortedCharactors[1]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[2]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[3]), hp: 0 },
-          ],
-        }
-      ],
-    };
-
-    const battle = (toBattle(data) as Battle);
-    const gameResult = isSettlement(battle);
-    assert.equal(gameResult, GameHome);
-  });
-  it('GameVisitor', function () {
-    const data = {
-      ...testData,
-      turns: [
-        {
-          ...(testData.turns[0]),
-          sortedCharactors: [
-            { ...(testData.turns[0].sortedCharactors[0]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[1]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[2]) },
-            { ...(testData.turns[0].sortedCharactors[3]), hp: 0 },
-          ],
-        }
-      ],
-    };
-
-    const battle = (toBattle(data) as Battle);
-    const gameResult = isSettlement(battle);
-    assert.equal(gameResult, GameVisitor);
-  });
-  it('GameDraw', function () {
-    const data = {
-      ...testData,
-      turns: [
-        {
-          ...(testData.turns[0]),
-          sortedCharactors: [
-            { ...(testData.turns[0].sortedCharactors[0]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[1]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[2]), hp: 0 },
-            { ...(testData.turns[0].sortedCharactors[3]), hp: 0 },
-          ],
-        }
-      ],
-    };
-
-    const battle = (toBattle(data) as Battle);
-    const gameResult = isSettlement(battle);
-    assert.equal(gameResult, GameDraw);
+    assert.equal(turn.sortedCharactors[3].restWt, 210);
   });
 });
 
