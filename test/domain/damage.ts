@@ -33,45 +33,6 @@ import {
 } from 'src/store/store';
 import { getSkill } from 'src/store/skill';
 
-/*
- * 想定ダメージ調整用テスト
- * - 前衛、後衛
- *   - 後衛へのダメージをHPの27-33%
- *   - 前衛へはその2/3程度を想定
- * - バフ、デバフがかかっている、かかっていない
- *   - 後衛へのダメージを想定し、デバフは1.5倍程度
- *   - 後衛へのダメージを想定し、バフは2/3倍程度
- * - 属性、祝福相性のよい悪い普通の魔法攻撃
- *   - 属性相性がいい場合は2倍程度を想定
- *   - 属性相性が悪い場合は半分程度を想定
- * - 物理耐性特性のあるなしの攻撃
- *   - 物理耐性がある場合は、半分程度を想定
- * - 強い攻撃弱い攻撃
- *   - 強い攻撃は2倍程度を想定
- * 
- * 前衛
- * - ヒューマン
- * - 心の祝福
- * - 鎖帷子
- * - 盾セット
- * 
- * 弓使い
- * - ヒューマン
- * - 心の祝福
- * - 軍人の制服
- * - ロングボウ
- * 
- * 魔法使い
- * - ヒューマン
- * - 心の祝福
- * - 軍人の制服
- * - ロングボウ
- * 
- * 祝福は魔法相性のために変更パターンあり
- * 装備、武器は物理相性のために変更パターンあり
-*/
-
-
 /* テストケース
  * - レイピア(弱め武器)
  *   - 前衛
@@ -100,6 +61,13 @@ import { getSkill } from 'src/store/skill';
  * - 魔法使い 火セット * 2
  * - 魔法使い 水セット
  * - 魔法使い 風セット
+ *
+ * TODO
+ * - 属性相性と、物理耐性のダメージ実装
+ * - 強攻撃の実装
+ * - ダメージ調整
+ * - ダメージ以外のステータス、特にWT調整
+ * - 他acquirementの実装
  */
 
 const testData = {
@@ -107,15 +75,19 @@ const testData = {
   home: {
     name: 'home',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-      { name: 'sara', race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
+      { name: 'sam', race: 'human', blessing: 'mind', clothing: 'steelArmor', weapon: 'rapier', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: false },
+      { name: 'sara', race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow', statuses: [], hp: 100, mp: 0, restWt: 100, isVisitor: false },
+      { name: 'nick', race: 'human', blessing: 'mind', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
+      { name: 'yoshua', race: 'human', blessing: 'mind', clothing: 'blueRobe', weapon: 'sapphireRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: false },
     ],
   },
   visitor: {
     name: 'visitor',
     charactors: [
-      { name: 'john', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-      { name: 'noa', race: 'human', blessing: 'mind', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+      { name: 'john', race: 'human', blessing: 'mind', clothing: 'furArmor', weapon: 'rapier', statuses: [], hp: 100, mp: 0, restWt: 135, isVisitor: true },
+      { name: 'jonny', race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow', statuses: [], hp: 100, mp: 0, restWt: 105, isVisitor: true },
+      { name: 'noa', race: 'human', blessing: 'mind', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 125, isVisitor: true },
+      { name: 'funcy', race: 'human', blessing: 'mind', clothing: 'greenRobe', weapon: 'emeraldRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: true },
     ],
   },
   turns: [
@@ -126,10 +98,14 @@ const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sam', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'sara', race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
-        { name: 'john', race: 'human', blessing: 'mind', clothing: 'chainMail', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-        { name: 'noa', race: 'human', blessing: 'mind', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+        { name: 'sara',   race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',     statuses: [], hp: 100, mp: 0, restWt: 100, isVisitor: false },
+        { name: 'jonny',  race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',     statuses: [], hp: 100, mp: 0, restWt: 105, isVisitor: true  },
+        { name: 'yoshua', race: 'human', blessing: 'mind', clothing: 'blueRobe',       weapon: 'sapphireRod',    statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: false },
+        { name: 'funcy',  race: 'human', blessing: 'mind', clothing: 'greenRobe',      weapon: 'emeraldRod',     statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: true  },
+        { name: 'nick',   race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',        statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
+        { name: 'noa',    race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',        statuses: [], hp: 100, mp: 0, restWt: 125, isVisitor: true  },
+        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'chainMail',      weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: false },
+        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'chainMail',      weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 135, isVisitor: true  },
       ],
       field: {
         climate: 'SUNNY',
@@ -142,41 +118,270 @@ const testData = {
 type FormatDate = (date: Date) => string;
 const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
 
-describe('Battle#act', function () {
-  it('charactor', function () {
+describe('Damage#rapier', function () {
+  it('前衛刺突耐性なし', function () {
     const battle = (toBattle(testData) as Battle);
-    const actor = (toCharactor(testData.home.charactors[0]) as Charactor);
-    const receiver = (toCharactor(testData.visitor.charactors[0]) as Charactor);
-    const skill = (getSkill('chop') as Skill);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[6]) as Charactor); // sam
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[7]) as Charactor); // john
+    const skill = (getSkill('stab') as Skill);
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
-      times: 0.1,
-      damage: 0.1,
-      accuracy: 0.1,
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
     });
 
-    assert.equal(turn.action.type, 'DO_SKILL');
-    if (turn.action.type === 'DO_SKILL') {
-      assert.equal(turn.action.actor.name, 'sam');
-      assert.equal(turn.action.skill.name, 'chop');
-      assert.equal(turn.action.receivers.length, 1);
-      assert.equal(turn.action.receivers[0].name, 'john');
-    } else {
-      assert.equal(true, false);
-    }
+    assert.equal(turn.sortedCharactors[6].name, 'john');
+    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].restWt, 135);
 
-    assert.equal(turn.field.climate, 'SUNNY');
-    assert.equal(turn.sortedCharactors.length, 4);
-    assert.equal(turn.sortedCharactors[0].name, 'noa');
-    assert.equal(turn.sortedCharactors[1].name, 'sara');
+    assert.equal(turn.sortedCharactors[7].name, 'sam');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 210);
+  });
+  it('前衛刺突耐性あり', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[7]) as Charactor); // john
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[6]) as Charactor); // sam
+    const skill = (getSkill('stab') as Skill);
 
-    assert.equal(turn.sortedCharactors[2].name, 'john');
-    assert.equal(turn.sortedCharactors[2].hp, 99);
-    assert.equal(turn.sortedCharactors[2].restWt, 130);
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
 
-    assert.equal(turn.sortedCharactors[3].name, 'sam');
-    assert.equal(turn.sortedCharactors[3].hp, 100);
-    assert.equal(turn.sortedCharactors[3].restWt, 210);
+    assert.equal(turn.sortedCharactors[6].name, 'sam');
+    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].restWt, 130);
+
+    assert.equal(turn.sortedCharactors[7].name, 'john');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 210);
+  });
+  it('弓使い', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[6]) as Charactor); // sam
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[1]) as Charactor); // jonny
+    const skill = (getSkill('stab') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[1].name, 'jonny');
+    assert.equal(turn.sortedCharactors[1].hp, 99);
+    assert.equal(turn.sortedCharactors[1].restWt, 105);
+
+    assert.equal(turn.sortedCharactors[7].name, 'sam');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 210);
+  });
+  it('魔法使い', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[6]) as Charactor); // sam
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[5]) as Charactor); // noa
+    const skill = (getSkill('stab') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[5].name, 'noa');
+    assert.equal(turn.sortedCharactors[5].hp, 99);
+    assert.equal(turn.sortedCharactors[5].restWt, 125);
+
+    assert.equal(turn.sortedCharactors[7].name, 'sam');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 210);
   });
 });
 
+describe('Damage#samuraiBow', function () {
+  it('前衛刺突耐性なし', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[0]) as Charactor); // sara
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[7]) as Charactor); // john
+    const skill = (getSkill('shot') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[6].name, 'john');
+    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].restWt, 135);
+
+    assert.equal(turn.sortedCharactors[7].name, 'sara');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('前衛刺突耐性あり', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[0]) as Charactor); // sara
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[6]) as Charactor); // sam
+    const skill = (getSkill('shot') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[5].name, 'sam');
+    assert.equal(turn.sortedCharactors[5].hp, 99);
+    assert.equal(turn.sortedCharactors[5].restWt, 130);
+
+    assert.equal(turn.sortedCharactors[7].name, 'sara');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('弓使い', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[0]) as Charactor); // sara
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[1]) as Charactor); // jonny
+    const skill = (getSkill('shot') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[0].name, 'jonny');
+    assert.equal(turn.sortedCharactors[0].hp, 99);
+    assert.equal(turn.sortedCharactors[0].restWt, 105);
+
+    assert.equal(turn.sortedCharactors[7].name, 'sara');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('魔法使い', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[0]) as Charactor); // sara
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[5]) as Charactor); // noa
+    const skill = (getSkill('shot') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[4].name, 'noa');
+    assert.equal(turn.sortedCharactors[4].hp, 99);
+    assert.equal(turn.sortedCharactors[4].restWt, 125);
+
+    assert.equal(turn.sortedCharactors[7].name, 'sara');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+});
+describe('Damage#flameFall', function () {
+  it('前衛', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[4]) as Charactor); // nick
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[7]) as Charactor); // john
+    const skill = (getSkill('flameFall') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[6].name, 'john');
+    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].restWt, 135);
+
+    assert.equal(turn.sortedCharactors[7].name, 'nick');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('前衛', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[4]) as Charactor); // nick
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[1]) as Charactor); // jonny
+    const skill = (getSkill('flameFall') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[1].name, 'jonny');
+    assert.equal(turn.sortedCharactors[1].hp, 99);
+    assert.equal(turn.sortedCharactors[1].restWt, 105);
+
+    assert.equal(turn.sortedCharactors[7].name, 'nick');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('属性相性よい', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[4]) as Charactor); // nick
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[3]) as Charactor); // funcy
+    const skill = (getSkill('flameFall') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[3].name, 'funcy');
+    assert.equal(turn.sortedCharactors[3].hp, 99);
+    assert.equal(turn.sortedCharactors[3].restWt, 115);
+
+    assert.equal(turn.sortedCharactors[7].name, 'nick');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('属性相性悪い', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[4]) as Charactor); // nick
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[2]) as Charactor); // yoshua
+    const skill = (getSkill('flameFall') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[2].name, 'yoshua');
+    assert.equal(turn.sortedCharactors[2].hp, 99);
+    assert.equal(turn.sortedCharactors[2].restWt, 110);
+
+    assert.equal(turn.sortedCharactors[7].name, 'nick');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+  it('属性相性なし', function () {
+    const battle = (toBattle(testData) as Battle);
+    const actor = (toCharactor(testData.turns[0].sortedCharactors[4]) as Charactor); // nick
+    const receiver = (toCharactor(testData.turns[0].sortedCharactors[5]) as Charactor); // noa
+    const skill = (getSkill('flameFall') as Skill);
+
+    const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
+      times: 0.5,
+      damage: 0.5,
+      accuracy: 0.5,
+    });
+
+    assert.equal(turn.sortedCharactors[4].name, 'noa');
+    assert.equal(turn.sortedCharactors[4].hp, 99);
+    assert.equal(turn.sortedCharactors[4].restWt, 125);
+
+    assert.equal(turn.sortedCharactors[7].name, 'nick');
+    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].restWt, 215);
+  });
+});
