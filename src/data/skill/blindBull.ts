@@ -1,11 +1,14 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy } from 'src/domain/skill';
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from 'src/domain/skill';
 
 export const blindBull: Skill = {
   name: 'blindBull',
   label: '盲牛の突き',
   type: 'SKILL_TO_CHARACTOR',
   action: calcOrdinaryDirectDamage,
+  directType: DIRECT_TYPE_STAB,
+  magicType: MAGIC_TYPE_NONE,
+  baseDamage: 100,
   receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

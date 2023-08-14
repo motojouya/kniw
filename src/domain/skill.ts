@@ -2,6 +2,21 @@ import { Field } from 'src/domain/field';
 import { Randoms } from 'src/domain/random';
 import { Charactor, getPhysical } from 'src/domain/charactor';
 
+export type DirectType = 'SLASH' | 'STAB' | 'BLOW' | 'NONE';
+export const DIRECT_TYPE_SLASH: DirectType = 'SLASH';
+export const DIRECT_TYPE_STAB: DirectType = 'STAB';
+export const DIRECT_TYPE_BLOW: DirectType = 'BLOW';
+export const DIRECT_TYPE_NONE: DirectType = 'NONE';
+
+export type MagicType = 'FIRE' | 'ROCK' | 'WATER' | 'ICE' | 'WIND' | 'THUNDER' | 'NONE';
+export const MAGIC_TYPE_FIRE: MagicType = 'FIRE';
+export const MAGIC_TYPE_ROCK: MagicType = 'ROCK';
+export const MAGIC_TYPE_WATER: MagicType = 'WATER';
+export const MAGIC_TYPE_ICE: MagicType = 'ICE';
+export const MAGIC_TYPE_WIND: MagicType = 'WIND';
+export const MAGIC_TYPE_THUNDER: MagicType = 'THUNDER';
+export const MAGIC_TYPE_NONE: MagicType = 'NONE';
+
 export type ActionToCharactor = (
   self: Skill,
   actor: Charactor,
@@ -10,6 +25,7 @@ export type ActionToCharactor = (
   receiver: Charactor,
 ) => Charactor;
 export type ActionToField = (self: Skill, actor: Charactor, randoms: Randoms, field: Field) => Field;
+
 export type GetAccuracy = (self: Skill, actor: Charactor, field: Field, receiver: Charactor) => number;
 
 export type SkillToCharactor = {
@@ -17,6 +33,9 @@ export type SkillToCharactor = {
   label: string;
   type: 'SKILL_TO_CHARACTOR';
   action: ActionToCharactor;
+  directType: DirectType;
+  magicType: MagicType;
+  baseDamage: number;
   receiverCount: number;
   additionalWt: number;
   getAccuracy: GetAccuracy;
@@ -28,6 +47,8 @@ export type SkillToField = {
   label: string;
   type: 'SKILL_TO_FIELD';
   action: ActionToField;
+  directType: DirectType;
+  magicType: MagicType;
   receiverCount: 0;
   additionalWt: number;
   getAccuracy: GetAccuracy;
@@ -47,6 +68,16 @@ const calcDirectDefence: CalcDirectDefence = defencer => {
   const physical = getPhysical(defencer);
   return (physical.VIT + physical.STR) / 2;
 };
+
+// StabResistance: 0,
+// SlashResistance: 0,
+// BlowResistance: 0,
+// FireSuitable: 30,
+// RockSuitable: 30,
+// WaterSuitable: 0,
+// IceSuitable: 0,
+// AirSuitable: 0,
+// ThunderSuitable: 0,
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   let damage = calcDirectAttack(actor) - calcDirectDefence(receiver);
