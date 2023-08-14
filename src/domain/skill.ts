@@ -80,7 +80,11 @@ const calcDirectDefence: CalcDirectDefence = defencer => {
 // ThunderSuitable: 0,
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-  let damage = calcDirectAttack(actor) - calcDirectDefence(receiver);
+  if (self.type === 'SKILL_TO_FIELD') {
+    return receiver;
+  }
+
+  let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;
   if (damage < 1) {
     damage = 1;
@@ -97,21 +101,25 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
   };
 };
 
-type CalcMagicalAttack = (attacker: Charactor) => number;
-const calcMagicalAttack: CalcMagicalAttack = attacker => {
+type CalcMagicalAttack = (skill: Skill, attacker: Charactor) => number;
+const calcMagicalAttack: CalcMagicalAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   return (physical.INT + physical.MND) / 2;
 };
 
-type CalcMagicalDefence = (defencer: Charactor) => number;
-const calcMagicalDefence: CalcMagicalDefence = defencer => {
+type CalcMagicalDefence = (skill: Skill, defencer: Charactor) => number;
+const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   return (physical.VIT + physical.MND) / 2;
 };
 
 // TODO blessingに心、大地、海、空があり、空->海->大地->空という力関係なので、ダメージ計算にも反映させたい。心は力関係がない。
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-  let damage = calcMagicalAttack(actor) - calcMagicalDefence(receiver);
+  if (self.type === 'SKILL_TO_FIELD') {
+    return receiver;
+  }
+
+  let damage = self.baseDamage + calcMagicalAttack(self, actor) - calcMagicalDefence(self, receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;
   if (damage < 1) {
     damage = 1;
@@ -128,14 +136,14 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
   };
 };
 
-type CalcAttackAccuracy = (attacker: Charactor) => number;
-const calcAttackAccuracy: CalcAttackAccuracy = attacker => {
+type CalcAttackAccuracy = (skill: Skill, attacker: Charactor) => number;
+const calcAttackAccuracy: CalcAttackAccuracy = (skill, attacker) => {
   const physical = getPhysical(attacker);
   return (physical.DEX + physical.AGI) / 2;
 };
 
-type CalcDefenceAccuracy = (defencer: Charactor) => number;
-const calcDefenceAccuracy: CalcDefenceAccuracy = defencer => {
+type CalcDefenceAccuracy = (skill: Skill, defencer: Charactor) => number;
+const calcDefenceAccuracy: CalcDefenceAccuracy = (skill, defencer) => {
   const physical = getPhysical(defencer);
   return (physical.DEX + physical.AVD) / 2;
 };

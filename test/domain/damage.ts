@@ -64,7 +64,7 @@ import { getSkill } from 'src/store/skill';
  *
  * TODO
  * - 属性相性と、物理耐性のダメージ実装
- * - 強攻撃の実装
+ *  - 強攻撃の実装
  * - ダメージ調整
  * - ダメージ以外のステータス、特にWT調整
  * - 他acquirementの実装
