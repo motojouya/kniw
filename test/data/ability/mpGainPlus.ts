@@ -38,8 +38,8 @@ describe('mpGainPlus#wait', function () {
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
     assert.equal(charactor.mp, 0);
 
-    const result = mpGainPlus.wait(120, charactor, randoms);
-    assert.equal(result.mp, 100);
+    const result = mpGainPlus.wait(210, charactor, randoms);
+    assert.equal(result.mp, 200);
   });
 });
 
