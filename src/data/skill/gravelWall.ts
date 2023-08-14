@@ -1,5 +1,5 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK, } from 'src/domain/skill';
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from 'src/domain/skill';
 
 export const gravelWall: Skill = {
   name: 'gravelWall',

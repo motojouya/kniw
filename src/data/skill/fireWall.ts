@@ -1,5 +1,5 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE, } from 'src/domain/skill';
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from 'src/domain/skill';
 
 export const fireWall: Skill = {
   name: 'fireWall',

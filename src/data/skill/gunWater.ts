@@ -1,5 +1,5 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER, } from 'src/domain/skill';
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from 'src/domain/skill';
 
 export const gunWater: Skill = {
   name: 'gunWater',
