@@ -8,7 +8,7 @@ export const guillotineOfGiant: Skill = {
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_SLASH,
   magicType: MAGIC_TYPE_NONE,
-  baseDamage: 100,
+  baseDamage: 150,
   mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 100,

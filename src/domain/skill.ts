@@ -133,12 +133,7 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
     return receiver;
   }
 
-  //let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
-  const directAttack = calcDirectAttack(self, actor);
-  const directDefence = calcDirectDefence(self, receiver);
-  console.log('directAttack', directAttack);
-  console.log('directDefence', directDefence);
-  let damage = self.baseDamage + directAttack - directDefence;
+  let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
   damage += Math.ceil(randoms.damage * 10) - 5;
   if (damage < 1) {
     damage = 1;

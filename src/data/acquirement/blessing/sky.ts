@@ -25,8 +25,8 @@ export const sky: Blessing = {
     RockSuitable: 0,
     WaterSuitable: 0,
     IceSuitable: 0,
-    AirSuitable: 30,
-    ThunderSuitable: 30,
+    AirSuitable: 10,
+    ThunderSuitable: 10,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(sky, {

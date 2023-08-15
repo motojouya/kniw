@@ -33,42 +33,16 @@ import {
 } from 'src/store/store';
 import { getSkill } from 'src/store/skill';
 
-/* テストケース
- * - レイピア(弱め武器)
- *   - 前衛
- *     - 耐性あり
- *     - 耐性なし
- *   - 弓使い
- *   - 魔法使い
- * - 和弓(強め武器)
- *   - 前衛
- *     - 耐性あり
- *     - 耐性なし
- *   - 弓使い
- *   - 魔法使い
- * - 基本魔法
- *   - 前衛
- *   - 弓使い
- *   - 魔法使い
- *     - 属性相性よい
- *     - 属性相性悪い
- *     - 属性相性なし
- * 
- * これだけキャラを用意する
- * - 前衛 レイピア 鋼鉄の鎧
- * - 前衛 レイピア 毛皮の鎧
- * - 弓使い 和弓 軍人の制服 * 2
- * - 魔法使い 火セット * 2
- * - 魔法使い 水セット
- * - 魔法使い 風セット
- *
- * TODO
+/* TODO
  * - 属性相性と、物理耐性のダメージ実装 done
  *  - 強攻撃の実装 done
- * - ダメージ調整
- * - ダメージ以外のステータス、特にWT調整
+ * - ダメージ調整 done
+ * - ダメージ以外のステータス、特にWT調整 done
+ * - 命中率の実装
  * - 他acquirementの実装
  * - mp消費とmp回復の実装
+ * - バフ、デバフのダメージ効果実装 -> それぞれ1.2倍とか0.8倍とかでいいと思う
+ * - その他TODO潰し
  */
 
 const testData = {
@@ -99,14 +73,14 @@ const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sara',   race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',     statuses: [], hp: 100, mp: 0, restWt: 100, isVisitor: false },
-        { name: 'jonny',  race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',     statuses: [], hp: 100, mp: 0, restWt: 105, isVisitor: true  },
-        { name: 'yoshua', race: 'human', blessing: 'mind', clothing: 'blueRobe',       weapon: 'sapphireRod',    statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: false },
-        { name: 'funcy',  race: 'human', blessing: 'mind', clothing: 'greenRobe',      weapon: 'emeraldRod',     statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: true  },
-        { name: 'nick',   race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',        statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'noa',    race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',        statuses: [], hp: 100, mp: 0, restWt: 125, isVisitor: true  },
-        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'steelArmor',     weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: false },
-        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'furArmor',       weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 135, isVisitor: true  },
+        { name: 'sara',   race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',  statuses: [], hp: 300, mp: 0, restWt: 100, isVisitor: false },
+        { name: 'jonny',  race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',  statuses: [], hp: 300, mp: 0, restWt: 105, isVisitor: true  },
+        { name: 'yoshua', race: 'human', blessing: 'mind', clothing: 'blueRobe',       weapon: 'sapphireRod', statuses: [], hp: 300, mp: 0, restWt: 110, isVisitor: false },
+        { name: 'funcy',  race: 'human', blessing: 'mind', clothing: 'greenRobe',      weapon: 'emeraldRod',  statuses: [], hp: 300, mp: 0, restWt: 115, isVisitor: true  },
+        { name: 'nick',   race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',     statuses: [], hp: 300, mp: 0, restWt: 120, isVisitor: false },
+        { name: 'noa',    race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',     statuses: [], hp: 300, mp: 0, restWt: 125, isVisitor: true  },
+        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'steelArmor',     weapon: 'rapier',      statuses: [], hp: 300, mp: 0, restWt: 130, isVisitor: false },
+        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'furArmor',       weapon: 'rapier',      statuses: [], hp: 300, mp: 0, restWt: 135, isVisitor: true  },
       ],
       field: {
         climate: 'SUNNY',
@@ -133,12 +107,12 @@ describe('Damage#rapier', function () {
     });
 
     assert.equal(turn.sortedCharactors[6].name, 'john');
-    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].hp, 230);
     assert.equal(turn.sortedCharactors[6].restWt, 135);
 
     assert.equal(turn.sortedCharactors[7].name, 'sam');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
-    assert.equal(turn.sortedCharactors[7].restWt, 210);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
+    assert.equal(turn.sortedCharactors[7].restWt, 220);
   });
   it('前衛刺突耐性あり', function () {
     const battle = (toBattle(testData) as Battle);
@@ -153,11 +127,11 @@ describe('Damage#rapier', function () {
     });
 
     assert.equal(turn.sortedCharactors[6].name, 'sam');
-    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].hp, 280);
     assert.equal(turn.sortedCharactors[6].restWt, 130);
 
     assert.equal(turn.sortedCharactors[7].name, 'john');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 220);
   });
   it('弓使い', function () {
@@ -173,12 +147,12 @@ describe('Damage#rapier', function () {
     });
 
     assert.equal(turn.sortedCharactors[1].name, 'jonny');
-    assert.equal(turn.sortedCharactors[1].hp, 99);
+    assert.equal(turn.sortedCharactors[1].hp, 210);
     assert.equal(turn.sortedCharactors[1].restWt, 105);
 
     assert.equal(turn.sortedCharactors[7].name, 'sam');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
-    assert.equal(turn.sortedCharactors[7].restWt, 210);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
+    assert.equal(turn.sortedCharactors[7].restWt, 220);
   });
   it('魔法使い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -193,12 +167,12 @@ describe('Damage#rapier', function () {
     });
 
     assert.equal(turn.sortedCharactors[5].name, 'noa');
-    assert.equal(turn.sortedCharactors[5].hp, 99);
+    assert.equal(turn.sortedCharactors[5].hp, 190);
     assert.equal(turn.sortedCharactors[5].restWt, 125);
 
     assert.equal(turn.sortedCharactors[7].name, 'sam');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
-    assert.equal(turn.sortedCharactors[7].restWt, 210);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
+    assert.equal(turn.sortedCharactors[7].restWt, 220);
   });
 });
 
@@ -216,11 +190,11 @@ describe('Damage#samuraiBow', function () {
     });
 
     assert.equal(turn.sortedCharactors[6].name, 'john');
-    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].hp, 230);
     assert.equal(turn.sortedCharactors[6].restWt, 135);
 
     assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
   it('前衛刺突耐性あり', function () {
@@ -236,11 +210,11 @@ describe('Damage#samuraiBow', function () {
     });
 
     assert.equal(turn.sortedCharactors[5].name, 'sam');
-    assert.equal(turn.sortedCharactors[5].hp, 99);
+    assert.equal(turn.sortedCharactors[5].hp, 280);
     assert.equal(turn.sortedCharactors[5].restWt, 130);
 
     assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
   it('弓使い', function () {
@@ -256,11 +230,11 @@ describe('Damage#samuraiBow', function () {
     });
 
     assert.equal(turn.sortedCharactors[0].name, 'jonny');
-    assert.equal(turn.sortedCharactors[0].hp, 99);
+    assert.equal(turn.sortedCharactors[0].hp, 210);
     assert.equal(turn.sortedCharactors[0].restWt, 105);
 
     assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
   it('魔法使い', function () {
@@ -276,11 +250,11 @@ describe('Damage#samuraiBow', function () {
     });
 
     assert.equal(turn.sortedCharactors[4].name, 'noa');
-    assert.equal(turn.sortedCharactors[4].hp, 99);
+    assert.equal(turn.sortedCharactors[4].hp, 190);
     assert.equal(turn.sortedCharactors[4].restWt, 125);
 
     assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
 });
@@ -298,14 +272,14 @@ describe('Damage#flameFall', function () {
     });
 
     assert.equal(turn.sortedCharactors[6].name, 'john');
-    assert.equal(turn.sortedCharactors[6].hp, 99);
+    assert.equal(turn.sortedCharactors[6].hp, 230);
     assert.equal(turn.sortedCharactors[6].restWt, 135);
 
     assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
-  it('前衛', function () {
+  it('弓使い', function () {
     const battle = (toBattle(testData) as Battle);
     const actor = (toCharactor(testData.turns[0].sortedCharactors[4]) as Charactor); // nick
     const receiver = (toCharactor(testData.turns[0].sortedCharactors[1]) as Charactor); // jonny
@@ -318,11 +292,11 @@ describe('Damage#flameFall', function () {
     });
 
     assert.equal(turn.sortedCharactors[1].name, 'jonny');
-    assert.equal(turn.sortedCharactors[1].hp, 99);
+    assert.equal(turn.sortedCharactors[1].hp, 210);
     assert.equal(turn.sortedCharactors[1].restWt, 105);
 
     assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
   it('属性相性よい', function () {
@@ -338,11 +312,11 @@ describe('Damage#flameFall', function () {
     });
 
     assert.equal(turn.sortedCharactors[3].name, 'funcy');
-    assert.equal(turn.sortedCharactors[3].hp, 99);
+    assert.equal(turn.sortedCharactors[3].hp, 154);
     assert.equal(turn.sortedCharactors[3].restWt, 115);
 
     assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
   it('属性相性悪い', function () {
@@ -358,11 +332,11 @@ describe('Damage#flameFall', function () {
     });
 
     assert.equal(turn.sortedCharactors[2].name, 'yoshua');
-    assert.equal(turn.sortedCharactors[2].hp, 99);
+    assert.equal(turn.sortedCharactors[2].hp, 246);
     assert.equal(turn.sortedCharactors[2].restWt, 110);
 
     assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
   it('属性相性なし', function () {
@@ -378,11 +352,11 @@ describe('Damage#flameFall', function () {
     });
 
     assert.equal(turn.sortedCharactors[4].name, 'noa');
-    assert.equal(turn.sortedCharactors[4].hp, 99);
+    assert.equal(turn.sortedCharactors[4].hp, 200);
     assert.equal(turn.sortedCharactors[4].restWt, 125);
 
     assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 100);
+    assert.equal(turn.sortedCharactors[7].hp, 300);
     assert.equal(turn.sortedCharactors[7].restWt, 215);
   });
 });

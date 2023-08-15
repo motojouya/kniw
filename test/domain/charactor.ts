@@ -58,14 +58,14 @@ describe('Charctor#toCharactor', function () {
     assert.equal(skills[3].name, 'ghostFire');
 
     const physical = getPhysical(charactor);
-    assert.equal(physical.MaxHP, 200);
+    assert.equal(physical.MaxHP, 300);
     assert.equal(physical.MaxMP, 200);
-    assert.equal(physical.STR, 120);
-    assert.equal(physical.VIT, 120);
+    assert.equal(physical.STR, 100);
+    assert.equal(physical.VIT, 110);
     assert.equal(physical.DEX, 100);
     assert.equal(physical.AGI, 100);
     assert.equal(physical.AVD, 100);
-    assert.equal(physical.INT, 110);
+    assert.equal(physical.INT, 130);
     assert.equal(physical.MND, 120);
     assert.equal(physical.RES, 100);
     assert.equal(physical.WT, 115);

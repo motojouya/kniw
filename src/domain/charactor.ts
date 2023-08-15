@@ -12,7 +12,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
 const basePhysical: Physical = {
-  MaxHP: 200,
+  MaxHP: 300,
   MaxMP: 200,
   STR: 100,
   VIT: 100,

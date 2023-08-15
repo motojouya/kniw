@@ -164,7 +164,7 @@ describe('Battle#act', function () {
     assert.equal(turn.sortedCharactors[1].name, 'sara');
 
     assert.equal(turn.sortedCharactors[2].name, 'john');
-    assert.equal(turn.sortedCharactors[2].hp, 99);
+    assert.equal(turn.sortedCharactors[2].hp, 74);
     assert.equal(turn.sortedCharactors[2].restWt, 130);
 
     assert.equal(turn.sortedCharactors[3].name, 'sam');

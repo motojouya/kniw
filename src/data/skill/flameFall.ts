@@ -8,7 +8,7 @@ export const flameFall: Skill = {
   action: calcOrdinaryMagicalDamage,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_FIRE,
-  baseDamage: 60,
+  baseDamage: 30,
   mpConsumption: 15,
   receiverCount: 5,
   additionalWt: 100,

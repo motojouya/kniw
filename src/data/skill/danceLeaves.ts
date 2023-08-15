@@ -8,7 +8,7 @@ export const danceLeaves: Skill = {
   action: calcOrdinaryMagicalDamage,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WIND,
-  baseDamage: 60,
+  baseDamage: 30,
   mpConsumption: 30,
   receiverCount: 5,
   additionalWt: 100,

@@ -8,7 +8,7 @@ export const swordDance: Skill = {
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_SLASH,
   magicType: MAGIC_TYPE_NONE,
-  baseDamage: 60,
+  baseDamage: 90,
   mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 100,

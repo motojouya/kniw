@@ -8,7 +8,7 @@ export const gravelWall: Skill = {
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ROCK,
-  baseDamage: 60,
+  baseDamage: 90,
   mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 100,

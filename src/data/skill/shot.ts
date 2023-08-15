@@ -8,7 +8,7 @@ export const shot: Skill = {
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_STAB,
   magicType: MAGIC_TYPE_NONE,
-  baseDamage: 60,
+  baseDamage: 90,
   mpConsumption: 10,
   receiverCount: 1,
   additionalWt: 100,

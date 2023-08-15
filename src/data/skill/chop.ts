@@ -8,7 +8,7 @@ export const chop: Skill = {
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_SLASH,
   magicType: MAGIC_TYPE_NONE,
-  baseDamage: 60,
+  baseDamage: 90,
   mpConsumption: 10,
   receiverCount: 1,
   additionalWt: 100,
