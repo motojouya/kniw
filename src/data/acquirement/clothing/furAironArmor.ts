@@ -20,7 +20,7 @@ export const furAironArmor: Clothing = {
     RES: 0,
     WT: 10,
     StabResistance: 0,
-    SlashResistance: 30,
+    SlashResistance: 10,
     BlowResistance: 0,
     FireSuitable: 0,
     RockSuitable: 0,

@@ -16,6 +16,7 @@ export const clearCloud: Skill = {
   action: changeClimate,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WIND,
+  mpConsumption: 15,
   receiverCount: 0,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

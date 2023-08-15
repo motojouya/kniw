@@ -9,6 +9,7 @@ export const quench: Skill = {
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WATER,
   baseDamage: 100,
+  mpConsumption: 15,
   receiverCount: 5,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

@@ -63,11 +63,12 @@ import { getSkill } from 'src/store/skill';
  * - 魔法使い 風セット
  *
  * TODO
- * - 属性相性と、物理耐性のダメージ実装
- *  - 強攻撃の実装
+ * - 属性相性と、物理耐性のダメージ実装 done
+ *  - 強攻撃の実装 done
  * - ダメージ調整
  * - ダメージ以外のステータス、特にWT調整
  * - 他acquirementの実装
+ * - mp消費とmp回復の実装
  */
 
 const testData = {
@@ -104,8 +105,8 @@ const testData = {
         { name: 'funcy',  race: 'human', blessing: 'mind', clothing: 'greenRobe',      weapon: 'emeraldRod',     statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: true  },
         { name: 'nick',   race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',        statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
         { name: 'noa',    race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',        statuses: [], hp: 100, mp: 0, restWt: 125, isVisitor: true  },
-        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'chainMail',      weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: false },
-        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'chainMail',      weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 135, isVisitor: true  },
+        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'steelArmor',     weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: false },
+        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'furArmor',       weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 135, isVisitor: true  },
       ],
       field: {
         climate: 'SUNNY',
@@ -157,7 +158,7 @@ describe('Damage#rapier', function () {
 
     assert.equal(turn.sortedCharactors[7].name, 'john');
     assert.equal(turn.sortedCharactors[7].hp, 100);
-    assert.equal(turn.sortedCharactors[7].restWt, 210);
+    assert.equal(turn.sortedCharactors[7].restWt, 220);
   });
   it('弓使い', function () {
     const battle = (toBattle(testData) as Battle);

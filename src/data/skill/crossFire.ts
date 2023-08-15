@@ -9,6 +9,7 @@ export const crossFire: Skill = {
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_FIRE,
   baseDamage: 60,
+  mpConsumption: 30,
   receiverCount: 5,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

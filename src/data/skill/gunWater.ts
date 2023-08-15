@@ -9,6 +9,7 @@ export const gunWater: Skill = {
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WATER,
   baseDamage: 60,
+  mpConsumption: 15,
   receiverCount: 5,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

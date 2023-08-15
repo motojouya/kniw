@@ -9,6 +9,7 @@ export const push: Skill = {
   directType: DIRECT_TYPE_BLOW,
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 60,
+  mpConsumption: 10,
   receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

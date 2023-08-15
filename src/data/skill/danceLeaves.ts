@@ -9,6 +9,7 @@ export const danceLeaves: Skill = {
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WIND,
   baseDamage: 60,
+  mpConsumption: 30,
   receiverCount: 5,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

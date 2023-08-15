@@ -9,6 +9,7 @@ export const lightMeteor: Skill = {
   directType: DIRECT_TYPE_BLOW,
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 100,
+  mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,

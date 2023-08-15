@@ -19,7 +19,7 @@ export const steelArmor: Clothing = {
     MND: 10,
     RES: 0,
     WT: 10,
-    StabResistance: 30,
+    StabResistance: 10,
     SlashResistance: 0,
     BlowResistance: 0,
     FireSuitable: 0,

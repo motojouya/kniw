@@ -191,6 +191,7 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
 };
 
 // TODO mp消費の概念が実装されてない
+// mpの残りによって実行できない行動の制限があるはず。
 export type ActToCharactor = (
   battle: Battle,
   actor: Charactor,
@@ -221,9 +222,13 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = { ...charactor };
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
+      newCharactor.mp = newCharactor.mp - skill.mpConsumption;
     }
     return newCharactor;
   });
@@ -254,9 +259,13 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
   newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = { ...charactor };
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
+      newCharactor.mp = newCharactor.mp - skill.mpConsumption;
     }
     return newCharactor;
   });
@@ -279,7 +288,10 @@ export const stay: Stay = (battle, actor, datetime) => {
   };
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = { ...charactor };
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT;
     }
@@ -330,6 +342,7 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
 // ターン経過による状態変化を起こす関数
 // これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
 // TODO mp回復の概念が実装されてない。ターン経過ごとにMPが回復しないといつまでも0のまま
+// mp回復は、だいたい20ぐらいにしたい。消費mpのバランス的にそういう感じにしてある
 export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn;
 export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);

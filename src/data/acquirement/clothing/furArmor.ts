@@ -21,7 +21,7 @@ export const furArmor: Clothing = {
     WT: 10,
     StabResistance: 0,
     SlashResistance: 0,
-    BlowResistance: 30,
+    BlowResistance: 10,
     FireSuitable: 0,
     RockSuitable: 0,
     WaterSuitable: 0,

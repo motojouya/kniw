@@ -9,6 +9,7 @@ export const saturnRing: Skill = {
   directType: DIRECT_TYPE_STAB,
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 60,
+  mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,
