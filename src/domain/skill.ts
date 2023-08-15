@@ -75,7 +75,7 @@ const calcMagicRate: CalcMagicRate = (skill, charactor) => {
       return 100 + physical.AirSuitable;
     case MAGIC_TYPE_THUNDER:
       return 100 + physical.ThunderSuitable;
-    default: 
+    default:
       return 100;
   }
 };
@@ -93,7 +93,7 @@ const calcMagicRegistance: CalcMagicRegistance = (skill, charactor) => {
     case MAGIC_TYPE_WIND:
     case MAGIC_TYPE_THUNDER:
       return 100 + physical.FireSuitable + physical.RockSuitable - physical.WaterSuitable - physical.IceSuitable;
-    default: 
+    default:
       return 100;
   }
 };
@@ -108,7 +108,7 @@ const calcDirectRegistance: CalcDirectRegistance = (skill, charactor) => {
       return 100 + physical.BlowResistance;
     case DIRECT_TYPE_STAB:
       return 100 + physical.StabResistance;
-    default: 
+    default:
       return 100;
   }
 };
@@ -117,7 +117,7 @@ type CalcDirectAttack = (skill: Skill, attacker: Charactor) => number;
 const calcDirectAttack: CalcDirectAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
-  return (physical.STR + physical.DEX) * magicRate / 100;
+  return ((physical.STR + physical.DEX) * magicRate) / 100;
 };
 
 type CalcDirectDefence = (skill: Skill, defencer: Charactor) => number;
@@ -125,7 +125,7 @@ const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   const magicRegistance = calcMagicRegistance(skill, defencer);
   const directRegistance = calcDirectRegistance(skill, defencer);
-  return (physical.VIT + physical.STR) * directRegistance * magicRegistance / 100 / 100;
+  return ((physical.VIT + physical.STR) * directRegistance * magicRegistance) / 100 / 100;
 };
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
@@ -154,7 +154,7 @@ type CalcMagicalAttack = (skill: Skill, attacker: Charactor) => number;
 const calcMagicalAttack: CalcMagicalAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
-  return (physical.INT + physical.MND) * magicRate / 100;
+  return ((physical.INT + physical.MND) * magicRate) / 100;
 };
 
 type CalcMagicalDefence = (skill: Skill, defencer: Charactor) => number;
@@ -162,7 +162,7 @@ const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   const magicRegistance = calcMagicRegistance(skill, defencer);
   const directRegistance = calcDirectRegistance(skill, defencer);
-  return (physical.VIT + physical.MND) * directRegistance * magicRegistance / 100 / 100;
+  return ((physical.VIT + physical.MND) * directRegistance * magicRegistance) / 100 / 100;
 };
 
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {

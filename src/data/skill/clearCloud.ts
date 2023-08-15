@@ -1,6 +1,6 @@
 import type { Skill, ActionToField } from 'src/domain/skill';
 import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from 'src/domain/skill';
-import {  } from 'src/domain/field';
+import {} from 'src/domain/field';
 
 const changeClimate: ActionToField = (self, actor, randoms, field) => {
   return {
