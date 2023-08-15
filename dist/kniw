@@ -29775,8 +29775,8 @@ exports.earth = {
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
-        FireSuitable: 30,
-        RockSuitable: 30,
+        FireSuitable: 10,
+        RockSuitable: 10,
         WaterSuitable: 0,
         IceSuitable: 0,
         AirSuitable: 0,
@@ -29896,8 +29896,8 @@ exports.sea = {
         BlowResistance: 0,
         FireSuitable: 0,
         RockSuitable: 0,
-        WaterSuitable: 30,
-        IceSuitable: 30,
+        WaterSuitable: 10,
+        IceSuitable: 10,
         AirSuitable: 0,
         ThunderSuitable: 0,
     },
@@ -29948,8 +29948,8 @@ exports.sky = {
         RockSuitable: 0,
         WaterSuitable: 0,
         IceSuitable: 0,
-        AirSuitable: 30,
-        ThunderSuitable: 30,
+        AirSuitable: 10,
+        ThunderSuitable: 10,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.sky, {
@@ -29988,10 +29988,10 @@ exports.bishopRobe = {
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 10,
-        MND: 20,
+        INT: 0,
+        MND: 30,
         RES: 0,
-        WT: 5,
+        WT: 10,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -30040,16 +30040,16 @@ exports.blueRobe = {
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 10,
+        INT: 0,
         MND: 20,
         RES: 0,
-        WT: 5,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
         FireSuitable: 0,
         RockSuitable: 0,
-        WaterSuitable: 30,
+        WaterSuitable: 10,
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
@@ -30086,14 +30086,14 @@ exports.chainMail = {
         MaxHP: 0,
         MaxMP: 0,
         STR: 0,
-        VIT: 20,
+        VIT: 50,
         DEX: 0,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 10,
         RES: 0,
-        WT: 0,
+        WT: 10,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -30137,16 +30137,16 @@ exports.furAironArmor = {
         MaxHP: 0,
         MaxMP: 0,
         STR: 0,
-        VIT: 20,
+        VIT: 50,
         DEX: 0,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 10,
         RES: 0,
-        WT: 10,
-        StabResistance: 0,
-        SlashResistance: 30,
+        WT: 20,
+        StabResistance: 10,
+        SlashResistance: 20,
         BlowResistance: 0,
         FireSuitable: 0,
         RockSuitable: 0,
@@ -30188,17 +30188,17 @@ exports.furArmor = {
         MaxHP: 0,
         MaxMP: 0,
         STR: 0,
-        VIT: 20,
+        VIT: 50,
         DEX: 0,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 10,
         RES: 0,
-        WT: 10,
+        WT: 20,
         StabResistance: 0,
-        SlashResistance: 0,
-        BlowResistance: 30,
+        SlashResistance: 10,
+        BlowResistance: 20,
         FireSuitable: 0,
         RockSuitable: 0,
         WaterSuitable: 0,
@@ -30244,10 +30244,10 @@ exports.greenRobe = {
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 10,
+        INT: 0,
         MND: 20,
         RES: 0,
-        WT: 5,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -30255,7 +30255,7 @@ exports.greenRobe = {
         RockSuitable: 0,
         WaterSuitable: 0,
         IceSuitable: 0,
-        AirSuitable: 30,
+        AirSuitable: 10,
         ThunderSuitable: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
@@ -30322,14 +30322,14 @@ exports.mithrilArmor = {
         MaxHP: 0,
         MaxMP: 0,
         STR: 0,
-        VIT: 20,
+        VIT: 50,
         DEX: 0,
         AGI: 0,
         AVD: 0,
         INT: 0,
-        MND: 10,
+        MND: 20,
         RES: 0,
-        WT: 10,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -30378,14 +30378,14 @@ exports.redRobe = {
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 10,
+        INT: 0,
         MND: 20,
         RES: 0,
-        WT: 5,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
-        FireSuitable: 30,
+        FireSuitable: 10,
         RockSuitable: 0,
         WaterSuitable: 0,
         IceSuitable: 0,
@@ -30424,14 +30424,14 @@ exports.soldierUniform = {
         MaxHP: 0,
         MaxMP: 0,
         STR: 0,
-        VIT: 10,
+        VIT: 30,
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 10,
-        MND: 20,
+        INT: 0,
+        MND: 10,
         RES: 0,
-        WT: 5,
+        WT: 10,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -30475,17 +30475,17 @@ exports.steelArmor = {
         MaxHP: 0,
         MaxMP: 0,
         STR: 0,
-        VIT: 20,
+        VIT: 50,
         DEX: 0,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 10,
         RES: 0,
-        WT: 10,
-        StabResistance: 30,
+        WT: 20,
+        StabResistance: 20,
         SlashResistance: 0,
-        BlowResistance: 0,
+        BlowResistance: 10,
         FireSuitable: 0,
         RockSuitable: 0,
         WaterSuitable: 0,
@@ -30902,12 +30902,12 @@ exports.emeraldRod = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
+        STR: 0,
+        VIT: 0,
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 0,
+        INT: 30,
         MND: 0,
         RES: 0,
         WT: 10,
@@ -30918,7 +30918,7 @@ exports.emeraldRod = {
         RockSuitable: 0,
         WaterSuitable: 0,
         IceSuitable: 0,
-        AirSuitable: 20,
+        AirSuitable: 10,
         ThunderSuitable: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
@@ -30956,12 +30956,12 @@ exports.emeraldSaber = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 20,
         AGI: 0,
         AVD: 0,
-        INT: 0,
+        INT: 10,
         MND: 0,
         RES: 0,
         WT: 10,
@@ -31043,9 +31043,9 @@ exports.morningStar = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 30,
         AGI: 0,
         AVD: 0,
         INT: 0,
@@ -31097,9 +31097,9 @@ exports.rapier = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 30,
         AGI: 0,
         AVD: 0,
         INT: 0,
@@ -31150,19 +31150,19 @@ exports.rubyRod = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
+        STR: 0,
+        VIT: 0,
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 0,
+        INT: 30,
         MND: 0,
         RES: 0,
         WT: 10,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
-        FireSuitable: 20,
+        FireSuitable: 10,
         RockSuitable: 0,
         WaterSuitable: 0,
         IceSuitable: 0,
@@ -31204,12 +31204,12 @@ exports.rubySaber = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 20,
         AGI: 0,
         AVD: 0,
-        INT: 0,
+        INT: 10,
         MND: 0,
         RES: 0,
         WT: 10,
@@ -31257,15 +31257,15 @@ exports.samuraiBow = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 30,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 0,
         RES: 0,
-        WT: 10,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -31311,15 +31311,15 @@ exports.samuraiSword = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 30,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 0,
         RES: 0,
-        WT: 10,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -31364,12 +31364,12 @@ exports.sapphireRod = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
+        STR: 0,
+        VIT: 0,
         DEX: 0,
         AGI: 0,
         AVD: 0,
-        INT: 0,
+        INT: 30,
         MND: 0,
         RES: 0,
         WT: 10,
@@ -31378,7 +31378,7 @@ exports.sapphireRod = {
         BlowResistance: 0,
         FireSuitable: 0,
         RockSuitable: 0,
-        WaterSuitable: 20,
+        WaterSuitable: 10,
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
@@ -31418,12 +31418,12 @@ exports.sapphireSaber = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
-        VIT: 10,
-        DEX: 0,
+        STR: 0,
+        VIT: 0,
+        DEX: 20,
         AGI: 0,
         AVD: 0,
-        INT: 0,
+        INT: 10,
         MND: 0,
         RES: 0,
         WT: 10,
@@ -31473,15 +31473,15 @@ exports.swordAndShield = {
     additionalPhysical: {
         MaxHP: 0,
         MaxMP: 0,
-        STR: 20,
+        STR: 0,
         VIT: 10,
-        DEX: 0,
+        DEX: 20,
         AGI: 0,
         AVD: 0,
         INT: 0,
         MND: 0,
         RES: 0,
-        WT: 10,
+        WT: 20,
         StabResistance: 0,
         SlashResistance: 0,
         BlowResistance: 0,
@@ -31522,7 +31522,8 @@ exports.blindBull = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 100,
+    baseDamage: 150,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31547,7 +31548,8 @@ exports.blow = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_BLOW,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31572,7 +31574,8 @@ exports.chop = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_SLASH,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31590,9 +31593,7 @@ exports.chop = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.clearCloud = void 0;
 const skill_1 = __webpack_require__(8841);
-const changeClimate = (self, actor, randoms, field) => {
-    return Object.assign(Object.assign({}, field), { climate: 'RAIN' });
-};
+const changeClimate = (self, actor, randoms, field) => (Object.assign(Object.assign({}, field), { climate: 'RAIN' }));
 exports.clearCloud = {
     name: 'clearCloud',
     label: '晴れ',
@@ -31600,6 +31601,7 @@ exports.clearCloud = {
     action: changeClimate,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
+    mpConsumption: 15,
     receiverCount: 0,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31625,6 +31627,7 @@ exports.coldFeet = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31650,6 +31653,7 @@ exports.concentration = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31674,7 +31678,8 @@ exports.crossFire = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
-    baseDamage: 60,
+    baseDamage: 30,
+    mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31699,7 +31704,8 @@ exports.danceLeaves = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
-    baseDamage: 60,
+    baseDamage: 30,
+    mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31725,6 +31731,7 @@ exports.dazzle = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31750,6 +31757,7 @@ exports.downRushing = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 100,
+    mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31775,6 +31783,7 @@ exports.fireWall = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31800,6 +31809,7 @@ exports.flameDigger = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31824,7 +31834,8 @@ exports.flameFall = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
-    baseDamage: 60,
+    baseDamage: 30,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31849,7 +31860,8 @@ exports.flashFlood = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
-    baseDamage: 60,
+    baseDamage: 30,
+    mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31875,6 +31887,7 @@ exports.ghostFire = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31899,7 +31912,8 @@ exports.gravelWall = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31924,7 +31938,8 @@ exports.guillotineOfGiant = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_SLASH,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 100,
+    baseDamage: 150,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31949,7 +31964,8 @@ exports.gunWater = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
-    baseDamage: 60,
+    baseDamage: 30,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -31974,7 +31990,8 @@ exports.hardRain = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 100,
+    baseDamage: 150,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32000,6 +32017,7 @@ exports.heavyWind = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32107,7 +32125,8 @@ exports.lightMeteor = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_BLOW,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 100,
+    baseDamage: 150,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32132,7 +32151,8 @@ exports.multiShot = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32158,6 +32178,7 @@ exports.overbear = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32183,6 +32204,7 @@ exports.pitch = {
     directType: skill_1.DIRECT_TYPE_BLOW,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 60,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32208,6 +32230,7 @@ exports.push = {
     directType: skill_1.DIRECT_TYPE_BLOW,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 60,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32232,7 +32255,8 @@ exports.quench = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
-    baseDamage: 100,
+    baseDamage: 150,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32258,6 +32282,7 @@ exports.quick = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32282,7 +32307,8 @@ exports.saturnRing = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32307,7 +32333,8 @@ exports.shot = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32333,6 +32360,7 @@ exports.smallHeat = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 100,
+    mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32357,7 +32385,8 @@ exports.stab = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32383,6 +32412,7 @@ exports.stickyRain = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32407,7 +32437,8 @@ exports.swordDance = {
     action: skill_1.calcOrdinaryDirectDamage,
     directType: skill_1.DIRECT_TYPE_SLASH,
     magicType: skill_1.MAGIC_TYPE_NONE,
-    baseDamage: 60,
+    baseDamage: 90,
+    mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32433,6 +32464,7 @@ exports.tornade = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 100,
+    mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32458,6 +32490,7 @@ exports.waterCutter = {
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 0,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -32482,7 +32515,8 @@ exports.windEdge = {
     action: skill_1.calcOrdinaryMagicalDamage,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
-    baseDamage: 60,
+    baseDamage: 30,
+    mpConsumption: 15,
     receiverCount: 5,
     additionalWt: 100,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
@@ -33094,9 +33128,10 @@ const actToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
     const resultReceivers = receivers.map(receiver => skill.action(skill, actor, randoms, lastTurn.field, receiver));
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign({}, charactor);
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
         if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
             newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT + skill.additionalWt;
+            newCharactor.mp -= skill.mpConsumption;
         }
         return newCharactor;
     });
@@ -33122,9 +33157,10 @@ const actToField = (battle, actor, skill, datetime, randoms) => {
     };
     newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign({}, charactor);
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
         if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
             newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT + skill.additionalWt;
+            newCharactor.mp -= skill.mpConsumption;
         }
         return newCharactor;
     });
@@ -33144,7 +33180,7 @@ const stay = (battle, actor, datetime) => {
         field: lastTurn.field,
     };
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign({}, charactor);
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
         if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
             newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT;
         }
@@ -33240,7 +33276,7 @@ const acquirement_2 = __webpack_require__(2066);
 const store_1 = __webpack_require__(9895);
 const json_schema_1 = __webpack_require__(6540);
 const basePhysical = {
-    MaxHP: 200,
+    MaxHP: 300,
     MaxMP: 200,
     STR: 100,
     VIT: 100,
@@ -33683,25 +33719,70 @@ exports.MAGIC_TYPE_ICE = 'ICE';
 exports.MAGIC_TYPE_WIND = 'WIND';
 exports.MAGIC_TYPE_THUNDER = 'THUNDER';
 exports.MAGIC_TYPE_NONE = 'NONE';
-const calcDirectAttack = attacker => {
+const calcMagicRate = (skill, charactor) => {
+    const physical = (0, charactor_1.getPhysical)(charactor);
+    switch (skill.magicType) {
+        case exports.MAGIC_TYPE_FIRE:
+            return 100 + physical.FireSuitable;
+        case exports.MAGIC_TYPE_ROCK:
+            return 100 + physical.RockSuitable;
+        case exports.MAGIC_TYPE_WATER:
+            return 100 + physical.WaterSuitable;
+        case exports.MAGIC_TYPE_ICE:
+            return 100 + physical.IceSuitable;
+        case exports.MAGIC_TYPE_WIND:
+            return 100 + physical.AirSuitable;
+        case exports.MAGIC_TYPE_THUNDER:
+            return 100 + physical.ThunderSuitable;
+        default:
+            return 100;
+    }
+};
+const calcMagicRegistance = (skill, charactor) => {
+    const physical = (0, charactor_1.getPhysical)(charactor);
+    switch (skill.magicType) {
+        case exports.MAGIC_TYPE_FIRE:
+        case exports.MAGIC_TYPE_ROCK:
+            return 100 + physical.WaterSuitable + physical.IceSuitable - physical.AirSuitable - physical.ThunderSuitable;
+        case exports.MAGIC_TYPE_WATER:
+        case exports.MAGIC_TYPE_ICE:
+            return 100 + physical.AirSuitable + physical.ThunderSuitable - physical.FireSuitable - physical.RockSuitable;
+        case exports.MAGIC_TYPE_WIND:
+        case exports.MAGIC_TYPE_THUNDER:
+            return 100 + physical.FireSuitable + physical.RockSuitable - physical.WaterSuitable - physical.IceSuitable;
+        default:
+            return 100;
+    }
+};
+const calcDirectRegistance = (skill, charactor) => {
+    const physical = (0, charactor_1.getPhysical)(charactor);
+    switch (skill.directType) {
+        case exports.DIRECT_TYPE_SLASH:
+            return 100 + physical.SlashResistance;
+        case exports.DIRECT_TYPE_BLOW:
+            return 100 + physical.BlowResistance;
+        case exports.DIRECT_TYPE_STAB:
+            return 100 + physical.StabResistance;
+        default:
+            return 100;
+    }
+};
+const calcDirectAttack = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
-    return (physical.STR + physical.DEX) / 2;
+    const magicRate = calcMagicRate(skill, attacker);
+    return ((physical.STR + physical.DEX) * magicRate) / 100;
 };
-const calcDirectDefence = defencer => {
+const calcDirectDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
-    return (physical.VIT + physical.STR) / 2;
+    const magicRegistance = calcMagicRegistance(skill, defencer);
+    const directRegistance = calcDirectRegistance(skill, defencer);
+    return ((physical.VIT + physical.STR) * directRegistance * magicRegistance) / 100 / 100;
 };
-// StabResistance: 0,
-// SlashResistance: 0,
-// BlowResistance: 0,
-// FireSuitable: 30,
-// RockSuitable: 30,
-// WaterSuitable: 0,
-// IceSuitable: 0,
-// AirSuitable: 0,
-// ThunderSuitable: 0,
 const calcOrdinaryDirectDamage = (self, actor, randoms, field, receiver) => {
-    let damage = calcDirectAttack(actor) - calcDirectDefence(receiver);
+    if (self.type === 'SKILL_TO_FIELD') {
+        return receiver;
+    }
+    let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
     damage += Math.ceil(randoms.damage * 10) - 5;
     if (damage < 1) {
         damage = 1;
@@ -33713,17 +33794,22 @@ const calcOrdinaryDirectDamage = (self, actor, randoms, field, receiver) => {
     return Object.assign(Object.assign({}, receiver), { hp: restHp });
 };
 exports.calcOrdinaryDirectDamage = calcOrdinaryDirectDamage;
-const calcMagicalAttack = attacker => {
+const calcMagicalAttack = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
-    return (physical.INT + physical.MND) / 2;
+    const magicRate = calcMagicRate(skill, attacker);
+    return ((physical.INT + physical.MND) * magicRate) / 100;
 };
-const calcMagicalDefence = defencer => {
+const calcMagicalDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
-    return (physical.VIT + physical.MND) / 2;
+    const magicRegistance = calcMagicRegistance(skill, defencer);
+    const directRegistance = calcDirectRegistance(skill, defencer);
+    return ((physical.VIT + physical.MND) * directRegistance * magicRegistance) / 100 / 100;
 };
-// TODO blessingに心、大地、海、空があり、空->海->大地->空という力関係なので、ダメージ計算にも反映させたい。心は力関係がない。
 const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
-    let damage = calcMagicalAttack(actor) - calcMagicalDefence(receiver);
+    if (self.type === 'SKILL_TO_FIELD') {
+        return receiver;
+    }
+    let damage = self.baseDamage + calcMagicalAttack(self, actor) - calcMagicalDefence(self, receiver);
     damage += Math.ceil(randoms.damage * 10) - 5;
     if (damage < 1) {
         damage = 1;
@@ -33735,15 +33821,15 @@ const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
     return Object.assign(Object.assign({}, receiver), { hp: restHp });
 };
 exports.calcOrdinaryMagicalDamage = calcOrdinaryMagicalDamage;
-const calcAttackAccuracy = attacker => {
+const calcAttackAccuracy = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
     return (physical.DEX + physical.AGI) / 2;
 };
-const calcDefenceAccuracy = defencer => {
+const calcDefenceAccuracy = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
     return (physical.DEX + physical.AVD) / 2;
 };
-const calcOrdinaryAccuracy = (self, actor, field, receiver) => (100 + calcAttackAccuracy(actor) - calcDefenceAccuracy(receiver)) / 100;
+const calcOrdinaryAccuracy = (self, actor, field, receiver) => (100 + calcAttackAccuracy(self, actor) - calcDefenceAccuracy(self, receiver)) / 100;
 exports.calcOrdinaryAccuracy = calcOrdinaryAccuracy;
 
 
