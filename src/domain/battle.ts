@@ -228,7 +228,7 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
     };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
-      newCharactor.mp = newCharactor.mp - skill.mpConsumption;
+      newCharactor.mp -= skill.mpConsumption;
     }
     return newCharactor;
   });
@@ -265,7 +265,7 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
     };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
-      newCharactor.mp = newCharactor.mp - skill.mpConsumption;
+      newCharactor.mp -= skill.mpConsumption;
     }
     return newCharactor;
   });

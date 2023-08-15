@@ -1,13 +1,10 @@
 import type { Skill, ActionToField } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from 'src/domain/skill';
-import {} from 'src/domain/field';
+import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from 'src/domain/skill';
 
-const changeClimate: ActionToField = (self, actor, randoms, field) => {
-  return {
+const changeClimate: ActionToField = (self, actor, randoms, field) => ({
     ...field,
     climate: 'RAIN',
-  };
-};
+  });
 
 export const clearCloud: Skill = {
   name: 'clearCloud',
