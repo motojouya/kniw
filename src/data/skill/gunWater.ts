@@ -10,7 +10,7 @@ export const gunWater: Skill = {
   magicType: MAGIC_TYPE_WATER,
   baseDamage: 30,
   mpConsumption: 15,
-  receiverCount: 5,
+  receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,
   description: '水の基本魔法',

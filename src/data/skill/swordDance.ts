@@ -10,8 +10,8 @@ export const swordDance: Skill = {
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 90,
   mpConsumption: 30,
-  receiverCount: 1,
-  additionalWt: 100,
+  receiverCount: 4,
+  additionalWt: 150,
   getAccuracy: calcOrdinaryAccuracy,
   description: '斬撃の範囲攻撃',
 };

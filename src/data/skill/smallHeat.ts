@@ -10,8 +10,8 @@ export const smallHeat: Skill = {
   magicType: MAGIC_TYPE_FIRE,
   baseDamage: 100,
   mpConsumption: 30,
-  receiverCount: 5,
-  additionalWt: 100,
+  receiverCount: 1,
+  additionalWt: 150,
   getAccuracy: calcOrdinaryAccuracy,
   description: '火の強魔法',
 };

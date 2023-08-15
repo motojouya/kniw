@@ -10,7 +10,7 @@ export const windEdge: Skill = {
   magicType: MAGIC_TYPE_WIND,
   baseDamage: 30,
   mpConsumption: 15,
-  receiverCount: 5,
+  receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,
   description: '風の基本魔法',

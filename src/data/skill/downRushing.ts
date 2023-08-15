@@ -10,8 +10,8 @@ export const downRushing: Skill = {
   magicType: MAGIC_TYPE_WATER,
   baseDamage: 100,
   mpConsumption: 30,
-  receiverCount: 5,
-  additionalWt: 100,
+  receiverCount: 1,
+  additionalWt: 150,
   getAccuracy: calcOrdinaryAccuracy,
   description: '水の強魔法',
 };

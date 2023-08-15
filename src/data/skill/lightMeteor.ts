@@ -11,7 +11,7 @@ export const lightMeteor: Skill = {
   baseDamage: 150,
   mpConsumption: 30,
   receiverCount: 1,
-  additionalWt: 100,
+  additionalWt: 150,
   getAccuracy: calcOrdinaryAccuracy,
   description: '',
 };

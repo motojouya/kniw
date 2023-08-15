@@ -10,7 +10,7 @@ export const waterCutter: Skill = {
   magicType: MAGIC_TYPE_WATER,
   baseDamage: 0,
   mpConsumption: 15,
-  receiverCount: 5,
+  receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,
   description: '物理攻撃up',

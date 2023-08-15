@@ -10,8 +10,8 @@ export const gravelWall: Skill = {
   magicType: MAGIC_TYPE_ROCK,
   baseDamage: 90,
   mpConsumption: 30,
-  receiverCount: 1,
-  additionalWt: 100,
+  receiverCount: 4,
+  additionalWt: 150,
   getAccuracy: calcOrdinaryAccuracy,
   description: '打撃の範囲攻撃',
 };

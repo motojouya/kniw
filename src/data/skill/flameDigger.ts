@@ -10,7 +10,7 @@ export const flameDigger: Skill = {
   magicType: MAGIC_TYPE_FIRE,
   baseDamage: 0,
   mpConsumption: 15,
-  receiverCount: 5,
+  receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,
   description: '魔法防御down',

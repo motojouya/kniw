@@ -164,12 +164,12 @@ describe('Battle#act', function () {
     assert.equal(turn.sortedCharactors[1].name, 'sara');
 
     assert.equal(turn.sortedCharactors[2].name, 'john');
-    assert.equal(turn.sortedCharactors[2].hp, 74);
+    assert.equal(turn.sortedCharactors[2].hp, 54);
     assert.equal(turn.sortedCharactors[2].restWt, 130);
 
     assert.equal(turn.sortedCharactors[3].name, 'sam');
     assert.equal(turn.sortedCharactors[3].hp, 100);
-    assert.equal(turn.sortedCharactors[3].restWt, 220);
+    assert.equal(turn.sortedCharactors[3].restWt, 240);
   });
 });
 
@@ -191,8 +191,8 @@ describe('Battle#stay', function () {
     assert.equal(turn.sortedCharactors.length, 4);
     assert.equal(turn.sortedCharactors[0].name, 'noa');
     assert.equal(turn.sortedCharactors[1].name, 'sara');
-    assert.equal(turn.sortedCharactors[2].name, 'sam');
-    assert.equal(turn.sortedCharactors[3].name, 'john');
+    assert.equal(turn.sortedCharactors[2].name, 'john');
+    assert.equal(turn.sortedCharactors[3].name, 'sam');
   });
 });
 

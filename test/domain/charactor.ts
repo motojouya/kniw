@@ -68,7 +68,7 @@ describe('Charctor#toCharactor', function () {
     assert.equal(physical.INT, 130);
     assert.equal(physical.MND, 120);
     assert.equal(physical.RES, 100);
-    assert.equal(physical.WT, 115);
+    assert.equal(physical.WT, 130);
   });
 });
 

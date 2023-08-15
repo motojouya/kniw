@@ -11,7 +11,7 @@ export const flashFlood: Skill = {
   baseDamage: 30,
   mpConsumption: 30,
   receiverCount: 5,
-  additionalWt: 100,
+  additionalWt: 150,
   getAccuracy: calcOrdinaryAccuracy,
   description: '水の範囲魔法',
 };

@@ -10,7 +10,7 @@ export const quick: Skill = {
   magicType: MAGIC_TYPE_WIND,
   baseDamage: 0,
   mpConsumption: 15,
-  receiverCount: 5,
+  receiverCount: 1,
   additionalWt: 100,
   getAccuracy: calcOrdinaryAccuracy,
   description: 'クイック状態の付与',
