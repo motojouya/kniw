@@ -11,8 +11,6 @@ export type Acquirement = {
   validateWearable: ValidateWearable;
   description: string;
 };
-// TODO 移動範囲、移動高さの概念を追加したい。コード上は関係ないがゲーム時に任意で参照する。
-// Acquirementでは、追加補正でこの辺りがあって欲しい
 
 export type ValidateWearable = (
   race: Race | null,

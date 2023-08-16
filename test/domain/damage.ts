@@ -33,19 +33,6 @@ import {
 } from 'src/store/store';
 import { getSkill } from 'src/store/skill';
 
-/* TODO
- * - 属性相性と、物理耐性のダメージ実装 done
- *  - 強攻撃の実装 done
- * - ダメージ調整 done
- * - ダメージ以外のステータス、特にWT調整 done
- * - skillごとのWT調整 done
- * - 命中率の実装
- * - 他acquirementの実装
- * - mp消費とmp回復の実装
- * - バフ、デバフのダメージ効果実装 -> それぞれ1.2倍とか0.8倍とかでいいと思う
- * - その他TODO潰し
- */
-
 const testData = {
   title: 'first-title',
   home: {
@@ -74,14 +61,14 @@ const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sara',   race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',  statuses: [], hp: 300, mp: 0, restWt: 100, isVisitor: false },
-        { name: 'jonny',  race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',  statuses: [], hp: 300, mp: 0, restWt: 105, isVisitor: true  },
-        { name: 'yoshua', race: 'human', blessing: 'mind', clothing: 'blueRobe',       weapon: 'sapphireRod', statuses: [], hp: 300, mp: 0, restWt: 110, isVisitor: false },
-        { name: 'funcy',  race: 'human', blessing: 'mind', clothing: 'greenRobe',      weapon: 'emeraldRod',  statuses: [], hp: 300, mp: 0, restWt: 115, isVisitor: true  },
-        { name: 'nick',   race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',     statuses: [], hp: 300, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'noa',    race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',     statuses: [], hp: 300, mp: 0, restWt: 125, isVisitor: true  },
-        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'steelArmor',     weapon: 'rapier',      statuses: [], hp: 300, mp: 0, restWt: 130, isVisitor: false },
-        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'furArmor',       weapon: 'rapier',      statuses: [], hp: 300, mp: 0, restWt: 135, isVisitor: true  },
+        { name: 'sara',   race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',  statuses: [], hp: 300, mp: 200, restWt: 100, isVisitor: false },
+        { name: 'jonny',  race: 'human', blessing: 'mind', clothing: 'soldierUniform', weapon: 'samuraiBow',  statuses: [], hp: 300, mp: 200, restWt: 105, isVisitor: true  },
+        { name: 'yoshua', race: 'human', blessing: 'mind', clothing: 'blueRobe',       weapon: 'sapphireRod', statuses: [], hp: 300, mp: 200, restWt: 110, isVisitor: false },
+        { name: 'funcy',  race: 'human', blessing: 'mind', clothing: 'greenRobe',      weapon: 'emeraldRod',  statuses: [], hp: 300, mp: 200, restWt: 115, isVisitor: true  },
+        { name: 'nick',   race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',     statuses: [], hp: 300, mp: 200, restWt: 120, isVisitor: false },
+        { name: 'noa',    race: 'human', blessing: 'mind', clothing: 'redRobe',        weapon: 'rubyRod',     statuses: [], hp: 300, mp: 200, restWt: 125, isVisitor: true  },
+        { name: 'sam',    race: 'human', blessing: 'mind', clothing: 'steelArmor',     weapon: 'rapier',      statuses: [], hp: 300, mp: 200, restWt: 130, isVisitor: false },
+        { name: 'john',   race: 'human', blessing: 'mind', clothing: 'furArmor',       weapon: 'rapier',      statuses: [], hp: 300, mp: 200, restWt: 135, isVisitor: true  },
       ],
       field: {
         climate: 'SUNNY',

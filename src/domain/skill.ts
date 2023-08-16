@@ -1,6 +1,17 @@
 import { Field } from 'src/domain/field';
 import { Randoms } from 'src/domain/random';
 import { Charactor, getPhysical } from 'src/domain/charactor';
+import type { Status } from 'src/domain/status';
+import {
+  directAttackUp,
+  directAttackDown,
+  directDiffenceUp,
+  directDiffenceDown,
+  magicAttackUp,
+  magicAttackDown,
+  magicDiffenceUp,
+  magicDiffenceDown,
+} from 'src/data/status';
 
 export type DirectType = 'SLASH' | 'STAB' | 'BLOW' | 'NONE';
 export const DIRECT_TYPE_SLASH: DirectType = 'SLASH';
@@ -117,7 +128,11 @@ type CalcDirectAttack = (skill: Skill, attacker: Charactor) => number;
 const calcDirectAttack: CalcDirectAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
-  return ((physical.STR + physical.DEX) * magicRate) / 100;
+
+  const upRate = attacker.statuses.find(status => status.name === directAttackUp.name) ? 1.2 : 1;
+  const downRate = attacker.statuses.find(status => status.name === directAttackDown.name) ? 0.8 : 1;
+
+  return ((physical.STR + physical.DEX) * magicRate * upRate * downRate) / 100;
 };
 
 type CalcDirectDefence = (skill: Skill, defencer: Charactor) => number;
@@ -125,7 +140,11 @@ const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   const magicRegistance = calcMagicRegistance(skill, defencer);
   const directRegistance = calcDirectRegistance(skill, defencer);
-  return ((physical.VIT + physical.STR) * directRegistance * magicRegistance) / 100 / 100;
+
+  const upRate = defencer.statuses.find(status => status.name === directDiffenceUp.name) ? 1.2 : 1;
+  const downRate = defencer.statuses.find(status => status.name === directDiffenceDown.name) ? 0.8 : 1;
+
+  return ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
 };
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
@@ -154,7 +173,11 @@ type CalcMagicalAttack = (skill: Skill, attacker: Charactor) => number;
 const calcMagicalAttack: CalcMagicalAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
-  return ((physical.INT + physical.MND) * magicRate) / 100;
+
+  const upRate = attacker.statuses.find(status => status.name === magicAttackUp.name) ? 1.2 : 1;
+  const downRate = attacker.statuses.find(status => status.name === magicAttackDown.name) ? 0.8 : 1;
+
+  return ((physical.INT + physical.MND) * magicRate * upRate * downRate) / 100;
 };
 
 type CalcMagicalDefence = (skill: Skill, defencer: Charactor) => number;
@@ -162,7 +185,11 @@ const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   const magicRegistance = calcMagicRegistance(skill, defencer);
   const directRegistance = calcDirectRegistance(skill, defencer);
-  return ((physical.VIT + physical.MND) * directRegistance * magicRegistance) / 100 / 100;
+
+  const upRate = defencer.statuses.find(status => status.name === magicDiffenceUp.name) ? 1.2 : 1;
+  const downRate = defencer.statuses.find(status => status.name === magicDiffenceDown.name) ? 0.8 : 1;
+
+  return ((physical.VIT + physical.MND) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
 };
 
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
@@ -187,6 +214,12 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
   };
 };
 
+/* FIXME
+ * 命中率の概念が実装途中
+ * ボードゲームでやる以上、行動がキャンセルされる可能性があるのは戦略が練りづらくなる
+ * ゲームに実装しても問題なさそうではあるが、上記の事情もあり、実装の手間もありpending状態
+ * 命中率、回避率を操作するバフもあるので、命中率の概念がないと形骸化する点も留意。
+ */
 type CalcAttackAccuracy = (skill: Skill, attacker: Charactor) => number;
 const calcAttackAccuracy: CalcAttackAccuracy = (skill, attacker) => {
   const physical = getPhysical(attacker);
