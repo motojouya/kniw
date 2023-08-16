@@ -738,5 +738,11 @@ HP回復状態
   - restWtが一致している場合の優先度
     physicalの回避率的な数字を見てもいいかも。最終的にはhpが多い方とか
   - file_repository.createCopyの例外パターン列挙
+- ability実装
+  - mpGainPlus.ts
+  - rampartForce.ts
+    実装というよりステータスに表示したい
+  - shootingGuard.ts
 - 他acquirementの実装
+
 
