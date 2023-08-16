@@ -1,7 +1,6 @@
 import { Field } from 'src/domain/field';
 import { Randoms } from 'src/domain/random';
 import { Charactor, getPhysical } from 'src/domain/charactor';
-import type { Status } from 'src/domain/status';
 import {
   directAttackUp,
   directAttackDown,

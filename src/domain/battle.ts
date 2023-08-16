@@ -342,7 +342,7 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
 
   newCharactor.restWt = Math.max(newCharactor.restWt - wt, 0);
 
-  newCharactor.mp = newCharactor.mp + Math.floor(wt / 10);
+  newCharactor.mp += Math.floor(wt / 10);
   const physical = getPhysical(newCharactor);
   if (newCharactor.mp > physical.MaxMP) {
     newCharactor.mp = physical.MaxMP;
