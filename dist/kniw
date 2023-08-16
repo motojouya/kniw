@@ -28674,6 +28674,17 @@ const show = ({ notice }) => async (name) => {
     await notice(`  MND: ${physical.MND}`);
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
+    await notice(`  刺突耐性: ${physical.StabResistance}`);
+    await notice(`  斬撃耐性: ${physical.SlashResistance}`);
+    await notice(`  打撃耐性: ${physical.BlowResistance}`);
+    await notice(`  火属性: ${physical.FireSuitable}`);
+    await notice(`  岩属性: ${physical.RockSuitable}`);
+    await notice(`  水属性: ${physical.WaterSuitable}`);
+    await notice(`  氷属性: ${physical.IceSuitable}`);
+    await notice(`  風属性: ${physical.AirSuitable}`);
+    await notice(`  雷属性: ${physical.ThunderSuitable}`);
+    await notice(`  移動距離: ${physical.move}`);
+    await notice(`  移動高さ: ${physical.jump}`);
     await notice('アビリティ:');
     await blessing.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
     await notice('スキル:');
@@ -28857,6 +28868,17 @@ const showStatus = ({ notice }, repository) => async (name) => {
     await notice(`  MND: ${physical.MND}`);
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
+    await notice(`  刺突耐性: ${physical.StabResistance}`);
+    await notice(`  斬撃耐性: ${physical.SlashResistance}`);
+    await notice(`  打撃耐性: ${physical.BlowResistance}`);
+    await notice(`  火属性: ${physical.FireSuitable}`);
+    await notice(`  岩属性: ${physical.RockSuitable}`);
+    await notice(`  水属性: ${physical.WaterSuitable}`);
+    await notice(`  氷属性: ${physical.IceSuitable}`);
+    await notice(`  風属性: ${physical.AirSuitable}`);
+    await notice(`  雷属性: ${physical.ThunderSuitable}`);
+    await notice(`  移動距離: ${physical.move}`);
+    await notice(`  移動高さ: ${physical.jump}`);
     const abilities = (0, charactor_2.getAbilities)(characor);
     await notice('アビリティ:');
     await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
@@ -28911,6 +28933,17 @@ const show = ({ notice }) => async (name) => {
     await notice(`  MND: ${physical.MND}`);
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
+    await notice(`  刺突耐性: ${physical.StabResistance}`);
+    await notice(`  斬撃耐性: ${physical.SlashResistance}`);
+    await notice(`  打撃耐性: ${physical.BlowResistance}`);
+    await notice(`  火属性: ${physical.FireSuitable}`);
+    await notice(`  岩属性: ${physical.RockSuitable}`);
+    await notice(`  水属性: ${physical.WaterSuitable}`);
+    await notice(`  氷属性: ${physical.IceSuitable}`);
+    await notice(`  風属性: ${physical.AirSuitable}`);
+    await notice(`  雷属性: ${physical.ThunderSuitable}`);
+    await notice(`  移動距離: ${physical.move}`);
+    await notice(`  移動高さ: ${physical.jump}`);
     await notice('アビリティ:');
     await clothing.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
     await notice('スキル:');
@@ -29211,6 +29244,17 @@ const show = ({ notice }) => async (name) => {
     await notice(`  MND: ${physical.MND}`);
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
+    await notice(`  刺突耐性: ${physical.StabResistance}`);
+    await notice(`  斬撃耐性: ${physical.SlashResistance}`);
+    await notice(`  打撃耐性: ${physical.BlowResistance}`);
+    await notice(`  火属性: ${physical.FireSuitable}`);
+    await notice(`  岩属性: ${physical.RockSuitable}`);
+    await notice(`  水属性: ${physical.WaterSuitable}`);
+    await notice(`  氷属性: ${physical.IceSuitable}`);
+    await notice(`  風属性: ${physical.AirSuitable}`);
+    await notice(`  雷属性: ${physical.ThunderSuitable}`);
+    await notice(`  移動距離: ${physical.move}`);
+    await notice(`  移動高さ: ${physical.jump}`);
     await notice('アビリティ:');
     await race.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
     await notice('スキル:');
@@ -29253,11 +29297,17 @@ const show = ({ notice }) => async (name) => {
     await notice(`スキル名: ${skill.label}`);
     if (skill.type === 'SKILL_TO_CHARACTOR') {
         await notice(`効果対象: キャラクター(最大${skill.receiverCount}体)`);
+        await notice(`基本ダメージ: ${skill.baseDamage}`);
     }
     else {
         await notice(`効果対象: フィールド`);
     }
     await notice(`加算WT: ${skill.additionalWt}`);
+    await notice(`物理属性: ${skill.directType}`);
+    await notice(`魔法属性: ${skill.magicType}`);
+    await notice(`消費MP: ${skill.mpConsumption}`);
+    await notice(`追加WT: ${skill.additionalWt}`);
+    await notice(`効果距離: ${skill.effectLength}`);
     await notice(`説明: ${skill.description}`);
 };
 exports.show = show;
@@ -29307,6 +29357,17 @@ const show = ({ notice }) => async (name) => {
     await notice(`  MND: ${physical.MND}`);
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
+    await notice(`  刺突耐性: ${physical.StabResistance}`);
+    await notice(`  斬撃耐性: ${physical.SlashResistance}`);
+    await notice(`  打撃耐性: ${physical.BlowResistance}`);
+    await notice(`  火属性: ${physical.FireSuitable}`);
+    await notice(`  岩属性: ${physical.RockSuitable}`);
+    await notice(`  水属性: ${physical.WaterSuitable}`);
+    await notice(`  氷属性: ${physical.IceSuitable}`);
+    await notice(`  風属性: ${physical.AirSuitable}`);
+    await notice(`  雷属性: ${physical.ThunderSuitable}`);
+    await notice(`  移動距離: ${physical.move}`);
+    await notice(`  移動高さ: ${physical.jump}`);
     await notice('アビリティ:');
     await weapon.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
     await notice('スキル:');
@@ -29690,7 +29751,7 @@ exports.mpGainPlus = void 0;
 const charactor_1 = __webpack_require__(657);
 /* eslint-disable */
 const wait = (wt, charactor, randoms) => {
-    const turnAdd = wt;
+    const turnAdd = Math.floor(wt / 20);
     let randomAdd = Math.ceil(randoms.damage * 5);
     if (turnAdd < randomAdd) {
         randomAdd = 0;
@@ -29783,6 +29844,8 @@ exports.earth = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.earth, {
@@ -29852,6 +29915,8 @@ exports.mind = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.mind, {
@@ -29902,6 +29967,8 @@ exports.sea = {
         IceSuitable: 10,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.sea, {
@@ -29952,6 +30019,8 @@ exports.sky = {
         IceSuitable: 0,
         AirSuitable: 10,
         ThunderSuitable: 10,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.sky, {
@@ -30003,6 +30072,8 @@ exports.bishopRobe = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.bishopRobe, {
@@ -30055,6 +30126,8 @@ exports.blueRobe = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.blueRobe, {
@@ -30105,6 +30178,8 @@ exports.chainMail = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 1,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.chainMail, {
@@ -30156,6 +30231,8 @@ exports.furAironArmor = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.furAironArmor, {
@@ -30207,6 +30284,8 @@ exports.furArmor = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.furArmor, {
@@ -30259,6 +30338,8 @@ exports.greenRobe = {
         IceSuitable: 0,
         AirSuitable: 10,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.greenRobe, {
@@ -30341,6 +30422,8 @@ exports.mithrilArmor = {
         IceSuitable: 10,
         AirSuitable: 10,
         ThunderSuitable: 10,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.mithrilArmor, {
@@ -30393,6 +30476,8 @@ exports.redRobe = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.redRobe, {
@@ -30443,6 +30528,8 @@ exports.soldierUniform = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 1,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.soldierUniform, {
@@ -30494,6 +30581,8 @@ exports.steelArmor = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.steelArmor, {
@@ -30544,6 +30633,8 @@ exports.fairy = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.fairy, {
@@ -30594,6 +30685,8 @@ exports.golem = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.golem, {
@@ -30644,6 +30737,8 @@ exports.hawkman = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.hawkman, {
@@ -30694,6 +30789,8 @@ exports.human = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.human, {
@@ -30769,6 +30866,8 @@ exports.lizardman = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.lizardman, {
@@ -30819,6 +30918,8 @@ exports.merman = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.merman, {
@@ -30869,6 +30970,8 @@ exports.werewolf = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.werewolf, {
@@ -30922,6 +31025,8 @@ exports.emeraldRod = {
         IceSuitable: 0,
         AirSuitable: 10,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.emeraldRod, {
@@ -30976,6 +31081,8 @@ exports.emeraldSaber = {
         IceSuitable: 0,
         AirSuitable: 10,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.emeraldSaber, {
@@ -31063,6 +31170,8 @@ exports.morningStar = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.morningStar, {
@@ -31117,6 +31226,8 @@ exports.rapier = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.rapier, {
@@ -31170,6 +31281,8 @@ exports.rubyRod = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.rubyRod, {
@@ -31224,6 +31337,8 @@ exports.rubySaber = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.rubySaber, {
@@ -31277,6 +31392,8 @@ exports.samuraiBow = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.samuraiBow, {
@@ -31331,6 +31448,8 @@ exports.samuraiSword = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.samuraiSword, {
@@ -31384,6 +31503,8 @@ exports.sapphireRod = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.sapphireRod, {
@@ -31438,6 +31559,8 @@ exports.sapphireSaber = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.sapphireSaber, {
@@ -31493,6 +31616,8 @@ exports.swordAndShield = {
         IceSuitable: 0,
         AirSuitable: 0,
         ThunderSuitable: 0,
+        move: 0,
+        jump: 0,
     },
     validateWearable: (race, blessing, clothing, weapon) => {
         const validate = (0, acquirement_1.createValidateWearable)(exports.swordAndShield, {
@@ -31528,6 +31653,7 @@ exports.blindBull = {
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '刺突における強攻撃',
 };
@@ -31554,6 +31680,7 @@ exports.blow = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '打撃攻撃',
 };
@@ -31580,6 +31707,7 @@ exports.chop = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '斬りつける',
 };
@@ -31606,6 +31734,7 @@ exports.clearCloud = {
     mpConsumption: 15,
     receiverCount: 0,
     additionalWt: 100,
+    effectLength: 0,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '天候操作。晴れにする',
 };
@@ -31632,6 +31761,7 @@ exports.coldFeet = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '対象の回避率をあげる',
 };
@@ -31658,6 +31788,7 @@ exports.concentration = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '対象の攻撃命中率をあげる',
 };
@@ -31684,6 +31815,7 @@ exports.crossFire = {
     mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '火の範囲魔法',
 };
@@ -31710,6 +31842,7 @@ exports.danceLeaves = {
     mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '風の範囲魔法',
 };
@@ -31736,6 +31869,7 @@ exports.dazzle = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '対象の攻撃命中率を下げる',
 };
@@ -31762,6 +31896,7 @@ exports.downRushing = {
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '水の強魔法',
 };
@@ -31788,6 +31923,7 @@ exports.fireWall = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '魔法防御up',
 };
@@ -31814,6 +31950,7 @@ exports.flameDigger = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '魔法防御down',
 };
@@ -31840,6 +31977,7 @@ exports.flameFall = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '基本魔法',
 };
@@ -31866,6 +32004,7 @@ exports.flashFlood = {
     mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '水の範囲魔法',
 };
@@ -31892,6 +32031,7 @@ exports.ghostFire = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '恐怖の付与',
 };
@@ -31918,6 +32058,7 @@ exports.gravelWall = {
     mpConsumption: 30,
     receiverCount: 4,
     additionalWt: 150,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '打撃の範囲攻撃',
 };
@@ -31944,6 +32085,7 @@ exports.guillotineOfGiant = {
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '斬撃の強攻撃',
 };
@@ -31970,6 +32112,7 @@ exports.gunWater = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '水の基本魔法',
 };
@@ -31985,17 +32128,19 @@ exports.gunWater = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.hardRain = void 0;
 const skill_1 = __webpack_require__(8841);
+const shot_1 = __webpack_require__(2350);
 exports.hardRain = {
     name: 'hardRain',
     label: '堅い雨',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: shot_1.shotAction,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 150,
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '弓矢の強攻撃',
 };
@@ -32022,6 +32167,7 @@ exports.heavyWind = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '眠りの付与',
 };
@@ -32131,6 +32277,7 @@ exports.lightMeteor = {
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '',
 };
@@ -32146,17 +32293,19 @@ exports.lightMeteor = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.multiShot = void 0;
 const skill_1 = __webpack_require__(8841);
+const shot_1 = __webpack_require__(2350);
 exports.multiShot = {
     name: 'multiShot',
     label: '複数射撃',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: shot_1.shotAction,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 90,
     mpConsumption: 30,
     receiverCount: 5,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '弓矢の範囲攻撃',
 };
@@ -32183,6 +32332,7 @@ exports.overbear = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '対象の回避率を下げる',
 };
@@ -32209,6 +32359,7 @@ exports.pitch = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '投げる',
 };
@@ -32235,6 +32386,7 @@ exports.push = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '盾の基本攻撃',
 };
@@ -32261,6 +32413,7 @@ exports.quench = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '回復',
 };
@@ -32287,6 +32440,7 @@ exports.quick = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: 'クイック状態の付与',
 };
@@ -32313,6 +32467,7 @@ exports.saturnRing = {
     mpConsumption: 30,
     receiverCount: 4,
     additionalWt: 150,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '刺突の範囲攻撃',
 };
@@ -32326,19 +32481,30 @@ exports.saturnRing = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.shot = void 0;
+exports.shot = exports.shotAction = void 0;
+const charactor_1 = __webpack_require__(657);
 const skill_1 = __webpack_require__(8841);
+const shootingGuard_1 = __webpack_require__(7775);
+const shotAction = (self, actor, randoms, field, receiver) => {
+    const abilities = (0, charactor_1.getAbilities)(receiver);
+    if (abilities.find(ability => ability.name === shootingGuard_1.shootingGuard.name)) {
+        return Object.assign({}, receiver);
+    }
+    return (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
+};
+exports.shotAction = shotAction;
 exports.shot = {
     name: 'shot',
     label: '射る',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: exports.shotAction,
     directType: skill_1.DIRECT_TYPE_STAB,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 90,
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '弓矢の基本攻撃',
 };
@@ -32365,6 +32531,7 @@ exports.smallHeat = {
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '火の強魔法',
 };
@@ -32391,6 +32558,7 @@ exports.stab = {
     mpConsumption: 10,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '刺突の基本攻撃',
 };
@@ -32417,6 +32585,7 @@ exports.stickyRain = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '物理攻撃down',
 };
@@ -32443,6 +32612,7 @@ exports.swordDance = {
     mpConsumption: 30,
     receiverCount: 4,
     additionalWt: 150,
+    effectLength: 1,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '斬撃の範囲攻撃',
 };
@@ -32469,6 +32639,7 @@ exports.tornade = {
     mpConsumption: 30,
     receiverCount: 1,
     additionalWt: 150,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '風の強魔法',
 };
@@ -32495,6 +32666,7 @@ exports.waterCutter = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '物理攻撃up',
 };
@@ -32521,6 +32693,7 @@ exports.windEdge = {
     mpConsumption: 15,
     receiverCount: 1,
     additionalWt: 100,
+    effectLength: 5,
     getAccuracy: skill_1.calcOrdinaryAccuracy,
     description: '風の基本魔法',
 };
@@ -33069,8 +33242,11 @@ const sortByWT = charactors => charactors.sort((left, right) => {
     if (mpDiff !== 0) {
         return mpDiff;
     }
-    // TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
-    // 最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
+    const statusDiff = left.statuses.length - right.statuses.length;
+    if (statusDiff !== 0) {
+        return statusDiff;
+    }
+    // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
     return 0;
 });
 const createBattle = (title, home, visitor) => {
@@ -33308,6 +33484,8 @@ const basePhysical = {
     IceSuitable: 0,
     AirSuitable: 0,
     ThunderSuitable: 0,
+    move: 4,
+    jump: 3,
 };
 exports.charactorSchema = {
     type: 'object',
@@ -33617,8 +33795,6 @@ exports.createParty = createParty;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.addPhysicals = void 0;
-// TODO 移動範囲、移動高さの概念を追加したい。コード上は関係ないがゲーム時に任意で参照する。
-// Acquirementでは、追加補正でこの辺りがあって欲しい
 const zeroPhysical = {
     MaxHP: 0,
     MaxMP: 0,
@@ -33640,6 +33816,8 @@ const zeroPhysical = {
     IceSuitable: 0,
     AirSuitable: 0,
     ThunderSuitable: 0,
+    move: 0,
+    jump: 0,
 };
 const addPhysical = (left, right) => ({
     MaxHP: left.MaxHP + right.MaxHP,
@@ -33662,6 +33840,8 @@ const addPhysical = (left, right) => ({
     IceSuitable: left.IceSuitable + right.IceSuitable,
     AirSuitable: left.AirSuitable + right.AirSuitable,
     ThunderSuitable: left.ThunderSuitable + right.ThunderSuitable,
+    move: left.move + right.move,
+    jump: left.jump + right.jump,
 });
 const addPhysicals = physicals => physicals.reduce((acc, item) => addPhysical(acc, item), zeroPhysical);
 exports.addPhysicals = addPhysicals;
@@ -34075,9 +34255,13 @@ const toTurn = turnJson => {
         console.debug(errors);
         return new store_1.JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
     }
-    // TODO try catch
-    // const datetime = new Date(Date.parse(turnJson.datetime));
-    const datetime = (0, date_fns_1.parse)(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+    let datetime = null;
+    try {
+        datetime = (0, date_fns_1.parse)(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+    }
+    catch (e) {
+        return new store_1.JsonSchemaUnmatchError(e, '日付が間違っています');
+    }
     const action = (0, exports.toAction)(turnJson.action);
     if (action instanceof acquirement_1.NotWearableErorr ||
         action instanceof store_1.DataNotFoundError ||
@@ -34192,7 +34376,8 @@ const createRemove = basePath => async (namespace, objctKey) => {
         }
     }
 };
-// TODO エラーが粗いので細かくしたい
+// FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
+// ただし、fsのエラーメッセージが一緒なら意味がない
 const createCopy = basePath => async (namespace, objctKey, fileName) => {
     try {
         await fs_1.default.promises.copyFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), fileName, fs_1.default.constants.COPYFILE_EXCL);

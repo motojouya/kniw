@@ -13,13 +13,13 @@ export const show: Show =
     await notice(`スキル名: ${skill.label}`);
     if (skill.type === 'SKILL_TO_CHARACTOR') {
       await notice(`効果対象: キャラクター(最大${skill.receiverCount}体)`);
+      await notice(`基本ダメージ: ${skill.baseDamage}`);
     } else {
       await notice(`効果対象: フィールド`);
     }
     await notice(`加算WT: ${skill.additionalWt}`);
     await notice(`物理属性: ${skill.directType}`);
     await notice(`魔法属性: ${skill.magicType}`);
-    await notice(`基本ダメージ: ${skill.baseDamage}`);
     await notice(`消費MP: ${skill.mpConsumption}`);
     await notice(`追加WT: ${skill.additionalWt}`);
     await notice(`効果距離: ${skill.effectLength}`);

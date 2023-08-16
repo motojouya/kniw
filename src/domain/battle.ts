@@ -143,7 +143,7 @@ const sortByWT: SortByWT = charactors =>
     if (mpDiff !== 0) {
       return mpDiff;
     }
-    const statusDiff = left.statuses.length - right.statuses.length
+    const statusDiff = left.statuses.length - right.statuses.length;
     if (statusDiff !== 0) {
       return statusDiff;
     }
