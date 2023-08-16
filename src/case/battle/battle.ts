@@ -49,7 +49,9 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
   /* eslint-disable no-await-in-loop */
   for (;;) {
     const skills = getSkills(actor);
-    const skillOptions = skills.map(skill => ({ value: skill.name, label: skill.name }));
+    const skillOptions = skills
+      .filter(skill => skill.mpConsumption <= actor.mp)
+      .map(skill => ({ value: skill.name, label: skill.name }));
     skillOptions.push({ value: BACK, label: '戻る' });
     const selectedName = await dialogue.select('Skillを選んでください', skillOptions);
     if (selectedName instanceof NotApplicable || selectedName === BACK) {

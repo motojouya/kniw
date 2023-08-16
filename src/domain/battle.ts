@@ -14,7 +14,6 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
-// TODO util?
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
 export type GameResult = 'ONGOING' | 'HOME' | 'VISITOR' | 'DRAW';
@@ -190,7 +189,6 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
   return charactor;
 };
 
-// TODO mp消費の概念が実装されてない
 export type ActToCharactor = (
   battle: Battle,
   actor: Charactor,
@@ -202,6 +200,10 @@ export type ActToCharactor = (
 export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
   if (skill.type === 'SKILL_TO_FIELD') {
     throw new Error('invalid skill type');
+  }
+
+  if (skill.mpConsumption > actor.mp) {
+    throw new Error('mp shortage');
   }
 
   const lastTurn = arrayLast(battle.turns);
@@ -221,9 +223,13 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = { ...charactor };
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
+      newCharactor.mp -= skill.mpConsumption;
     }
     return newCharactor;
   });
@@ -236,6 +242,10 @@ export type ActToField = (battle: Battle, actor: Charactor, skill: Skill, dateti
 export const actToField: ActToField = (battle, actor, skill, datetime, randoms) => {
   if (skill.type === 'SKILL_TO_CHARACTOR') {
     throw new Error('invalid skill type');
+  }
+
+  if (skill.mpConsumption > actor.mp) {
+    throw new Error('mp shortage');
   }
 
   const lastTurn = arrayLast(battle.turns);
@@ -254,9 +264,13 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
   newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = { ...charactor };
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
+      newCharactor.mp -= skill.mpConsumption;
     }
     return newCharactor;
   });
@@ -279,7 +293,10 @@ export const stay: Stay = (battle, actor, datetime) => {
   };
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = { ...charactor };
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT;
     }
@@ -324,12 +341,16 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
     .filter(status => status.restWt > 0);
 
   newCharactor.restWt = Math.max(newCharactor.restWt - wt, 0);
+
+  newCharactor.mp += Math.floor(wt / 10);
+  const physical = getPhysical(newCharactor);
+  if (newCharactor.mp > physical.MaxMP) {
+    newCharactor.mp = physical.MaxMP;
+  }
+
   return newCharactor;
 };
 
-// ターン経過による状態変化を起こす関数
-// これの実装はabilityかあるいはstatusに持たせたほうがいいか。体力の回復とかステータス異常の回復とかなので
-// TODO mp回復の概念が実装されてない。ターン経過ごとにMPが回復しないといつまでも0のまま
 export type Wait = (battle: Battle, wt: number, datetime: Date, randoms: Randoms) => Turn;
 export const wait: Wait = (battle, wt, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);

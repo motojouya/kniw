@@ -12,8 +12,8 @@ import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
 const basePhysical: Physical = {
-  MaxHP: 100,
-  MaxMP: 100,
+  MaxHP: 300,
+  MaxMP: 200,
   STR: 100,
   VIT: 100,
   DEX: 100,

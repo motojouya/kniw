@@ -13,9 +13,9 @@ export const rapier: Weapon = {
   additionalPhysical: {
     MaxHP: 0,
     MaxMP: 0,
-    STR: 20,
-    VIT: 10,
-    DEX: 0,
+    STR: 0,
+    VIT: 0,
+    DEX: 30,
     AGI: 0,
     AVD: 0,
     INT: 0,

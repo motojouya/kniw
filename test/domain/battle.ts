@@ -38,15 +38,15 @@ const testData = {
   home: {
     name: 'home',
     charactors: [
-      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 100, restWt: 120, isVisitor: false },
+      { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 100, restWt: 115, isVisitor: false },
     ],
   },
   visitor: {
     name: 'visitor',
     charactors: [
-      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 100, restWt: 130, isVisitor: true },
+      { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 100, restWt: 110, isVisitor: true },
     ],
   },
   turns: [
@@ -57,10 +57,10 @@ const testData = {
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
-        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 100, restWt: 120, isVisitor: false },
+        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 100, restWt: 115, isVisitor: false },
+        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 100, restWt: 130, isVisitor: true },
+        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 100, restWt: 110, isVisitor: true },
       ],
       field: {
         climate: 'SUNNY',
@@ -164,12 +164,12 @@ describe('Battle#act', function () {
     assert.equal(turn.sortedCharactors[1].name, 'sara');
 
     assert.equal(turn.sortedCharactors[2].name, 'john');
-    assert.equal(turn.sortedCharactors[2].hp, 99);
+    assert.equal(turn.sortedCharactors[2].hp, 54);
     assert.equal(turn.sortedCharactors[2].restWt, 130);
 
     assert.equal(turn.sortedCharactors[3].name, 'sam');
     assert.equal(turn.sortedCharactors[3].hp, 100);
-    assert.equal(turn.sortedCharactors[3].restWt, 220);
+    assert.equal(turn.sortedCharactors[3].restWt, 240);
   });
 });
 
@@ -191,8 +191,8 @@ describe('Battle#stay', function () {
     assert.equal(turn.sortedCharactors.length, 4);
     assert.equal(turn.sortedCharactors[0].name, 'noa');
     assert.equal(turn.sortedCharactors[1].name, 'sara');
-    assert.equal(turn.sortedCharactors[2].name, 'sam');
-    assert.equal(turn.sortedCharactors[3].name, 'john');
+    assert.equal(turn.sortedCharactors[2].name, 'john');
+    assert.equal(turn.sortedCharactors[3].name, 'sam');
   });
 });
 
