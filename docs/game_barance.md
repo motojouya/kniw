@@ -744,5 +744,6 @@ HP回復状態
     実装というよりステータスに表示したい
   - shootingGuard.ts
 - 他acquirementの実装
+- statusの効果の実装
 
 
