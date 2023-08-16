@@ -31,6 +31,8 @@ export const emeraldSaber: Weapon = {
     IceSuitable: 0,
     AirSuitable: 10,
     ThunderSuitable: 0,
+    move: 0,
+    jump: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(emeraldSaber, {

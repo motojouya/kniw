@@ -12,6 +12,7 @@ export const smallHeat: Skill = {
   mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 150,
+  effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
   description: '火の強魔法',
 };

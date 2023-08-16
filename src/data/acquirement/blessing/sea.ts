@@ -27,6 +27,8 @@ export const sea: Blessing = {
     IceSuitable: 10,
     AirSuitable: 0,
     ThunderSuitable: 0,
+    move: 0,
+    jump: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(sea, {

@@ -32,6 +32,8 @@ const basePhysical: Physical = {
   IceSuitable: 0,
   AirSuitable: 0,
   ThunderSuitable: 0,
+  move: 4,
+  jump: 3,
 };
 
 export type Charactor = {

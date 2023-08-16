@@ -49,6 +49,7 @@ export type SkillToCharactor = {
   mpConsumption: number;
   receiverCount: number;
   additionalWt: number;
+  effectLength: number;
   getAccuracy: GetAccuracy;
   description: string;
 };
@@ -63,6 +64,7 @@ export type SkillToField = {
   mpConsumption: number;
   receiverCount: 0;
   additionalWt: number;
+  effectLength: number;
   getAccuracy: GetAccuracy;
   description: string;
 };

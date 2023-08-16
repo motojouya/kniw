@@ -14,6 +14,8 @@ const climateParcent: ClimateParcent[] = [
   { name: 'SNOW', parcent: 10 },
 ];
 
+// FIXME 天候をかえるすべはあれど、天候の効果が実装されていない状態
+// ゲーム上で既にいろいろな変数があるので、バランス見て実装していく
 export type ChangeClimate = (randoms: Randoms) => Climate;
 export const changeClimate: ChangeClimate = randoms => {
   const validateResult = validateRandoms(randoms);

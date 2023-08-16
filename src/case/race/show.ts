@@ -25,6 +25,17 @@ export const show: Show =
     await notice(`  MND: ${physical.MND}`);
     await notice(`  RES: ${physical.RES}`);
     await notice(`  WT: ${physical.WT}`);
+    await notice(`  刺突耐性: ${physical.StabResistance}`);
+    await notice(`  斬撃耐性: ${physical.SlashResistance}`);
+    await notice(`  打撃耐性: ${physical.BlowResistance}`);
+    await notice(`  火属性: ${physical.FireSuitable}`);
+    await notice(`  岩属性: ${physical.RockSuitable}`);
+    await notice(`  水属性: ${physical.WaterSuitable}`);
+    await notice(`  氷属性: ${physical.IceSuitable}`);
+    await notice(`  風属性: ${physical.AirSuitable}`);
+    await notice(`  雷属性: ${physical.ThunderSuitable}`);
+    await notice(`  移動距離: ${physical.move}`);
+    await notice(`  移動高さ: ${physical.jump}`);
 
     await notice('アビリティ:');
     await race.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());

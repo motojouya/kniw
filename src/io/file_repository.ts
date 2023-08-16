@@ -112,7 +112,8 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   }
 };
 
-// TODO エラーが粗いので細かくしたい
+// FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
+// ただし、fsのエラーメッセージが一緒なら意味がない
 const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
   try {
     await fs.promises.copyFile(

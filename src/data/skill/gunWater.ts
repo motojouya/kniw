@@ -12,6 +12,7 @@ export const gunWater: Skill = {
   mpConsumption: 15,
   receiverCount: 1,
   additionalWt: 100,
+  effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
   description: '水の基本魔法',
 };

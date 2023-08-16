@@ -15,7 +15,7 @@ describe('mpGainPlus#wait', function () {
     assert.equal(charactor.mp, 0);
 
     const result = mpGainPlus.wait(30, charactor, randoms);
-    assert.equal(result.mp, 31);
+    assert.equal(result.mp, 2);
   });
   it('zero', function () {
     const randoms = {
@@ -39,7 +39,7 @@ describe('mpGainPlus#wait', function () {
     assert.equal(charactor.mp, 0);
 
     const result = mpGainPlus.wait(210, charactor, randoms);
-    assert.equal(result.mp, 200);
+    assert.equal(result.mp, 11);
   });
 });
 

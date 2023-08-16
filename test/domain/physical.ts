@@ -25,6 +25,8 @@ const basePhysical: Physical = {
   IceSuitable: 0,
   AirSuitable: 0,
   ThunderSuitable: 0,
+  move: 4,
+  jump: 3,
 };
 
 describe('Physical#addPhysicals', function () {
@@ -52,6 +54,8 @@ describe('Physical#addPhysicals', function () {
         IceSuitable: 10,
         AirSuitable: 10,
         ThunderSuitable: 10,
+        move: 1,
+        jump: 1,
       },
       {
         MaxHP: 1,
@@ -74,6 +78,8 @@ describe('Physical#addPhysicals', function () {
         IceSuitable: 1,
         AirSuitable: 1,
         ThunderSuitable: 1,
+        move: 2,
+        jump: 2,
       },
     ]);
 
@@ -97,6 +103,8 @@ describe('Physical#addPhysicals', function () {
     assert.equal(result.IceSuitable, 11);
     assert.equal(result.AirSuitable, 11);
     assert.equal(result.ThunderSuitable, 11);
+    assert.equal(result.move, 7);
+    assert.equal(result.jump, 6);
   });
 
   it('minus', function () {
@@ -123,6 +131,8 @@ describe('Physical#addPhysicals', function () {
         IceSuitable: 10,
         AirSuitable: 10,
         ThunderSuitable: 10,
+        move: 1,
+        jump: 1,
       },
       {
         MaxHP: 1,
@@ -145,6 +155,8 @@ describe('Physical#addPhysicals', function () {
         IceSuitable: -1,
         AirSuitable: -1,
         ThunderSuitable: -1,
+        move: -1,
+        jump: -1,
       },
     ]);
 
@@ -168,6 +180,8 @@ describe('Physical#addPhysicals', function () {
     assert.equal(result.IceSuitable, 9);
     assert.equal(result.AirSuitable, 9);
     assert.equal(result.ThunderSuitable, 9);
+    assert.equal(result.move, 4);
+    assert.equal(result.jump, 3);
   });
 });
 

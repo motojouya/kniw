@@ -27,6 +27,8 @@ export const soldierUniform: Clothing = {
     IceSuitable: 0,
     AirSuitable: 0,
     ThunderSuitable: 0,
+    move: 1,
+    jump: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(soldierUniform, {

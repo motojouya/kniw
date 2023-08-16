@@ -12,6 +12,7 @@ export const stab: Skill = {
   mpConsumption: 10,
   receiverCount: 1,
   additionalWt: 100,
+  effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
   description: '刺突の基本攻撃',
 };

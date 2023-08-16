@@ -143,8 +143,11 @@ const sortByWT: SortByWT = charactors =>
     if (mpDiff !== 0) {
       return mpDiff;
     }
-    // TODO restWtが一致しているケースにどういう判断でsort順を決めるか。
-    // 最終的にランダム、あるいはホーム側が有利になってもいいが、パラメータとか見てなるべく一貫性のあるものにしたい
+    const statusDiff = left.statuses.length - right.statuses.length;
+    if (statusDiff !== 0) {
+      return statusDiff;
+    }
+    // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
     return 0;
   });
 

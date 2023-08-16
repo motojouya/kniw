@@ -30,6 +30,8 @@ export const sapphireRod: Weapon = {
     IceSuitable: 0,
     AirSuitable: 0,
     ThunderSuitable: 0,
+    move: 0,
+    jump: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(sapphireRod, {

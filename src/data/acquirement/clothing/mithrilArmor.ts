@@ -28,6 +28,8 @@ export const mithrilArmor: Clothing = {
     IceSuitable: 10,
     AirSuitable: 10,
     ThunderSuitable: 10,
+    move: 0,
+    jump: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(mithrilArmor, {

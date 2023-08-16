@@ -733,12 +733,12 @@ HP回復状態
 - mp消費とmp回復の実装 done
 - バフ、デバフのダメージ効果実装 -> それぞれ1.2倍とか0.8倍とかでいいと思う done
 - その他TODO潰し
-  - 日付の例外処理
-  - 移動、技範囲などフィールド上で管理する数字の表示
-  - restWtが一致している場合の優先度
-    physicalの回避率的な数字を見てもいいかも。最終的にはhpが多い方とか
-  - file_repository.createCopyの例外パターン列挙
-- ability実装
+  - 日付の例外処理 done
+  - 移動、技範囲などフィールド上で管理する数字の表示 done
+  - restWtが一致している場合の優先度 done
+    physicalの回避率的な数字を見てもいいかも。最終的にはhpが多い方とか done
+  - file_repository.createCopyの例外パターン列挙 pending
+- ability実装 done
   - mpGainPlus.ts
   - rampartForce.ts
     実装というよりステータスに表示したい

@@ -12,6 +12,7 @@ export const heavyWind: Skill = {
   mpConsumption: 15,
   receiverCount: 1,
   additionalWt: 100,
+  effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
   description: '眠りの付与',
 };

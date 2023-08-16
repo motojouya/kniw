@@ -245,9 +245,12 @@ export const toTurn: ToTurn = turnJson => {
     return new JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
   }
 
-  // TODO try catch
-  // const datetime = new Date(Date.parse(turnJson.datetime));
-  const datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+  let datetime = null;
+  try {
+    datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+  } catch (e) {
+    return new JsonSchemaUnmatchError(e, '日付が間違っています');
+  }
 
   const action = toAction(turnJson.action);
   if (
