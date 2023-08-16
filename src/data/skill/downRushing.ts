@@ -12,6 +12,7 @@ export const downRushing: Skill = {
   mpConsumption: 30,
   receiverCount: 1,
   additionalWt: 150,
+  effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
   description: '水の強魔法',
 };

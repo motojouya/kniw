@@ -12,6 +12,7 @@ export const gravelWall: Skill = {
   mpConsumption: 30,
   receiverCount: 4,
   additionalWt: 150,
+  effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
   description: '打撃の範囲攻撃',
 };

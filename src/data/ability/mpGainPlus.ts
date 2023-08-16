@@ -3,7 +3,7 @@ import { getPhysical } from 'src/domain/charactor';
 
 /* eslint-disable */
 const wait: Wait = (wt, charactor, randoms) => {
-  const turnAdd = wt;
+  const turnAdd = Math.floor(wt / 20);
   let randomAdd = Math.ceil(randoms.damage * 5);
   if (turnAdd < randomAdd) {
     randomAdd = 0;

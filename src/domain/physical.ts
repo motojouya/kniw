@@ -19,9 +19,9 @@ export type Physical = {
   IceSuitable: number;
   AirSuitable: number;
   ThunderSuitable: number;
+  move: number;
+  jump: number;
 };
-// TODO 移動範囲、移動高さの概念を追加したい。コード上は関係ないがゲーム時に任意で参照する。
-// Acquirementでは、追加補正でこの辺りがあって欲しい
 
 const zeroPhysical: Physical = {
   MaxHP: 0,
@@ -44,6 +44,8 @@ const zeroPhysical: Physical = {
   IceSuitable: 0,
   AirSuitable: 0,
   ThunderSuitable: 0,
+  move: 0,
+  jump: 0,
 };
 
 type AddPhysical = (left: Physical, right: Physical) => Physical;
@@ -68,6 +70,8 @@ const addPhysical: AddPhysical = (left, right) => ({
   IceSuitable: left.IceSuitable + right.IceSuitable,
   AirSuitable: left.AirSuitable + right.AirSuitable,
   ThunderSuitable: left.ThunderSuitable + right.ThunderSuitable,
+  move: left.move + right.move,
+  jump: left.jump + right.jump,
 });
 
 export type AddPhysicals = (physicals: Physical[]) => Physical;

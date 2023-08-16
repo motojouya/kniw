@@ -16,6 +16,7 @@ export const clearCloud: Skill = {
   mpConsumption: 15,
   receiverCount: 0,
   additionalWt: 100,
+  effectLength: 0,
   getAccuracy: calcOrdinaryAccuracy,
   description: '天候操作。晴れにする',
 };

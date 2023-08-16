@@ -12,6 +12,7 @@ export const push: Skill = {
   mpConsumption: 10,
   receiverCount: 1,
   additionalWt: 100,
+  effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
   description: '盾の基本攻撃',
 };

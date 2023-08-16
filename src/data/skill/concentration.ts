@@ -12,6 +12,7 @@ export const concentration: Skill = {
   mpConsumption: 10,
   receiverCount: 1,
   additionalWt: 100,
+  effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
   description: '対象の攻撃命中率をあげる',
 };
