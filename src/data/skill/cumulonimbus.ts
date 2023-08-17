@@ -1,17 +1,22 @@
-import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from 'src/domain/skill';
+import type { Skill, ActionToField } from 'src/domain/skill';
+import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from 'src/domain/skill';
+
+const changeClimate: ActionToField = (self, actor, randoms, field) => ({
+  ...field,
+  climate: 'RAIN',
+});
 
 export const cumulonimbus: Skill = {
   name: 'cumulonimbus',
   label: '雨乞い',
   type: 'SKILL_TO_FIELD',
-  action: calcOrdinaryMagicalDamage,
+  action: changeClimate,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ICE,
   mpConsumption: 15,
   receiverCount: 0,
   additionalWt: 100,
-  effectLength: 5,
+  effectLength: 0,
   getAccuracy: calcOrdinaryAccuracy,
   description: '天候を雨に',
 };

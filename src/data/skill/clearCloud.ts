@@ -3,7 +3,7 @@ import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from 'src/dom
 
 const changeClimate: ActionToField = (self, actor, randoms, field) => ({
   ...field,
-  climate: 'RAIN',
+  climate: 'SUNNY',
 });
 
 export const clearCloud: Skill = {

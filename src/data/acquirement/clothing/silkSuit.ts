@@ -31,7 +31,7 @@ export const silkSuit: Clothing = {
     jump: 0,
   },
   validateWearable: (race, blessing, clothing, weapon) => {
-    const validate = createValidateWearable(soldierUniform, {
+    const validate = createValidateWearable(silkSuit, {
       wearableRaces: [],
       wearableBlessings: [],
       wearableClothings: [],
@@ -39,5 +39,5 @@ export const silkSuit: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '軍人の制服。動きやすい',
+  description: 'シルクの衣',
 };
