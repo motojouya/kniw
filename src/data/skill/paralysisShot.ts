@@ -1,0 +1,27 @@
+import type { Skill, ActionToCharactor } from 'src/domain/skill';
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { paralysis } from 'src/data/status/paralysis';
+
+export const paralysisAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
+  const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
+  if (!newReceiver.statuses.find(status => status.name === paralysis.name)) {
+    newReceiver.statuses.push(paralysis);
+  }
+  return newReceiver;
+};
+
+export const paralysisShot: Skill = {
+  name: 'paralysisShot',
+  label: '神経の矢',
+  type: 'SKILL_TO_CHARACTOR',
+  action: paralysisAction,
+  directType: DIRECT_TYPE_STAB,
+  magicType: MAGIC_TYPE_NONE,
+  baseDamage: 60,
+  mpConsumption: 10,
+  receiverCount: 1,
+  additionalWt: 100,
+  effectLength: 5,
+  getAccuracy: calcOrdinaryAccuracy,
+  description: '攻撃しつつ相手を麻痺にする',
+};
