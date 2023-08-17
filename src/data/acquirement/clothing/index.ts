@@ -1,10 +1,17 @@
 export { bishopRobe } from 'src/data/acquirement/clothing/bishopRobe';
 export { blueRobe } from 'src/data/acquirement/clothing/blueRobe';
 export { chainMail } from 'src/data/acquirement/clothing/chainMail';
+export { crocodileSkin } from 'src/data/acquirement/clothing/crocodileSkin';
+export { cyanRobe } from 'src/data/acquirement/clothing/cyanRobe';
 export { furAironArmor } from 'src/data/acquirement/clothing/furAironArmor';
 export { furArmor } from 'src/data/acquirement/clothing/furArmor';
 export { greenRobe } from 'src/data/acquirement/clothing/greenRobe';
+export { lionCollar } from 'src/data/acquirement/clothing/lionCollar';
+export { magentaRobe } from 'src/data/acquirement/clothing/magentaRobe';
 export { mithrilArmor } from 'src/data/acquirement/clothing/mithrilArmor';
+export { owlRainWear } from 'src/data/acquirement/clothing/owlRainWear';
 export { redRobe } from 'src/data/acquirement/clothing/redRobe';
+export { silkSuit } from 'src/data/acquirement/clothing/silkSuit';
 export { soldierUniform } from 'src/data/acquirement/clothing/soldierUniform';
 export { steelArmor } from 'src/data/acquirement/clothing/steelArmor';
+export { yellowRobe } from 'src/data/acquirement/clothing/yellowRobe';
