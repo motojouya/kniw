@@ -4,6 +4,7 @@ import type { Skill } from 'src/domain/skill';
 import type { Randoms } from 'src/domain/random';
 import type { Turn } from 'src/domain/turn';
 
+import { MAGIC_TYPE_NONE } from 'src/domain/skill';
 import { toTurn, toTurnJson, turnSchema } from 'src/domain/turn';
 import { toParty, toPartyJson, CharactorDuplicationError, partySchema } from 'src/domain/party';
 import { getPhysical, getAbilities } from 'src/domain/charactor';
@@ -13,7 +14,8 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
-import { acid, quick, sleep, slow } from 'src/data/status';
+import { acid, paralysis, quick, silent, sleep, slow } from 'src/data/status';
+import { underStatus } from 'src/domain/status';
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
@@ -210,8 +212,17 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
     throw new Error('mp shortage');
   }
 
-  if (actor.statuses.find(status => status.name === sleep.name)) {
-    throw new Error('sleeping');
+  if (underStatus(silent, actor) && skill.magicType !== MAGIC_TYPE_NONE) {
+    throw new Error('silent cannot do magic');
+  }
+
+  if (underStatus(sleep, actor)) {
+    return stay(battle, actor, datetime);
+  }
+
+  // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
+  if (underStatus(paralysis, actor) && randoms.accuracy > 0.5) {
+    return stay(battle, actor, datetime);
   }
 
   const lastTurn = arrayLast(battle.turns);
@@ -256,8 +267,17 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
     throw new Error('mp shortage');
   }
 
-  if (actor.statuses.find(status => status.name === sleep.name)) {
-    throw new Error('sleeping');
+  if (underStatus(silent, actor) && skill.magicType !== MAGIC_TYPE_NONE) {
+    throw new Error('silent cannot do magic');
+  }
+
+  if (underStatus(sleep, actor)) {
+    return stay(battle, actor, datetime);
+  }
+
+  // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
+  if (underStatus(paralysis, actor) && randoms.accuracy > 0.5) {
+    return stay(battle, actor, datetime);
   }
 
   const lastTurn = arrayLast(battle.turns);

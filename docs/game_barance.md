@@ -637,13 +637,9 @@ HP回復状態
   - acid done
   - quick done
   - slow done
-  - paralysis
-  - silent
-  - sleep
-
-
-
-
-
-
+  - paralysis done
+  - silent done
+  - sleep done
+- statusのrestWtが共通なので、バグってる
+  あとcharactorをcopyする際に、status部分が浅いコピーになってる
 

@@ -34,6 +34,10 @@ import { createAbsolute, createRandoms } from 'src/domain/random';
 import { getSkill } from 'src/store/skill';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { underStatus } from 'src/domain/status';
+import { sleep } from 'src/data/status/sleep';
+import { MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { silent } from 'src/data/status';
 
 const SKILL = 'SKILL';
 const LIST = 'LIST';
@@ -51,6 +55,7 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
     const skills = getSkills(actor);
     const skillOptions = skills
       .filter(skill => skill.mpConsumption <= actor.mp)
+      .filter(skill => !underStatus(silent, actor) || skill.magicType === MAGIC_TYPE_NONE)
       .map(skill => ({ value: skill.name, label: skill.name }));
     skillOptions.push({ value: BACK, label: '戻る' });
     const selectedName = await dialogue.select('Skillを選んでください', skillOptions);
@@ -246,12 +251,19 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
     turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
 
     const actor = nextActor(battle);
-    const turn = await playerSelect(dialogue)(actor, battle);
-    if (!turn) {
-      break;
+
+    if (underStatus(sleep, actor)) {
+      turns.push(stay(battle, actor, new Date()));
+      await battleStore.save(battle);
+
+    } else {
+      const turn = await playerSelect(dialogue)(actor, battle);
+      if (!turn) {
+        break;
+      }
+      turns.push(turn);
+      await battleStore.save(battle);
     }
-    turns.push(turn);
-    await battleStore.save(battle);
 
     // eslint-disable-next-line no-param-reassign
     battle.result = isSettlement(battle);
