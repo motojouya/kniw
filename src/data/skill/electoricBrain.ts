@@ -1,6 +1,6 @@
 import type { Skill } from 'src/domain/skill';
 import {
-  addStatus
+  addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
