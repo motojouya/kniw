@@ -1,13 +1,16 @@
 import type { Skill, ActionToCharactor } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import {
+  calcOrdinaryDirectDamage,
+  addStatus,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_STAB,
+  MAGIC_TYPE_NONE,
+} from 'src/domain/skill';
 import { silent } from 'src/data/status/silent';
 
 export const silentAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
-  if (!newReceiver.statuses.find(status => status.name === silent.name)) {
-    newReceiver.statuses.push(silent);
-  }
-  return newReceiver;
+  return addStatus(silent)(self, actor, randoms, field, newReceiver);
 };
 
 export const silentShot: Skill = {

@@ -1,11 +1,12 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from 'src/domain/skill';
+import { silent as silentStatus } from 'src/data/status/silent';
 
 export const silent: Skill = {
   name: 'silent',
   label: '音食う雪',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryMagicalDamage,
+  action: addStatus(silentStatus),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ICE,
   baseDamage: 0,

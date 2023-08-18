@@ -13,6 +13,7 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
+import { acid, quick, sleep, slow } from 'src/data/status';
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
@@ -209,6 +210,10 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
     throw new Error('mp shortage');
   }
 
+  if (actor.statuses.find(status => status.name === sleep.name)) {
+    throw new Error('sleeping');
+  }
+
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
     datetime,
@@ -249,6 +254,10 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
 
   if (skill.mpConsumption > actor.mp) {
     throw new Error('mp shortage');
+  }
+
+  if (actor.statuses.find(status => status.name === sleep.name)) {
+    throw new Error('sleeping');
   }
 
   const lastTurn = arrayLast(battle.turns);
@@ -343,7 +352,17 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
     })
     .filter(status => status.restWt > 0);
 
-  newCharactor.restWt = Math.max(newCharactor.restWt - wt, 0);
+  /* eslint-disable no-nested-ternary */
+  // prettier-ignore
+  const wtRate = newCharactor.statuses.find(status => status.name === quick.name) ? 1.5
+    : newCharactor.statuses.find(status => status.name === slow.name) ? 0.75
+    : 1;
+  /* eslint-enable no-nested-ternary */
+  newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
+
+  if (newCharactor.statuses.find(status => status.name === acid.name)) {
+    newCharactor.hp = Math.max(newCharactor.hp - wt / 10, 0);
+  }
 
   newCharactor.mp += Math.floor(wt / 10);
   const physical = getPhysical(newCharactor);

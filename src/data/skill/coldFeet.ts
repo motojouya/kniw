@@ -1,11 +1,12 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { avoidUp } from 'src/data/status/avoidUp';
 
 export const coldFeet: Skill = {
   name: 'coldFeet',
   label: '逃げ腰',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryDirectDamage,
+  action: addStatus(avoidUp),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 0,

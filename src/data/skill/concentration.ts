@@ -1,11 +1,12 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { accuracyUp } from 'src/data/status/accuracyUp';
 
 export const concentration: Skill = {
   name: 'concentration',
   label: '精神集中',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryDirectDamage,
+  action: addStatus(accuracyUp),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 0,

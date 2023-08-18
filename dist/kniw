@@ -28323,7 +28323,16 @@ const actSkill = dialogue => async (actor, battle) => {
             await dialogue.notice(`${selectedName}というskillはありません`);
             return null;
         }
-        if (selectedSkill.type === 'SKILL_TO_CHARACTOR') {
+        if (selectedSkill.type === 'SKILL_TO_FIELD') {
+            const newTurn = (0, battle_1.actToField)(battle, actor, selectedSkill, new Date(), (0, random_1.createAbsolute)());
+            await dialogue.notice('効果');
+            await dialogue.notice(`天候: ${newTurn.field.climate}`);
+            const isExec = await dialogue.confirm('実行しますか？');
+            if (!(isExec instanceof standard_dialogue_1.NotApplicable) && isExec) {
+                return (0, battle_1.actToField)(battle, actor, selectedSkill, new Date(), (0, random_1.createRandoms)());
+            }
+        }
+        else {
             const { receiverCount } = selectedSkill;
             const receiverOptions = lastTurn.sortedCharactors.map(receiver => (0, charactor_1.getSelectOption)(receiver));
             const selectedReceiverNames = await dialogue.multiSelect(`対象を${receiverCount}体まで選んでください。未選択でSkillを選び直せます`, receiverCount, receiverOptions);
@@ -28346,15 +28355,6 @@ const actSkill = dialogue => async (actor, battle) => {
             const isExec = await dialogue.confirm('実行しますか？');
             if (!(isExec instanceof standard_dialogue_1.NotApplicable) && isExec) {
                 return (0, battle_1.actToCharactor)(battle, actor, selectedSkill, selectedReceivers, new Date(), (0, random_1.createRandoms)());
-            }
-        }
-        else {
-            const newTurn = (0, battle_1.actToField)(battle, actor, selectedSkill, new Date(), (0, random_1.createAbsolute)());
-            await dialogue.notice('効果');
-            await dialogue.notice(`天候: ${newTurn.field.climate}`);
-            const isExec = await dialogue.confirm('実行しますか？');
-            if (!(isExec instanceof standard_dialogue_1.NotApplicable) && isExec) {
-                return (0, battle_1.actToField)(battle, actor, selectedSkill, new Date(), (0, random_1.createRandoms)());
             }
         }
     }
@@ -29295,12 +29295,12 @@ const show = ({ notice }) => async (name) => {
         return;
     }
     await notice(`スキル名: ${skill.label}`);
-    if (skill.type === 'SKILL_TO_CHARACTOR') {
-        await notice(`効果対象: キャラクター(最大${skill.receiverCount}体)`);
-        await notice(`基本ダメージ: ${skill.baseDamage}`);
+    if (skill.type === 'SKILL_TO_FIELD') {
+        await notice(`効果対象: フィールド`);
     }
     else {
-        await notice(`効果対象: フィールド`);
+        await notice(`効果対象: キャラクター(最大${skill.receiverCount}体)`);
+        await notice(`基本ダメージ: ${skill.baseDamage}`);
     }
     await notice(`加算WT: ${skill.additionalWt}`);
     await notice(`物理属性: ${skill.directType}`);
@@ -34199,11 +34199,12 @@ exports.clearCloud = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.coldFeet = void 0;
 const skill_1 = __webpack_require__(8841);
+const avoidUp_1 = __webpack_require__(5210);
 exports.coldFeet = {
     name: 'coldFeet',
     label: '逃げ腰',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: (0, skill_1.addStatus)(avoidUp_1.avoidUp),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -34226,11 +34227,12 @@ exports.coldFeet = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.concentration = void 0;
 const skill_1 = __webpack_require__(8841);
+const accuracyUp_1 = __webpack_require__(9099);
 exports.concentration = {
     name: 'concentration',
     label: '精神集中',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: (0, skill_1.addStatus)(accuracyUp_1.accuracyUp),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -34253,11 +34255,12 @@ exports.concentration = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.copperBlue = void 0;
 const skill_1 = __webpack_require__(8841);
+const acid_1 = __webpack_require__(4504);
 exports.copperBlue = {
     name: 'copperBlue',
     label: '青銅',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(acid_1.acid),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
     baseDamage: 0,
@@ -34361,11 +34364,12 @@ exports.danceLeaves = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.dazzle = void 0;
 const skill_1 = __webpack_require__(8841);
+const accuracyDown_1 = __webpack_require__(6836);
 exports.dazzle = {
     name: 'dazzle',
     label: '幻惑',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: (0, skill_1.addStatus)(accuracyDown_1.accuracyDown),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -34415,11 +34419,12 @@ exports.downRushing = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.eleciWave = void 0;
 const skill_1 = __webpack_require__(8841);
+const paralysis_1 = __webpack_require__(563);
 exports.eleciWave = {
     name: 'eleciWave',
     label: '麻痺',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(paralysis_1.paralysis),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_THUNDER,
     baseDamage: 0,
@@ -34442,11 +34447,12 @@ exports.eleciWave = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.electoricBrain = void 0;
 const skill_1 = __webpack_require__(8841);
+const magicAttackUp_1 = __webpack_require__(8004);
 exports.electoricBrain = {
     name: 'electoricBrain',
     label: '電脳',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(magicAttackUp_1.magicAttackUp),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_THUNDER,
     baseDamage: 0,
@@ -34496,11 +34502,12 @@ exports.electricShock = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.fireWall = void 0;
 const skill_1 = __webpack_require__(8841);
+const magicDiffenceUp_1 = __webpack_require__(9377);
 exports.fireWall = {
     name: 'fireWall',
     label: '炎の壁',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(magicDiffenceUp_1.magicDiffenceUp),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
@@ -34523,11 +34530,12 @@ exports.fireWall = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.flameDigger = void 0;
 const skill_1 = __webpack_require__(8841);
+const magicDiffenceDown_1 = __webpack_require__(9198);
 exports.flameDigger = {
     name: 'flameDigger',
     label: '炎で穿つ',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(magicDiffenceDown_1.magicDiffenceDown),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
@@ -34631,11 +34639,12 @@ exports.frostbite = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.ghostFire = void 0;
 const skill_1 = __webpack_require__(8841);
+const fear_1 = __webpack_require__(2933);
 exports.ghostFire = {
     name: 'ghostFire',
     label: '鬼火',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(fear_1.fear),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
@@ -34821,11 +34830,12 @@ exports.hardRain = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.heavyWind = void 0;
 const skill_1 = __webpack_require__(8841);
+const sleep_1 = __webpack_require__(6120);
 exports.heavyWind = {
     name: 'heavyWind',
     label: '春の暁',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(sleep_1.sleep),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 0,
@@ -35034,11 +35044,12 @@ Object.defineProperty(exports, "windEdge", ({ enumerable: true, get: function ()
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.jammer = void 0;
 const skill_1 = __webpack_require__(8841);
+const magicAttackDown_1 = __webpack_require__(9748);
 exports.jammer = {
     name: 'jammer',
     label: '妨害魔法',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(magicAttackDown_1.magicAttackDown),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_THUNDER,
     baseDamage: 0,
@@ -35143,11 +35154,12 @@ exports.multiShot = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.overbear = void 0;
 const skill_1 = __webpack_require__(8841);
+const avoidDown_1 = __webpack_require__(6933);
 exports.overbear = {
     name: 'overbear',
     label: '威圧',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryDirectDamage,
+    action: (0, skill_1.addStatus)(avoidDown_1.avoidDown),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -35173,10 +35185,7 @@ const skill_1 = __webpack_require__(8841);
 const paralysis_1 = __webpack_require__(563);
 const paralysisAction = (self, actor, randoms, field, receiver) => {
     const newReceiver = (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
-    if (!newReceiver.statuses.find(status => status.name === paralysis_1.paralysis.name)) {
-        newReceiver.statuses.push(paralysis_1.paralysis);
-    }
-    return newReceiver;
+    return (0, skill_1.addStatus)(paralysis_1.paralysis)(self, actor, randoms, field, newReceiver);
 };
 exports.paralysisAction = paralysisAction;
 exports.paralysisScratch = {
@@ -35209,10 +35218,7 @@ const skill_1 = __webpack_require__(8841);
 const paralysis_1 = __webpack_require__(563);
 const paralysisAction = (self, actor, randoms, field, receiver) => {
     const newReceiver = (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
-    if (!newReceiver.statuses.find(status => status.name === paralysis_1.paralysis.name)) {
-        newReceiver.statuses.push(paralysis_1.paralysis);
-    }
-    return newReceiver;
+    return (0, skill_1.addStatus)(paralysis_1.paralysis)(self, actor, randoms, field, newReceiver);
 };
 exports.paralysisAction = paralysisAction;
 exports.paralysisShot = {
@@ -35294,13 +35300,24 @@ exports.push = {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.quench = void 0;
+exports.quench = exports.recover = void 0;
 const skill_1 = __webpack_require__(8841);
+const charactor_1 = __webpack_require__(657);
+const recover = (self, actor, randoms, field, receiver) => {
+    const physical = (0, charactor_1.getPhysical)(receiver);
+    const newReceiver = Object.assign({}, receiver);
+    newReceiver.hp += 150;
+    if (newReceiver.hp > physical.MaxHP) {
+        newReceiver.hp = physical.MaxHP;
+    }
+    return newReceiver;
+};
+exports.recover = recover;
 exports.quench = {
     name: 'quench',
     label: '恵みの雨',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: exports.recover,
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 150,
@@ -35323,11 +35340,12 @@ exports.quench = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.quick = void 0;
 const skill_1 = __webpack_require__(8841);
+const quick_1 = __webpack_require__(3813);
 exports.quick = {
     name: 'quick',
     label: 'クイック',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(quick_1.quick),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 0,
@@ -35441,11 +35459,12 @@ exports.shot = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.silent = void 0;
 const skill_1 = __webpack_require__(8841);
+const silent_1 = __webpack_require__(5876);
 exports.silent = {
     name: 'silent',
     label: '音食う雪',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(silent_1.silent),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ICE,
     baseDamage: 0,
@@ -35471,10 +35490,7 @@ const skill_1 = __webpack_require__(8841);
 const silent_1 = __webpack_require__(5876);
 const silentAction = (self, actor, randoms, field, receiver) => {
     const newReceiver = (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
-    if (!newReceiver.statuses.find(status => status.name === silent_1.silent.name)) {
-        newReceiver.statuses.push(silent_1.silent);
-    }
-    return newReceiver;
+    return (0, skill_1.addStatus)(silent_1.silent)(self, actor, randoms, field, newReceiver);
 };
 exports.silentAction = silentAction;
 exports.silentScratch = {
@@ -35507,10 +35523,7 @@ const skill_1 = __webpack_require__(8841);
 const silent_1 = __webpack_require__(5876);
 const silentAction = (self, actor, randoms, field, receiver) => {
     const newReceiver = (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
-    if (!newReceiver.statuses.find(status => status.name === silent_1.silent.name)) {
-        newReceiver.statuses.push(silent_1.silent);
-    }
-    return newReceiver;
+    return (0, skill_1.addStatus)(silent_1.silent)(self, actor, randoms, field, newReceiver);
 };
 exports.silentAction = silentAction;
 exports.silentShot = {
@@ -35540,11 +35553,12 @@ exports.silentShot = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.slow = void 0;
 const skill_1 = __webpack_require__(8841);
+const slow_1 = __webpack_require__(3126);
 exports.slow = {
     name: 'slow',
     label: 'スロウ',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(slow_1.slow),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ICE,
     baseDamage: 0,
@@ -35621,11 +35635,12 @@ exports.stab = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.stickyRain = void 0;
 const skill_1 = __webpack_require__(8841);
+const directAttackDown_1 = __webpack_require__(6938);
 exports.stickyRain = {
     name: 'stickyRain',
     label: '酸性雨',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(directAttackDown_1.directAttackDown),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 0,
@@ -35648,11 +35663,12 @@ exports.stickyRain = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.stoneShell = void 0;
 const skill_1 = __webpack_require__(8841);
+const directDiffenceUp_1 = __webpack_require__(6062);
 exports.stoneShell = {
     name: 'stoneShell',
     label: '亀甲岩',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(directDiffenceUp_1.directDiffenceUp),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
     baseDamage: 0,
@@ -35675,11 +35691,12 @@ exports.stoneShell = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.stoneWeather = void 0;
 const skill_1 = __webpack_require__(8841);
+const directDiffenceDown_1 = __webpack_require__(3010);
 exports.stoneWeather = {
     name: 'stoneWeather',
     label: '風化',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(directDiffenceDown_1.directDiffenceDown),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
     baseDamage: 0,
@@ -35786,10 +35803,7 @@ const skill_1 = __webpack_require__(8841);
 const acid_1 = __webpack_require__(4504);
 const toxicAction = (self, actor, randoms, field, receiver) => {
     const newReceiver = (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
-    if (!newReceiver.statuses.find(status => status.name === acid_1.acid.name)) {
-        newReceiver.statuses.push(acid_1.acid);
-    }
-    return newReceiver;
+    return (0, skill_1.addStatus)(acid_1.acid)(self, actor, randoms, field, newReceiver);
 };
 exports.toxicAction = toxicAction;
 exports.toxicScratch = {
@@ -35822,10 +35836,7 @@ const skill_1 = __webpack_require__(8841);
 const acid_1 = __webpack_require__(4504);
 const toxicAction = (self, actor, randoms, field, receiver) => {
     const newReceiver = (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
-    if (!newReceiver.statuses.find(status => status.name === acid_1.acid.name)) {
-        newReceiver.statuses.push(acid_1.acid);
-    }
-    return newReceiver;
+    return (0, skill_1.addStatus)(acid_1.acid)(self, actor, randoms, field, newReceiver);
 };
 exports.toxicAction = toxicAction;
 exports.toxicShot = {
@@ -35855,11 +35866,12 @@ exports.toxicShot = {
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.waterCutter = void 0;
 const skill_1 = __webpack_require__(8841);
+const directAttackUp_1 = __webpack_require__(4570);
 exports.waterCutter = {
     name: 'waterCutter',
     label: '水刃の鎖',
     type: 'SKILL_TO_CHARACTOR',
-    action: skill_1.calcOrdinaryMagicalDamage,
+    action: (0, skill_1.addStatus)(directAttackUp_1.directAttackUp),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 0,
@@ -36347,6 +36359,7 @@ const field_1 = __webpack_require__(4925);
 const acquirement_1 = __webpack_require__(8826);
 const store_1 = __webpack_require__(9895);
 const json_schema_1 = __webpack_require__(6540);
+const status_1 = __webpack_require__(9538);
 const arrayLast = (ary) => ary.slice(-1)[0];
 exports.GameOngoing = 'ONGOING';
 exports.GameHome = 'HOME';
@@ -36493,6 +36506,9 @@ const actToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
     if (skill.mpConsumption > actor.mp) {
         throw new Error('mp shortage');
     }
+    if (actor.statuses.find(status => status.name === status_1.sleep.name)) {
+        throw new Error('sleeping');
+    }
     const lastTurn = arrayLast(battle.turns);
     const newTurn = {
         datetime,
@@ -36525,6 +36541,9 @@ const actToField = (battle, actor, skill, datetime, randoms) => {
     }
     if (skill.mpConsumption > actor.mp) {
         throw new Error('mp shortage');
+    }
+    if (actor.statuses.find(status => status.name === status_1.sleep.name)) {
+        throw new Error('sleeping');
     }
     const lastTurn = arrayLast(battle.turns);
     const newTurn = {
@@ -36597,7 +36616,16 @@ const waitCharactor = (charactor, wt, randoms) => {
         return Object.assign(Object.assign({}, status), { restWt });
     })
         .filter(status => status.restWt > 0);
-    newCharactor.restWt = Math.max(newCharactor.restWt - wt, 0);
+    /* eslint-disable no-nested-ternary */
+    // prettier-ignore
+    const wtRate = newCharactor.statuses.find(status => status.name === status_1.quick.name) ? 1.5
+        : newCharactor.statuses.find(status => status.name === status_1.slow.name) ? 0.75
+            : 1;
+    /* eslint-enable no-nested-ternary */
+    newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
+    if (newCharactor.statuses.find(status => status.name === status_1.acid.name)) {
+        newCharactor.hp = Math.max(newCharactor.hp - wt / 10, 0);
+    }
     newCharactor.mp += Math.floor(wt / 10);
     const physical = (0, charactor_1.getPhysical)(newCharactor);
     if (newCharactor.mp > physical.MaxMP) {
@@ -37099,7 +37127,7 @@ exports.createAbsolute = createAbsolute;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.calcOrdinaryAccuracy = exports.calcOrdinaryMagicalDamage = exports.calcOrdinaryDirectDamage = exports.MAGIC_TYPE_NONE = exports.MAGIC_TYPE_THUNDER = exports.MAGIC_TYPE_WIND = exports.MAGIC_TYPE_ICE = exports.MAGIC_TYPE_WATER = exports.MAGIC_TYPE_ROCK = exports.MAGIC_TYPE_FIRE = exports.DIRECT_TYPE_NONE = exports.DIRECT_TYPE_BLOW = exports.DIRECT_TYPE_STAB = exports.DIRECT_TYPE_SLASH = void 0;
+exports.calcOrdinaryAccuracy = exports.addStatus = exports.calcOrdinaryMagicalDamage = exports.calcOrdinaryDirectDamage = exports.MAGIC_TYPE_NONE = exports.MAGIC_TYPE_THUNDER = exports.MAGIC_TYPE_WIND = exports.MAGIC_TYPE_ICE = exports.MAGIC_TYPE_WATER = exports.MAGIC_TYPE_ROCK = exports.MAGIC_TYPE_FIRE = exports.DIRECT_TYPE_NONE = exports.DIRECT_TYPE_BLOW = exports.DIRECT_TYPE_STAB = exports.DIRECT_TYPE_SLASH = void 0;
 const charactor_1 = __webpack_require__(657);
 const status_1 = __webpack_require__(9538);
 exports.DIRECT_TYPE_SLASH = 'SLASH';
@@ -37166,7 +37194,8 @@ const calcDirectAttack = (skill, attacker) => {
     const magicRate = calcMagicRate(skill, attacker);
     const upRate = attacker.statuses.find(status => status.name === status_1.directAttackUp.name) ? 1.2 : 1;
     const downRate = attacker.statuses.find(status => status.name === status_1.directAttackDown.name) ? 0.8 : 1;
-    return ((physical.STR + physical.DEX) * magicRate * upRate * downRate) / 100;
+    const fearRate = attacker.statuses.find(status => status.name === status_1.fear.name) ? 0.8 : 1;
+    return ((physical.STR + physical.DEX) * magicRate * upRate * downRate * fearRate) / 100;
 };
 const calcDirectDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
@@ -37174,11 +37203,12 @@ const calcDirectDefence = (skill, defencer) => {
     const directRegistance = calcDirectRegistance(skill, defencer);
     const upRate = defencer.statuses.find(status => status.name === status_1.directDiffenceUp.name) ? 1.2 : 1;
     const downRate = defencer.statuses.find(status => status.name === status_1.directDiffenceDown.name) ? 0.8 : 1;
-    return ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
+    const fearRate = defencer.statuses.find(status => status.name === status_1.fear.name) ? 0.8 : 1;
+    return (((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100);
 };
 const calcOrdinaryDirectDamage = (self, actor, randoms, field, receiver) => {
     if (self.type === 'SKILL_TO_FIELD') {
-        return receiver;
+        return Object.assign({}, receiver);
     }
     let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
     damage += Math.ceil(randoms.damage * 10) - 5;
@@ -37209,7 +37239,7 @@ const calcMagicalDefence = (skill, defencer) => {
 };
 const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
     if (self.type === 'SKILL_TO_FIELD') {
-        return receiver;
+        return Object.assign({}, receiver);
     }
     let damage = self.baseDamage + calcMagicalAttack(self, actor) - calcMagicalDefence(self, receiver);
     damage += Math.ceil(randoms.damage * 10) - 5;
@@ -37223,6 +37253,14 @@ const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
     return Object.assign(Object.assign({}, receiver), { hp: restHp });
 };
 exports.calcOrdinaryMagicalDamage = calcOrdinaryMagicalDamage;
+const addStatus = status => (self, actor, randoms, field, receiver) => {
+    const newReceiver = Object.assign({}, receiver);
+    if (!newReceiver.statuses.find(s => s.name === status.name)) {
+        newReceiver.statuses.push(status);
+    }
+    return newReceiver;
+};
+exports.addStatus = addStatus;
 const calcAttackAccuracy = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
     return (physical.DEX + physical.AGI) / 2;
@@ -37243,7 +37281,7 @@ exports.calcOrdinaryAccuracy = calcOrdinaryAccuracy;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toStatus = exports.toStatusJson = exports.statusSchema = void 0;
+exports.underStatus = exports.toStatus = exports.toStatusJson = exports.statusSchema = void 0;
 const json_schema_1 = __webpack_require__(6540);
 const status_1 = __webpack_require__(3244);
 const store_1 = __webpack_require__(9895);
@@ -37277,6 +37315,8 @@ const toStatus = statusJson => {
     return status;
 };
 exports.toStatus = toStatus;
+const underStatus = (status, charactor) => !!charactor.statuses.find(s => s.name === status.name);
+exports.underStatus = underStatus;
 
 
 /***/ }),

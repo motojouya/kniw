@@ -628,11 +628,22 @@ HP回復状態
   - rampartForce.ts
     実装というよりステータスに表示したい
   - shootingGuard.ts
-- 他acquirementの実装
+- 他acquirementの実装 done
   skillはだいたい実装したが、ダガーとハンティングボウの特殊スキルが未実装
-- statusの効果の実装
-- 補助魔法でダメージがはいっちゃう
+- 補助魔法でダメージがはいっちゃう done
   魔法属性とか物理属性とかでコントロールする？
+- statusの効果の実装
+  - fear done
+  - acid done
+  - quick done
+  - slow done
+  - paralysis
+  - silent
+  - sleep
+
+
+
+
 
 
 
