@@ -6,7 +6,7 @@ export const eleciWave: Skill = {
   name: 'eleciWave',
   label: '麻痺',
   type: 'SKILL_TO_CHARACTOR',
-  action: addStatus(paralysis),
+  action: ((skill, actor, randoms, field, receiver) => addStatus(paralysis)(skill, actor, randoms, field, receiver)),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_THUNDER,
   baseDamage: 0,

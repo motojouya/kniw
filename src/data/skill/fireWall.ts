@@ -6,7 +6,7 @@ export const fireWall: Skill = {
   name: 'fireWall',
   label: '炎の壁',
   type: 'SKILL_TO_CHARACTOR',
-  action: addStatus(magicDiffenceUp),
+  action: ((skill, actor, randoms, field, receiver) => addStatus(magicDiffenceUp)(skill, actor, randoms, field, receiver)),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_FIRE,
   baseDamage: 0,
