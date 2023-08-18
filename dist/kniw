@@ -4451,7 +4451,7 @@ exports["default"] = def;
 
 /***/ }),
 
-/***/ 2151:
+/***/ 8200:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5363,7 +5363,7 @@ var DiscrError;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(5684);
 const validation_1 = __webpack_require__(2649);
-const applicator_1 = __webpack_require__(2151);
+const applicator_1 = __webpack_require__(8200);
 const format_1 = __webpack_require__(9502);
 const metadata_1 = __webpack_require__(6167);
 const draft7Vocabularies = [
@@ -34215,7 +34215,7 @@ exports.coldFeet = {
     name: 'coldFeet',
     label: '逃げ腰',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(avoidUp_1.avoidUp),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(avoidUp_1.avoidUp)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -34243,7 +34243,7 @@ exports.concentration = {
     name: 'concentration',
     label: '精神集中',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(accuracyUp_1.accuracyUp),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(accuracyUp_1.accuracyUp)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -34271,7 +34271,7 @@ exports.copperBlue = {
     name: 'copperBlue',
     label: '青銅',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(acid_1.acid),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(acid_1.acid)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
     baseDamage: 0,
@@ -34380,7 +34380,7 @@ exports.dazzle = {
     name: 'dazzle',
     label: '幻惑',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(accuracyDown_1.accuracyDown),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(accuracyDown_1.accuracyDown)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -34435,7 +34435,7 @@ exports.eleciWave = {
     name: 'eleciWave',
     label: '麻痺',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(paralysis_1.paralysis),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(paralysis_1.paralysis)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_THUNDER,
     baseDamage: 0,
@@ -34463,7 +34463,7 @@ exports.electoricBrain = {
     name: 'electoricBrain',
     label: '電脳',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(magicAttackUp_1.magicAttackUp),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(magicAttackUp_1.magicAttackUp)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_THUNDER,
     baseDamage: 0,
@@ -34518,7 +34518,7 @@ exports.fireWall = {
     name: 'fireWall',
     label: '炎の壁',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(magicDiffenceUp_1.magicDiffenceUp),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(magicDiffenceUp_1.magicDiffenceUp)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
@@ -34546,7 +34546,7 @@ exports.flameDigger = {
     name: 'flameDigger',
     label: '炎で穿つ',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(magicDiffenceDown_1.magicDiffenceDown),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(magicDiffenceDown_1.magicDiffenceDown)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
@@ -34655,7 +34655,7 @@ exports.ghostFire = {
     name: 'ghostFire',
     label: '鬼火',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(fear_1.fear),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(fear_1.fear)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_FIRE,
     baseDamage: 0,
@@ -34846,7 +34846,7 @@ exports.heavyWind = {
     name: 'heavyWind',
     label: '春の暁',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(sleep_1.sleep),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(sleep_1.sleep)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 0,
@@ -35060,7 +35060,7 @@ exports.jammer = {
     name: 'jammer',
     label: '妨害魔法',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(magicAttackDown_1.magicAttackDown),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(magicAttackDown_1.magicAttackDown)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_THUNDER,
     baseDamage: 0,
@@ -35170,7 +35170,7 @@ exports.overbear = {
     name: 'overbear',
     label: '威圧',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(avoidDown_1.avoidDown),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(avoidDown_1.avoidDown)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_NONE,
     baseDamage: 0,
@@ -35351,7 +35351,7 @@ exports.quick = {
     name: 'quick',
     label: 'クイック',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(quick_1.quick),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(quick_1.quick)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WIND,
     baseDamage: 0,
@@ -35470,7 +35470,7 @@ exports.silent = {
     name: 'silent',
     label: '音食う雪',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(silent_1.silent),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(silent_1.silent)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ICE,
     baseDamage: 0,
@@ -35564,7 +35564,7 @@ exports.slow = {
     name: 'slow',
     label: 'スロウ',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(slow_1.slow),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(slow_1.slow)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ICE,
     baseDamage: 0,
@@ -35646,7 +35646,7 @@ exports.stickyRain = {
     name: 'stickyRain',
     label: '酸性雨',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(directAttackDown_1.directAttackDown),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(directAttackDown_1.directAttackDown)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 0,
@@ -35674,7 +35674,7 @@ exports.stoneShell = {
     name: 'stoneShell',
     label: '亀甲岩',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(directDiffenceUp_1.directDiffenceUp),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(directDiffenceUp_1.directDiffenceUp)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
     baseDamage: 0,
@@ -35702,7 +35702,7 @@ exports.stoneWeather = {
     name: 'stoneWeather',
     label: '風化',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(directDiffenceDown_1.directDiffenceDown),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(directDiffenceDown_1.directDiffenceDown)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_ROCK,
     baseDamage: 0,
@@ -35877,7 +35877,7 @@ exports.waterCutter = {
     name: 'waterCutter',
     label: '水刃の鎖',
     type: 'SKILL_TO_CHARACTOR',
-    action: (0, skill_1.addStatus)(directAttackUp_1.directAttackUp),
+    action: (skill, actor, randoms, field, receiver) => (0, skill_1.addStatus)(directAttackUp_1.directAttackUp)(skill, actor, randoms, field, receiver),
     directType: skill_1.DIRECT_TYPE_NONE,
     magicType: skill_1.MAGIC_TYPE_WATER,
     baseDamage: 0,
@@ -36704,7 +36704,7 @@ exports.isSettlement = isSettlement;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createCharactor = exports.toCharactor = exports.toCharactorJson = exports.toAttachedStatusJson = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = exports.charactorSchema = exports.attachedStatusSchema = void 0;
-const physical_1 = __webpack_require__(8200);
+const physical_1 = __webpack_require__(5341);
 const status_1 = __webpack_require__(7929);
 const acquirement_1 = __webpack_require__(8826);
 const acquirement_2 = __webpack_require__(2066);
@@ -37054,7 +37054,7 @@ exports.createParty = createParty;
 
 /***/ }),
 
-/***/ 8200:
+/***/ 5341:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -37166,8 +37166,8 @@ exports.createAbsolute = createAbsolute;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcOrdinaryAccuracy = exports.addStatus = exports.calcOrdinaryMagicalDamage = exports.calcOrdinaryDirectDamage = exports.MAGIC_TYPE_NONE = exports.MAGIC_TYPE_THUNDER = exports.MAGIC_TYPE_WIND = exports.MAGIC_TYPE_ICE = exports.MAGIC_TYPE_WATER = exports.MAGIC_TYPE_ROCK = exports.MAGIC_TYPE_FIRE = exports.DIRECT_TYPE_NONE = exports.DIRECT_TYPE_BLOW = exports.DIRECT_TYPE_STAB = exports.DIRECT_TYPE_SLASH = void 0;
-const charactor_1 = __webpack_require__(657);
 const status_1 = __webpack_require__(7929);
+const charactor_1 = __webpack_require__(657);
 const status_2 = __webpack_require__(9538);
 exports.DIRECT_TYPE_SLASH = 'SLASH';
 exports.DIRECT_TYPE_STAB = 'STAB';
