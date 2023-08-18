@@ -10,6 +10,7 @@ import {
   magicAttackDown,
   magicDiffenceUp,
   magicDiffenceDown,
+  fear,
 } from 'src/data/status';
 
 export type DirectType = 'SLASH' | 'STAB' | 'BLOW' | 'NONE';
@@ -132,8 +133,9 @@ const calcDirectAttack: CalcDirectAttack = (skill, attacker) => {
 
   const upRate = attacker.statuses.find(status => status.name === directAttackUp.name) ? 1.2 : 1;
   const downRate = attacker.statuses.find(status => status.name === directAttackDown.name) ? 0.8 : 1;
+  const fearRate = attacker.statuses.find(status => status.name === fear.name) ? 0.8 : 1;
 
-  return ((physical.STR + physical.DEX) * magicRate * upRate * downRate) / 100;
+  return ((physical.STR + physical.DEX) * magicRate * upRate * downRate * fearRate) / 100;
 };
 
 type CalcDirectDefence = (skill: Skill, defencer: Charactor) => number;
@@ -144,13 +146,16 @@ const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
 
   const upRate = defencer.statuses.find(status => status.name === directDiffenceUp.name) ? 1.2 : 1;
   const downRate = defencer.statuses.find(status => status.name === directDiffenceDown.name) ? 0.8 : 1;
+  const fearRate = defencer.statuses.find(status => status.name === fear.name) ? 0.8 : 1;
 
-  return ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
+  return ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100;
 };
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   if (self.type === 'SKILL_TO_FIELD') {
-    return receiver;
+    return {
+      ...receiver,
+    };
   }
 
   let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
@@ -195,7 +200,9 @@ const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
 
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   if (self.type === 'SKILL_TO_FIELD') {
-    return receiver;
+    return {
+      ...receiver,
+    };
   }
 
   let damage = self.baseDamage + calcMagicalAttack(self, actor) - calcMagicalDefence(self, receiver);
@@ -215,11 +222,26 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
   };
 };
 
+export type AddStatus = (status: Status) => ActionToCharactor;
+export const addStatus: AddStatus = status => (self, actor, randoms, field, receiver) => {
+  const newReceiver = {
+    ...receiver,
+  };
+  if (!newReceiver.statuses.find(s => s.name === status.name)) {
+    newReceiver.statuses.push(status);
+  }
+  return newReceiver;
+};
+
 /* FIXME
  * 命中率の概念が実装途中
  * ボードゲームでやる以上、行動がキャンセルされる可能性があるのは戦略が練りづらくなる
  * ゲームに実装しても問題なさそうではあるが、上記の事情もあり、実装の手間もありpending状態
  * 命中率、回避率を操作するバフもあるので、命中率の概念がないと形骸化する点も留意。
+ * accuracyDown
+ * accuracyUp
+ * avoidDown
+ * avoidUp
  */
 type CalcAttackAccuracy = (skill: Skill, attacker: Charactor) => number;
 const calcAttackAccuracy: CalcAttackAccuracy = (skill, attacker) => {
@@ -235,3 +257,5 @@ const calcDefenceAccuracy: CalcDefenceAccuracy = (skill, defencer) => {
 
 export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) =>
   (100 + calcAttackAccuracy(self, actor) - calcDefenceAccuracy(self, receiver)) / 100;
+
+

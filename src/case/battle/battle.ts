@@ -64,7 +64,18 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       return null;
     }
 
-    if (selectedSkill.type === 'SKILL_TO_CHARACTOR') {
+    if (selectedSkill.type === 'SKILL_TO_FIELD') {
+      const newTurn = actToField(battle, actor, selectedSkill, new Date(), createAbsolute());
+
+      await dialogue.notice('効果');
+      await dialogue.notice(`天候: ${newTurn.field.climate}`);
+
+      const isExec = await dialogue.confirm('実行しますか？');
+      if (!(isExec instanceof NotApplicable) && isExec) {
+        return actToField(battle, actor, selectedSkill, new Date(), createRandoms());
+      }
+
+    } else {
       const { receiverCount } = selectedSkill;
       const receiverOptions = lastTurn.sortedCharactors.map(receiver => charactorSelectOption(receiver));
       const selectedReceiverNames = await dialogue.multiSelect(
@@ -102,16 +113,6 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       const isExec = await dialogue.confirm('実行しますか？');
       if (!(isExec instanceof NotApplicable) && isExec) {
         return actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createRandoms());
-      }
-    } else {
-      const newTurn = actToField(battle, actor, selectedSkill, new Date(), createAbsolute());
-
-      await dialogue.notice('効果');
-      await dialogue.notice(`天候: ${newTurn.field.climate}`);
-
-      const isExec = await dialogue.confirm('実行しますか？');
-      if (!(isExec instanceof NotApplicable) && isExec) {
-        return actToField(battle, actor, selectedSkill, new Date(), createRandoms());
       }
     }
   }

@@ -1,11 +1,12 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from 'src/domain/skill';
+import { directAttackDown } from 'src/data/status/directAttackDown';
 
 export const stickyRain: Skill = {
   name: 'stickyRain',
   label: '酸性雨',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryMagicalDamage,
+  action: addStatus(directAttackDown),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WATER,
   baseDamage: 0,

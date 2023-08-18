@@ -1,11 +1,12 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from 'src/domain/skill';
+import { fear } from 'src/data/status/fear';
 
 export const ghostFire: Skill = {
   name: 'ghostFire',
   label: '鬼火',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryMagicalDamage,
+  action: addStatus(fear),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_FIRE,
   baseDamage: 0,

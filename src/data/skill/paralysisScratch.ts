@@ -1,13 +1,10 @@
 import type { Skill, ActionToCharactor } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_SLASH, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { calcOrdinaryDirectDamage, addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_SLASH, MAGIC_TYPE_NONE } from 'src/domain/skill';
 import { paralysis } from 'src/data/status/paralysis';
 
 export const paralysisAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
-  if (!newReceiver.statuses.find(status => status.name === paralysis.name)) {
-    newReceiver.statuses.push(paralysis);
-  }
-  return newReceiver;
+  return addStatus(paralysis)(self, actor, randoms, field, receiver)
 };
 
 export const paralysisScratch: Skill = {

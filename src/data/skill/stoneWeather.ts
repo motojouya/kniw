@@ -1,11 +1,12 @@
 import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from 'src/domain/skill';
+import { directDiffenceDown } from 'src/data/status/directDiffenceDown';
 
 export const stoneWeather: Skill = {
   name: 'stoneWeather',
   label: '風化',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryMagicalDamage,
+  action: addStatus(directDiffenceDown),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ROCK,
   baseDamage: 0,

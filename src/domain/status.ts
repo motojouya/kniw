@@ -2,6 +2,7 @@ import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 import { getStatus } from 'src/store/status';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import type { Charactor } from 'src/domain/charactor';
 
 export type Status = {
   name: string;
@@ -46,3 +47,6 @@ export const toStatus: ToStatus = statusJson => {
   status.restWt = statusJson.restWt;
   return status;
 };
+
+export type UnderStatus = (status: Status, charactor: Charactor) => boolean;
+export const underStatus: UnderStatus = (status, charactor) => charactor.statuses.find(s => s.name === status.name);

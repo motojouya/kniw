@@ -1,16 +1,17 @@
 import type { Skill } from 'src/domain/skill';
 import {
-  calcOrdinaryMagicalDamage,
+  addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
 } from 'src/domain/skill';
+import { paralysis } from 'src/data/status/paralysis';
 
 export const eleciWave: Skill = {
   name: 'eleciWave',
   label: '麻痺',
   type: 'SKILL_TO_CHARACTOR',
-  action: calcOrdinaryMagicalDamage,
+  action: addStatus(paralysis),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_THUNDER,
   baseDamage: 0,
