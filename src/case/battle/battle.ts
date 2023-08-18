@@ -162,7 +162,7 @@ const showCharactorStatus: ShowCharactorStatus =
 
     await notice('ステータス:');
     await charactor.statuses.reduce(
-      (p, status) => p.then(() => notice(`  - ${status.label}(${status.restWt})`)),
+      (p, s) => p.then(() => notice(`  - ${s.status.label}(${s.restWt})`)),
       Promise.resolve(),
     );
 

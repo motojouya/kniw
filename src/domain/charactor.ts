@@ -77,7 +77,7 @@ export const charactorSchema = {
     weapon: { type: 'string' },
     statuses: {
       type: 'array',
-      items: attachedStatusSchema
+      items: attachedStatusSchema,
     },
     hp: { type: 'integer' },
     mp: { type: 'integer' },
