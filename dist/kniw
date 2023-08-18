@@ -28298,6 +28298,10 @@ const random_1 = __webpack_require__(8708);
 const skill_1 = __webpack_require__(7239);
 const acquirement_1 = __webpack_require__(8826);
 const store_1 = __webpack_require__(9895);
+const status_1 = __webpack_require__(7929);
+const sleep_1 = __webpack_require__(6120);
+const skill_2 = __webpack_require__(8841);
+const status_2 = __webpack_require__(9538);
 const SKILL = 'SKILL';
 const LIST = 'LIST';
 const CHARACTOR = 'CHARACTOR';
@@ -28312,6 +28316,7 @@ const actSkill = dialogue => async (actor, battle) => {
         const skills = (0, charactor_1.getSkills)(actor);
         const skillOptions = skills
             .filter(skill => skill.mpConsumption <= actor.mp)
+            .filter(skill => !(0, status_1.underStatus)(status_2.silent, actor) || skill.magicType === skill_2.MAGIC_TYPE_NONE)
             .map(skill => ({ value: skill.name, label: skill.name }));
         skillOptions.push({ value: BACK, label: '戻る' });
         const selectedName = await dialogue.select('Skillを選んでください', skillOptions);
@@ -28461,12 +28466,18 @@ const continueBattle = (dialogue, repository) => async (battle) => {
         const firstWaiting = (0, battle_1.nextActor)(battle);
         turns.push((0, battle_1.wait)(battle, firstWaiting.restWt, new Date(), (0, random_1.createRandoms)()));
         const actor = (0, battle_1.nextActor)(battle);
-        const turn = await playerSelect(dialogue)(actor, battle);
-        if (!turn) {
-            break;
+        if ((0, status_1.underStatus)(sleep_1.sleep, actor)) {
+            turns.push((0, battle_1.stay)(battle, actor, new Date()));
+            await battleStore.save(battle);
         }
-        turns.push(turn);
-        await battleStore.save(battle);
+        else {
+            const turn = await playerSelect(dialogue)(actor, battle);
+            if (!turn) {
+                break;
+            }
+            turns.push(turn);
+            await battleStore.save(battle);
+        }
         // eslint-disable-next-line no-param-reassign
         battle.result = (0, battle_1.isSettlement)(battle);
         if (battle.result !== battle_1.GameOngoing) {
@@ -36351,7 +36362,8 @@ exports.createValidateWearable = createValidateWearable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isSettlement = exports.wait = exports.surrender = exports.stay = exports.actToField = exports.actToCharactor = exports.start = exports.createBattle = exports.nextActor = exports.getLastTurn = exports.toBattle = exports.toBattleJson = exports.battleSchema = exports.GameDraw = exports.GameVisitor = exports.GameHome = exports.GameOngoing = void 0;
+exports.isSettlement = exports.wait = exports.surrender = exports.actToField = exports.actToCharactor = exports.stay = exports.start = exports.createBattle = exports.nextActor = exports.getLastTurn = exports.toBattle = exports.toBattleJson = exports.battleSchema = exports.GameDraw = exports.GameVisitor = exports.GameHome = exports.GameOngoing = void 0;
+const skill_1 = __webpack_require__(8841);
 const turn_1 = __webpack_require__(2078);
 const party_1 = __webpack_require__(7551);
 const charactor_1 = __webpack_require__(657);
@@ -36360,6 +36372,7 @@ const acquirement_1 = __webpack_require__(8826);
 const store_1 = __webpack_require__(9895);
 const json_schema_1 = __webpack_require__(6540);
 const status_1 = __webpack_require__(9538);
+const status_2 = __webpack_require__(7929);
 const arrayLast = (ary) => ary.slice(-1)[0];
 exports.GameOngoing = 'ONGOING';
 exports.GameHome = 'HOME';
@@ -36492,6 +36505,28 @@ const start = (battle, datetime, randoms) => ({
     },
 });
 exports.start = start;
+const stay = (battle, actor, datetime) => {
+    const lastTurn = arrayLast(battle.turns);
+    const newTurn = {
+        datetime,
+        action: {
+            type: 'DO_NOTHING',
+            actor,
+        },
+        sortedCharactors: lastTurn.sortedCharactors,
+        field: lastTurn.field,
+    };
+    newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
+        if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
+            newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT;
+        }
+        return newCharactor;
+    });
+    newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
+    return newTurn;
+};
+exports.stay = stay;
 const updateCharactor = receivers => charactor => {
     const foundReceiver = receivers.find(receiver => charactor.name === receiver.name);
     if (foundReceiver) {
@@ -36506,8 +36541,15 @@ const actToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
     if (skill.mpConsumption > actor.mp) {
         throw new Error('mp shortage');
     }
-    if (actor.statuses.find(status => status.name === status_1.sleep.name)) {
-        throw new Error('sleeping');
+    if ((0, status_2.underStatus)(status_1.silent, actor) && skill.magicType !== skill_1.MAGIC_TYPE_NONE) {
+        throw new Error('silent cannot do magic');
+    }
+    if ((0, status_2.underStatus)(status_1.sleep, actor)) {
+        return (0, exports.stay)(battle, actor, datetime);
+    }
+    // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
+    if ((0, status_2.underStatus)(status_1.paralysis, actor) && randoms.accuracy > 0.5) {
+        return (0, exports.stay)(battle, actor, datetime);
     }
     const lastTurn = arrayLast(battle.turns);
     const newTurn = {
@@ -36542,8 +36584,15 @@ const actToField = (battle, actor, skill, datetime, randoms) => {
     if (skill.mpConsumption > actor.mp) {
         throw new Error('mp shortage');
     }
-    if (actor.statuses.find(status => status.name === status_1.sleep.name)) {
-        throw new Error('sleeping');
+    if ((0, status_2.underStatus)(status_1.silent, actor) && skill.magicType !== skill_1.MAGIC_TYPE_NONE) {
+        throw new Error('silent cannot do magic');
+    }
+    if ((0, status_2.underStatus)(status_1.sleep, actor)) {
+        return (0, exports.stay)(battle, actor, datetime);
+    }
+    // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
+    if ((0, status_2.underStatus)(status_1.paralysis, actor) && randoms.accuracy > 0.5) {
+        return (0, exports.stay)(battle, actor, datetime);
     }
     const lastTurn = arrayLast(battle.turns);
     const newTurn = {
@@ -36570,28 +36619,6 @@ const actToField = (battle, actor, skill, datetime, randoms) => {
     return newTurn;
 };
 exports.actToField = actToField;
-const stay = (battle, actor, datetime) => {
-    const lastTurn = arrayLast(battle.turns);
-    const newTurn = {
-        datetime,
-        action: {
-            type: 'DO_NOTHING',
-            actor,
-        },
-        sortedCharactors: lastTurn.sortedCharactors,
-        field: lastTurn.field,
-    };
-    newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
-        if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-            newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT;
-        }
-        return newCharactor;
-    });
-    newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
-    return newTurn;
-};
-exports.stay = stay;
 const surrender = (battle, actor, datetime) => {
     const lastTurn = arrayLast(battle.turns);
     return {

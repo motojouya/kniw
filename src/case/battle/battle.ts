@@ -255,7 +255,6 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
     if (underStatus(sleep, actor)) {
       turns.push(stay(battle, actor, new Date()));
       await battleStore.save(battle);
-
     } else {
       const turn = await playerSelect(dialogue)(actor, battle);
       if (!turn) {

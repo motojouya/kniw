@@ -186,6 +186,34 @@ export const start: Start = (battle, datetime, randoms) => ({
   },
 });
 
+export type Stay = (battle: Battle, actor: Charactor, datetime: Date) => Turn;
+export const stay: Stay = (battle, actor, datetime) => {
+  const lastTurn = arrayLast(battle.turns);
+  const newTurn: Turn = {
+    datetime,
+    action: {
+      type: 'DO_NOTHING',
+      actor,
+    },
+    sortedCharactors: lastTurn.sortedCharactors,
+    field: lastTurn.field,
+  };
+
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
+    const newCharactor = {
+      ...charactor,
+      statuses: [...charactor.statuses],
+    };
+    if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
+      newCharactor.restWt = getPhysical(charactor).WT;
+    }
+    return newCharactor;
+  });
+  newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
+
+  return newTurn;
+};
+
 type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
   const foundReceiver = receivers.find(receiver => charactor.name === receiver.name);
@@ -303,34 +331,6 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
       newCharactor.mp -= skill.mpConsumption;
-    }
-    return newCharactor;
-  });
-  newTurn.sortedCharactors = sortByWT(newTurn.sortedCharactors);
-
-  return newTurn;
-};
-
-export type Stay = (battle: Battle, actor: Charactor, datetime: Date) => Turn;
-export const stay: Stay = (battle, actor, datetime) => {
-  const lastTurn = arrayLast(battle.turns);
-  const newTurn: Turn = {
-    datetime,
-    action: {
-      type: 'DO_NOTHING',
-      actor,
-    },
-    sortedCharactors: lastTurn.sortedCharactors,
-    field: lastTurn.field,
-  };
-
-  newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-    const newCharactor = {
-      ...charactor,
-      statuses: [...charactor.statuses],
-    };
-    if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
-      newCharactor.restWt = getPhysical(charactor).WT;
     }
     return newCharactor;
   });
