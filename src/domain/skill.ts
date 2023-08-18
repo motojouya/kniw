@@ -1,7 +1,10 @@
-import { Field } from 'src/domain/field';
-import { Randoms } from 'src/domain/random';
-import { Charactor, getPhysical } from 'src/domain/charactor';
-import { Status, underStatus } from 'src/domain/status';
+import type { Field } from 'src/domain/field';
+import type { Randoms } from 'src/domain/random';
+import type { Charactor } from 'src/domain/charactor';
+import type { Status } from 'src/domain/status';
+
+import { underStatus } from 'src/domain/status';
+import { getPhysical } from 'src/domain/charactor';
 import {
   directAttackUp,
   directAttackDown,

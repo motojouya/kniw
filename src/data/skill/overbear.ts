@@ -6,7 +6,7 @@ export const overbear: Skill = {
   name: 'overbear',
   label: '威圧',
   type: 'SKILL_TO_CHARACTOR',
-  action: addStatus(avoidDown),
+  action: (skill, actor, randoms, field, receiver) => addStatus(avoidDown)(skill, actor, randoms, field, receiver),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_NONE,
   baseDamage: 0,
