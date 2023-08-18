@@ -18,6 +18,7 @@ const wait: Wait = (wt, charactor, randoms) => {
   return {
     ...charactor,
     mp,
+    statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   };
 };
 /* eslint-enable */

@@ -4,14 +4,11 @@ import { getPhysical } from 'src/domain/charactor';
 
 export const recover: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const physical = getPhysical(receiver);
-  const newReceiver = {
+  return {
     ...receiver,
+    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+    hp: Math.min(newReceiver.hp + 150, physical.MaxHP),
   };
-  newReceiver.hp += 150;
-  if (newReceiver.hp > physical.MaxHP) {
-    newReceiver.hp = physical.MaxHP;
-  }
-  return newReceiver;
 };
 
 export const quench: Skill = {

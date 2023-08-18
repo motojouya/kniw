@@ -7,26 +7,16 @@ import type { Charactor } from 'src/domain/charactor';
 export type Status = {
   name: string;
   label: string;
-  restWt: number;
+  wt: number;
   description: string;
 };
 
-export const statusSchema = {
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-    restWt: { type: 'integer' },
-  },
-  required: ['name', 'restWt'],
-} as const;
+export const statusSchema = { type: 'string' } as const;
 
 export type StatusJson = FromSchema<typeof statusSchema>;
 
 export type ToStatusJson = (status: Status) => StatusJson;
-export const toStatusJson: ToStatusJson = status => ({
-  name: status.name,
-  restWt: status.restWt,
-});
+export const toStatusJson: ToStatusJson = status => status.name;
 
 export type ToStatus = (statusJson: any) => Status | DataNotFoundError | JsonSchemaUnmatchError;
 export const toStatus: ToStatus = statusJson => {
@@ -39,14 +29,14 @@ export const toStatus: ToStatus = statusJson => {
     return new JsonSchemaUnmatchError(errors, 'statusのjsonデータではありません');
   }
 
-  const status = getStatus(statusJson.name);
+  const status = getStatus(statusJson);
   if (!status) {
     return new DataNotFoundError(statusJson.name, 'status', `${statusJson.name}というstatusは存在しません`);
   }
 
-  status.restWt = statusJson.restWt;
   return status;
 };
 
 export type UnderStatus = (status: Status, charactor: Charactor) => boolean;
-export const underStatus: UnderStatus = (status, charactor) => !!charactor.statuses.find(s => s.name === status.name);
+export const underStatus: UnderStatus = (status, charactor) => !!charactor.statuses.find(s => s.status.name === status.name);
+

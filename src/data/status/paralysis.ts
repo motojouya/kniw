@@ -3,6 +3,6 @@ import { Status } from 'src/domain/status';
 export const paralysis: Status = {
   name: 'paralysis',
   label: '麻痺',
-  restWt: 500,
+  wt: 500,
   description: '確率で行動できない',
 };

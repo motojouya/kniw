@@ -8,6 +8,7 @@ export const shotAction: ActionToCharactor = (self, actor, randoms, field, recei
   if (abilities.find(ability => ability.name === shootingGuard.name)) {
     return {
       ...receiver,
+      statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
     };
   }
 

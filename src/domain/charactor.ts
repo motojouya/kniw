@@ -1,7 +1,7 @@
 import type { Status } from 'src/domain/status';
 import type { SelectOption } from 'src/io/standard_dialogue';
 import { Physical, addPhysicals } from 'src/domain/physical';
-import { toStatus, toStatusJson } from 'src/domain/status';
+import { statusSchema, toStatus, toStatusJson } from 'src/domain/status';
 import { Race, Weapon, Clothing, Blessing, NotWearableErorr } from 'src/domain/acquirement';
 import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
 import { Ability } from 'src/domain/ability';
@@ -36,13 +36,18 @@ const basePhysical: Physical = {
   jump: 3,
 };
 
+export type AttachedStatus = {
+  status: Status;
+  restWt: number;
+};
+
 export type Charactor = {
   name: string;
   weapon: Weapon;
   clothing: Clothing;
   blessing: Blessing;
   race: Race;
-  statuses: Status[];
+  statuses: AttachedStatus[];
   hp: number;
   mp: number;
   restWt: number;
@@ -50,6 +55,17 @@ export type Charactor = {
 };
 
 export type CharactorBattling = Required<Charactor>;
+
+export const attachedStatusSchema = {
+  type: 'object',
+  properties: {
+    status: statusSchema,
+    restWt: { type: 'integer' },
+  },
+  required: ['status', 'restWt'],
+} as const;
+
+export type AttachedStatusJson = FromSchema<typeof attachedStatusSchema>;
 
 export const charactorSchema = {
   type: 'object',
@@ -59,7 +75,10 @@ export const charactorSchema = {
     blessing: { type: 'string' },
     clothing: { type: 'string' },
     weapon: { type: 'string' },
-    statuses: { type: 'array', items: {} },
+    statuses: {
+      type: 'array',
+      items: attachedStatusSchema
+    },
     hp: { type: 'integer' },
     mp: { type: 'integer' },
     restWt: { type: 'integer' },
@@ -106,6 +125,12 @@ export const getPhysical: GetPhysical = charactor =>
     charactor.weapon.additionalPhysical,
   ]);
 
+export type ToAttachedStatusJson = (attached: AttachedStatus) => AttachedStatusJson;
+export const toAttachedStatusJson: ToAttachedStatusJson = attached => ({
+  status: toStatusJson(attached.status),
+  restWt: attached.restWt,
+});
+
 export type ToCharactorJson = (charactor: Charactor) => CharactorJson;
 export const toCharactorJson: ToCharactorJson = charactor => {
   const json = {
@@ -114,7 +139,7 @@ export const toCharactorJson: ToCharactorJson = charactor => {
     blessing: charactor.blessing.name,
     clothing: charactor.clothing.name,
     weapon: charactor.weapon.name,
-    statuses: charactor.statuses.map(toStatusJson),
+    statuses: charactor.statuses.map(toAttachedStatusJson),
     hp: charactor.hp,
     mp: charactor.mp,
     restWt: charactor.restWt,
@@ -208,13 +233,17 @@ export const toCharactor: ToCharactor = charactorJson => {
   }
 
   const statuses: Status[] = [];
-  for (const status of charactorJson.statuses) {
-    const statusObj = toStatus(status);
+  for (const attachedStatusJson of charactorJson.statuses) {
+    const statusObj = toStatus(attachedStatusJson.status);
 
     if (statusObj instanceof JsonSchemaUnmatchError || statusObj instanceof DataNotFoundError) {
       return statusObj;
     }
-    statuses.push(statusObj);
+
+    statuses.push({
+      status: statusObj,
+      restWt: attachedStatusJson.restWt,
+    });
   }
 
   const someone: Charactor = {

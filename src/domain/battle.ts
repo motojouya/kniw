@@ -202,7 +202,7 @@ export const stay: Stay = (battle, actor, datetime) => {
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     const newCharactor = {
       ...charactor,
-      statuses: [...charactor.statuses],
+      statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
     };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT;
@@ -272,7 +272,7 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     const newCharactor = {
       ...charactor,
-      statuses: [...charactor.statuses],
+      statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
     };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
@@ -326,7 +326,7 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
     const newCharactor = {
       ...charactor,
-      statuses: [...charactor.statuses],
+      statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
     };
     if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
       newCharactor.restWt = getPhysical(charactor).WT + skill.additionalWt;
@@ -359,36 +359,34 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
   /* eslint-disable @typescript-eslint/no-unsafe-return */
   const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), {
     ...charactor,
+    statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   } as Charactor);
   /* eslint-enable @typescript-eslint/no-unsafe-return */
 
-  newCharactor.statuses = newCharactor.statuses
-    .map(status => {
-      const restWt = status.restWt - wt;
-      return {
-        ...status,
-        restWt,
-      };
-    })
-    .filter(status => status.restWt > 0);
-
   /* eslint-disable no-nested-ternary */
   // prettier-ignore
-  const wtRate = newCharactor.statuses.find(status => status.name === quick.name) ? 1.5
-    : newCharactor.statuses.find(status => status.name === slow.name) ? 0.75
+  const wtRate = underStatus(quick, newCharactor) ? 1.5
+    : underStatus(slow, newCharactor) ? 0.75
     : 1;
   /* eslint-enable no-nested-ternary */
   newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
 
-  if (newCharactor.statuses.find(status => status.name === acid.name)) {
+  if (underStatus(acid, newCharactor)) {
     newCharactor.hp = Math.max(newCharactor.hp - wt / 10, 0);
   }
 
-  newCharactor.mp += Math.floor(wt / 10);
+  newCharactor.statuses = newCharactor.statuses
+    .map(attachedStatus => {
+      const restWt = attachedStatus.restWt - wt;
+      return {
+        ...attachedStatus,
+        restWt,
+      };
+    })
+    .filter(attachedStatus => attachedStatus.restWt > 0);
+
   const physical = getPhysical(newCharactor);
-  if (newCharactor.mp > physical.MaxMP) {
-    newCharactor.mp = physical.MaxMP;
-  }
+  newCharactor.mp = Math.min(newCharactor.mp + Math.floor(wt / 10), physical.MaxMP);
 
   return newCharactor;
 };

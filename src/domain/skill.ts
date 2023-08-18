@@ -1,7 +1,7 @@
 import { Field } from 'src/domain/field';
 import { Randoms } from 'src/domain/random';
 import { Charactor, getPhysical } from 'src/domain/charactor';
-import { Status } from 'src/domain/status';
+import { Status, underStatus } from 'src/domain/status';
 import {
   directAttackUp,
   directAttackDown,
@@ -158,6 +158,7 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
   if (self.type === 'SKILL_TO_FIELD') {
     return {
       ...receiver,
+      statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
     };
   }
 
@@ -175,6 +176,7 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
   return {
     ...receiver,
     hp: restHp,
+    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   };
 };
 
@@ -205,6 +207,7 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
   if (self.type === 'SKILL_TO_FIELD') {
     return {
       ...receiver,
+      statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
     };
   }
 
@@ -222,6 +225,7 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
   return {
     ...receiver,
     hp: restHp,
+    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   };
 };
 
@@ -229,9 +233,13 @@ export type AddStatus = (status: Status) => ActionToCharactor;
 export const addStatus: AddStatus = status => (self, actor, randoms, field, receiver) => {
   const newReceiver = {
     ...receiver,
+    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   };
-  if (!newReceiver.statuses.find(s => s.name === status.name)) {
-    newReceiver.statuses.push(status);
+  if (!underStatus(status, newReceiver)) {
+    newReceiver.statuses.push({
+      status,
+      restWt: status.wt,
+    });
   }
   return newReceiver;
 };

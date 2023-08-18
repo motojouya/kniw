@@ -3,6 +3,6 @@ import { Status } from 'src/domain/status';
 export const fear: Status = {
   name: 'fear',
   label: '恐怖',
-  restWt: 500,
+  wt: 500,
   description: '物理攻撃、物理防御が両方downする',
 };
