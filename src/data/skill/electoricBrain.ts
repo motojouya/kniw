@@ -1,10 +1,5 @@
 import type { Skill } from 'src/domain/skill';
-import {
-  addStatus,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_NONE,
-  MAGIC_TYPE_THUNDER,
-} from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from 'src/domain/skill';
 import { magicAttackUp } from 'src/data/status/magicAttackUp';
 
 export const electoricBrain: Skill = {

@@ -149,7 +149,9 @@ const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
   const downRate = defencer.statuses.find(status => status.name === directDiffenceDown.name) ? 0.8 : 1;
   const fearRate = defencer.statuses.find(status => status.name === fear.name) ? 0.8 : 1;
 
-  return ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100;
+  return (
+    ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100
+  );
 };
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
@@ -258,5 +260,3 @@ const calcDefenceAccuracy: CalcDefenceAccuracy = (skill, defencer) => {
 
 export const calcOrdinaryAccuracy: GetAccuracy = (self, actor, field, receiver) =>
   (100 + calcAttackAccuracy(self, actor) - calcDefenceAccuracy(self, receiver)) / 100;
-
-

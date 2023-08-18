@@ -12,7 +12,7 @@ export const recover: ActionToCharactor = (self, actor, randoms, field, receiver
     newReceiver.hp = physical.MaxHP;
   }
   return newReceiver;
-}
+};
 
 export const quench: Skill = {
   name: 'quench',

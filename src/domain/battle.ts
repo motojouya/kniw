@@ -352,13 +352,14 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
     })
     .filter(status => status.restWt > 0);
 
+  // prettier-ignore
   const wtRate = newCharactor.statuses.find(status => status.name === quick.name) ? 1.5
-               : newCharactor.statuses.find(status => status.name === slow.name) ? 0.75
-               : 1
-  newCharactor.restWt = Math.max(newCharactor.restWt - (wt * wtRate), 0);
+    : newCharactor.statuses.find(status => status.name === slow.name) ? 0.75
+    : 1;
+  newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
 
   if (newCharactor.statuses.find(status => status.name === acid.name)) {
-    newCharactor.hp = Math.max(newCharactor.hp - (wt / 10), 0);
+    newCharactor.hp = Math.max(newCharactor.hp - wt / 10, 0);
   }
 
   newCharactor.mp += Math.floor(wt / 10);

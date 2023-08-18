@@ -1,10 +1,5 @@
 import type { Skill } from 'src/domain/skill';
-import {
-  addStatus,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_NONE,
-  MAGIC_TYPE_THUNDER,
-} from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from 'src/domain/skill';
 import { magicAttackDown } from 'src/data/status/magicAttackDown';
 
 export const jammer: Skill = {

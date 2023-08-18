@@ -1,10 +1,5 @@
 import type { Skill } from 'src/domain/skill';
-import {
-  addStatus,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_NONE,
-  MAGIC_TYPE_THUNDER,
-} from 'src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from 'src/domain/skill';
 import { paralysis } from 'src/data/status/paralysis';
 
 export const eleciWave: Skill = {

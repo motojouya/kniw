@@ -49,4 +49,4 @@ export const toStatus: ToStatus = statusJson => {
 };
 
 export type UnderStatus = (status: Status, charactor: Charactor) => boolean;
-export const underStatus: UnderStatus = (status, charactor) => !!(charactor.statuses.find(s => s.name === status.name));
+export const underStatus: UnderStatus = (status, charactor) => !!charactor.statuses.find(s => s.name === status.name);

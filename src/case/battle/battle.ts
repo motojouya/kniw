@@ -74,7 +74,6 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       if (!(isExec instanceof NotApplicable) && isExec) {
         return actToField(battle, actor, selectedSkill, new Date(), createRandoms());
       }
-
     } else {
       const { receiverCount } = selectedSkill;
       const receiverOptions = lastTurn.sortedCharactors.map(receiver => charactorSelectOption(receiver));
