@@ -28390,7 +28390,7 @@ const showCharactorStatus = ({ select, notice }) => async (battle) => {
     await notice(`MP: ${charactor.mp}`);
     await notice(`WT: ${charactor.restWt}`);
     await notice('ステータス:');
-    await charactor.statuses.reduce((p, status) => p.then(() => notice(`  - ${status.label}(${status.restWt})`)), Promise.resolve());
+    await charactor.statuses.reduce((p, s) => p.then(() => notice(`  - ${s.status.label}(${s.restWt})`)), Promise.resolve());
     await notice(`種族: ${charactor.race.label}`);
     await notice(`祝福: ${charactor.blessing.label}`);
     await notice(`装備: ${charactor.clothing.label}`);
@@ -29772,7 +29772,7 @@ const wait = (wt, charactor, randoms) => {
     if (mp > physical.MaxMP) {
         mp = physical.MaxMP;
     }
-    return Object.assign(Object.assign({}, charactor), { mp });
+    return Object.assign(Object.assign({}, charactor), { mp, statuses: [...charactor.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
 };
 /* eslint-enable */
 exports.mpGainPlus = {
@@ -35316,12 +35316,7 @@ const skill_1 = __webpack_require__(8841);
 const charactor_1 = __webpack_require__(657);
 const recover = (self, actor, randoms, field, receiver) => {
     const physical = (0, charactor_1.getPhysical)(receiver);
-    const newReceiver = Object.assign({}, receiver);
-    newReceiver.hp += 150;
-    if (newReceiver.hp > physical.MaxHP) {
-        newReceiver.hp = physical.MaxHP;
-    }
-    return newReceiver;
+    return Object.assign(Object.assign({}, receiver), { statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))], hp: Math.min(receiver.hp + 150, physical.MaxHP) });
 };
 exports.recover = recover;
 exports.quench = {
@@ -35438,7 +35433,7 @@ const shootingGuard_1 = __webpack_require__(7775);
 const shotAction = (self, actor, randoms, field, receiver) => {
     const abilities = (0, charactor_1.getAbilities)(receiver);
     if (abilities.find(ability => ability.name === shootingGuard_1.shootingGuard.name)) {
-        return Object.assign({}, receiver);
+        return Object.assign(Object.assign({}, receiver), { statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
     }
     return (0, skill_1.calcOrdinaryDirectDamage)(self, actor, randoms, field, receiver);
 };
@@ -35934,7 +35929,7 @@ exports.accuracyDown = void 0;
 exports.accuracyDown = {
     name: 'accuracyDown',
     label: '命中down',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -35951,7 +35946,7 @@ exports.accuracyUp = void 0;
 exports.accuracyUp = {
     name: 'accuracyUp',
     label: '命中up',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -35968,7 +35963,7 @@ exports.acid = void 0;
 exports.acid = {
     name: 'acid',
     label: '毒',
-    restWt: 500,
+    wt: 500,
     description: '毒状態。wt10につき、hpが1削れる',
 };
 
@@ -35985,7 +35980,7 @@ exports.avoidDown = void 0;
 exports.avoidDown = {
     name: 'avoidDown',
     label: '回避down',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36002,7 +35997,7 @@ exports.avoidUp = void 0;
 exports.avoidUp = {
     name: 'avoidUp',
     label: '回避up',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36019,7 +36014,7 @@ exports.directAttackDown = void 0;
 exports.directAttackDown = {
     name: 'directAttackDown',
     label: '物理攻撃down',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36036,7 +36031,7 @@ exports.directAttackUp = void 0;
 exports.directAttackUp = {
     name: 'directAttackUp',
     label: '物理攻撃up',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36053,7 +36048,7 @@ exports.directDiffenceDown = void 0;
 exports.directDiffenceDown = {
     name: 'directDiffenceDown',
     label: '物理防御down',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36070,7 +36065,7 @@ exports.directDiffenceUp = void 0;
 exports.directDiffenceUp = {
     name: 'directDiffenceUp',
     label: '物理防御up',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36087,7 +36082,7 @@ exports.fear = void 0;
 exports.fear = {
     name: 'fear',
     label: '恐怖',
-    restWt: 500,
+    wt: 500,
     description: '物理攻撃、物理防御が両方downする',
 };
 
@@ -36153,7 +36148,7 @@ exports.magicAttackDown = void 0;
 exports.magicAttackDown = {
     name: 'magicAttackDown',
     label: '魔法攻撃down',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36170,7 +36165,7 @@ exports.magicAttackUp = void 0;
 exports.magicAttackUp = {
     name: 'magicAttackUp',
     label: '魔法攻撃up',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36187,7 +36182,7 @@ exports.magicDiffenceDown = void 0;
 exports.magicDiffenceDown = {
     name: 'magicDiffenceDown',
     label: '魔法防御down',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36204,7 +36199,7 @@ exports.magicDiffenceUp = void 0;
 exports.magicDiffenceUp = {
     name: 'magicDiffenceUp',
     label: '魔法防御up',
-    restWt: 500,
+    wt: 500,
     description: 'desc',
 };
 
@@ -36221,7 +36216,7 @@ exports.paralysis = void 0;
 exports.paralysis = {
     name: 'paralysis',
     label: '麻痺',
-    restWt: 500,
+    wt: 500,
     description: '確率で行動できない',
 };
 
@@ -36238,7 +36233,7 @@ exports.quick = void 0;
 exports.quick = {
     name: 'quick',
     label: 'クイック',
-    restWt: 500,
+    wt: 500,
     description: 'WTの消費が1.5倍になる',
 };
 
@@ -36255,7 +36250,7 @@ exports.silent = void 0;
 exports.silent = {
     name: 'silent',
     label: '沈黙',
-    restWt: 500,
+    wt: 500,
     description: '魔法攻撃ができない',
 };
 
@@ -36272,7 +36267,7 @@ exports.sleep = void 0;
 exports.sleep = {
     name: 'sleep',
     label: '眠り',
-    restWt: 500,
+    wt: 500,
     description: '行動不能',
 };
 
@@ -36289,7 +36284,7 @@ exports.slow = void 0;
 exports.slow = {
     name: 'slow',
     label: 'スロウ',
-    restWt: 500,
+    wt: 500,
     description: 'WTの消費が2/3になる',
 };
 
@@ -36517,7 +36512,7 @@ const stay = (battle, actor, datetime) => {
         field: lastTurn.field,
     };
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
         if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
             newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT;
         }
@@ -36566,7 +36561,7 @@ const actToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
     const resultReceivers = receivers.map(receiver => skill.action(skill, actor, randoms, lastTurn.field, receiver));
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
         if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
             newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT + skill.additionalWt;
             newCharactor.mp -= skill.mpConsumption;
@@ -36608,7 +36603,7 @@ const actToField = (battle, actor, skill, datetime, randoms) => {
     };
     newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
     newTurn.sortedCharactors = newTurn.sortedCharactors.map(charactor => {
-        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses] });
+        const newCharactor = Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
         if (actor.isVisitor === charactor.isVisitor && actor.name === charactor.name) {
             newCharactor.restWt = (0, charactor_1.getPhysical)(charactor).WT + skill.additionalWt;
             newCharactor.mp -= skill.mpConsumption;
@@ -36635,29 +36630,26 @@ exports.surrender = surrender;
 const waitCharactor = (charactor, wt, randoms) => {
     const abilities = (0, charactor_1.getAbilities)(charactor);
     /* eslint-disable @typescript-eslint/no-unsafe-return */
-    const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), Object.assign({}, charactor));
+    const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), Object.assign(Object.assign({}, charactor), { statuses: [...charactor.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] }));
     /* eslint-enable @typescript-eslint/no-unsafe-return */
-    newCharactor.statuses = newCharactor.statuses
-        .map(status => {
-        const restWt = status.restWt - wt;
-        return Object.assign(Object.assign({}, status), { restWt });
-    })
-        .filter(status => status.restWt > 0);
     /* eslint-disable no-nested-ternary */
     // prettier-ignore
-    const wtRate = newCharactor.statuses.find(status => status.name === status_1.quick.name) ? 1.5
-        : newCharactor.statuses.find(status => status.name === status_1.slow.name) ? 0.75
+    const wtRate = (0, status_2.underStatus)(status_1.quick, newCharactor) ? 1.5
+        : (0, status_2.underStatus)(status_1.slow, newCharactor) ? 0.75
             : 1;
     /* eslint-enable no-nested-ternary */
     newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
-    if (newCharactor.statuses.find(status => status.name === status_1.acid.name)) {
+    if ((0, status_2.underStatus)(status_1.acid, newCharactor)) {
         newCharactor.hp = Math.max(newCharactor.hp - wt / 10, 0);
     }
-    newCharactor.mp += Math.floor(wt / 10);
+    newCharactor.statuses = newCharactor.statuses
+        .map(attachedStatus => {
+        const restWt = attachedStatus.restWt - wt;
+        return Object.assign(Object.assign({}, attachedStatus), { restWt });
+    })
+        .filter(attachedStatus => attachedStatus.restWt > 0);
     const physical = (0, charactor_1.getPhysical)(newCharactor);
-    if (newCharactor.mp > physical.MaxMP) {
-        newCharactor.mp = physical.MaxMP;
-    }
+    newCharactor.mp = Math.min(newCharactor.mp + Math.floor(wt / 10), physical.MaxMP);
     return newCharactor;
 };
 const wait = (battle, wt, datetime, randoms) => {
@@ -36711,7 +36703,7 @@ exports.isSettlement = isSettlement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createCharactor = exports.toCharactor = exports.toCharactorJson = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = exports.charactorSchema = void 0;
+exports.createCharactor = exports.toCharactor = exports.toCharactorJson = exports.toAttachedStatusJson = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = exports.charactorSchema = exports.attachedStatusSchema = void 0;
 const physical_1 = __webpack_require__(8200);
 const status_1 = __webpack_require__(7929);
 const acquirement_1 = __webpack_require__(8826);
@@ -36742,6 +36734,14 @@ const basePhysical = {
     move: 4,
     jump: 3,
 };
+exports.attachedStatusSchema = {
+    type: 'object',
+    properties: {
+        status: status_1.statusSchema,
+        restWt: { type: 'integer' },
+    },
+    required: ['status', 'restWt'],
+};
 exports.charactorSchema = {
     type: 'object',
     properties: {
@@ -36750,7 +36750,10 @@ exports.charactorSchema = {
         blessing: { type: 'string' },
         clothing: { type: 'string' },
         weapon: { type: 'string' },
-        statuses: { type: 'array', items: {} },
+        statuses: {
+            type: 'array',
+            items: exports.attachedStatusSchema,
+        },
         hp: { type: 'integer' },
         mp: { type: 'integer' },
         restWt: { type: 'integer' },
@@ -36787,6 +36790,11 @@ const getPhysical = charactor => (0, physical_1.addPhysicals)([
     charactor.weapon.additionalPhysical,
 ]);
 exports.getPhysical = getPhysical;
+const toAttachedStatusJson = attached => ({
+    status: (0, status_1.toStatusJson)(attached.status),
+    restWt: attached.restWt,
+});
+exports.toAttachedStatusJson = toAttachedStatusJson;
 const toCharactorJson = charactor => {
     const json = {
         name: charactor.name,
@@ -36794,7 +36802,7 @@ const toCharactorJson = charactor => {
         blessing: charactor.blessing.name,
         clothing: charactor.clothing.name,
         weapon: charactor.weapon.name,
-        statuses: charactor.statuses.map(status_1.toStatusJson),
+        statuses: charactor.statuses.map(exports.toAttachedStatusJson),
         hp: charactor.hp,
         mp: charactor.mp,
         restWt: charactor.restWt,
@@ -36856,12 +36864,15 @@ const toCharactor = charactorJson => {
         return validateResult;
     }
     const statuses = [];
-    for (const status of charactorJson.statuses) {
-        const statusObj = (0, status_1.toStatus)(status);
+    for (const attachedStatusJson of charactorJson.statuses) {
+        const statusObj = (0, status_1.toStatus)(attachedStatusJson.status);
         if (statusObj instanceof store_1.JsonSchemaUnmatchError || statusObj instanceof store_1.DataNotFoundError) {
             return statusObj;
         }
-        statuses.push(statusObj);
+        statuses.push({
+            status: statusObj,
+            restWt: attachedStatusJson.restWt,
+        });
     }
     const someone = {
         name,
@@ -37156,7 +37167,8 @@ exports.createAbsolute = createAbsolute;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcOrdinaryAccuracy = exports.addStatus = exports.calcOrdinaryMagicalDamage = exports.calcOrdinaryDirectDamage = exports.MAGIC_TYPE_NONE = exports.MAGIC_TYPE_THUNDER = exports.MAGIC_TYPE_WIND = exports.MAGIC_TYPE_ICE = exports.MAGIC_TYPE_WATER = exports.MAGIC_TYPE_ROCK = exports.MAGIC_TYPE_FIRE = exports.DIRECT_TYPE_NONE = exports.DIRECT_TYPE_BLOW = exports.DIRECT_TYPE_STAB = exports.DIRECT_TYPE_SLASH = void 0;
 const charactor_1 = __webpack_require__(657);
-const status_1 = __webpack_require__(9538);
+const status_1 = __webpack_require__(7929);
+const status_2 = __webpack_require__(9538);
 exports.DIRECT_TYPE_SLASH = 'SLASH';
 exports.DIRECT_TYPE_STAB = 'STAB';
 exports.DIRECT_TYPE_BLOW = 'BLOW';
@@ -37219,23 +37231,23 @@ const calcDirectRegistance = (skill, charactor) => {
 const calcDirectAttack = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
     const magicRate = calcMagicRate(skill, attacker);
-    const upRate = attacker.statuses.find(status => status.name === status_1.directAttackUp.name) ? 1.2 : 1;
-    const downRate = attacker.statuses.find(status => status.name === status_1.directAttackDown.name) ? 0.8 : 1;
-    const fearRate = attacker.statuses.find(status => status.name === status_1.fear.name) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(status_2.directAttackUp, attacker) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(status_2.directAttackDown, attacker) ? 0.8 : 1;
+    const fearRate = (0, status_1.underStatus)(status_2.fear, attacker) ? 0.8 : 1;
     return ((physical.STR + physical.DEX) * magicRate * upRate * downRate * fearRate) / 100;
 };
 const calcDirectDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
     const magicRegistance = calcMagicRegistance(skill, defencer);
     const directRegistance = calcDirectRegistance(skill, defencer);
-    const upRate = defencer.statuses.find(status => status.name === status_1.directDiffenceUp.name) ? 1.2 : 1;
-    const downRate = defencer.statuses.find(status => status.name === status_1.directDiffenceDown.name) ? 0.8 : 1;
-    const fearRate = defencer.statuses.find(status => status.name === status_1.fear.name) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(status_2.directDiffenceUp, defencer) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(status_2.directDiffenceDown, defencer) ? 0.8 : 1;
+    const fearRate = (0, status_1.underStatus)(status_2.fear, defencer) ? 0.8 : 1;
     return (((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100);
 };
 const calcOrdinaryDirectDamage = (self, actor, randoms, field, receiver) => {
     if (self.type === 'SKILL_TO_FIELD') {
-        return Object.assign({}, receiver);
+        return Object.assign(Object.assign({}, receiver), { statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
     }
     let damage = self.baseDamage + calcDirectAttack(self, actor) - calcDirectDefence(self, receiver);
     damage += Math.ceil(randoms.damage * 10) - 5;
@@ -37246,27 +37258,27 @@ const calcOrdinaryDirectDamage = (self, actor, randoms, field, receiver) => {
     if (restHp < 0) {
         restHp = 0;
     }
-    return Object.assign(Object.assign({}, receiver), { hp: restHp });
+    return Object.assign(Object.assign({}, receiver), { hp: restHp, statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
 };
 exports.calcOrdinaryDirectDamage = calcOrdinaryDirectDamage;
 const calcMagicalAttack = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
     const magicRate = calcMagicRate(skill, attacker);
-    const upRate = attacker.statuses.find(status => status.name === status_1.magicAttackUp.name) ? 1.2 : 1;
-    const downRate = attacker.statuses.find(status => status.name === status_1.magicAttackDown.name) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(status_2.magicAttackUp, attacker) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(status_2.magicAttackDown, attacker) ? 0.8 : 1;
     return ((physical.INT + physical.MND) * magicRate * upRate * downRate) / 100;
 };
 const calcMagicalDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
     const magicRegistance = calcMagicRegistance(skill, defencer);
     const directRegistance = calcDirectRegistance(skill, defencer);
-    const upRate = defencer.statuses.find(status => status.name === status_1.magicDiffenceUp.name) ? 1.2 : 1;
-    const downRate = defencer.statuses.find(status => status.name === status_1.magicDiffenceDown.name) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(status_2.magicDiffenceUp, defencer) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(status_2.magicDiffenceDown, defencer) ? 0.8 : 1;
     return ((physical.VIT + physical.MND) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
 };
 const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
     if (self.type === 'SKILL_TO_FIELD') {
-        return Object.assign({}, receiver);
+        return Object.assign(Object.assign({}, receiver), { statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
     }
     let damage = self.baseDamage + calcMagicalAttack(self, actor) - calcMagicalDefence(self, receiver);
     damage += Math.ceil(randoms.damage * 10) - 5;
@@ -37277,13 +37289,16 @@ const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
     if (restHp < 0) {
         restHp = 0;
     }
-    return Object.assign(Object.assign({}, receiver), { hp: restHp });
+    return Object.assign(Object.assign({}, receiver), { hp: restHp, statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
 };
 exports.calcOrdinaryMagicalDamage = calcOrdinaryMagicalDamage;
 const addStatus = status => (self, actor, randoms, field, receiver) => {
-    const newReceiver = Object.assign({}, receiver);
-    if (!newReceiver.statuses.find(s => s.name === status.name)) {
-        newReceiver.statuses.push(status);
+    const newReceiver = Object.assign(Object.assign({}, receiver), { statuses: [...receiver.statuses.map(attachedStatus => (Object.assign({}, attachedStatus)))] });
+    if (!(0, status_1.underStatus)(status, newReceiver)) {
+        newReceiver.statuses.push({
+            status,
+            restWt: status.wt,
+        });
     }
     return newReceiver;
 };
@@ -37312,18 +37327,8 @@ exports.underStatus = exports.toStatus = exports.toStatusJson = exports.statusSc
 const json_schema_1 = __webpack_require__(6540);
 const status_1 = __webpack_require__(3244);
 const store_1 = __webpack_require__(9895);
-exports.statusSchema = {
-    type: 'object',
-    properties: {
-        name: { type: 'string' },
-        restWt: { type: 'integer' },
-    },
-    required: ['name', 'restWt'],
-};
-const toStatusJson = status => ({
-    name: status.name,
-    restWt: status.restWt,
-});
+exports.statusSchema = { type: 'string' };
+const toStatusJson = status => status.name;
 exports.toStatusJson = toStatusJson;
 const toStatus = statusJson => {
     const compile = (0, json_schema_1.createValidationCompiler)();
@@ -37334,15 +37339,14 @@ const toStatus = statusJson => {
         console.debug(errors);
         return new store_1.JsonSchemaUnmatchError(errors, 'statusのjsonデータではありません');
     }
-    const status = (0, status_1.getStatus)(statusJson.name);
+    const status = (0, status_1.getStatus)(statusJson);
     if (!status) {
-        return new store_1.DataNotFoundError(statusJson.name, 'status', `${statusJson.name}というstatusは存在しません`);
+        return new store_1.DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);
     }
-    status.restWt = statusJson.restWt;
     return status;
 };
 exports.toStatus = toStatus;
-const underStatus = (status, charactor) => !!charactor.statuses.find(s => s.name === status.name);
+const underStatus = (status, charactor) => !!charactor.statuses.find(s => s.status.name === status.name);
 exports.underStatus = underStatus;
 
 
