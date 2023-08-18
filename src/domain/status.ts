@@ -31,7 +31,7 @@ export const toStatus: ToStatus = statusJson => {
 
   const status = getStatus(statusJson);
   if (!status) {
-    return new DataNotFoundError(statusJson.name, 'status', `${statusJson.name}というstatusは存在しません`);
+    return new DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);
   }
 
   return status;

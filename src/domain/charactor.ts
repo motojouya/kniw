@@ -232,7 +232,7 @@ export const toCharactor: ToCharactor = charactorJson => {
     return validateResult;
   }
 
-  const statuses: Status[] = [];
+  const statuses: AttachedStatus[] = [];
   for (const attachedStatusJson of charactorJson.statuses) {
     const statusObj = toStatus(attachedStatusJson.status);
 

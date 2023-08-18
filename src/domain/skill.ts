@@ -132,9 +132,9 @@ const calcDirectAttack: CalcDirectAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
 
-  const upRate = attacker.statuses.find(status => status.name === directAttackUp.name) ? 1.2 : 1;
-  const downRate = attacker.statuses.find(status => status.name === directAttackDown.name) ? 0.8 : 1;
-  const fearRate = attacker.statuses.find(status => status.name === fear.name) ? 0.8 : 1;
+  const upRate = underStatus(directAttackUp, attacker) ? 1.2 : 1;
+  const downRate = underStatus(directAttackDown, attacker) ? 0.8 : 1;
+  const fearRate = underStatus(fear, attacker) ? 0.8 : 1;
 
   return ((physical.STR + physical.DEX) * magicRate * upRate * downRate * fearRate) / 100;
 };
@@ -145,9 +145,9 @@ const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
   const magicRegistance = calcMagicRegistance(skill, defencer);
   const directRegistance = calcDirectRegistance(skill, defencer);
 
-  const upRate = defencer.statuses.find(status => status.name === directDiffenceUp.name) ? 1.2 : 1;
-  const downRate = defencer.statuses.find(status => status.name === directDiffenceDown.name) ? 0.8 : 1;
-  const fearRate = defencer.statuses.find(status => status.name === fear.name) ? 0.8 : 1;
+  const upRate = underStatus(directDiffenceUp, defencer) ? 1.2 : 1;
+  const downRate = underStatus(directDiffenceDown, defencer) ? 0.8 : 1;
+  const fearRate = underStatus(fear, defencer) ? 0.8 : 1;
 
   return (
     ((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100
@@ -185,8 +185,8 @@ const calcMagicalAttack: CalcMagicalAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
 
-  const upRate = attacker.statuses.find(status => status.name === magicAttackUp.name) ? 1.2 : 1;
-  const downRate = attacker.statuses.find(status => status.name === magicAttackDown.name) ? 0.8 : 1;
+  const upRate = underStatus(magicAttackUp, attacker) ? 1.2 : 1;
+  const downRate = underStatus(magicAttackDown, attacker) ? 0.8 : 1;
 
   return ((physical.INT + physical.MND) * magicRate * upRate * downRate) / 100;
 };
@@ -197,8 +197,8 @@ const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
   const magicRegistance = calcMagicRegistance(skill, defencer);
   const directRegistance = calcDirectRegistance(skill, defencer);
 
-  const upRate = defencer.statuses.find(status => status.name === magicDiffenceUp.name) ? 1.2 : 1;
-  const downRate = defencer.statuses.find(status => status.name === magicDiffenceDown.name) ? 0.8 : 1;
+  const upRate = underStatus(magicDiffenceUp, defencer) ? 1.2 : 1;
+  const downRate = underStatus(magicDiffenceDown, defencer) ? 0.8 : 1;
 
   return ((physical.VIT + physical.MND) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
 };

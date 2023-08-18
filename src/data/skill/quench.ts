@@ -7,7 +7,7 @@ export const recover: ActionToCharactor = (self, actor, randoms, field, receiver
   return {
     ...receiver,
     statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
-    hp: Math.min(newReceiver.hp + 150, physical.MaxHP),
+    hp: Math.min(receiver.hp + 150, physical.MaxHP),
   };
 };
 
