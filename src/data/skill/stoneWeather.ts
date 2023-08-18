@@ -6,7 +6,8 @@ export const stoneWeather: Skill = {
   name: 'stoneWeather',
   label: '風化',
   type: 'SKILL_TO_CHARACTOR',
-  action: ((skill, actor, randoms, field, receiver) => addStatus(directDiffenceDown)(skill, actor, randoms, field, receiver)),
+  action: (skill, actor, randoms, field, receiver) =>
+    addStatus(directDiffenceDown)(skill, actor, randoms, field, receiver),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ROCK,
   baseDamage: 0,
