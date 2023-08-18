@@ -10,7 +10,7 @@ import { paralysis } from 'src/data/status/paralysis';
 
 export const paralysisAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
-  return addStatus(paralysis)(self, actor, randoms, field, receiver);
+  return addStatus(paralysis)(self, actor, randoms, field, newReceiver);
 };
 
 export const paralysisScratch: Skill = {

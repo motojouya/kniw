@@ -352,10 +352,12 @@ const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
     })
     .filter(status => status.restWt > 0);
 
+  /* eslint-disable no-nested-ternary */
   // prettier-ignore
   const wtRate = newCharactor.statuses.find(status => status.name === quick.name) ? 1.5
     : newCharactor.statuses.find(status => status.name === slow.name) ? 0.75
     : 1;
+  /* eslint-enable no-nested-ternary */
   newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
 
   if (newCharactor.statuses.find(status => status.name === acid.name)) {

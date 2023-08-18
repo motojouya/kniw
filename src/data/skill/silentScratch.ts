@@ -10,7 +10,7 @@ import { silent } from 'src/data/status/silent';
 
 export const silentAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
-  return addStatus(silent)(self, actor, randoms, field, receiver);
+  return addStatus(silent)(self, actor, randoms, field, newReceiver);
 };
 
 export const silentScratch: Skill = {
