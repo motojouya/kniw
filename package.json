@@ -15,10 +15,10 @@
     "eslint": "eslint --fix --ext .ts src",
     "prettier_check": "npx prettier --check 'src/**/*.ts'",
     "eslint_check": "eslint --max-warnings=0 --ext .ts src",
-    "wdev": "next dev",
-    "wbuild": "next build",
-    "wstart": "next start",
-    "wexport": "next export"
+    "wdev": "npx next dev",
+    "wbuild": "npx next build",
+    "wstart": "npx next start",
+    "wexport": "npx next export"
   },
   "private": true,
   "devDependencies": {
@@ -32,6 +32,7 @@
     "eslint-plugin-import": "^2.27.5",
     "mocha": "^10.2.0",
     "prettier": "^3.0.0",
+    "serve": "^14.2.0",
     "ts-loader": "^9.3.0",
     "tsconfig-paths": "^4.2.0",
     "tsconfig-paths-webpack-plugin": "^4.1.0",
