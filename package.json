@@ -14,7 +14,11 @@
     "prettier": "npx prettier --write 'src/**/*.ts'",
     "eslint": "eslint --fix --ext .ts src",
     "prettier_check": "npx prettier --check 'src/**/*.ts'",
-    "eslint_check": "eslint --max-warnings=0 --ext .ts src"
+    "eslint_check": "eslint --max-warnings=0 --ext .ts src",
+    "wdev": "next dev",
+    "wbuild": "next build",
+    "wstart": "next start",
+    "wexport": "next export"
   },
   "private": true,
   "devDependencies": {
@@ -45,7 +49,10 @@
     "commander": "^11.0.0",
     "date-fns": "^2.30.0",
     "json-schema-to-ts": "^2.9.1",
+    "next": "^13.4.19",
     "prompts": "^2.4.2",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "shebang-loader": "^0.0.1",
     "ts-node": "^10.9.1"
   }
