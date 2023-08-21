@@ -5,15 +5,23 @@
 - next.js
 - github pages
   - 別アカウント作ってそっちでやりたい
+  - 別アカウントは規約的な問題があるっぽいので今のリポジトリで
 - UIライブラリ
   - material uiはややこしい感じがする
   - やることは単純なので凝ったことできなくていいし、テーマとかいらないが
+  - chakra ui
+  - https://chakra-ui.com/getting-started
 - formライブラリ
   - なんかいいのあれば
+  - react-hooks-form
+  - https://www.react-hook-form.com/get-started
+  - https://chakra-ui.com/getting-started/with-hook-form
 - storage
   - indexed dbを使う  
   - file_repositoryもKVSな構造をしているので、自然と使えると思う
   - ライブラリはなんか探す
+  - dexie.js
+  - https://dexie.org/docs/Tutorial/React
 
 ## dir
 

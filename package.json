@@ -41,18 +41,25 @@
     "webpack-merge": "^5.8.0"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.8.0",
     "@commander-js/extra-typings": "^11.0.0",
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
     "@types/mocha": "^10.0.1",
     "@types/prompts": "^2.4.4",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "commander": "^11.0.0",
     "date-fns": "^2.30.0",
+    "dexie": "^3.2.4",
+    "dexie-react-hooks": "^1.1.6",
+    "framer-motion": "^10.16.0",
     "json-schema-to-ts": "^2.9.1",
     "next": "^13.4.19",
     "prompts": "^2.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-hook-form": "^7.45.4",
     "shebang-loader": "^0.0.1",
     "ts-node": "^10.9.1"
   }
