@@ -1,0 +1,1 @@
+(self.webpackChunk_N_E=self.webpackChunk_N_E||[]).push([[141],{6698:function(n,u,t){(window.__NEXT_P=window.__NEXT_P||[]).push(["/party",function(){return t(2993)}])},2993:function(n,u,t){"use strict";t.r(u);var _=t(5893);u.default=()=>(0,_.jsx)("div",{children:"party!"})}},function(n){n.O(0,[774,888,179],function(){return n(n.s=6698)}),_N_E=n.O()}]);
