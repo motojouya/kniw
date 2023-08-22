@@ -1,7 +1,7 @@
 import { FC } from 'react';
 // import { ajvResolver } from '@hookform/resolvers/ajv';
-//import { useForm } from 'react-hook-form';
-//import { FormErrorMessage, FormLabel, FormControl, Input, Button, Box } from '@chakra-ui/react';
+// import { useForm } from 'react-hook-form';
+// import { FormErrorMessage, FormLabel, FormControl, Input, Button, Box } from '@chakra-ui/react';
 // import Link from 'next/link'
 
 // TODO 型エラー type: 'string' がダメって怒られる
