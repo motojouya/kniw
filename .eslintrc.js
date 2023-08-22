@@ -1,8 +1,9 @@
 module.exports = {
   parser: "@typescript-eslint/parser",
-  plugins: ["@typescript-eslint"],
+  plugins: ["react", "react-hooks", "@typescript-eslint"],
   root: true,
   env: {
+    // "browser": true,
     node: true,
     es2021: true,
   },
@@ -11,6 +12,14 @@ module.exports = {
     sourceType: "module",
     project: "./tsconfig.eslint.json",
     tsconfigRootDir: __dirname,
+    "ecmaFeatures": {
+      "jsx": true
+    },
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
   },
   ignorePatterns: ["dist"],
   extends: [
@@ -18,7 +27,9 @@ module.exports = {
     "airbnb-base",
     "airbnb-typescript/base",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "prettier"
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier",
   ],
   rules: {
     "no-console": "off",
@@ -45,5 +56,7 @@ module.exports = {
         message: '`with` is disallowed in strict mode because it makes code impossible to predict and optimize.',
       },
     ],
+    "react/jsx-uses-react": "off",
+    "react/react-in-jsx-scope": "off",
   },
 };

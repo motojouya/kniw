@@ -18,7 +18,8 @@
     "wdev": "npx next dev",
     "wbuild": "npx next build",
     "wstart": "npx next start",
-    "wexport": "npx next export"
+    "wexport": "npx next export",
+    "serve": "sudo npx serve out -l 80"
   },
   "private": true,
   "devDependencies": {
@@ -30,6 +31,8 @@
     "eslint-config-airbnb-typescript": "^17.0.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
     "mocha": "^10.2.0",
     "prettier": "^3.0.0",
     "serve": "^14.2.0",
@@ -46,6 +49,7 @@
     "@commander-js/extra-typings": "^11.0.0",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
+    "@hookform/resolvers": "^3.2.0",
     "@types/mocha": "^10.0.1",
     "@types/prompts": "^2.4.4",
     "ajv": "^8.12.0",
