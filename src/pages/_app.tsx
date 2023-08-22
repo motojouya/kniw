@@ -1,8 +1,7 @@
+import { AppProps } from "next/app";
 import { ChakraProvider } from '@chakra-ui/react'
-// import { FC, ReactNode } from 'react';
 
-// TODO 型ちゃんとつける
-const MyApp = ({ Component, pageProps }: any) => (
+const MyApp = ({ Component, pageProps }: AppProps) => (
   <ChakraProvider>
     <Component {...pageProps} />
   </ChakraProvider>
