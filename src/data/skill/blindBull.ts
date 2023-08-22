@@ -14,5 +14,5 @@ export const blindBull: Skill = {
   additionalWt: 150,
   effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '刺突における強攻撃',
+  description: '刺突の強攻撃',
 };
