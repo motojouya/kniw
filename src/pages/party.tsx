@@ -24,52 +24,6 @@ import {
 // import Link from 'next/link'
 import { FromSchema } from 'json-schema-to-ts';
 
-export const charactorSchema = {
- type: 'object',
- properties: {
-   name: {
-     type: 'string',
-     minLength: 1,
-     errorMessage: { minLength: 'username field is required' },
-   },
-   // race: {
-   //   type: 'string',
-   //   minLength: 1,
-   //   errorMessage: { minLength: 'username field is required' },
-   // },
-   // blessing: {
-   //   type: 'string',
-   //   minLength: 1,
-   //   errorMessage: { minLength: 'username field is required' },
-   // },
-   // clothing: {
-   //   type: 'string',
-   //   minLength: 1,
-   //   errorMessage: { minLength: 'username field is required' },
-   // },
-   // weapon: {
-   //   type: 'string',
-   //   minLength: 1,
-   //   errorMessage: { minLength: 'username field is required' },
-   // },
- },
- required: ['name'],// , 'race', 'blessing', 'clothing', 'weapon'],
- additionalProperties: false,
-} as const;
-
-type CharactorJson = FromSchema<typeof charactorSchema>;
-
-export const partySchema = {
-  type: 'object',
-  properties: {
-    name: { type: 'string' },
-    charactors: { type: 'array', items: charactorSchema },
-  },
-  required: ['name', 'charactors'],
-} as const;
-
-export type PartyJson = FromSchema<typeof partySchema>;
-
 const Index: FC = () => {
   const {
     handleSubmit,
@@ -79,7 +33,8 @@ const Index: FC = () => {
     // reset,
     // trigger,
     // setError,
-  } = useForm<PartyJson>({ resolver: ajvResolver<PartyJson>(partySchema) });
+  // } = useForm<PartyJson>({ resolver: ajvResolver<PartyJson>(partySchema) });
+  } = useForm();
 
   const { fields, append, remove } = useFieldArray({
     control,
@@ -94,10 +49,8 @@ const Index: FC = () => {
       }, 3000);
     });
 
-  type IndexReversed = (ary: Array, i: number) => number;
-  const indexReversed: IndexReversed = (ary, i) => (fields.length - i - 1);
-
-  const charactorItemId = (ary, i, property) => `charactor.${indexReversed(ary, i)}.${property}`;
+  const indexReversed = <T>(ary: Array<T>, i: number): number => (ary.length - i - 1);
+  const charactorItemId = <T>(ary: Array<T>, i: number, property: string): number => `charactor.${indexReversed(ary, i)}.${property}`;
 
   return (
     <Box p={4}>
@@ -130,7 +83,7 @@ const Index: FC = () => {
                   <Button type="button" onClick={() => remove(index)}>Delete</Button>
                 </CardFooter>
               </Card>
-            <ListItem>
+            </ListItem>
           ))}
         </List>
         <Button type="button" onClick={() => append({ name: '' })} >append</Button>
@@ -142,3 +95,69 @@ const Index: FC = () => {
 };
 
 export default Index;
+
+// TODO Ajv導入
+// export const charactorSchema = {
+//   type: 'object',
+//   properties: {
+//     name: {
+//       type: 'string',
+//       minLength: 1,
+//       errorMessage: { minLength: 'username field is required' },
+//     },
+//     // race: {
+//     //   type: 'string',
+//     //   minLength: 1,
+//     //   errorMessage: { minLength: 'username field is required' },
+//     // },
+//     // blessing: {
+//     //   type: 'string',
+//     //   minLength: 1,
+//     //   errorMessage: { minLength: 'username field is required' },
+//     // },
+//     // clothing: {
+//     //   type: 'string',
+//     //   minLength: 1,
+//     //   errorMessage: { minLength: 'username field is required' },
+//     // },
+//     // weapon: {
+//     //   type: 'string',
+//     //   minLength: 1,
+//     //   errorMessage: { minLength: 'username field is required' },
+//     // },
+//   },
+//   required: ['name'],// , 'race', 'blessing', 'clothing', 'weapon'],
+//   additionalProperties: false,
+// } as const;
+// 
+// type CharactorJson = FromSchema<typeof charactorSchema>;
+
+// export const partySchema = {
+//   type: 'object',
+//   properties: {
+//     name: {
+//       type: 'string',
+//       minLength: 1,
+//       errorMessage: { minLength: 'username field is required' },
+//     },
+//     charactors: {
+//       type: 'array',
+//       items: {
+//         type: 'object',
+//         properties: {
+//           name: {
+//             type: 'string',
+//             minLength: 1,
+//             errorMessage: { minLength: 'username field is required' },
+//           },
+//         },
+//         required: ['name'],// , 'race', 'blessing', 'clothing', 'weapon'],
+//         additionalProperties: false,
+//       }
+//     },
+//   },
+//   required: ['name', 'charactors'],
+// } as const;
+// 
+// export type PartyJson = FromSchema<typeof partySchema>;
+
