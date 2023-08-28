@@ -17,31 +17,30 @@ import type {
 } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
+import Dexie from 'dexie';
 import type { CopyFailError } from 'src/io/repository';
 
-// 以下実装と、ファイル保存の固有の型
-const FILE_EXTENSION = '.json';
+import { PartyJson } from 'src/domain/party';
+import { BattleJson } from 'src/domain/battle';
 
-const userHome = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
-export const repositoryDirectory = path.join(userHome || '', '.kniw');
-
-type IsDataFile = (basePath: string, dirName: string, file: string) => boolean;
-const isDataFile: IsDataFile = (basePath, dirName, file) =>
-  fs.statSync(path.join(basePath, dirName, file)).isFile() && new RegExp(`.*${FILE_EXTENSION}`).test(file);
-
-type CreateDirctory = (dirName: string) => Promise<void>;
-const createDirctory: CreateDirctory = async dirName => {
-  if (!fs.existsSync(dirName)) {
-    await fs.promises.mkdir(dirName);
+class KniwDB extends Dexie {
+  party: Dexie.Table<PartyJson, string>;
+  battle: Dexie.Table<BattleJson, string>;
+  constructor () {
+    super('KniwDB');
+    this.version(1).stores({
+      patry: 'name',
+      battle: 'title',
+    });
   }
-};
+}
 
-const createCheckNamespace: CreateCheckNamespace = basePath => async namespace =>
-  createDirctory(path.join(basePath, namespace));
+var db = new Dexie("MyAppDatabase");
+db.version(1).stores({contacts: 'id, first, last'});
+db.contacts.put({first: "First name", last: "Last name"}); // Fails to compile
 
-type ResolvePath = (basePath: string, dirName: string, fileBaseName: string, extension: string) => string;
-const resolvePath: ResolvePath = (basePath, dirName, fileBaseName, extension) =>
-  path.join(basePath, dirName, fileBaseName + extension);
+
+const createCheckNamespace: CreateCheckNamespace = basePath => async namespace => {};
 
 const createSave: CreateSave = basePath => async (namespace, objctKey, data) =>
   fs.promises.writeFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), JSON.stringify(data));
@@ -130,7 +129,6 @@ export const readJson: ReadJson = async fileName => {
 };
 
 export const createRepository: CreateRepository = async basePath => {
-  await createDirctory(basePath);
   return {
     checkNamespace: createCheckNamespace(basePath),
     save: createSave(basePath),
