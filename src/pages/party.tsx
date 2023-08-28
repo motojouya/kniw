@@ -34,6 +34,15 @@ import {
   Select,
   Heading,
   Text,
+  Table,
+//  Thead,
+  Tbody,
+//  Tfoot,
+  Tr,
+  Th,
+  Td,
+//  TableCaption,
+  TableContainer,
 } from '@chakra-ui/react';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
@@ -107,6 +116,7 @@ type PartyForm = {
   name: string;
   charactors: CharactorForm[]
 };
+
 const partyFormSchema: JSONSchemaType<PartyForm> = {
   type: 'object',
   properties: {
@@ -171,37 +181,41 @@ const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
   const skillsText = skills.map(skill => skill.label).join(', ');
 
   return (
-    <Box as={'dl'}>
-      <Heading as={'dt'}>名前</Heading><Text as={'dd'}>{charactor.name}</Text>
-      <Heading as={'dt'}>種族</Heading><Text as={'dd'}>{charactor.race.label}</Text>
-      <Heading as={'dt'}>祝福</Heading><Text as={'dd'}>{charactor.blessing.label}</Text>
-      <Heading as={'dt'}>装備</Heading><Text as={'dd'}>{charactor.clothing.label}</Text>
-      <Heading as={'dt'}>武器</Heading><Text as={'dd'}>{charactor.weapon.label}</Text>
-      <Heading as={'dt'}>MaxHP</Heading><Text as={'dd'}>{physical.MaxHP}</Text>
-      <Heading as={'dt'}>MaxMP</Heading><Text as={'dd'}>{physical.MaxMP}</Text>
-      <Heading as={'dt'}>STR</Heading><Text as={'dd'}>{physical.STR}</Text>
-      <Heading as={'dt'}>VIT</Heading><Text as={'dd'}>{physical.VIT}</Text>
-      <Heading as={'dt'}>DEX</Heading><Text as={'dd'}>{physical.DEX}</Text>
-      <Heading as={'dt'}>AGI</Heading><Text as={'dd'}>{physical.AGI}</Text>
-      <Heading as={'dt'}>AVD</Heading><Text as={'dd'}>{physical.AVD}</Text>
-      <Heading as={'dt'}>INT</Heading><Text as={'dd'}>{physical.INT}</Text>
-      <Heading as={'dt'}>MND</Heading><Text as={'dd'}>{physical.MND}</Text>
-      <Heading as={'dt'}>RES</Heading><Text as={'dd'}>{physical.RES}</Text>
-      <Heading as={'dt'}>WT</Heading><Text as={'dd'}>{physical.WT}</Text>
-      <Heading as={'dt'}>刺突耐性</Heading><Text as={'dd'}>{physical.StabResistance}</Text>
-      <Heading as={'dt'}>斬撃耐性</Heading><Text as={'dd'}>{physical.SlashResistance}</Text>
-      <Heading as={'dt'}>打撃耐性</Heading><Text as={'dd'}>{physical.BlowResistance}</Text>
-      <Heading as={'dt'}>火属性</Heading><Text as={'dd'}>{physical.FireSuitable}</Text>
-      <Heading as={'dt'}>岩属性</Heading><Text as={'dd'}>{physical.RockSuitable}</Text>
-      <Heading as={'dt'}>水属性</Heading><Text as={'dd'}>{physical.WaterSuitable}</Text>
-      <Heading as={'dt'}>氷属性</Heading><Text as={'dd'}>{physical.IceSuitable}</Text>
-      <Heading as={'dt'}>風属性</Heading><Text as={'dd'}>{physical.AirSuitable}</Text>
-      <Heading as={'dt'}>雷属性</Heading><Text as={'dd'}>{physical.ThunderSuitable}</Text>
-      <Heading as={'dt'}>移動距離</Heading><Text as={'dd'}>{physical.move}</Text>
-      <Heading as={'dt'}>移動高さ</Heading><Text as={'dd'}>{physical.jump}</Text>
-      <Heading as={'dt'}>アビリティ</Heading><Text as={'dd'}>{abilitiesText}</Text>
-      <Heading as={'dt'}>スキル</Heading><Text as={'dd'}>{skillsText}</Text>
-    </Box>
+    <TableContainer>
+      <Table variant='simple'>
+        <Tbody>
+          <Tr><Th>名前      </Th><Td>{charactor.name}          </Td></Tr>
+          <Tr><Th>種族      </Th><Td>{charactor.race.label}    </Td></Tr>
+          <Tr><Th>祝福      </Th><Td>{charactor.blessing.label}</Td></Tr>
+          <Tr><Th>装備      </Th><Td>{charactor.clothing.label}</Td></Tr>
+          <Tr><Th>武器      </Th><Td>{charactor.weapon.label}  </Td></Tr>
+          <Tr><Th>MaxHP     </Th><Td>{physical.MaxHP}          </Td></Tr>
+          <Tr><Th>MaxMP     </Th><Td>{physical.MaxMP}          </Td></Tr>
+          <Tr><Th>STR       </Th><Td>{physical.STR}            </Td></Tr>
+          <Tr><Th>VIT       </Th><Td>{physical.VIT}            </Td></Tr>
+          <Tr><Th>DEX       </Th><Td>{physical.DEX}            </Td></Tr>
+          <Tr><Th>AGI       </Th><Td>{physical.AGI}            </Td></Tr>
+          <Tr><Th>AVD       </Th><Td>{physical.AVD}            </Td></Tr>
+          <Tr><Th>INT       </Th><Td>{physical.INT}            </Td></Tr>
+          <Tr><Th>MND       </Th><Td>{physical.MND}            </Td></Tr>
+          <Tr><Th>RES       </Th><Td>{physical.RES}            </Td></Tr>
+          <Tr><Th>WT        </Th><Td>{physical.WT}             </Td></Tr>
+          <Tr><Th>刺突耐性  </Th><Td>{physical.StabResistance} </Td></Tr>
+          <Tr><Th>斬撃耐性  </Th><Td>{physical.SlashResistance}</Td></Tr>
+          <Tr><Th>打撃耐性  </Th><Td>{physical.BlowResistance} </Td></Tr>
+          <Tr><Th>火属性    </Th><Td>{physical.FireSuitable}   </Td></Tr>
+          <Tr><Th>岩属性    </Th><Td>{physical.RockSuitable}   </Td></Tr>
+          <Tr><Th>水属性    </Th><Td>{physical.WaterSuitable}  </Td></Tr>
+          <Tr><Th>氷属性    </Th><Td>{physical.IceSuitable}    </Td></Tr>
+          <Tr><Th>風属性    </Th><Td>{physical.AirSuitable}    </Td></Tr>
+          <Tr><Th>雷属性    </Th><Td>{physical.ThunderSuitable}</Td></Tr>
+          <Tr><Th>移動距離  </Th><Td>{physical.move}           </Td></Tr>
+          <Tr><Th>移動高さ  </Th><Td>{physical.jump}           </Td></Tr>
+          <Tr><Th>アビリティ</Th><Td>{abilitiesText}           </Td></Tr>
+          <Tr><Th>スキル    </Th><Td>{skillsText}              </Td></Tr>
+        </Tbody>
+      </Table>
+    </TableContainer>
   );
 };
 
@@ -240,7 +254,7 @@ const CharactorCard: FC<{
   };
 
   return (
-    <Card>
+    <Card p={3} border='solid'>
       <CardHeader>
         <Button type="button" onClick={() => remove(index)}>Fire</Button>
       </CardHeader>
@@ -327,7 +341,8 @@ const Form: FC<{ party: Party | null }> = ({ party }) => {
   /* eslint-disable @typescript-eslint/no-misused-promises */
   return (
     <Box p={4}>
-      <p>This is the party page</p>
+      <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
+      <Text>This is the party page</Text>
       <form onSubmit={handleSubmit(onSubmit)}>
         {party ? (
           <Box as={'dl'}>
@@ -349,16 +364,41 @@ const Form: FC<{ party: Party | null }> = ({ party }) => {
           ))}
         </List>
         <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire</Button>
-        <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">{party ? 'Change' : 'Create'}</Button>
+        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">{party ? 'Change' : 'Create'}</Button>
       </form>
     </Box>
   );
   /* eslint-enable @typescript-eslint/no-misused-promises */
 };
 
+const PartyList: FC<{ parties: Party[] }> = ({ parties }) => (
+   <Box>
+     <Link href={{ pathname: '/' }}><a>戻る</a></Link>
+     <Box>
+       <List>
+         <ListItem key='party-new'>
+           <Link href={{ pathname: 'party', query: { name: '_new' } }}><a>新しく作る</a></Link>
+         </ListItem>
+         {parties.map((testParty, index) => (
+           <ListItem key={`party-${index}`}>
+             <Link href={{ pathname: 'party', query: { name: testParty.name } }}><a>{testParty.name}</a></Link>
+           </ListItem>
+         ))}
+       </List>
+     </Box>
+   </Box>
+);
+
+const NoParty: FC<{ name: string }> = ({ name }) => (
+  <Box>
+    <Text>{`${name}というpartyは見つかりません`}</Text>
+    <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
+  </Box>
+);
+
 const testParty = (toParty({ name: 'team01', charactors: [
   { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
-  { name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
+  { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
 ]}) as Party);
 
 const Index: FC = () => {
@@ -366,11 +406,7 @@ const Index: FC = () => {
   const name = searchParams.get('name');
 
   if (!name) {
-    return (
-      <Box>
-        <Link href={{ pathname: 'party', query: { name: 'team01' } }}><a>{'team01'}</a></Link>
-      </Box>
-    );
+    return (<PartyList parties={[testParty]}/>);
   }
 
   if (name === '_new') {
@@ -381,12 +417,7 @@ const Index: FC = () => {
     return <Form party={testParty}/>
   }
 
-  return (
-    <Box>
-      <Text>{`${name}というpartyは見つかりません`}</Text>
-      <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
-    </Box>
-  );
+  return (<NoParty name={name} />);
 };
 
 export default Index;
