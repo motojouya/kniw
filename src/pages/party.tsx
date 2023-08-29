@@ -429,8 +429,8 @@ const PartyEditor: FC<{ party: Party | null, store: PartyStore }> = ({ party, st
     <Box p={4}>
       <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
       <Text>This is the party page</Text>
-      {!party && (<Button type="button" onClick={() => console.log('import')} >Import</Button>)}
-      {party && (<Button type="button" onClick={() => console.log('export')} >Export</Button>)}
+      {!party && (<Button type="button" onClick={() => console.log('import useState -> setPartyForm -> defaultValueへのeffecみたいな感じにしないといけない。関数を定義する')} >Import</Button>)}
+      {party && (<Button type="button" onClick={() => console.log('export createCopy(name)みたいな感じで呼び出すだけ')} >Export</Button>)}
       <form onSubmit={handleSubmit((values: any) => saveParty(values))}>
         {party ? (
           <Box as={'dl'}>
