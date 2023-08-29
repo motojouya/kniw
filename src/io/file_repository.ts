@@ -6,14 +6,7 @@ import type {
   Get,
   Remove,
   Copy,
-  CreateCheckNamespace,
-  CreateSave,
-  CreateList,
-  CreateGet,
-  CreateRemove,
-  CreateCopy,
   Repository,
-  CreateRepository,
 } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
@@ -36,6 +29,7 @@ const createDirctory: CreateDirctory = async dirName => {
   }
 };
 
+type CreateCheckNamespace = (basePath: string) => CheckNamespace;
 const createCheckNamespace: CreateCheckNamespace = basePath => async namespace =>
   createDirctory(path.join(basePath, namespace));
 
@@ -43,9 +37,11 @@ type ResolvePath = (basePath: string, dirName: string, fileBaseName: string, ext
 const resolvePath: ResolvePath = (basePath, dirName, fileBaseName, extension) =>
   path.join(basePath, dirName, fileBaseName + extension);
 
+type CreateSave = (basePath: string) => Save;
 const createSave: CreateSave = basePath => async (namespace, objctKey, data) =>
   fs.promises.writeFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), JSON.stringify(data));
 
+type CreateList = (basePath: string) => List;
 const createList: CreateList = basePath => async namespace => {
   try {
     const files = await fs.promises.readdir(path.join(basePath, namespace));
@@ -62,6 +58,7 @@ const createList: CreateList = basePath => async namespace => {
   }
 };
 
+type CreateGet = (basePath: string) => Get;
 const createGet: CreateGet = basePath => async (namespace, objctKey) => {
   try {
     const contents = await fs.promises.readFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), {
@@ -81,6 +78,7 @@ const createGet: CreateGet = basePath => async (namespace, objctKey) => {
   }
 };
 
+type CreateRemove = (basePath: string) => Remove;
 const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   try {
     await fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
@@ -96,6 +94,7 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
 
 // FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
 // ただし、fsのエラーメッセージが一緒なら意味がない
+type CreateCopy = (basePath: string) => Copy;
 const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
   try {
     await fs.promises.copyFile(
@@ -129,6 +128,7 @@ export const readJson: ReadJson = async fileName => {
   }
 };
 
+export type CreateRepository = (basePath: string) => Promise<Repository>;
 export const createRepository: CreateRepository = async basePath => {
   await createDirctory(basePath);
   return {

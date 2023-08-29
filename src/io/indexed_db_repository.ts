@@ -6,14 +6,7 @@ import type {
   Get,
   Remove,
   Copy,
-  CreateCheckNamespace,
-  CreateSave,
-  CreateList,
-  CreateGet,
-  CreateRemove,
-  CreateCopy,
   Repository,
-  CreateRepository,
 } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
@@ -35,106 +28,89 @@ class KniwDB extends Dexie {
   }
 }
 
-var db = new Dexie("MyAppDatabase");
-db.version(1).stores({contacts: 'id, first, last'});
-db.contacts.put({first: "First name", last: "Last name"}); // Fails to compile
-
-
-const createCheckNamespace: CreateCheckNamespace = basePath => async namespace => {};
-
-const createSave: CreateSave = basePath => async (namespace, objctKey, data) =>
-  fs.promises.writeFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), JSON.stringify(data));
-
-const createList: CreateList = basePath => async namespace => {
-  try {
-    const files = await fs.promises.readdir(path.join(basePath, namespace));
-    return files.filter(file => isDataFile(basePath, namespace, file)).map(file => path.basename(file, FILE_EXTENSION));
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const error = e as any;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (error.code === 'ENOENT') {
-      return [];
-    } else {
-      throw e;
-    }
+// type GetTable = (db: Dexie, tableName: string) => Dexie.Table<PartyJson, string> | Dexie.Table<BattleJson, string>;
+type GetTable = (db: Dexie, tableName: string) => Dexie.Table;
+const getTable: GetTable = (db, tableName) => {
+  if (tableName === 'party') {
+    return db.party;
   }
+  if (tableName === 'battle') {
+    return db.battle;
+  }
+  throw new Error('no such tables');
 };
 
-const createGet: CreateGet = basePath => async (namespace, objctKey) => {
-  try {
-    const contents = await fs.promises.readFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), {
-      encoding: 'utf8',
-    });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return JSON.parse(contents);
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const error = e as any;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (error.code === 'ENOENT') {
-      return null;
-    } else {
-      throw e;
-    }
-  }
+type CreateDB = () => Dexie;
+const createDB: CreateDB = () => new Dexie('KniwDB');
+
+type CreateSave = (db: Dexie) => Save;
+const createSave: CreateSave = db => async (namespace, objctKey, data) => {
+  const table = createDB(db, namespace);
+  await table.put(data);
+}
+
+type CreateList = (db: Dexie) => List;
+const createList: CreateList = db => async namespace => {
+  const table = createDB(db, namespace);
+  const list = await table.primaryKeys();
+  return list.map(item => '' + item);
 };
 
-const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
-  try {
-    await fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const error = e as any;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (error.code !== 'ENOENT') {
-      throw e;
-    }
-  }
+type CreateGet = (db: Dexie) => Get;
+const createGet: CreateGet = db => async (namespace, objctKey) => {
+  const table = createDB(db, namespace);
+  return await table.get(objctKey);
 };
 
-// FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
-// ただし、fsのエラーメッセージが一緒なら意味がない
-const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
-  try {
-    await fs.promises.copyFile(
-      resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
-      fileName,
-      fs.constants.COPYFILE_EXCL,
-    );
-    return null;
-  } catch (e) {
-    return new CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
-  }
+type CreateRemove = (db: Dexie) => Remove;
+const createRemove: CreateRemove = db => async (namespace, objctKey) => {
+  const table = createDB(db, namespace);
+  await table.delete(data);
 };
 
-export type ReadJson = (fileName: string) => Promise<object | null>;
-export const readJson: ReadJson = async fileName => {
-  try {
-    const contents = await fs.promises.readFile(fileName, {
-      encoding: 'utf8',
-    });
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-    return JSON.parse(contents);
-  } catch (e) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const error = e as any;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-    if (error.code === 'ENOENT') {
-      return null;
-    } else {
-      throw e;
-    }
-  }
+// でもwindow自体は引数というよりcontextなので、このタイミングで渡ってくるものではないか
+// TODO exportという関数名に変えて、型を付けたい。
+type CreateCopy = (db: Dexie) => Copy;
+const createCopy: CreateCopy = db => async (namespace, objctKey, fileName) => {
+  const table = createDB(db, namespace);
+  const json =  await table.get(objctKey);
+
+  const newHandle = await window.showSaveFilePicker();
+  const writableStream = await newHandle.createWritable();
+  await writableStream.write(JSON.stringify(json));
+  await writableStream.close();
 };
 
-export const createRepository: CreateRepository = async basePath => {
+const pickerOpts = {
+  types: [
+    {
+      description: "JSON",
+      accept: {
+        "application/json": [".json"],
+      },
+    },
+  ],
+  excludeAcceptAllOption: true,
+  multiple: false,
+};
+
+// TODO importという関数名に変えて、型を付けたい。
+export type ReadJson = () => Promise<object | null>;
+export const readJson: ReadJson = async () => {
+  const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
+  const fileData = await fileHandle.getFile();
+  return JSON.parse(fileData);
+};
+
+export type CreateRepository = () => Promise<Repository>;
+export const createRepository: CreateRepository = async () => {
+  const db = createDB();
   return {
-    checkNamespace: createCheckNamespace(basePath),
-    save: createSave(basePath),
-    list: createList(basePath),
-    get: createGet(basePath),
-    remove: createRemove(basePath),
-    copy: createCopy(basePath),
+    checkNamespace: async (namespace) => {},
+    save: createSave(db),
+    list: createList(db),
+    get: createGet(db),
+    remove: createRemove(db),
+    copy: createCopy(db),
   };
 };
