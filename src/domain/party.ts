@@ -98,6 +98,46 @@ export const toParty: ToParty = partyJson => {
   };
 };
 
+export type FormToParty = (
+  partyForm: any,
+) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+export const formToParty: FormToParty = partyForm => {
+  const compile = createValidationCompiler();
+  const validateSchema = compile(partyFormSchema);
+  if (!validateSchema(partyForm)) {
+    // @ts-ignore
+    const { errors } = validateSchema;
+    console.debug(errors);
+    return new JsonSchemaUnmatchError(errors, 'partyのformデータではありません');
+  }
+
+  const { name } = partyJson;
+
+  const charactorObjs: Charactor[] = [];
+  for (const charactor of partyJson.charactors) {
+    // TODO charactorもformToCharactorを定義してあげる必要がある
+    const charactorObj = toCharactor(charactor);
+    if (
+      charactorObj instanceof DataNotFoundError ||
+      charactorObj instanceof NotWearableErorr ||
+      charactorObj instanceof JsonSchemaUnmatchError
+    ) {
+      return charactorObj;
+    }
+    charactorObjs.push(charactorObj);
+  }
+
+  const validateResult = validate(name, charactorObjs);
+  if (validateResult instanceof CharactorDuplicationError) {
+    return validateResult;
+  }
+
+  return {
+    name,
+    charactors: charactorObjs,
+  };
+};
+
 export type CreateParty = (name: string, charactors: Charactor[]) => Party | CharactorDuplicationError;
 export const createParty: CreateParty = (name, charactors) => {
   const validateResult = validate(name, charactors);
