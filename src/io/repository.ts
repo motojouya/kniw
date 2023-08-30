@@ -14,7 +14,7 @@ export type Save = (namespace: string, objctKey: string, data: KeyValue) => Prom
 export type List = (namespace: string) => Promise<string[]>;
 export type Get = (namespace: string, objctKey: string) => Promise<KeyValue | null>;
 export type Remove = (namespace: string, objctKey: string) => Promise<void>;
-export type Copy = (namespace: string, objctKey: string, fileName: string) => Promise<null | CopyFailError>;
+export type ExportJson = (namespace: string, objctKey: string, fileName: string) => Promise<null | CopyFailError>;
 
 export type Repository = {
   checkNamespace: CheckNamespace;
@@ -22,8 +22,5 @@ export type Repository = {
   list: List;
   get: Get;
   remove: Remove;
-  copy: Copy;
+  exportJson: ExportJson;
 };
-
-// TODO 共通化できるか？
-// export type ReadJson = (fileName: string) => Promise<object | null>;

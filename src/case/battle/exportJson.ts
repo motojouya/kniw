@@ -11,7 +11,7 @@ export const exportJson: ExportJson = (dialogue, repository) => async (title, fi
     console.debug(message);
     throw new Error(message);
   }
-  const result = store.copy(title, file);
+  const result = store.exportJson(title, file);
   if (result instanceof CopyFailError) {
     await dialogue.notice(`${title}を出力できませんでした`);
   }

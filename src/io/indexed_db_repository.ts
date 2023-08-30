@@ -5,7 +5,7 @@ import type {
   List,
   Get,
   Remove,
-  Copy,
+  ExportJson,
   Repository,
 } from 'src/io/repository';
 import fs from 'fs';
@@ -68,10 +68,8 @@ const createRemove: CreateRemove = db => async (namespace, objctKey) => {
   await table.delete(data);
 };
 
-// でもwindow自体は引数というよりcontextなので、このタイミングで渡ってくるものではないか
-// TODO exportという関数名に変えて、型を付けたい。
-type CreateCopy = (db: Dexie) => Copy;
-const createCopy: CreateCopy = db => async (namespace, objctKey, fileName) => {
+type CreateExportJson = (db: Dexie) => ExportJson;
+const createExportJson: CreateExportJson = db => async (namespace, objctKey, fileName) => {
   const table = createDB(db, namespace);
   const json =  await table.get(objctKey);
 
@@ -94,9 +92,8 @@ const pickerOpts = {
   multiple: false,
 };
 
-// TODO importという関数名に変えて、型を付けたい。
-export type ReadJson = () => Promise<object | null>;
-export const readJson: ReadJson = async () => {
+export type ImportJson = () => Promise<object | null>;
+export const importJson: ImportJson = async () => {
   const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
   const fileData = await fileHandle.getFile();
   return JSON.parse(fileData);
@@ -111,6 +108,6 @@ export const createRepository: CreateRepository = async () => {
     list: createList(db),
     get: createGet(db),
     remove: createRemove(db),
-    copy: createCopy(db),
+    exportJson: createExportJson(db),
   };
 };

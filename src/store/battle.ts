@@ -1,4 +1,4 @@
-import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateCopy, CreateStore } from 'src/store/store';
+import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateStore } from 'src/store/store';
 import type { Battle } from 'src/domain/battle';
 
 import { FromSchema } from 'json-schema-to-ts';
@@ -30,7 +30,7 @@ const createRemove: CreateRemove = repository => async name => repository.remove
 
 const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
-const createCopy: CreateCopy = repository => async (name, file) => repository.copy(NAMESPACE, name, file);
+const createExportJson: CreateExportJson = repository => async (name, file) => repository.copy(NAMESPACE, name, file);
 
 type CreateStoreBattle = CreateStore<
   Battle,
@@ -43,6 +43,6 @@ export const createStore: CreateStoreBattle = async repository => {
     list: createList(repository),
     get: createGet(repository),
     remove: createRemove(repository),
-    copy: createCopy(repository),
+    exportJson: createExportJson(repository),
   };
 };

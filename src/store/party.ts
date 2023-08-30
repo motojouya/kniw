@@ -1,4 +1,4 @@
-import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateCopy, CreateStore } from 'src/store/store';
+import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateStore } from 'src/store/store';
 import type { Party } from 'src/domain/party';
 import { CharactorDuplicationError } from 'src/domain/party';
 import { toParty, toPartyJson } from 'src/store/schema/party';
@@ -26,7 +26,7 @@ const createRemove: CreateRemove = storage => async name => storage.remove(NAMES
 
 const createList: CreateList = storage => async () => storage.list(NAMESPACE);
 
-const createCopy: CreateCopy = storage => async (name, file) => storage.copy(NAMESPACE, name, file);
+const createExportJson: CreateExportJson = storage => async (name, file) => storage.exportJson(NAMESPACE, name, file);
 
 type CreateStoreParty = CreateStore<
   Party,
@@ -39,6 +39,6 @@ export const createStore: CreateStoreParty = async storage => {
     list: createList(storage),
     get: createGet(storage),
     remove: createRemove(storage),
-    copy: createCopy(storage),
+    exportJson: createExportJson(storage),
   };
 };

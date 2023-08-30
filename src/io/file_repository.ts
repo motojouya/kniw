@@ -5,7 +5,7 @@ import type {
   List,
   Get,
   Remove,
-  Copy,
+  ExportJson,
   Repository,
 } from 'src/io/repository';
 import fs from 'fs';
@@ -94,8 +94,8 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
 
 // FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
 // ただし、fsのエラーメッセージが一緒なら意味がない
-type CreateCopy = (basePath: string) => Copy;
-const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
+type CreateExportJson = (basePath: string) => ExportJson;
+const createExportJson: CreateExportJson = basePath => async (namespace, objctKey, fileName) => {
   try {
     await fs.promises.copyFile(
       resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
@@ -137,6 +137,6 @@ export const createRepository: CreateRepository = async basePath => {
     list: createList(basePath),
     get: createGet(basePath),
     remove: createRemove(basePath),
-    copy: createCopy(basePath),
+    exportJson: createExportJson(basePath),
   };
 };

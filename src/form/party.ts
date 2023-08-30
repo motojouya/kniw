@@ -9,11 +9,9 @@ import { charactorFormSchema } from 'src/form/charactor';
 import { validate, CharactorDuplicationError } from 'src/domain/party';
 import { toCharactor, toCharactorForm } from 'src/form/charactor';
 
-
 // TODO json-schema-to-tsの導入
 // import { FromSchema } from 'json-schema-to-ts';
-// type CharactorJson = FromSchema<typeof charactorSchema>;
-// export type PartyJson = FromSchema<typeof partySchema>;
+// type PartyForm = FromSchema<typeof partyFormSchema>;
 
 export type PartyForm = {
   name: string;
@@ -80,4 +78,29 @@ export const toParty: ToParty = partyForm => {
     charactors: charactorObjs,
   };
 };
+
+export type SaveParty = (partyForm: any) => Promise<null | DataNotFoundError | NotWearableErorr | JsonSchemaUnmatchError | CharactorDuplicationError | DataExistError>;
+export type CreateSaveParty = (store: Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>, checkExists: boolean) => SaveParty;
+export const saveParty: CreateSaveParty = (store, checkExists) => async (partyForm) => {
+
+  const party = toParty(partyForm);
+  if (
+    party instanceof DataNotFoundError ||
+    party instanceof NotWearableErorr ||
+    party instanceof JsonSchemaUnmatchError ||
+    party instanceof CharactorDuplicationError
+  ) {
+    return party;
+  }
+
+  if (checkExists) {
+    const partyNames = await store.list();
+    if (partyNames.includes(party.name)) {
+      return new DataExistError(party.name, 'party', `${name}というpartyは既に存在します`);
+    }
+  }
+
+  store.save(party);
+  return null;
+}
 
