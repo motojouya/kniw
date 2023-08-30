@@ -13,8 +13,8 @@ import path from 'path';
 import Dexie from 'dexie';
 import type { CopyFailError } from 'src/io/repository';
 
-import { PartyJson } from 'src/domain/party';
-import { BattleJson } from 'src/domain/battle';
+import { PartyJson } from 'src/store/party';
+import { BattleJson } from 'src/store/battle';
 
 class KniwDB extends Dexie {
   party: Dexie.Table<PartyJson, string>;

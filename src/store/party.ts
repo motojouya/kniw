@@ -1,6 +1,7 @@
 import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateCopy, CreateStore } from 'src/store/store';
 import type { Party } from 'src/domain/party';
-import { toParty, toPartyJson, CharactorDuplicationError } from 'src/domain/party';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { toParty, toPartyJson } from 'src/store/schema/party';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
