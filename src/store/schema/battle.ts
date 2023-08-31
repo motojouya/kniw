@@ -1,10 +1,26 @@
 import type { Battle } from 'src/domain/battle';
+import type { Party } from 'src/domain/party';
+import type { Charactor } from 'src/domain/charactor';
+import type { Skill } from 'src/domain/skill';
+import type { Randoms } from 'src/domain/random';
+import type { Turn } from 'src/domain/turn';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
 
-import { toTurn, toTurnJson, turnSchema } from 'src/store/turn';
-import { toParty, toPartyJson, partySchema } from 'src/store/party';
+import { toTurn, toTurnJson, turnSchema } from 'src/store/schema/turn';
+import { toParty, toPartyJson, partySchema } from 'src/store/schema/party';
+
+import { MAGIC_TYPE_NONE } from 'src/domain/skill';
+import { getPhysical, getAbilities } from 'src/domain/charactor';
+import { changeClimate } from 'src/domain/field';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { GameDraw, GameHome, GameResult, GameOngoing, GameVisitor } from 'src/domain/battle';
+
+import { acid, paralysis, quick, silent, sleep, slow } from 'src/data/status';
+import { underStatus } from 'src/domain/status';
 
 export const battleSchema = {
   type: 'object',

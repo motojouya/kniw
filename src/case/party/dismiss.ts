@@ -1,5 +1,5 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/file_repository';
+import type { Repository } from 'src/io/repository';
 import { NotApplicable } from 'src/io/standard_dialogue';
 import { createStore } from 'src/store/party';
 

@@ -10,7 +10,7 @@ import type {
 } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
-import type { CopyFailError } from 'src/io/repository';
+import { CopyFailError } from 'src/io/repository';
 
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';

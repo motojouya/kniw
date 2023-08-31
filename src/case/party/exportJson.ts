@@ -1,12 +1,12 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/file_repository';
+import type { Repository } from 'src/io/repository';
 import { createStore } from 'src/store/party';
-import { CopyFailError } from 'src/io/file_repository';
+import { CopyFailError } from 'src/io/repository';
 
 export type ExportJson = (dialogue: Dialogue, repository: Repository) => (name: string, file: string) => Promise<void>;
 export const exportJson: ExportJson = (dialogue, repository) => async (name, file) => {
   const store = await createStore(repository);
-  if (!store.copy) {
+  if (!store.exportJson) {
     const message = 'no copy function on party store!';
     console.debug(message);
     throw new Error(message);

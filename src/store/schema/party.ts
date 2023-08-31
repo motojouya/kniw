@@ -1,4 +1,5 @@
 import type { Party } from 'src/domain/party';
+import type { Charactor } from 'src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';

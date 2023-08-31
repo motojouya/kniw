@@ -1,5 +1,5 @@
 import type { Dialogue, SelectOption } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/file_repository';
+import type { Repository } from 'src/io/repository';
 import type { Charactor } from 'src/domain/charactor';
 import { NotApplicable } from 'src/io/standard_dialogue';
 import { createStore as createCharactorStore } from 'src/store/charactor';

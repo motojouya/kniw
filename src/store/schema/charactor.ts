@@ -7,6 +7,7 @@ import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { validate } from 'src/domain/charactor';
 import { statusSchema, toStatus, toStatusJson } from 'src/store/schema/status';
+import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
 
 export const attachedStatusSchema = {
   type: 'object',

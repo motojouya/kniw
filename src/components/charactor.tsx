@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { Acquirement } from 'src/domain/acquirement';
 import type { Charactor } from 'src/domain/charactor';
+import type { PartyForm } from 'src/form/party';
 
 import { useState } from 'react';
 import {

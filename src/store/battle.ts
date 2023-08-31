@@ -30,7 +30,7 @@ const createRemove: CreateRemove = repository => async name => repository.remove
 
 const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
-const createExportJson: CreateExportJson = repository => async (name, file) => repository.copy(NAMESPACE, name, file);
+const createExportJson: CreateExportJson = repository => async (name, file) => repository.exportJson(NAMESPACE, name, file);
 
 type CreateStoreBattle = CreateStore<
   Battle,

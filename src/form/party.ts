@@ -1,8 +1,12 @@
 import type { Party } from 'src/domain/party';
+import type { Charactor } from 'src/domain/charactor';
 import type { CharactorForm } from 'src/form/charactor';
+import type { Store } from 'src/store/store';
 
 import { JSONSchemaType } from "ajv"
 
+import { createValidationCompiler } from 'src/io/json_schema';
+import { DataExistError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { charactorFormSchema } from 'src/form/charactor';
@@ -53,10 +57,13 @@ export const toParty: ToParty = partyForm => {
     return new JsonSchemaUnmatchError(errors, 'partyのformデータではありません');
   }
 
-  const { name } = partyJson;
+  // TODO キャスト無くしたい
+  const validParty = partyForm as PartyForm;
+
+  const { name } = validParty;
 
   const charactorObjs: Charactor[] = [];
-  for (const charactor of partyJson.charactors) {
+  for (const charactor of validParty.charactors) {
     const charactorObj = toCharactor(charactor);
     if (
       charactorObj instanceof DataNotFoundError ||

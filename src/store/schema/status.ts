@@ -4,6 +4,7 @@ import { FromSchema } from 'json-schema-to-ts';
 
 import { createValidationCompiler } from 'src/io/json_schema';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { getStatus } from 'src/store/status';
 
 export const statusSchema = { type: 'string' } as const;
 

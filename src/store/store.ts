@@ -1,5 +1,5 @@
-import type { Repository } from 'src/io/file_repository';
-import { CopyFailError } from 'src/io/file_repository';
+import type { Repository } from 'src/io/repository';
+import { CopyFailError } from 'src/io/repository';
 
 export type Save<T> = (obj: T) => Promise<void>;
 export type Get<T, E> = (name: string) => Promise<T | E | null>;

@@ -1,5 +1,7 @@
 import type { FC, ReactNode } from 'react';
+import type { Party } from 'src/domain/party';
 import type { PartyForm } from 'src/form/party';
+import type { Store } from 'src/store/store';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -10,7 +12,6 @@ import { ajvResolver } from '@hookform/resolvers/ajv';
 import { useForm, useFieldArray } from 'react-hook-form';
 import {
   FormErrorMessage,
-  FormMessage,
   FormLabel,
   FormControl,
   Input,
@@ -23,9 +24,15 @@ import {
 } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { toPartyForm, saveParty } from 'src/form/party';
+import { partyFormSchema, toPartyForm, saveParty } from 'src/form/party';
 import { importJson } from 'src/io/indexed_db_repository';
 import { toParty as jsonToParty } from 'src/store/schema/party';
+
+import { CharactorDuplicationError } from 'src/domain/party';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+
+type PartyStore = Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
 const PartyEditor: FC<{
   exist: boolean,
@@ -58,21 +65,19 @@ const PartyEditor: FC<{
     } else {
       if (exist) {
         setSaveMessage({
-          error: false
+          error: false,
           message: '保存しました',
         });
       } else {
         const saved = party as PartyForm;
-        e.preventDefault()
         router.push({ pathname: 'party', query: { name: saved.name } })
       }
     }
   };
 
   const deleteParty = (name: string) => {
-    if (comfirm('削除してもよいですか？')) {
-      store.delete(party.name);
-      e.preventDefault()
+    if (confirm('削除してもよいですか？')) {
+      store.delete(partyForm.name);
       router.push({ pathname: 'party' })
     }
   };
@@ -84,12 +89,12 @@ const PartyEditor: FC<{
       <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
       <Text>This is the party page</Text>
       {inoutButton}
-      <Button type="button" onClick={() => store.copy(party.name)} >Export</Button>
+      <Button type="button" onClick={() => store.copy(partyForm.name)} >Export</Button>
       <form onSubmit={handleSubmit(save)}>
         {saveMessage.message && (
           saveMessage.error
             ? <FormErrorMessage>{saveMessage.message}</FormErrorMessage>
-            : <FormMessage>{saveMessage.message}</FormMessage>
+            : <Text>{saveMessage.message}</Text>
         )}
         {exist ? (
           <Box as={'dl'}>
@@ -123,6 +128,10 @@ const PartyEditor: FC<{
 export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ store, partyName }) => {
   const party = useLiveQuery(() => store.get(partyName), [partyName]);
 
+  if (!store.exportJson) {
+    throw new Error('invalid store');
+  }
+
   if (!party) {
     return (
       <Box>
@@ -134,7 +143,7 @@ export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ st
 
   return (
     <PartyEditor exist={true} partyForm={toPartyForm(party)} store={store} inoutButton={(
-      <Button type="button" onClick={() => store.copy(party.name, '')} >Export</Button>
+      <Button type="button" onClick={() => store.exportJson(party.name, '')} >Export</Button>
     )} />
   );
 };
@@ -143,7 +152,7 @@ export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
 
   const [party, setParty] = useState<PartyForm>({ name: '', charactors: [] });
   const importParty = async () => {
-    if (!comfirm('取り込むと入力したデータが削除されますがよいですか？')) {
+    if (!confirm('取り込むと入力したデータが削除されますがよいですか？')) {
       return;
     }
 

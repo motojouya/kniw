@@ -1,5 +1,5 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/file_repository';
+import type { Repository } from 'src/io/repository';
 import type { Charactor } from 'src/domain/charactor';
 import { readJson } from 'src/io/file_repository';
 import { NotApplicable } from 'src/io/standard_dialogue';
@@ -29,7 +29,8 @@ import {
   selectCharactor,
 } from 'src/domain/charactor';
 import { createStore as createBattleStore } from 'src/store/battle';
-import { toParty, CharactorDuplicationError } from 'src/domain/party';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { toParty } from 'src/store/schema/party';
 import { createAbsolute, createRandoms } from 'src/domain/random';
 import { getSkill } from 'src/store/skill';
 import { NotWearableErorr } from 'src/domain/acquirement';

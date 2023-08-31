@@ -1,5 +1,5 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/file_repository';
+import type { Repository } from 'src/io/repository';
 
 // import commander from 'commander';
 import { Command } from '@commander-js/extra-typings';

@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import type { Party } from 'src/domain/party';
 import type { Store } from 'src/store/store';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
 import {
   Box,
@@ -15,23 +15,25 @@ import { createStore } from 'src/store/party';
 import { createRepository } from 'src/io/indexed_db_repository';
 import {
   PartyList,
-  PartyEditor,
+  PartyNew,
   PartyExsiting,
 } from 'src/components/party';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 import Link from 'next/link'
-
-type PartyStore = Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
 const Index: FC = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
 
-  const [store, setStore] = useState<PartyStore | null>(null);
-  useEffect(async () => {
-    const webRepository = await createRepository();
-    const store = await createStore(repository);
-    setStore(store);
+  const [store, setStore] = useState<Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null>(null);
+  useEffect(() => {
+    (async () => {
+      const webRepository = await createRepository();
+      const store = await createStore(webRepository);
+      setStore(store);
+    })();
   }, []);
 
   if (!store) {
@@ -43,7 +45,7 @@ const Index: FC = () => {
   }
 
   if (name === '_new') {
-    return <PartyEditor store={store} />
+    return <PartyNew store={store} />
   }
 
   return <PartyExsiting partyName={name} store={store} />

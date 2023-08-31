@@ -1,4 +1,6 @@
 import type { Turn, Surrender, DoSkill, DoNothing, TimePassing, Action } from 'src/domain/turn';
+import type { Climate } from 'src/domain/field';
+import type { Charactor } from 'src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { parse } from 'date-fns';
@@ -8,7 +10,7 @@ import { createValidationCompiler } from 'src/io/json_schema';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { getSkill } from 'src/store/skill';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { toCharactor, toCharactorJson, charactorSchema } from 'src/domain/charactor';
+import { toCharactor, toCharactorJson, charactorSchema } from 'src/store/schema/charactor';
 
 export const surrenderSchema = {
   type: 'object',
