@@ -5,12 +5,10 @@ import type { Store } from 'src/store/store';
 
 import Ajv, { JSONSchemaType } from 'ajv';
 
-import { DataExistError } from 'src/store/store';
+import { DataExistError , JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { charactorFormSchema } from 'src/form/charactor';
+import { charactorFormSchema , toCharactor, toCharactorForm } from 'src/form/charactor';
 import { validate, CharactorDuplicationError } from 'src/domain/party';
-import { toCharactor, toCharactorForm } from 'src/form/charactor';
 
 // FIXME json-schema-to-tsの導入
 // import { FromSchema } from 'json-schema-to-ts';
@@ -110,10 +108,10 @@ export const saveParty: CreateSaveParty = (store, checkExists) => async partyFor
   if (checkExists) {
     const partyNames = await store.list();
     if (partyNames.includes(party.name)) {
-      return new DataExistError(party.name, 'party', `${name}というpartyは既に存在します`);
+      return new DataExistError(party.name, 'party', `${party.name}というpartyは既に存在します`);
     }
   }
 
-  store.save(party);
+  await store.save(party);
   return null;
 };

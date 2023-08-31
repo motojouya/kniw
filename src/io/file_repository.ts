@@ -1,4 +1,4 @@
-import type { KeyValue, CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
+import type { CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
 import { CopyFailError } from 'src/io/repository';

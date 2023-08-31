@@ -1,4 +1,4 @@
-import type { Field, Climate } from 'src/domain/field';
+import type { Field } from 'src/domain/field';
 import type { Charactor } from 'src/domain/charactor';
 import type { Skill } from 'src/domain/skill';
 

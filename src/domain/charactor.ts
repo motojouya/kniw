@@ -2,10 +2,8 @@ import type { Status } from 'src/domain/status';
 import type { SelectOption } from 'src/io/standard_dialogue';
 import { Physical, addPhysicals } from 'src/domain/physical';
 import { Race, Weapon, Clothing, Blessing, NotWearableErorr } from 'src/domain/acquirement';
-import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
 import { Ability } from 'src/domain/ability';
 import { Skill } from 'src/domain/skill';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 const basePhysical: Physical = {
   MaxHP: 300,

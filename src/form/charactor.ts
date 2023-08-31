@@ -1,12 +1,10 @@
 import type { Charactor } from 'src/domain/charactor';
-import type { Store } from 'src/store/store';
 
 import Ajv, { JSONSchemaType } from 'ajv';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { getPhysical } from 'src/domain/charactor';
-import { validate } from 'src/domain/charactor';
+import { getPhysical, validate } from 'src/domain/charactor';
 import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
 
 export type CharactorForm = {

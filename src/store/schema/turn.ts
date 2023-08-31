@@ -1,4 +1,4 @@
-import type { Turn, Surrender, DoSkill, DoNothing, TimePassing, Action } from 'src/domain/turn';
+import type { Turn, Action } from 'src/domain/turn';
 import type { Climate } from 'src/domain/field';
 import type { Charactor } from 'src/domain/charactor';
 

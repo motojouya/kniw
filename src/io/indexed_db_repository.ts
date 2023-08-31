@@ -1,15 +1,16 @@
-import type { KeyValue, CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
-import fs from 'fs';
-import path from 'path';
-import Dexie from 'dexie';
-import type { CopyFailError } from 'src/io/repository';
+import type { Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
 
+import Dexie from 'dexie';
+
+import { CopyFailError } from 'src/io/repository';
 import { PartyJson } from 'src/store/schema/party';
 import { BattleJson } from 'src/store/schema/battle';
 
 class KniwDB extends Dexie {
   party: Dexie.Table<PartyJson, string>;
+
   battle: Dexie.Table<BattleJson, string>;
+
   constructor() {
     super('KniwDB');
     this.version(1).stores({
@@ -49,13 +50,13 @@ type CreateList = (db: KniwDB) => List;
 const createList: CreateList = db => async namespace => {
   const table = getTable(db, namespace);
   const list = await table.toCollection().primaryKeys();
-  return list.map(item => '' + item);
+  return list.map(item => String(item));
 };
 
 type CreateGet = (db: KniwDB) => Get;
 const createGet: CreateGet = db => async (namespace, objctKey) => {
   const table = getTable(db, namespace);
-  return await table.get(objctKey);
+  return table.get(objctKey);
 };
 
 type CreateRemove = (db: KniwDB) => Remove;
@@ -65,9 +66,13 @@ const createRemove: CreateRemove = db => async (namespace, objctKey) => {
 };
 
 type CreateExportJson = (db: KniwDB) => ExportJson;
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const createExportJson: CreateExportJson = db => async (namespace, objctKey, fileName) => {
   const table = getTable(db, namespace);
-  const json = await table.get(objctKey);
+  const json = (await table.get(objctKey)) as object | null;
+  if (!json) {
+    return new CopyFailError(objctKey, null, `${objctKey}は存在しません`);
+  }
 
   const newHandle = await window.showSaveFilePicker();
   const writableStream = await newHandle.createWritable();
@@ -94,13 +99,14 @@ export const importJson: ImportJson = async () => {
   const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
   const file = await fileHandle.getFile();
   const text = await file.text();
-  return JSON.parse(text);
+  return JSON.parse(text) as object;
 };
 
 export type CreateRepository = () => Promise<Repository>;
+// eslint-disable-next-line @typescript-eslint/require-await
 export const createRepository: CreateRepository = async () => {
   const db = createDB();
-  const table = db.party;
+  /* eslint-disable @typescript-eslint/no-unused-vars */
   return {
     checkNamespace: async namespace => {},
     save: createSave(db),
@@ -109,4 +115,5 @@ export const createRepository: CreateRepository = async () => {
     remove: createRemove(db),
     exportJson: createExportJson(db),
   };
+  /* eslint-enable @typescript-eslint/no-unused-vars */
 };

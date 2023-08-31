@@ -7,8 +7,6 @@ import type { Turn } from 'src/domain/turn';
 import { MAGIC_TYPE_NONE } from 'src/domain/skill';
 import { getPhysical, getAbilities } from 'src/domain/charactor';
 import { changeClimate } from 'src/domain/field';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 import { acid, paralysis, quick, silent, sleep, slow } from 'src/data/status';
 import { underStatus } from 'src/domain/status';

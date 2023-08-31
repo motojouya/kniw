@@ -1,4 +1,3 @@
-import { getStatus } from 'src/store/status';
 import type { Charactor } from 'src/domain/charactor';
 
 export type Status = {
