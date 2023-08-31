@@ -1,9 +1,8 @@
 import type { Charactor } from 'src/domain/charactor';
 import type { Store } from 'src/store/store';
 
-import { JSONSchemaType } from "ajv"
+import Ajv, { JSONSchemaType } from "ajv"
 
-import { createValidationCompiler } from 'src/io/json_schema';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { getPhysical } from 'src/domain/charactor';
@@ -64,8 +63,8 @@ export type ToCharactor = (
   charactorForm: any,
 ) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toCharactor: ToCharactor = charactorForm => {
-  const compile = createValidationCompiler();
-  const validateSchema = compile(charactorFormSchema);
+  const ajv = new Ajv();
+  const validateSchema = ajv.compile<CharactorForm>(charactorFormSchema);
   if (!validateSchema(charactorForm)) {
     // @ts-ignore
     const { errors } = validateSchema;
@@ -73,37 +72,34 @@ export const toCharactor: ToCharactor = charactorForm => {
     return new JsonSchemaUnmatchError(errors, 'charactorのデータではありません');
   }
 
-  // TODO キャスト無くしたい
-  const validCharactor = charactorForm as CharactorForm;
+  const { name } = charactorForm;
 
-  const { name } = validCharactor;
-
-  const race = getRace(validCharactor.race);
+  const race = getRace(charactorForm.race);
   if (!race) {
-    return new DataNotFoundError(validCharactor.race, 'race', `${validCharactor.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorForm.race, 'race', `${charactorForm.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(validCharactor.blessing);
+  const blessing = getBlessing(charactorForm.blessing);
   if (!blessing) {
     return new DataNotFoundError(
-      validCharactor.blessing,
+      charactorForm.blessing,
       'blessing',
-      `${validCharactor.blessing}という祝福は存在しません`,
+      `${charactorForm.blessing}という祝福は存在しません`,
     );
   }
 
-  const clothing = getClothing(validCharactor.clothing);
+  const clothing = getClothing(charactorForm.clothing);
   if (!clothing) {
     return new DataNotFoundError(
-      validCharactor.clothing,
+      charactorForm.clothing,
       'clothing',
-      `${validCharactor.clothing}という装備は存在しません`,
+      `${charactorForm.clothing}という装備は存在しません`,
     );
   }
 
-  const weapon = getWeapon(validCharactor.weapon);
+  const weapon = getWeapon(charactorForm.weapon);
   if (!weapon) {
-    return new DataNotFoundError(validCharactor.weapon, 'weapon', `${validCharactor.weapon}という武器は存在しません`);
+    return new DataNotFoundError(charactorForm.weapon, 'weapon', `${charactorForm.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

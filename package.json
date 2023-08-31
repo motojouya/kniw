@@ -24,6 +24,7 @@
   "private": true,
   "devDependencies": {
     "@types/node": "^17.0.35",
+    "@types/wicg-file-system-access": "^2020.9.6",
     "@typescript-eslint/eslint-plugin": "^5.61.0",
     "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.44.0",

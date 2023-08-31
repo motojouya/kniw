@@ -108,8 +108,8 @@ const createExportJson: CreateExportJson = basePath => async (namespace, objctKe
   }
 };
 
-export type ReadJson = (fileName: string) => Promise<object | null>;
-export const readJson: ReadJson = async fileName => {
+export type ImportJson = (fileName: string) => Promise<object | null>;
+export const importJson: ImportJson = async fileName => {
   try {
     const contents = await fs.promises.readFile(fileName, {
       encoding: 'utf8',

@@ -3291,7 +3291,7 @@ const resolve_1 = __webpack_require__(2531);
 const dataType_1 = __webpack_require__(453);
 const util_1 = __webpack_require__(6776);
 const $dataRefSchema = __webpack_require__(4775);
-const uri_1 = __webpack_require__(3589);
+const uri_1 = __webpack_require__(1287);
 const defaultRegExp = (str, flags) => new RegExp(str, flags);
 defaultRegExp.code = "new RegExp";
 const META_IGNORE_OPTIONS = ["removeAdditional", "useDefaults", "coerceTypes"];
@@ -3935,7 +3935,7 @@ ucs2length.code = 'require("ajv/dist/runtime/ucs2length").default';
 
 /***/ }),
 
-/***/ 3589:
+/***/ 1287:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -4451,7 +4451,7 @@ exports["default"] = def;
 
 /***/ }),
 
-/***/ 8200:
+/***/ 2151:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5363,8 +5363,8 @@ var DiscrError;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 const core_1 = __webpack_require__(5684);
 const validation_1 = __webpack_require__(2649);
-const applicator_1 = __webpack_require__(8200);
-const format_1 = __webpack_require__(9502);
+const applicator_1 = __webpack_require__(2151);
+const format_1 = __webpack_require__(83);
 const metadata_1 = __webpack_require__(6167);
 const draft7Vocabularies = [
     core_1.default,
@@ -5478,7 +5478,7 @@ exports["default"] = def;
 
 /***/ }),
 
-/***/ 9502:
+/***/ 83:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -5616,7 +5616,7 @@ const pattern_1 = __webpack_require__(4336);
 const limitProperties_1 = __webpack_require__(498);
 const required_1 = __webpack_require__(3301);
 const limitItems_1 = __webpack_require__(1687);
-const uniqueItems_1 = __webpack_require__(2958);
+const uniqueItems_1 = __webpack_require__(6911);
 const const_1 = __webpack_require__(4693);
 const enum_1 = __webpack_require__(966);
 const validation = [
@@ -5923,7 +5923,7 @@ exports["default"] = def;
 
 /***/ }),
 
-/***/ 2958:
+/***/ 6911:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -28294,6 +28294,7 @@ const battle_1 = __webpack_require__(3279);
 const charactor_1 = __webpack_require__(657);
 const battle_2 = __webpack_require__(5033);
 const party_1 = __webpack_require__(7551);
+const party_2 = __webpack_require__(347);
 const random_1 = __webpack_require__(8708);
 const skill_1 = __webpack_require__(7239);
 const acquirement_1 = __webpack_require__(8826);
@@ -28498,12 +28499,12 @@ const continueBattle = (dialogue, repository) => async (battle) => {
 };
 exports.continueBattle = continueBattle;
 const start = (dialogue, repository) => async (title, home, visitor) => {
-    const homeJson = await (0, file_repository_1.readJson)(home);
+    const homeJson = await (0, file_repository_1.importJson)(home);
     if (!homeJson) {
         await dialogue.notice(`homeのデータがありません`);
         return;
     }
-    const homeParty = (0, party_1.toParty)(homeJson);
+    const homeParty = (0, party_2.toParty)(homeJson);
     if (homeParty instanceof acquirement_1.NotWearableErorr ||
         homeParty instanceof store_1.DataNotFoundError ||
         homeParty instanceof party_1.CharactorDuplicationError ||
@@ -28511,11 +28512,11 @@ const start = (dialogue, repository) => async (title, home, visitor) => {
         await dialogue.notice(`homeのpartyは不正なデータです`);
         return;
     }
-    const visitorJson = await (0, file_repository_1.readJson)(visitor);
+    const visitorJson = await (0, file_repository_1.importJson)(visitor);
     if (!visitorJson) {
         await dialogue.notice(`visitorのデータがありません`);
     }
-    const visitorParty = (0, party_1.toParty)(visitorJson);
+    const visitorParty = (0, party_2.toParty)(visitorJson);
     if (visitorParty instanceof acquirement_1.NotWearableErorr ||
         visitorParty instanceof store_1.DataNotFoundError ||
         visitorParty instanceof party_1.CharactorDuplicationError ||
@@ -28557,16 +28558,16 @@ exports.resume = resume;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.exportJson = void 0;
 const battle_1 = __webpack_require__(5033);
-const file_repository_1 = __webpack_require__(9195);
+const repository_1 = __webpack_require__(6039);
 const exportJson = (dialogue, repository) => async (title, file) => {
     const store = await (0, battle_1.createStore)(repository);
-    if (!store.copy) {
+    if (!store.exportJson) {
         const message = 'no copy function on party store!';
         console.debug(message);
         throw new Error(message);
     }
-    const result = store.copy(title, file);
-    if (result instanceof file_repository_1.CopyFailError) {
+    const result = store.exportJson(title, file);
+    if (result instanceof repository_1.CopyFailError) {
         await dialogue.notice(`${title}を出力できませんでした`);
     }
     await dialogue.notice(`${title}を${file}に出力しました`);
@@ -29136,16 +29137,16 @@ exports.dismiss = dismiss;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.exportJson = void 0;
 const party_1 = __webpack_require__(2228);
-const file_repository_1 = __webpack_require__(9195);
+const repository_1 = __webpack_require__(6039);
 const exportJson = (dialogue, repository) => async (name, file) => {
     const store = await (0, party_1.createStore)(repository);
-    if (!store.copy) {
+    if (!store.exportJson) {
         const message = 'no copy function on party store!';
         console.debug(message);
         throw new Error(message);
     }
-    const result = store.copy(name, file);
-    if (result instanceof file_repository_1.CopyFailError) {
+    const result = store.exportJson(name, file);
+    if (result instanceof repository_1.CopyFailError) {
         await dialogue.notice(`${name}を出力できませんでした`);
     }
     await dialogue.notice(`${name}を${file}に出力しました`);
@@ -29573,7 +29574,7 @@ exports.makeCommand = void 0;
 const extra_typings_1 = __webpack_require__(6641);
 const skill_1 = __webpack_require__(4847);
 const ability_1 = __webpack_require__(7262);
-const race_1 = __webpack_require__(7522);
+const race_1 = __webpack_require__(2958);
 const blessing_1 = __webpack_require__(4569);
 const clothing_1 = __webpack_require__(8524);
 const weapon_1 = __webpack_require__(7378);
@@ -29651,7 +29652,7 @@ exports.makeCommand = makeCommand;
 
 /***/ }),
 
-/***/ 7522:
+/***/ 2958:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -32724,7 +32725,7 @@ var jadeWand_1 = __webpack_require__(6738);
 Object.defineProperty(exports, "jadeWand", ({ enumerable: true, get: function () { return jadeWand_1.jadeWand; } }));
 var javelin_1 = __webpack_require__(6250);
 Object.defineProperty(exports, "javelin", ({ enumerable: true, get: function () { return javelin_1.javelin; } }));
-var morningStar_1 = __webpack_require__(8348);
+var morningStar_1 = __webpack_require__(9502);
 Object.defineProperty(exports, "morningStar", ({ enumerable: true, get: function () { return morningStar_1.morningStar; } }));
 var rapier_1 = __webpack_require__(745);
 Object.defineProperty(exports, "rapier", ({ enumerable: true, get: function () { return rapier_1.rapier; } }));
@@ -33150,7 +33151,7 @@ exports.javelin = {
 
 /***/ }),
 
-/***/ 8348:
+/***/ 9502:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -33771,7 +33772,7 @@ exports.sapphireRod = void 0;
 const acquirement_1 = __webpack_require__(8826);
 const gunWater_1 = __webpack_require__(9634);
 const quench_1 = __webpack_require__(195);
-const downRushing_1 = __webpack_require__(7181);
+const downRushing_1 = __webpack_require__(3589);
 exports.sapphireRod = {
     name: 'sapphireRod',
     label: 'サファイアロッド',
@@ -33882,7 +33883,7 @@ exports.sapphireStaff = void 0;
 const acquirement_1 = __webpack_require__(8826);
 const gunWater_1 = __webpack_require__(9634);
 const stickyRain_1 = __webpack_require__(7809);
-const downRushing_1 = __webpack_require__(7181);
+const downRushing_1 = __webpack_require__(3589);
 exports.sapphireStaff = {
     name: 'sapphireStaff',
     label: 'サファイアスタッフ',
@@ -34395,7 +34396,7 @@ exports.dazzle = {
 
 /***/ }),
 
-/***/ 7181:
+/***/ 3589:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
@@ -34945,7 +34946,7 @@ var danceLeaves_1 = __webpack_require__(8720);
 Object.defineProperty(exports, "danceLeaves", ({ enumerable: true, get: function () { return danceLeaves_1.danceLeaves; } }));
 var dazzle_1 = __webpack_require__(8497);
 Object.defineProperty(exports, "dazzle", ({ enumerable: true, get: function () { return dazzle_1.dazzle; } }));
-var downRushing_1 = __webpack_require__(7181);
+var downRushing_1 = __webpack_require__(3589);
 Object.defineProperty(exports, "downRushing", ({ enumerable: true, get: function () { return downRushing_1.downRushing; } }));
 var eleciWave_1 = __webpack_require__(1413);
 Object.defineProperty(exports, "eleciWave", ({ enumerable: true, get: function () { return eleciWave_1.eleciWave; } }));
@@ -36357,15 +36358,10 @@ exports.createValidateWearable = createValidateWearable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isSettlement = exports.wait = exports.surrender = exports.actToField = exports.actToCharactor = exports.stay = exports.start = exports.createBattle = exports.nextActor = exports.getLastTurn = exports.toBattle = exports.toBattleJson = exports.battleSchema = exports.GameDraw = exports.GameVisitor = exports.GameHome = exports.GameOngoing = void 0;
+exports.isSettlement = exports.wait = exports.surrender = exports.actToField = exports.actToCharactor = exports.stay = exports.start = exports.createBattle = exports.nextActor = exports.getLastTurn = exports.GameDraw = exports.GameVisitor = exports.GameHome = exports.GameOngoing = void 0;
 const skill_1 = __webpack_require__(8841);
-const turn_1 = __webpack_require__(2078);
-const party_1 = __webpack_require__(7551);
 const charactor_1 = __webpack_require__(657);
 const field_1 = __webpack_require__(4925);
-const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
-const json_schema_1 = __webpack_require__(6540);
 const status_1 = __webpack_require__(9538);
 const status_2 = __webpack_require__(7929);
 const arrayLast = (ary) => ary.slice(-1)[0];
@@ -36373,69 +36369,6 @@ exports.GameOngoing = 'ONGOING';
 exports.GameHome = 'HOME';
 exports.GameVisitor = 'VISITOR';
 exports.GameDraw = 'DRAW';
-exports.battleSchema = {
-    type: 'object',
-    properties: {
-        title: { type: 'string' },
-        home: party_1.partySchema,
-        visitor: party_1.partySchema,
-        turns: { type: 'array', items: turn_1.turnSchema },
-        result: { enum: [exports.GameOngoing, exports.GameHome, exports.GameVisitor, exports.GameDraw] },
-    },
-    required: ['title', 'home', 'visitor', 'turns', 'result'],
-};
-const toBattleJson = battle => ({
-    title: battle.title,
-    home: (0, party_1.toPartyJson)(battle.home),
-    visitor: (0, party_1.toPartyJson)(battle.visitor),
-    turns: battle.turns.map(turn_1.toTurnJson),
-    result: battle.result,
-});
-exports.toBattleJson = toBattleJson;
-const toBattle = battleJson => {
-    const compile = (0, json_schema_1.createValidationCompiler)();
-    const validateSchema = compile(exports.battleSchema);
-    if (!validateSchema(battleJson)) {
-        // @ts-ignore
-        const { errors } = validateSchema;
-        console.debug(errors);
-        return new store_1.JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
-    }
-    const { title } = battleJson;
-    const home = (0, party_1.toParty)(battleJson.home);
-    if (home instanceof acquirement_1.NotWearableErorr ||
-        home instanceof store_1.DataNotFoundError ||
-        home instanceof party_1.CharactorDuplicationError ||
-        home instanceof store_1.JsonSchemaUnmatchError) {
-        return home;
-    }
-    const visitor = (0, party_1.toParty)(battleJson.visitor);
-    if (visitor instanceof acquirement_1.NotWearableErorr ||
-        visitor instanceof store_1.DataNotFoundError ||
-        visitor instanceof party_1.CharactorDuplicationError ||
-        visitor instanceof store_1.JsonSchemaUnmatchError) {
-        return visitor;
-    }
-    const turns = [];
-    for (const turnJson of battleJson.turns) {
-        const turn = (0, turn_1.toTurn)(turnJson);
-        if (turn instanceof acquirement_1.NotWearableErorr ||
-            turn instanceof store_1.DataNotFoundError ||
-            turn instanceof store_1.JsonSchemaUnmatchError) {
-            return turn;
-        }
-        turns.push(turn);
-    }
-    const { result } = battleJson;
-    return {
-        title,
-        home,
-        visitor,
-        turns,
-        result,
-    };
-};
-exports.toBattle = toBattle;
 const getLastTurn = battle => arrayLast(battle.turns);
 exports.getLastTurn = getLastTurn;
 const nextActor = battle => arrayLast(battle.turns).sortedCharactors[0];
@@ -36703,13 +36636,9 @@ exports.isSettlement = isSettlement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createCharactor = exports.toCharactor = exports.toCharactorJson = exports.toAttachedStatusJson = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = exports.charactorSchema = exports.attachedStatusSchema = void 0;
-const physical_1 = __webpack_require__(5341);
-const status_1 = __webpack_require__(7929);
+exports.createCharactor = exports.validate = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = void 0;
+const physical_1 = __webpack_require__(8200);
 const acquirement_1 = __webpack_require__(8826);
-const acquirement_2 = __webpack_require__(2066);
-const store_1 = __webpack_require__(9895);
-const json_schema_1 = __webpack_require__(6540);
 const basePhysical = {
     MaxHP: 300,
     MaxMP: 200,
@@ -36733,33 +36662,6 @@ const basePhysical = {
     ThunderSuitable: 0,
     move: 4,
     jump: 3,
-};
-exports.attachedStatusSchema = {
-    type: 'object',
-    properties: {
-        status: status_1.statusSchema,
-        restWt: { type: 'integer' },
-    },
-    required: ['status', 'restWt'],
-};
-exports.charactorSchema = {
-    type: 'object',
-    properties: {
-        name: { type: 'string' },
-        race: { type: 'string' },
-        blessing: { type: 'string' },
-        clothing: { type: 'string' },
-        weapon: { type: 'string' },
-        statuses: {
-            type: 'array',
-            items: exports.attachedStatusSchema,
-        },
-        hp: { type: 'integer' },
-        mp: { type: 'integer' },
-        restWt: { type: 'integer' },
-        isVisitor: { type: 'boolean' },
-    },
-    required: ['name', 'race', 'blessing', 'clothing', 'weapon', 'statuses', 'hp', 'mp', 'restWt'],
 };
 const getSelectOption = charactor => ({
     label: `${charactor.isVisitor ? 'V' : 'H'}:${charactor.name}`,
@@ -36790,30 +36692,6 @@ const getPhysical = charactor => (0, physical_1.addPhysicals)([
     charactor.weapon.additionalPhysical,
 ]);
 exports.getPhysical = getPhysical;
-const toAttachedStatusJson = attached => ({
-    status: (0, status_1.toStatusJson)(attached.status),
-    restWt: attached.restWt,
-});
-exports.toAttachedStatusJson = toAttachedStatusJson;
-const toCharactorJson = charactor => {
-    const json = {
-        name: charactor.name,
-        race: charactor.race.name,
-        blessing: charactor.blessing.name,
-        clothing: charactor.clothing.name,
-        weapon: charactor.weapon.name,
-        statuses: charactor.statuses.map(exports.toAttachedStatusJson),
-        hp: charactor.hp,
-        mp: charactor.mp,
-        restWt: charactor.restWt,
-        isVisitor: charactor.isVisitor,
-    };
-    if (Object.prototype.hasOwnProperty.call(charactor, 'isVisitor')) {
-        json.isVisitor = charactor.isVisitor;
-    }
-    return json;
-};
-exports.toCharactorJson = toCharactorJson;
 const validate = (name, race, blessing, clothing, weapon) => {
     const raceResult = race.validateWearable(race, blessing, clothing, weapon);
     if (raceResult instanceof acquirement_1.NotWearableErorr) {
@@ -36833,66 +36711,9 @@ const validate = (name, race, blessing, clothing, weapon) => {
     }
     return null;
 };
-const toCharactor = charactorJson => {
-    const compile = (0, json_schema_1.createValidationCompiler)();
-    const validateSchema = compile(exports.charactorSchema);
-    if (!validateSchema(charactorJson)) {
-        // @ts-ignore
-        const { errors } = validateSchema;
-        console.debug(errors);
-        return new store_1.JsonSchemaUnmatchError(errors, 'charactorのjsonデータではありません');
-    }
-    const { name } = charactorJson;
-    const race = (0, acquirement_2.getRace)(charactorJson.race);
-    if (!race) {
-        return new store_1.DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
-    }
-    const blessing = (0, acquirement_2.getBlessing)(charactorJson.blessing);
-    if (!blessing) {
-        return new store_1.DataNotFoundError(charactorJson.blessing, 'blessing', `${charactorJson.blessing}という祝福は存在しません`);
-    }
-    const clothing = (0, acquirement_2.getClothing)(charactorJson.clothing);
-    if (!clothing) {
-        return new store_1.DataNotFoundError(charactorJson.clothing, 'clothing', `${charactorJson.clothing}という装備は存在しません`);
-    }
-    const weapon = (0, acquirement_2.getWeapon)(charactorJson.weapon);
-    if (!weapon) {
-        return new store_1.DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon}という武器は存在しません`);
-    }
-    const validateResult = validate(name, race, blessing, clothing, weapon);
-    if (validateResult instanceof acquirement_1.NotWearableErorr) {
-        return validateResult;
-    }
-    const statuses = [];
-    for (const attachedStatusJson of charactorJson.statuses) {
-        const statusObj = (0, status_1.toStatus)(attachedStatusJson.status);
-        if (statusObj instanceof store_1.JsonSchemaUnmatchError || statusObj instanceof store_1.DataNotFoundError) {
-            return statusObj;
-        }
-        statuses.push({
-            status: statusObj,
-            restWt: attachedStatusJson.restWt,
-        });
-    }
-    const someone = {
-        name,
-        race,
-        blessing,
-        clothing,
-        weapon,
-        statuses,
-        hp: 0 + charactorJson.hp,
-        mp: 0 + charactorJson.mp,
-        restWt: 0 + charactorJson.restWt,
-    };
-    if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
-        someone.isVisitor = charactorJson.isVisitor;
-    }
-    return someone;
-};
-exports.toCharactor = toCharactor;
+exports.validate = validate;
 const createCharactor = (name, race, blessing, clothing, weapon) => {
-    const validateResult = validate(name, race, blessing, clothing, weapon);
+    const validateResult = (0, exports.validate)(name, race, blessing, clothing, weapon);
     if (validateResult instanceof acquirement_1.NotWearableErorr) {
         return validateResult;
     }
@@ -36909,7 +36730,7 @@ const createCharactor = (name, race, blessing, clothing, weapon) => {
     };
     const someonesPhysical = (0, exports.getPhysical)(someone);
     someone.hp = someonesPhysical.MaxHP;
-    someone.hp = someonesPhysical.WT;
+    someone.restWt = someonesPhysical.WT;
     return someone;
 };
 exports.createCharactor = createCharactor;
@@ -36963,24 +36784,12 @@ exports.changeClimate = changeClimate;
 /***/ }),
 
 /***/ 7551:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createParty = exports.toParty = exports.toPartyJson = exports.CharactorDuplicationError = exports.partySchema = void 0;
-const charactor_1 = __webpack_require__(657);
-const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
-const json_schema_1 = __webpack_require__(6540);
-exports.partySchema = {
-    type: 'object',
-    properties: {
-        name: { type: 'string' },
-        charactors: { type: 'array', items: charactor_1.charactorSchema },
-    },
-    required: ['name', 'charactors'],
-};
+exports.createParty = exports.validate = exports.CharactorDuplicationError = void 0;
 class CharactorDuplicationError {
     constructor(name, message) {
         this.name = name;
@@ -36988,11 +36797,6 @@ class CharactorDuplicationError {
     }
 }
 exports.CharactorDuplicationError = CharactorDuplicationError;
-const toPartyJson = party => ({
-    name: party.name,
-    charactors: party.charactors.map(charactor_1.toCharactorJson),
-});
-exports.toPartyJson = toPartyJson;
 const validate = (name, charactors) => {
     const nameCountMap = charactors.reduce((acc, charactor) => {
         const nameCount = acc[charactor.name];
@@ -37009,38 +36813,9 @@ const validate = (name, charactors) => {
     }
     return null;
 };
-const toParty = partyJson => {
-    const compile = (0, json_schema_1.createValidationCompiler)();
-    const validateSchema = compile(exports.partySchema);
-    if (!validateSchema(partyJson)) {
-        // @ts-ignore
-        const { errors } = validateSchema;
-        console.debug(errors);
-        return new store_1.JsonSchemaUnmatchError(errors, 'partyのjsonデータではありません');
-    }
-    const { name } = partyJson;
-    const charactorObjs = [];
-    for (const charactor of partyJson.charactors) {
-        const charactorObj = (0, charactor_1.toCharactor)(charactor);
-        if (charactorObj instanceof store_1.DataNotFoundError ||
-            charactorObj instanceof acquirement_1.NotWearableErorr ||
-            charactorObj instanceof store_1.JsonSchemaUnmatchError) {
-            return charactorObj;
-        }
-        charactorObjs.push(charactorObj);
-    }
-    const validateResult = validate(name, charactorObjs);
-    if (validateResult instanceof CharactorDuplicationError) {
-        return validateResult;
-    }
-    return {
-        name,
-        charactors: charactorObjs,
-    };
-};
-exports.toParty = toParty;
+exports.validate = validate;
 const createParty = (name, charactors) => {
-    const validateResult = validate(name, charactors);
+    const validateResult = (0, exports.validate)(name, charactors);
     if (validateResult instanceof CharactorDuplicationError) {
         return validateResult;
     }
@@ -37054,7 +36829,7 @@ exports.createParty = createParty;
 
 /***/ }),
 
-/***/ 5341:
+/***/ 8200:
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -37318,248 +37093,14 @@ exports.calcOrdinaryAccuracy = calcOrdinaryAccuracy;
 /***/ }),
 
 /***/ 7929:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+/***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.underStatus = exports.toStatus = exports.toStatusJson = exports.statusSchema = void 0;
-const json_schema_1 = __webpack_require__(6540);
-const status_1 = __webpack_require__(3244);
-const store_1 = __webpack_require__(9895);
-exports.statusSchema = { type: 'string' };
-const toStatusJson = status => status.name;
-exports.toStatusJson = toStatusJson;
-const toStatus = statusJson => {
-    const compile = (0, json_schema_1.createValidationCompiler)();
-    const validateSchema = compile(exports.statusSchema);
-    if (!validateSchema(statusJson)) {
-        // @ts-ignore
-        const { errors } = validateSchema;
-        console.debug(errors);
-        return new store_1.JsonSchemaUnmatchError(errors, 'statusのjsonデータではありません');
-    }
-    const status = (0, status_1.getStatus)(statusJson);
-    if (!status) {
-        return new store_1.DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);
-    }
-    return status;
-};
-exports.toStatus = toStatus;
+exports.underStatus = void 0;
 const underStatus = (status, charactor) => !!charactor.statuses.find(s => s.status.name === status.name);
 exports.underStatus = underStatus;
-
-
-/***/ }),
-
-/***/ 2078:
-/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.toTurn = exports.toAction = exports.toTurnJson = exports.toActionJson = exports.turnSchema = exports.actionSchema = exports.timePassingSchema = exports.doNothingSchema = exports.doSkillSchema = exports.surrenderSchema = void 0;
-const charactor_1 = __webpack_require__(657);
-const acquirement_1 = __webpack_require__(8826);
-const skill_1 = __webpack_require__(7239);
-const store_1 = __webpack_require__(9895);
-const json_schema_1 = __webpack_require__(6540);
-const date_fns_1 = __webpack_require__(105);
-exports.surrenderSchema = {
-    type: 'object',
-    properties: {
-        type: { const: 'SURRENDER' },
-        actor: charactor_1.charactorSchema,
-    },
-    required: ['type', 'actor'],
-};
-exports.doSkillSchema = {
-    type: 'object',
-    properties: {
-        type: { const: 'DO_SKILL' },
-        actor: charactor_1.charactorSchema,
-        skill: { type: 'string' },
-        receivers: { type: 'array', items: charactor_1.charactorSchema },
-    },
-    required: ['type', 'actor', 'skill', 'receivers'],
-};
-exports.doNothingSchema = {
-    type: 'object',
-    properties: {
-        type: { const: 'DO_NOTHING' },
-        actor: charactor_1.charactorSchema,
-    },
-    required: ['type', 'actor'],
-};
-exports.timePassingSchema = {
-    type: 'object',
-    properties: {
-        type: { const: 'TIME_PASSING' },
-        wt: { type: 'integer' },
-    },
-    required: ['type', 'wt'],
-};
-exports.actionSchema = { anyOf: [exports.doSkillSchema, exports.doNothingSchema, exports.timePassingSchema, exports.surrenderSchema] };
-exports.turnSchema = {
-    type: 'object',
-    properties: {
-        datetime: { type: 'string', format: 'date-time' },
-        action: exports.actionSchema,
-        sortedCharactors: { type: 'array', items: charactor_1.charactorSchema },
-        field: {
-            type: 'object',
-            properties: {
-                climate: { type: 'string' },
-            },
-            required: ['climate'],
-        },
-    },
-    required: ['datetime', 'action', 'sortedCharactors', 'field'],
-};
-const toActionJson = action => {
-    if (action.type === 'DO_SKILL') {
-        return {
-            type: 'DO_SKILL',
-            actor: (0, charactor_1.toCharactorJson)(action.actor),
-            skill: action.skill.name,
-            receivers: action.receivers.map(charactor_1.toCharactorJson),
-        };
-    }
-    if (action.type === 'SURRENDER') {
-        return {
-            type: 'SURRENDER',
-            actor: (0, charactor_1.toCharactorJson)(action.actor),
-        };
-    }
-    if (action.type === 'DO_NOTHING') {
-        return {
-            type: 'DO_NOTHING',
-            actor: (0, charactor_1.toCharactorJson)(action.actor),
-        };
-    }
-    return {
-        type: 'TIME_PASSING',
-        wt: action.wt,
-    };
-};
-exports.toActionJson = toActionJson;
-const toTurnJson = turn => ({
-    datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
-    action: (0, exports.toActionJson)(turn.action),
-    sortedCharactors: turn.sortedCharactors.map(charactor_1.toCharactorJson),
-    field: turn.field,
-});
-exports.toTurnJson = toTurnJson;
-const toAction = actionJson => {
-    const compile = (0, json_schema_1.createValidationCompiler)();
-    const validateSchema = compile(exports.actionSchema);
-    if (!validateSchema(actionJson)) {
-        // @ts-ignore
-        const { errors } = validateSchema;
-        console.debug(errors);
-        return new store_1.JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
-    }
-    if (actionJson.type === 'DO_SKILL') {
-        const skillActor = (0, charactor_1.toCharactor)(actionJson.actor);
-        if (skillActor instanceof acquirement_1.NotWearableErorr ||
-            skillActor instanceof store_1.DataNotFoundError ||
-            skillActor instanceof store_1.JsonSchemaUnmatchError) {
-            return skillActor;
-        }
-        const receivers = [];
-        for (const receiverJson of actionJson.receivers) {
-            const receiver = (0, charactor_1.toCharactor)(receiverJson);
-            if (receiver instanceof acquirement_1.NotWearableErorr ||
-                receiver instanceof store_1.DataNotFoundError ||
-                receiver instanceof store_1.JsonSchemaUnmatchError) {
-                return receiver;
-            }
-            receivers.push(receiver);
-        }
-        const skill = (0, skill_1.getSkill)(actionJson.skill);
-        if (!skill) {
-            return new store_1.DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill}というskillは存在しません`);
-        }
-        return {
-            type: 'DO_SKILL',
-            actor: skillActor,
-            skill,
-            receivers,
-        };
-    }
-    if (actionJson.type === 'SURRENDER') {
-        const surrenderActor = (0, charactor_1.toCharactor)(actionJson.actor);
-        if (surrenderActor instanceof acquirement_1.NotWearableErorr ||
-            surrenderActor instanceof store_1.DataNotFoundError ||
-            surrenderActor instanceof store_1.JsonSchemaUnmatchError) {
-            return surrenderActor;
-        }
-        return {
-            type: 'SURRENDER',
-            actor: surrenderActor,
-        };
-    }
-    if (actionJson.type === 'DO_NOTHING') {
-        const nothingActor = (0, charactor_1.toCharactor)(actionJson.actor);
-        if (nothingActor instanceof acquirement_1.NotWearableErorr ||
-            nothingActor instanceof store_1.DataNotFoundError ||
-            nothingActor instanceof store_1.JsonSchemaUnmatchError) {
-            return nothingActor;
-        }
-        return {
-            type: 'DO_NOTHING',
-            actor: nothingActor,
-        };
-    }
-    return {
-        type: 'TIME_PASSING',
-        wt: 0 + actionJson.wt,
-    };
-};
-exports.toAction = toAction;
-const toTurn = turnJson => {
-    const compile = (0, json_schema_1.createValidationCompiler)();
-    const validateSchema = compile(exports.turnSchema);
-    if (!validateSchema(turnJson)) {
-        // @ts-ignore
-        const { errors } = validateSchema;
-        console.debug(errors);
-        return new store_1.JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
-    }
-    let datetime = null;
-    try {
-        datetime = (0, date_fns_1.parse)(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
-    }
-    catch (e) {
-        return new store_1.JsonSchemaUnmatchError(e, '日付が間違っています');
-    }
-    const action = (0, exports.toAction)(turnJson.action);
-    if (action instanceof acquirement_1.NotWearableErorr ||
-        action instanceof store_1.DataNotFoundError ||
-        action instanceof store_1.JsonSchemaUnmatchError) {
-        return action;
-    }
-    const sortedCharactors = [];
-    for (const charactorJson of turnJson.sortedCharactors) {
-        const charactor = (0, charactor_1.toCharactor)(charactorJson);
-        if (charactor instanceof acquirement_1.NotWearableErorr ||
-            charactor instanceof store_1.DataNotFoundError ||
-            charactor instanceof store_1.JsonSchemaUnmatchError) {
-            return charactor;
-        }
-        sortedCharactors.push(charactor);
-    }
-    const field = {
-        climate: turnJson.field.climate,
-    };
-    return {
-        datetime,
-        action,
-        sortedCharactors,
-        field,
-    };
-};
-exports.toTurn = toTurn;
 
 
 /***/ }),
@@ -37573,17 +37114,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createRepository = exports.readJson = exports.repositoryDirectory = exports.CopyFailError = void 0;
+exports.createRepository = exports.importJson = exports.repositoryDirectory = void 0;
 const fs_1 = __importDefault(__webpack_require__(7147));
 const path_1 = __importDefault(__webpack_require__(1017));
-class CopyFailError {
-    constructor(fileName, exception, message) {
-        this.fileName = fileName;
-        this.exception = exception;
-        this.message = message;
-    }
-}
-exports.CopyFailError = CopyFailError;
+const repository_1 = __webpack_require__(6039);
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
 const userHome = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
@@ -37647,18 +37181,16 @@ const createRemove = basePath => async (namespace, objctKey) => {
         }
     }
 };
-// FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
-// ただし、fsのエラーメッセージが一緒なら意味がない
-const createCopy = basePath => async (namespace, objctKey, fileName) => {
+const createExportJson = basePath => async (namespace, objctKey, fileName) => {
     try {
         await fs_1.default.promises.copyFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), fileName, fs_1.default.constants.COPYFILE_EXCL);
         return null;
     }
     catch (e) {
-        return new CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
+        return new repository_1.CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
     }
 };
-const readJson = async (fileName) => {
+const importJson = async (fileName) => {
     try {
         const contents = await fs_1.default.promises.readFile(fileName, {
             encoding: 'utf8',
@@ -37678,7 +37210,7 @@ const readJson = async (fileName) => {
         }
     }
 };
-exports.readJson = readJson;
+exports.importJson = importJson;
 const createRepository = async (basePath) => {
     await createDirctory(basePath);
     return {
@@ -37687,7 +37219,7 @@ const createRepository = async (basePath) => {
         list: createList(basePath),
         get: createGet(basePath),
         remove: createRemove(basePath),
-        copy: createCopy(basePath),
+        exportJson: createExportJson(basePath),
     };
 };
 exports.createRepository = createRepository;
@@ -37713,6 +37245,25 @@ const ajv = new ajv_1.default();
 const $compile = schema => ajv.compile(schema);
 const createValidationCompiler = () => (0, json_schema_to_ts_1.wrapCompilerAsTypeGuard)($compile);
 exports.createValidationCompiler = createValidationCompiler;
+
+
+/***/ }),
+
+/***/ 6039:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CopyFailError = void 0;
+class CopyFailError {
+    constructor(fileName, exception, message) {
+        this.fileName = fileName;
+        this.exception = exception;
+        this.message = message;
+    }
+}
+exports.CopyFailError = CopyFailError;
 
 
 /***/ }),
@@ -37916,7 +37467,7 @@ exports.allBlessings = Object.values(blessings);
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createStore = void 0;
-const battle_1 = __webpack_require__(3279);
+const battle_1 = __webpack_require__(3747);
 const NAMESPACE = 'battle';
 const createSave = repository => async (obj) => repository.save(NAMESPACE, obj.title, (0, battle_1.toBattleJson)(obj));
 const createGet = repository => async (name) => {
@@ -37928,7 +37479,7 @@ const createGet = repository => async (name) => {
 };
 const createRemove = repository => async (name) => repository.remove(NAMESPACE, name);
 const createList = repository => async () => repository.list(NAMESPACE);
-const createCopy = repository => async (name, file) => repository.copy(NAMESPACE, name, file);
+const createExportJson = repository => async (name, file) => repository.exportJson(NAMESPACE, name, file);
 const createStore = async (repository) => {
     await repository.checkNamespace(NAMESPACE);
     return {
@@ -37936,7 +37487,7 @@ const createStore = async (repository) => {
         list: createList(repository),
         get: createGet(repository),
         remove: createRemove(repository),
-        copy: createCopy(repository),
+        exportJson: createExportJson(repository),
     };
 };
 exports.createStore = createStore;
@@ -37951,7 +37502,7 @@ exports.createStore = createStore;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createStore = void 0;
-const charactor_1 = __webpack_require__(657);
+const charactor_1 = __webpack_require__(4821);
 const NAMESPACE = 'charactor';
 const createSave = repository => async (obj) => repository.save(NAMESPACE, obj.name, (0, charactor_1.toCharactorJson)(obj));
 const createGet = repository => async (name) => {
@@ -37984,7 +37535,7 @@ exports.createStore = createStore;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.createStore = void 0;
-const party_1 = __webpack_require__(7551);
+const party_1 = __webpack_require__(347);
 const NAMESPACE = 'party';
 const createSave = storage => async (obj) => storage.save(NAMESPACE, obj.name, (0, party_1.toPartyJson)(obj));
 const createGet = storage => async (name) => {
@@ -37996,7 +37547,7 @@ const createGet = storage => async (name) => {
 };
 const createRemove = storage => async (name) => storage.remove(NAMESPACE, name);
 const createList = storage => async () => storage.list(NAMESPACE);
-const createCopy = storage => async (name, file) => storage.copy(NAMESPACE, name, file);
+const createExportJson = storage => async (name, file) => storage.exportJson(NAMESPACE, name, file);
 const createStore = async (storage) => {
     await storage.checkNamespace(NAMESPACE);
     return {
@@ -38004,10 +37555,522 @@ const createStore = async (storage) => {
         list: createList(storage),
         get: createGet(storage),
         remove: createRemove(storage),
-        copy: createCopy(storage),
+        exportJson: createExportJson(storage),
     };
 };
 exports.createStore = createStore;
+
+
+/***/ }),
+
+/***/ 3747:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toBattle = exports.toBattleJson = exports.battleSchema = void 0;
+const json_schema_1 = __webpack_require__(6540);
+const turn_1 = __webpack_require__(4546);
+const party_1 = __webpack_require__(347);
+const acquirement_1 = __webpack_require__(8826);
+const store_1 = __webpack_require__(9895);
+const party_2 = __webpack_require__(7551);
+const battle_1 = __webpack_require__(3279);
+exports.battleSchema = {
+    type: 'object',
+    properties: {
+        title: { type: 'string' },
+        home: party_1.partySchema,
+        visitor: party_1.partySchema,
+        turns: { type: 'array', items: turn_1.turnSchema },
+        result: { enum: [battle_1.GameOngoing, battle_1.GameHome, battle_1.GameVisitor, battle_1.GameDraw] },
+    },
+    required: ['title', 'home', 'visitor', 'turns', 'result'],
+};
+const toBattleJson = battle => ({
+    title: battle.title,
+    home: (0, party_1.toPartyJson)(battle.home),
+    visitor: (0, party_1.toPartyJson)(battle.visitor),
+    turns: battle.turns.map(turn_1.toTurnJson),
+    result: battle.result,
+});
+exports.toBattleJson = toBattleJson;
+const toBattle = battleJson => {
+    const compile = (0, json_schema_1.createValidationCompiler)();
+    const validateSchema = compile(exports.battleSchema);
+    if (!validateSchema(battleJson)) {
+        // @ts-ignore
+        const { errors } = validateSchema;
+        console.debug(errors);
+        return new store_1.JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
+    }
+    const { title } = battleJson;
+    const home = (0, party_1.toParty)(battleJson.home);
+    if (home instanceof acquirement_1.NotWearableErorr ||
+        home instanceof store_1.DataNotFoundError ||
+        home instanceof party_2.CharactorDuplicationError ||
+        home instanceof store_1.JsonSchemaUnmatchError) {
+        return home;
+    }
+    const visitor = (0, party_1.toParty)(battleJson.visitor);
+    if (visitor instanceof acquirement_1.NotWearableErorr ||
+        visitor instanceof store_1.DataNotFoundError ||
+        visitor instanceof party_2.CharactorDuplicationError ||
+        visitor instanceof store_1.JsonSchemaUnmatchError) {
+        return visitor;
+    }
+    const turns = [];
+    for (const turnJson of battleJson.turns) {
+        const turn = (0, turn_1.toTurn)(turnJson);
+        if (turn instanceof acquirement_1.NotWearableErorr ||
+            turn instanceof store_1.DataNotFoundError ||
+            turn instanceof store_1.JsonSchemaUnmatchError) {
+            return turn;
+        }
+        turns.push(turn);
+    }
+    const { result } = battleJson;
+    return {
+        title,
+        home,
+        visitor,
+        turns,
+        result,
+    };
+};
+exports.toBattle = toBattle;
+
+
+/***/ }),
+
+/***/ 4821:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toCharactor = exports.toCharactorJson = exports.toAttachedStatusJson = exports.charactorSchema = exports.attachedStatusSchema = void 0;
+const json_schema_1 = __webpack_require__(6540);
+const acquirement_1 = __webpack_require__(8826);
+const store_1 = __webpack_require__(9895);
+const charactor_1 = __webpack_require__(657);
+const status_1 = __webpack_require__(2399);
+const acquirement_2 = __webpack_require__(2066);
+exports.attachedStatusSchema = {
+    type: 'object',
+    properties: {
+        status: status_1.statusSchema,
+        restWt: { type: 'integer' },
+    },
+    required: ['status', 'restWt'],
+};
+exports.charactorSchema = {
+    type: 'object',
+    properties: {
+        name: { type: 'string' },
+        race: { type: 'string' },
+        blessing: { type: 'string' },
+        clothing: { type: 'string' },
+        weapon: { type: 'string' },
+        statuses: {
+            type: 'array',
+            items: exports.attachedStatusSchema,
+        },
+        hp: { type: 'integer' },
+        mp: { type: 'integer' },
+        restWt: { type: 'integer' },
+        isVisitor: { type: 'boolean' },
+    },
+    required: ['name', 'race', 'blessing', 'clothing', 'weapon', 'statuses', 'hp', 'mp', 'restWt'],
+};
+const toAttachedStatusJson = attached => ({
+    status: (0, status_1.toStatusJson)(attached.status),
+    restWt: attached.restWt,
+});
+exports.toAttachedStatusJson = toAttachedStatusJson;
+const toCharactorJson = charactor => {
+    const json = {
+        name: charactor.name,
+        race: charactor.race.name,
+        blessing: charactor.blessing.name,
+        clothing: charactor.clothing.name,
+        weapon: charactor.weapon.name,
+        statuses: charactor.statuses.map(exports.toAttachedStatusJson),
+        hp: charactor.hp,
+        mp: charactor.mp,
+        restWt: charactor.restWt,
+        isVisitor: charactor.isVisitor,
+    };
+    if (Object.prototype.hasOwnProperty.call(charactor, 'isVisitor')) {
+        json.isVisitor = charactor.isVisitor;
+    }
+    return json;
+};
+exports.toCharactorJson = toCharactorJson;
+const toCharactor = charactorJson => {
+    const compile = (0, json_schema_1.createValidationCompiler)();
+    const validateSchema = compile(exports.charactorSchema);
+    if (!validateSchema(charactorJson)) {
+        // @ts-ignore
+        const { errors } = validateSchema;
+        console.debug(errors);
+        return new store_1.JsonSchemaUnmatchError(errors, 'charactorのjsonデータではありません');
+    }
+    const { name } = charactorJson;
+    const race = (0, acquirement_2.getRace)(charactorJson.race);
+    if (!race) {
+        return new store_1.DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
+    }
+    const blessing = (0, acquirement_2.getBlessing)(charactorJson.blessing);
+    if (!blessing) {
+        return new store_1.DataNotFoundError(charactorJson.blessing, 'blessing', `${charactorJson.blessing}という祝福は存在しません`);
+    }
+    const clothing = (0, acquirement_2.getClothing)(charactorJson.clothing);
+    if (!clothing) {
+        return new store_1.DataNotFoundError(charactorJson.clothing, 'clothing', `${charactorJson.clothing}という装備は存在しません`);
+    }
+    const weapon = (0, acquirement_2.getWeapon)(charactorJson.weapon);
+    if (!weapon) {
+        return new store_1.DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon}という武器は存在しません`);
+    }
+    const validateResult = (0, charactor_1.validate)(name, race, blessing, clothing, weapon);
+    if (validateResult instanceof acquirement_1.NotWearableErorr) {
+        return validateResult;
+    }
+    const statuses = [];
+    for (const attachedStatusJson of charactorJson.statuses) {
+        const statusObj = (0, status_1.toStatus)(attachedStatusJson.status);
+        if (statusObj instanceof store_1.JsonSchemaUnmatchError || statusObj instanceof store_1.DataNotFoundError) {
+            return statusObj;
+        }
+        statuses.push({
+            status: statusObj,
+            restWt: attachedStatusJson.restWt,
+        });
+    }
+    const someone = {
+        name,
+        race,
+        blessing,
+        clothing,
+        weapon,
+        statuses,
+        hp: 0 + charactorJson.hp,
+        mp: 0 + charactorJson.mp,
+        restWt: 0 + charactorJson.restWt,
+    };
+    if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
+        someone.isVisitor = charactorJson.isVisitor;
+    }
+    return someone;
+};
+exports.toCharactor = toCharactor;
+
+
+/***/ }),
+
+/***/ 347:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toParty = exports.toPartyJson = exports.partySchema = void 0;
+const json_schema_1 = __webpack_require__(6540);
+const acquirement_1 = __webpack_require__(8826);
+const store_1 = __webpack_require__(9895);
+const party_1 = __webpack_require__(7551);
+const charactor_1 = __webpack_require__(4821);
+exports.partySchema = {
+    type: 'object',
+    properties: {
+        name: { type: 'string' },
+        charactors: { type: 'array', items: charactor_1.charactorSchema },
+    },
+    required: ['name', 'charactors'],
+};
+const toPartyJson = party => ({
+    name: party.name,
+    charactors: party.charactors.map(charactor_1.toCharactorJson),
+});
+exports.toPartyJson = toPartyJson;
+const toParty = partyJson => {
+    const compile = (0, json_schema_1.createValidationCompiler)();
+    const validateSchema = compile(exports.partySchema);
+    if (!validateSchema(partyJson)) {
+        // @ts-ignore
+        const { errors } = validateSchema;
+        console.debug(errors);
+        return new store_1.JsonSchemaUnmatchError(errors, 'partyのjsonデータではありません');
+    }
+    const { name } = partyJson;
+    const charactorObjs = [];
+    for (const charactor of partyJson.charactors) {
+        const charactorObj = (0, charactor_1.toCharactor)(charactor);
+        if (charactorObj instanceof store_1.DataNotFoundError ||
+            charactorObj instanceof acquirement_1.NotWearableErorr ||
+            charactorObj instanceof store_1.JsonSchemaUnmatchError) {
+            return charactorObj;
+        }
+        charactorObjs.push(charactorObj);
+    }
+    const validateResult = (0, party_1.validate)(name, charactorObjs);
+    if (validateResult instanceof party_1.CharactorDuplicationError) {
+        return validateResult;
+    }
+    return {
+        name,
+        charactors: charactorObjs,
+    };
+};
+exports.toParty = toParty;
+
+
+/***/ }),
+
+/***/ 2399:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toStatus = exports.toStatusJson = exports.statusSchema = void 0;
+const json_schema_1 = __webpack_require__(6540);
+const store_1 = __webpack_require__(9895);
+const status_1 = __webpack_require__(3244);
+exports.statusSchema = { type: 'string' };
+const toStatusJson = status => status.name;
+exports.toStatusJson = toStatusJson;
+const toStatus = statusJson => {
+    const compile = (0, json_schema_1.createValidationCompiler)();
+    const validateSchema = compile(exports.statusSchema);
+    if (!validateSchema(statusJson)) {
+        // @ts-ignore
+        const { errors } = validateSchema;
+        console.debug(errors);
+        return new store_1.JsonSchemaUnmatchError(errors, 'statusのjsonデータではありません');
+    }
+    const status = (0, status_1.getStatus)(statusJson);
+    if (!status) {
+        return new store_1.DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);
+    }
+    return status;
+};
+exports.toStatus = toStatus;
+
+
+/***/ }),
+
+/***/ 4546:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.toTurn = exports.toAction = exports.toTurnJson = exports.toActionJson = exports.turnSchema = exports.actionSchema = exports.timePassingSchema = exports.doNothingSchema = exports.doSkillSchema = exports.surrenderSchema = void 0;
+const date_fns_1 = __webpack_require__(105);
+// import ja from 'date-fns/locale/ja'
+const json_schema_1 = __webpack_require__(6540);
+const acquirement_1 = __webpack_require__(8826);
+const skill_1 = __webpack_require__(7239);
+const store_1 = __webpack_require__(9895);
+const charactor_1 = __webpack_require__(4821);
+exports.surrenderSchema = {
+    type: 'object',
+    properties: {
+        type: { const: 'SURRENDER' },
+        actor: charactor_1.charactorSchema,
+    },
+    required: ['type', 'actor'],
+};
+exports.doSkillSchema = {
+    type: 'object',
+    properties: {
+        type: { const: 'DO_SKILL' },
+        actor: charactor_1.charactorSchema,
+        skill: { type: 'string' },
+        receivers: { type: 'array', items: charactor_1.charactorSchema },
+    },
+    required: ['type', 'actor', 'skill', 'receivers'],
+};
+exports.doNothingSchema = {
+    type: 'object',
+    properties: {
+        type: { const: 'DO_NOTHING' },
+        actor: charactor_1.charactorSchema,
+    },
+    required: ['type', 'actor'],
+};
+exports.timePassingSchema = {
+    type: 'object',
+    properties: {
+        type: { const: 'TIME_PASSING' },
+        wt: { type: 'integer' },
+    },
+    required: ['type', 'wt'],
+};
+exports.actionSchema = { anyOf: [exports.doSkillSchema, exports.doNothingSchema, exports.timePassingSchema, exports.surrenderSchema] };
+exports.turnSchema = {
+    type: 'object',
+    properties: {
+        datetime: { type: 'string', format: 'date-time' },
+        action: exports.actionSchema,
+        sortedCharactors: { type: 'array', items: charactor_1.charactorSchema },
+        field: {
+            type: 'object',
+            properties: {
+                climate: { type: 'string' },
+            },
+            required: ['climate'],
+        },
+    },
+    required: ['datetime', 'action', 'sortedCharactors', 'field'],
+};
+const toActionJson = action => {
+    if (action.type === 'DO_SKILL') {
+        return {
+            type: 'DO_SKILL',
+            actor: (0, charactor_1.toCharactorJson)(action.actor),
+            skill: action.skill.name,
+            receivers: action.receivers.map(charactor_1.toCharactorJson),
+        };
+    }
+    if (action.type === 'SURRENDER') {
+        return {
+            type: 'SURRENDER',
+            actor: (0, charactor_1.toCharactorJson)(action.actor),
+        };
+    }
+    if (action.type === 'DO_NOTHING') {
+        return {
+            type: 'DO_NOTHING',
+            actor: (0, charactor_1.toCharactorJson)(action.actor),
+        };
+    }
+    return {
+        type: 'TIME_PASSING',
+        wt: action.wt,
+    };
+};
+exports.toActionJson = toActionJson;
+const toTurnJson = turn => ({
+    datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+    action: (0, exports.toActionJson)(turn.action),
+    sortedCharactors: turn.sortedCharactors.map(charactor_1.toCharactorJson),
+    field: turn.field,
+});
+exports.toTurnJson = toTurnJson;
+const toAction = actionJson => {
+    const compile = (0, json_schema_1.createValidationCompiler)();
+    const validateSchema = compile(exports.actionSchema);
+    if (!validateSchema(actionJson)) {
+        // @ts-ignore
+        const { errors } = validateSchema;
+        console.debug(errors);
+        return new store_1.JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
+    }
+    if (actionJson.type === 'DO_SKILL') {
+        const skillActor = (0, charactor_1.toCharactor)(actionJson.actor);
+        if (skillActor instanceof acquirement_1.NotWearableErorr ||
+            skillActor instanceof store_1.DataNotFoundError ||
+            skillActor instanceof store_1.JsonSchemaUnmatchError) {
+            return skillActor;
+        }
+        const receivers = [];
+        for (const receiverJson of actionJson.receivers) {
+            const receiver = (0, charactor_1.toCharactor)(receiverJson);
+            if (receiver instanceof acquirement_1.NotWearableErorr ||
+                receiver instanceof store_1.DataNotFoundError ||
+                receiver instanceof store_1.JsonSchemaUnmatchError) {
+                return receiver;
+            }
+            receivers.push(receiver);
+        }
+        const skill = (0, skill_1.getSkill)(actionJson.skill);
+        if (!skill) {
+            return new store_1.DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill}というskillは存在しません`);
+        }
+        return {
+            type: 'DO_SKILL',
+            actor: skillActor,
+            skill,
+            receivers,
+        };
+    }
+    if (actionJson.type === 'SURRENDER') {
+        const surrenderActor = (0, charactor_1.toCharactor)(actionJson.actor);
+        if (surrenderActor instanceof acquirement_1.NotWearableErorr ||
+            surrenderActor instanceof store_1.DataNotFoundError ||
+            surrenderActor instanceof store_1.JsonSchemaUnmatchError) {
+            return surrenderActor;
+        }
+        return {
+            type: 'SURRENDER',
+            actor: surrenderActor,
+        };
+    }
+    if (actionJson.type === 'DO_NOTHING') {
+        const nothingActor = (0, charactor_1.toCharactor)(actionJson.actor);
+        if (nothingActor instanceof acquirement_1.NotWearableErorr ||
+            nothingActor instanceof store_1.DataNotFoundError ||
+            nothingActor instanceof store_1.JsonSchemaUnmatchError) {
+            return nothingActor;
+        }
+        return {
+            type: 'DO_NOTHING',
+            actor: nothingActor,
+        };
+    }
+    return {
+        type: 'TIME_PASSING',
+        wt: 0 + actionJson.wt,
+    };
+};
+exports.toAction = toAction;
+const toTurn = turnJson => {
+    const compile = (0, json_schema_1.createValidationCompiler)();
+    const validateSchema = compile(exports.turnSchema);
+    if (!validateSchema(turnJson)) {
+        // @ts-ignore
+        const { errors } = validateSchema;
+        console.debug(errors);
+        return new store_1.JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
+    }
+    let datetime = null;
+    try {
+        datetime = (0, date_fns_1.parse)(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+    }
+    catch (e) {
+        return new store_1.JsonSchemaUnmatchError(e, '日付が間違っています');
+    }
+    const action = (0, exports.toAction)(turnJson.action);
+    if (action instanceof acquirement_1.NotWearableErorr ||
+        action instanceof store_1.DataNotFoundError ||
+        action instanceof store_1.JsonSchemaUnmatchError) {
+        return action;
+    }
+    const sortedCharactors = [];
+    for (const charactorJson of turnJson.sortedCharactors) {
+        const charactor = (0, charactor_1.toCharactor)(charactorJson);
+        if (charactor instanceof acquirement_1.NotWearableErorr ||
+            charactor instanceof store_1.DataNotFoundError ||
+            charactor instanceof store_1.JsonSchemaUnmatchError) {
+            return charactor;
+        }
+        sortedCharactors.push(charactor);
+    }
+    const field = {
+        climate: turnJson.field.climate,
+    };
+    return {
+        datetime,
+        action,
+        sortedCharactors,
+        field,
+    };
+};
+exports.toTurn = toTurn;
 
 
 /***/ }),
@@ -38094,7 +38157,7 @@ exports.getStatus = getStatus;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DataNotFoundError = exports.JsonSchemaUnmatchError = void 0;
+exports.DataExistError = exports.DataNotFoundError = exports.JsonSchemaUnmatchError = void 0;
 class JsonSchemaUnmatchError {
     constructor(error, message) {
         this.error = error;
@@ -38110,6 +38173,14 @@ class DataNotFoundError {
     }
 }
 exports.DataNotFoundError = DataNotFoundError;
+class DataExistError {
+    constructor(name, type, message) {
+        this.name = name;
+        this.type = type;
+        this.message = message;
+    }
+}
+exports.DataExistError = DataExistError;
 
 
 /***/ }),

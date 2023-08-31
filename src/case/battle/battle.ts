@@ -1,7 +1,7 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
 import type { Repository } from 'src/io/repository';
 import type { Charactor } from 'src/domain/charactor';
-import { readJson } from 'src/io/file_repository';
+import { importJson } from 'src/io/file_repository';
 import { NotApplicable } from 'src/io/standard_dialogue';
 import type { Battle } from 'src/domain/battle';
 import type { Turn } from 'src/domain/turn';
@@ -291,7 +291,7 @@ export type Start = (
   repository: Repository,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, repository) => async (title, home, visitor) => {
-  const homeJson = await readJson(home);
+  const homeJson = await importJson(home);
   if (!homeJson) {
     await dialogue.notice(`homeのデータがありません`);
     return;
@@ -307,7 +307,7 @@ export const start: Start = (dialogue, repository) => async (title, home, visito
     return;
   }
 
-  const visitorJson = await readJson(visitor);
+  const visitorJson = await importJson(visitor);
   if (!visitorJson) {
     await dialogue.notice(`visitorのデータがありません`);
   }

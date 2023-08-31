@@ -3,9 +3,8 @@ import type { Charactor } from 'src/domain/charactor';
 import type { CharactorForm } from 'src/form/charactor';
 import type { Store } from 'src/store/store';
 
-import { JSONSchemaType } from "ajv"
+import Ajv, { JSONSchemaType } from "ajv"
 
-import { createValidationCompiler } from 'src/io/json_schema';
 import { DataExistError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
@@ -13,9 +12,14 @@ import { charactorFormSchema } from 'src/form/charactor';
 import { validate, CharactorDuplicationError } from 'src/domain/party';
 import { toCharactor, toCharactorForm } from 'src/form/charactor';
 
-// TODO json-schema-to-tsの導入
+// FIXME json-schema-to-tsの導入
 // import { FromSchema } from 'json-schema-to-ts';
 // type PartyForm = FromSchema<typeof partyFormSchema>;
+//
+// json-schema-to-tsに変更すると、validationのtype guardも変わる
+// import { createValidationCompiler } from 'src/io/json_schema';
+// const compile = createValidationCompiler();
+// const validateSchema = compile(partyFormSchema);
 
 export type PartyForm = {
   name: string;
@@ -48,8 +52,8 @@ export type ToParty = (
   partyForm: any,
 ) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toParty: ToParty = partyForm => {
-  const compile = createValidationCompiler();
-  const validateSchema = compile(partyFormSchema);
+  const ajv = new Ajv();
+  const validateSchema = ajv.compile<PartyForm>(partyFormSchema);
   if (!validateSchema(partyForm)) {
     // @ts-ignore
     const { errors } = validateSchema;
@@ -57,13 +61,10 @@ export const toParty: ToParty = partyForm => {
     return new JsonSchemaUnmatchError(errors, 'partyのformデータではありません');
   }
 
-  // TODO キャスト無くしたい
-  const validParty = partyForm as PartyForm;
-
-  const { name } = validParty;
+  const { name } = partyForm;
 
   const charactorObjs: Charactor[] = [];
-  for (const charactor of validParty.charactors) {
+  for (const charactor of partyForm.charactors) {
     const charactorObj = toCharactor(charactor);
     if (
       charactorObj instanceof DataNotFoundError ||

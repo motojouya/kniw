@@ -30,7 +30,7 @@ import { toParty as jsonToParty } from 'src/store/schema/party';
 
 import { CharactorDuplicationError } from 'src/domain/party';
 import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
 
 type PartyStore = Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
@@ -39,7 +39,7 @@ const PartyEditor: FC<{
   partyForm: PartyForm,
   inoutButton: ReactNode,
   store: PartyStore,
-}> = ({ exist, partyForm, store }) => {
+}> = ({ exist, partyForm, inoutButton, store }) => {
 
   const router = useRouter()
   const {
@@ -57,7 +57,13 @@ const PartyEditor: FC<{
 
   const save = async (party: any) => {
     const error = await saveParty(store, !exist)(party);
-    if (!error) {
+    if (
+      error instanceof DataNotFoundError ||
+      error instanceof NotWearableErorr ||
+      error instanceof JsonSchemaUnmatchError ||
+      error instanceof CharactorDuplicationError ||
+      error instanceof DataExistError
+    ) {
       setSaveMessage({
         error: true,
         message: error.message,
@@ -77,7 +83,7 @@ const PartyEditor: FC<{
 
   const deleteParty = (name: string) => {
     if (confirm('削除してもよいですか？')) {
-      store.delete(partyForm.name);
+      store.remove(partyForm.name);
       router.push({ pathname: 'party' })
     }
   };
@@ -89,7 +95,6 @@ const PartyEditor: FC<{
       <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
       <Text>This is the party page</Text>
       {inoutButton}
-      <Button type="button" onClick={() => store.copy(partyForm.name)} >Export</Button>
       <form onSubmit={handleSubmit(save)}>
         {saveMessage.message && (
           saveMessage.error
@@ -132,6 +137,20 @@ export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ st
     throw new Error('invalid store');
   }
 
+  if (
+    party instanceof NotWearableErorr ||
+    party instanceof DataNotFoundError ||
+    party instanceof CharactorDuplicationError ||
+    party instanceof JsonSchemaUnmatchError
+  ) {
+    return (
+      <Box>
+        <Text>{party.message}</Text>
+        <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
+      </Box>
+    );
+  }
+
   if (!party) {
     return (
       <Box>
@@ -143,7 +162,7 @@ export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ st
 
   return (
     <PartyEditor exist={true} partyForm={toPartyForm(party)} store={store} inoutButton={(
-      <Button type="button" onClick={() => store.exportJson(party.name, '')} >Export</Button>
+      <Button type="button" onClick={() => store.exportJson && store.exportJson(party.name, '')} >Export</Button>
     )} />
   );
 };
@@ -188,7 +207,7 @@ export const PartyList: FC<{ store: PartyStore }> = ({ store }) => {
           <ListItem key='party-new'>
             <Link href={{ pathname: 'party', query: { name: '_new' } }}><a>新しく作る</a></Link>
           </ListItem>
-          {partyNames.map((partyName, index) => (
+          {partyNames && partyNames.map((partyName, index) => (
             <ListItem key={`party-${index}`}>
               <Link href={{ pathname: 'party', query: { name: partyName } }}><a>{partyName}</a></Link>
             </ListItem>
