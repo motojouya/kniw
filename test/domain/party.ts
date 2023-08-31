@@ -1,13 +1,9 @@
 import assert from 'assert';
 import type { Party } from 'src/domain/party';
-import {
-  toParty,
-  CharactorDuplicationError,
-} from 'src/domain/party';
-import {
-  toCharactor,
-  Charactor,
-} from 'src/domain/charactor';
+import type { Charactor } from 'src/domain/charactor';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { toParty } from 'src/store/schema/party';
+import { toCharactor } from 'src/store/schema/charactor';
 
 describe('Party#toParty', function () {
   it('CharactorDuplicationError', function () {

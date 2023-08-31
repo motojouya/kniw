@@ -1,8 +1,8 @@
 import assert from 'assert';
 import type { Party } from 'src/domain/party';
-import { toParty } from 'src/domain/party';
+import type { Repository } from 'src/io/repository'
+import { toParty } from 'src/store/schema/party';
 import { createStore } from 'src/store/party';
-import type { Repository } from 'src/io/file_repository'
 
 const storeMock: Repository = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
@@ -16,7 +16,7 @@ const storeMock: Repository = {
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['team01', 'team02'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  copy: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
+  exportJson: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
 describe('Party#createStore', function () {

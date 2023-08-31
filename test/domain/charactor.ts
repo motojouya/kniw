@@ -1,14 +1,13 @@
 import assert from 'assert';
 
 import type { Charactor } from 'src/domain/charactor';
-import type { Repository } from 'src/io/file_repository'
 
 import {
-  toCharactor,
   getAbilities,
   getSkills,
   getPhysical,
 } from 'src/domain/charactor';
+import { toCharactor } from 'src/store/schema/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import {
   JsonSchemaUnmatchError,

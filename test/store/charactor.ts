@@ -1,8 +1,8 @@
 import assert from 'assert';
 import type { Charactor } from 'src/domain/charactor';
-import { toCharactor } from 'src/domain/charactor';
+import type { Repository } from 'src/io/repository'
+import { toCharactor } from 'src/store/schema/charactor';
 import { createStore } from 'src/store/charactor';
-import type { Repository } from 'src/io/file_repository'
 
 
 const storeMock: Repository = {
@@ -11,7 +11,7 @@ const storeMock: Repository = {
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  copy: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
+  exportJson: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
 describe('Charctor#createStore', function () {
