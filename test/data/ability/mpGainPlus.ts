@@ -1,7 +1,7 @@
 import assert from 'assert';
 import type { Charactor } from 'src/domain/charactor';
 
-import { toCharactor } from 'src/domain/charactor';
+import { toCharactor } from 'src/store/schema/charactor';
 import { mpGainPlus } from 'src/data/ability/mpGainPlus';
 
 describe('mpGainPlus#wait', function () {

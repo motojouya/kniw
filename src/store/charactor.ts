@@ -1,7 +1,7 @@
 import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateStore } from 'src/store/store';
 import type { Charactor } from 'src/domain/charactor';
 
-import { toCharactor, toCharactorJson } from 'src/domain/charactor';
+import { toCharactor, toCharactorJson } from 'src/store/schema/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 

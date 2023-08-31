@@ -1,10 +1,10 @@
 import type { Battle } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
 import type { Skill } from 'src/domain/skill';
+import type { Charactor } from 'src/domain/charactor';
 
 import assert from 'assert';
 import {
-  toBattle,
   actToCharactor,
   actToField,
   stay,
@@ -17,14 +17,12 @@ import {
   GameVisitor,
   GameDraw
 } from 'src/domain/battle';
-import { toParty } from 'src/domain/party';
-import { toTurn, toAction } from 'src/domain/turn';
+import { toBattle } from 'src/store/schema/battle';
+import { toParty } from 'src/store/schema/party';
+import { toTurn, toAction } from 'src/store/schema/turn';
 import { parse, format } from 'date-fns';
 
-import {
-  toCharactor,
-  Charactor,
-} from 'src/domain/charactor';
+import { toCharactor } from 'src/store/schema/charactor';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { CharactorDuplicationError } from 'src/domain/party';
 import {

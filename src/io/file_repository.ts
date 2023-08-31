@@ -1,41 +1,7 @@
+import type { CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
-
-export class CopyFailError {
-  constructor(
-    readonly fileName: string,
-    readonly exception: any,
-    readonly message: string,
-  ) {}
-}
-
-export type KeyValue = { [name: string]: any };
-
-// FIXME データ保存の選択肢が増えたら、型だけ別ファイルに移動
-export type CheckNamespace = (namespace: string) => Promise<void>;
-export type Save = (namespace: string, objctKey: string, data: KeyValue) => Promise<void>;
-export type List = (namespace: string) => Promise<string[]>;
-export type Get = (namespace: string, objctKey: string) => Promise<KeyValue | null>;
-export type Remove = (namespace: string, objctKey: string) => Promise<void>;
-export type Copy = (namespace: string, objctKey: string, fileName: string) => Promise<null | CopyFailError>;
-
-export type CreateCheckNamespace = (basePath: string) => CheckNamespace;
-export type CreateSave = (basePath: string) => Save;
-export type CreateList = (basePath: string) => List;
-export type CreateGet = (basePath: string) => Get;
-export type CreateRemove = (basePath: string) => Remove;
-export type CreateCopy = (basePath: string) => Copy;
-
-export type Repository = {
-  checkNamespace: CheckNamespace;
-  save: Save;
-  list: List;
-  get: Get;
-  remove: Remove;
-  copy: Copy;
-};
-
-export type CreateRepository = (basePath: string) => Promise<Repository>;
+import { CopyFailError } from 'src/io/repository';
 
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
@@ -54,6 +20,7 @@ const createDirctory: CreateDirctory = async dirName => {
   }
 };
 
+type CreateCheckNamespace = (basePath: string) => CheckNamespace;
 const createCheckNamespace: CreateCheckNamespace = basePath => async namespace =>
   createDirctory(path.join(basePath, namespace));
 
@@ -61,9 +28,11 @@ type ResolvePath = (basePath: string, dirName: string, fileBaseName: string, ext
 const resolvePath: ResolvePath = (basePath, dirName, fileBaseName, extension) =>
   path.join(basePath, dirName, fileBaseName + extension);
 
+type CreateSave = (basePath: string) => Save;
 const createSave: CreateSave = basePath => async (namespace, objctKey, data) =>
   fs.promises.writeFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), JSON.stringify(data));
 
+type CreateList = (basePath: string) => List;
 const createList: CreateList = basePath => async namespace => {
   try {
     const files = await fs.promises.readdir(path.join(basePath, namespace));
@@ -80,6 +49,7 @@ const createList: CreateList = basePath => async namespace => {
   }
 };
 
+type CreateGet = (basePath: string) => Get;
 const createGet: CreateGet = basePath => async (namespace, objctKey) => {
   try {
     const contents = await fs.promises.readFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), {
@@ -99,6 +69,7 @@ const createGet: CreateGet = basePath => async (namespace, objctKey) => {
   }
 };
 
+type CreateRemove = (basePath: string) => Remove;
 const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
   try {
     await fs.promises.unlink(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION));
@@ -114,7 +85,8 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
 
 // FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
 // ただし、fsのエラーメッセージが一緒なら意味がない
-const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName) => {
+type CreateExportJson = (basePath: string) => ExportJson;
+const createExportJson: CreateExportJson = basePath => async (namespace, objctKey, fileName) => {
   try {
     await fs.promises.copyFile(
       resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
@@ -127,8 +99,8 @@ const createCopy: CreateCopy = basePath => async (namespace, objctKey, fileName)
   }
 };
 
-export type ReadJson = (fileName: string) => Promise<object | null>;
-export const readJson: ReadJson = async fileName => {
+export type ImportJson = (fileName: string) => Promise<object | null>;
+export const importJson: ImportJson = async fileName => {
   try {
     const contents = await fs.promises.readFile(fileName, {
       encoding: 'utf8',
@@ -147,6 +119,7 @@ export const readJson: ReadJson = async fileName => {
   }
 };
 
+export type CreateRepository = (basePath: string) => Promise<Repository>;
 export const createRepository: CreateRepository = async basePath => {
   await createDirctory(basePath);
   return {
@@ -155,6 +128,6 @@ export const createRepository: CreateRepository = async basePath => {
     list: createList(basePath),
     get: createGet(basePath),
     remove: createRemove(basePath),
-    copy: createCopy(basePath),
+    exportJson: createExportJson(basePath),
   };
 };

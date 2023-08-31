@@ -1,13 +1,13 @@
 import assert from 'assert';
-import type { Repository } from 'src/io/file_repository'
+import type { Repository } from 'src/io/repository'
 import type { Battle } from 'src/domain/battle';
 import {
-  toBattle,
   GameOngoing,
   GameHome,
   GameVisitor,
   GameDraw
 } from 'src/domain/battle';
+import { toBattle } from 'src/store/schema/battle';
 import { createStore } from 'src/store/battle';
 import { parse, format } from 'date-fns';
 
@@ -54,7 +54,7 @@ const storeMock: Repository = {
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['2023-06-29T12:12:12', '2023-06-29T15:15:15'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  copy: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
+  exportJson: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
 
