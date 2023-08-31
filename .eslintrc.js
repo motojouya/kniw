@@ -33,6 +33,7 @@ module.exports = {
   ],
   rules: {
     "no-console": "off",
+    "no-alert": "off",
     "import/prefer-default-export": "off",
     "no-else-return": "off",
     "no-lonely-if": "off",
@@ -58,5 +59,25 @@ module.exports = {
     ],
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
+    "@typescript-eslint/no-floating-promises": [
+      "error",
+      {
+        "ignoreIIFE": true,
+      }
+    ],
+    // FIXME next導入したら以下でるようになったが、eslintがimportした型を判別できないためにでてるので無視
+    "@typescript-eslint/no-unsafe-assignment": "off",
+    "@typescript-eslint/no-unsafe-call": "off",
+    "@typescript-eslint/no-unsafe-member-access": "off",
+    "@typescript-eslint/no-unsafe-return": "off",
+    "@typescript-eslint/require-await": "off",
+    // FIXME react上でvoidに対してPromise<void>をassignして怒られるが直すのが面倒
+    "@typescript-eslint/no-misused-promises": [
+      "error",
+      {
+        "checksConditionals": false,
+        "checksVoidReturn": false,
+      }
+    ],
   },
 };

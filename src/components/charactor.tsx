@@ -19,13 +19,13 @@ import {
   FormControl,
   Input,
   Button,
-  Box,
+//  Box,
   Card,
   CardHeader,
   CardBody,
   CardFooter,
   Select,
-  Heading,
+//  Heading,
   Text,
   Table,
 //  Thead,
@@ -55,8 +55,6 @@ import {
   getAbilities,
   getSkills,
 } from 'src/domain/charactor';
-
-import Link from 'next/link'
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
 const getCharactorError: GetCharactorError = (errors, i, property) => {

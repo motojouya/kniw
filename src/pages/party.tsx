@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
 import {
   Box,
-  Heading,
+//  Heading,
   Text,
 } from '@chakra-ui/react';
 
@@ -21,8 +21,6 @@ import {
 import { CharactorDuplicationError } from 'src/domain/party';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
-import Link from 'next/link'
-
 const Index: FC = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
@@ -31,8 +29,8 @@ const Index: FC = () => {
   useEffect(() => {
     (async () => {
       const webRepository = await createRepository();
-      const store = await createStore(webRepository);
-      setStore(store);
+      const partyStore = await createStore(webRepository);
+      setStore(partyStore);
     })();
   }, []);
 

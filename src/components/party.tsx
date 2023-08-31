@@ -76,20 +76,18 @@ const PartyEditor: FC<{
         });
       } else {
         const saved = party as PartyForm;
-        router.push({ pathname: 'party', query: { name: saved.name } })
+        await router.push({ pathname: 'party', query: { name: saved.name } })
       }
     }
   };
 
-  const deleteParty = (name: string) => {
-    if (confirm('削除してもよいですか？')) {
-      store.remove(partyForm.name);
-      router.push({ pathname: 'party' })
+  const deleteParty = async (partyName: string) => {
+    if (window.confirm('削除してもよいですか？')) {
+      await store.remove(partyName);
+      await router.push({ pathname: 'party' })
     }
   };
 
-  /* eslint-disable @typescript-eslint/no-misused-promises */
-  /* eslint-enable @typescript-eslint/no-misused-promises */
   return (
     <Box p={4}>
       <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
@@ -171,23 +169,23 @@ export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
 
   const [party, setParty] = useState<PartyForm>({ name: '', charactors: [] });
   const importParty = async () => {
-    if (!confirm('取り込むと入力したデータが削除されますがよいですか？')) {
+    if (!window.confirm('取り込むと入力したデータが削除されますがよいですか？')) {
       return;
     }
 
     const partyJson = await importJson();
-    const party = jsonToParty(partyJson);
+    const partyObj = jsonToParty(partyJson);
     if (
-      party instanceof NotWearableErorr ||
-      party instanceof DataNotFoundError ||
-      party instanceof CharactorDuplicationError ||
-      party instanceof JsonSchemaUnmatchError
+      partyObj instanceof NotWearableErorr ||
+      partyObj instanceof DataNotFoundError ||
+      partyObj instanceof CharactorDuplicationError ||
+      partyObj instanceof JsonSchemaUnmatchError
     ) {
-      alert(party.message);
+      window.alert(partyObj.message);
       return;
     }
 
-    setParty(toPartyForm(party));
+    setParty(toPartyForm(partyObj));
   };
 
   return (
