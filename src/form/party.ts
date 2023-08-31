@@ -5,9 +5,9 @@ import type { Store } from 'src/store/store';
 
 import Ajv, { JSONSchemaType } from 'ajv';
 
-import { DataExistError , JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
-import { charactorFormSchema , toCharactor, toCharactorForm } from 'src/form/charactor';
+import { charactorFormSchema, toCharactor, toCharactorForm } from 'src/form/charactor';
 import { validate, CharactorDuplicationError } from 'src/domain/party';
 
 // FIXME json-schema-to-tsの導入
