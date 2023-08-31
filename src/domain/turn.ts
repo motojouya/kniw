@@ -32,4 +32,3 @@ export type Turn = {
   sortedCharactors: Charactor[];
   field: Field;
 };
-

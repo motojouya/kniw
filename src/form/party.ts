@@ -3,7 +3,7 @@ import type { Charactor } from 'src/domain/charactor';
 import type { CharactorForm } from 'src/form/charactor';
 import type { Store } from 'src/store/store';
 
-import Ajv, { JSONSchemaType } from "ajv"
+import Ajv, { JSONSchemaType } from 'ajv';
 
 import { DataExistError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
@@ -23,7 +23,7 @@ import { toCharactor, toCharactorForm } from 'src/form/charactor';
 
 export type PartyForm = {
   name: string;
-  charactors: CharactorForm[]
+  charactors: CharactorForm[];
 };
 
 export const partyFormSchema: JSONSchemaType<PartyForm> = {
@@ -45,7 +45,7 @@ export const partyFormSchema: JSONSchemaType<PartyForm> = {
 export type ToPartyForm = (party: Party) => PartyForm;
 export const toPartyForm: ToPartyForm = party => ({
   name: party.name,
-  charactors: party.charactors.map(toCharactorForm)
+  charactors: party.charactors.map(toCharactorForm),
 });
 
 export type ToParty = (
@@ -87,10 +87,16 @@ export const toParty: ToParty = partyForm => {
   };
 };
 
-export type SaveParty = (partyForm: any) => Promise<null | DataNotFoundError | NotWearableErorr | JsonSchemaUnmatchError | CharactorDuplicationError | DataExistError>;
-export type CreateSaveParty = (store: Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>, checkExists: boolean) => SaveParty;
-export const saveParty: CreateSaveParty = (store, checkExists) => async (partyForm) => {
-
+export type SaveParty = (
+  partyForm: any,
+) => Promise<
+  null | DataNotFoundError | NotWearableErorr | JsonSchemaUnmatchError | CharactorDuplicationError | DataExistError
+>;
+export type CreateSaveParty = (
+  store: Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>,
+  checkExists: boolean,
+) => SaveParty;
+export const saveParty: CreateSaveParty = (store, checkExists) => async partyForm => {
   const party = toParty(partyForm);
   if (
     party instanceof DataNotFoundError ||
@@ -110,5 +116,4 @@ export const saveParty: CreateSaveParty = (store, checkExists) => async (partyFo
 
   store.save(party);
   return null;
-}
-
+};

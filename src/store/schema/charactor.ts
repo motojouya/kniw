@@ -150,4 +150,3 @@ export const toCharactor: ToCharactor = charactorJson => {
 
   return someone;
 };
-

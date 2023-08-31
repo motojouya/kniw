@@ -31,4 +31,3 @@ export const toStatus: ToStatus = statusJson => {
 
   return status;
 };
-

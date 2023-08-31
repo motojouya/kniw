@@ -1,13 +1,4 @@
-import type {
-  KeyValue,
-  CheckNamespace,
-  Save,
-  List,
-  Get,
-  Remove,
-  ExportJson,
-  Repository,
-} from 'src/io/repository';
+import type { KeyValue, CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
 import fs from 'fs';
 import path from 'path';
 import Dexie from 'dexie';
@@ -19,7 +10,7 @@ import { BattleJson } from 'src/store/schema/battle';
 class KniwDB extends Dexie {
   party: Dexie.Table<PartyJson, string>;
   battle: Dexie.Table<BattleJson, string>;
-  constructor () {
+  constructor() {
     super('KniwDB');
     this.version(1).stores({
       patry: 'name',
@@ -52,7 +43,7 @@ type CreateSave = (table: KniwDB) => Save;
 const createSave: CreateSave = db => async (namespace, objctKey, data) => {
   const table = getTable(db, namespace);
   await table.put(data);
-}
+};
 
 type CreateList = (db: KniwDB) => List;
 const createList: CreateList = db => async namespace => {
@@ -76,7 +67,7 @@ const createRemove: CreateRemove = db => async (namespace, objctKey) => {
 type CreateExportJson = (db: KniwDB) => ExportJson;
 const createExportJson: CreateExportJson = db => async (namespace, objctKey, fileName) => {
   const table = getTable(db, namespace);
-  const json =  await table.get(objctKey);
+  const json = await table.get(objctKey);
 
   const newHandle = await window.showSaveFilePicker();
   const writableStream = await newHandle.createWritable();
@@ -88,9 +79,9 @@ const createExportJson: CreateExportJson = db => async (namespace, objctKey, fil
 const pickerOpts = {
   types: [
     {
-      description: "JSON",
+      description: 'JSON',
       accept: {
-        "application/json": [".json"],
+        'application/json': ['.json'],
       },
     },
   ],
@@ -111,7 +102,7 @@ export const createRepository: CreateRepository = async () => {
   const db = createDB();
   const table = db.party;
   return {
-    checkNamespace: async (namespace) => {},
+    checkNamespace: async namespace => {},
     save: createSave(db),
     list: createList(db),
     get: createGet(db),

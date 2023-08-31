@@ -64,4 +64,3 @@ export const toParty: ToParty = partyJson => {
     charactors: charactorObjs,
   };
 };
-

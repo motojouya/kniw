@@ -1,7 +1,7 @@
 import type { Charactor } from 'src/domain/charactor';
 import type { Store } from 'src/store/store';
 
-import Ajv, { JSONSchemaType } from "ajv"
+import Ajv, { JSONSchemaType } from 'ajv';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
@@ -46,7 +46,7 @@ export const charactorFormSchema: JSONSchemaType<CharactorForm> = {
       errorMessage: { minLength: 'username field is required' },
     },
   },
-  required: ['name' , 'race', 'blessing', 'clothing', 'weapon'],
+  required: ['name', 'race', 'blessing', 'clothing', 'weapon'],
   additionalProperties: false,
 } as const;
 
@@ -125,4 +125,3 @@ export const toCharactor: ToCharactor = charactorForm => {
 
   return someone;
 };
-
