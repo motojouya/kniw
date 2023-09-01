@@ -1,10 +1,53 @@
-import { FC } from 'react';
-// import Link from 'next/link'
+import type { FC } from 'react';
+import type { Battle } from 'src/domain/battle';
+import type { Store } from 'src/store/store';
 
-const Index: FC = () => (
-  <div>
-    <p>This is the battle page</p>
-  </div>
-);
+import { useState, useEffect } from 'react';
+import { useSearchParams } from 'next/navigation'
+import {
+  Box,
+//  Heading,
+  Text,
+} from '@chakra-ui/react';
+
+import { createStore } from 'src/store/battle';
+import { createRepository } from 'src/io/indexed_db_repository';
+import {
+  BattleList,
+  BattleNew,
+  BattleExsiting,
+} from 'src/components/battle';
+import { NotWearableErorr } from 'src/domain/acquirement';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+
+const Index: FC = () => {
+  const searchParams = useSearchParams();
+  const title = searchParams.get('title');
+
+  const [store, setStore] = useState<Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null>(null);
+  useEffect(() => {
+    (async () => {
+      const webRepository = await createRepository();
+      const battleStore = await createStore(webRepository);
+      setStore(battleStore);
+    })();
+  }, []);
+
+  if (!store) {
+    return (<Box><Text>loading...</Text></Box>);
+  }
+
+  if (!title) {
+    return (<BattleList store={store} />);
+  }
+
+  if (title === '_new') {
+    return <BattleNew store={store} />
+  }
+
+  return <BattleExsiting battleTitle={title} store={store} />
+};
 
 export default Index;
+
