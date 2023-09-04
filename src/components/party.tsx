@@ -174,6 +174,10 @@ export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
     }
 
     const partyJson = await importJson();
+    if (!partyJson) {
+      return;
+    }
+
     const partyObj = jsonToParty(partyJson);
     if (
       partyObj instanceof NotWearableErorr ||
@@ -203,7 +207,7 @@ export const PartyList: FC<{ store: PartyStore }> = ({ store }) => {
       <Box>
         <List>
           <ListItem key='party-new'>
-            <Link href={{ pathname: 'party', query: { name: '_new' } }}><a>新しく作る</a></Link>
+            <Link href={{ pathname: 'party', query: { name: '__new' } }}><a>新しく作る</a></Link>
           </ListItem>
           {partyNames && partyNames.map((partyName, index) => (
             <ListItem key={`party-${index}`}>

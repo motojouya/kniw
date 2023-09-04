@@ -57,9 +57,6 @@ export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
 } as const;
 
 
-export type SkillSelectOption = (skill: Skill) => SelectOption;
-export const skillSelectOption: SkillSelectOption => skill => ({ value: skill.name, label: skill.label })
-
 export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
 export const receiverSelectOption: ReceiverSelectOption => receiver => ({
   value: `${receiver.name}__${isVisitorString(receiver.isVisitor)}`,

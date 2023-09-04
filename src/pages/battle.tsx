@@ -42,7 +42,7 @@ const Index: FC = () => {
     return (<BattleList store={store} />);
   }
 
-  if (title === '_new') {
+  if (title === '__new') {
     return <BattleNew store={store} />
   }
 

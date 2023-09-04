@@ -42,7 +42,7 @@ const Index: FC = () => {
     return (<PartyList store={store} />);
   }
 
-  if (name === '_new') {
+  if (name === '__new') {
     return <PartyNew store={store} />
   }
 

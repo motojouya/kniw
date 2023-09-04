@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 import type { Battle } from 'src/domain/battle';
 import type { BattleForm } from 'src/form/battle';
 import type { Store } from 'src/store/store';
+import type { DoSkillForm, DoAction } from 'src/form/battle';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -26,36 +27,48 @@ import { useLiveQuery } from "dexie-react-hooks";
 
 import { battleFormSchema, toBattleForm, saveBattle } from 'src/form/battle';
 import { importJson } from 'src/io/indexed_db_repository';
-import { toBattle as jsonToBattle } from 'src/store/schema/battle';
+import { toParty as jsonToParty } from 'src/store/schema/party';
+import { skillSelectOption, receiverSelectOption, toAction } from 'src/form/battle';
+import { getSkill } from 'src/store/skill';
 
-import { CharactorDuplicationError } from 'src/domain/battle';
+import { CharactorDuplicationError } from 'src/domain/party';
+import { createRandoms } from 'src/domain/random';
+import { start, createBattle } from 'src/domain/battle';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
 
+const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
-const BattleEditor: FC<{
-  exist: boolean,
-  battleForm: BattleForm,
-  inoutButton: ReactNode,
-  store: BattleStore,
-}> = ({ exist, battleForm, inoutButton, store }) => {
+const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ battle, setBattle, store }) => {
+
+  const lastTurn = arrayLast(battle.turns);
+  const actor = nextActor(battle);
+
+  const skills = getSkills(actor);
+  const skillOptions = skills
+    .filter(skill => skill.mpConsumption <= actor.mp)
+    .filter(skill => !underStatus(silent, actor) || skill.magicType === MAGIC_TYPE_NONE)
+    .map(skill => ({ value: skill.name, label: skill.name }));
+  skillOptions.push({ value: BACK, label: '戻る' });
+
+  const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
 
   const router = useRouter()
+
   const {
     handleSubmit,
     register,
     getValues,
     formState: { errors, isSubmitting },
     control,
-  } = useForm<BattleForm>({
-    resolver: ajvResolver<BattleForm>(battleFormSchema),
-    defaultValues: battleForm,
-  });
-  const { fields, append, remove } = useFieldArray({ control, name: "charactors" });
+  } = useForm<DoSkillForm>({ resolver: ajvResolver<DoSkillForm>(doSkillFormSchema) });
+  const { fields, append, remove, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [saveMessage, setSaveMessage] = useState<{ error: boolean, message: string }>({ error: false, message: '' });
 
-  const save = async (battle: any) => {
+  const actSkill = async (battle: any) => {
+    // TODO 未実装
+    toAction
     const error = await saveBattle(store, !exist)(battle);
     if (
       error instanceof DataNotFoundError ||
@@ -81,10 +94,32 @@ const BattleEditor: FC<{
     }
   };
 
-  const deleteBattle = async (battleName: string) => {
-    if (window.confirm('削除してもよいですか？')) {
-      await store.remove(battleName);
-      await router.push({ pathname: 'battle' })
+  const onBlurSkill = () => {
+    const skillName = getValues('skillName');
+    const skill = getSkill(skillName);
+    if (!skill) {
+      replace([]);
+      return;
+    }
+
+    if (!skill.receiverCount) {
+      replace([]);
+      return;
+    }
+
+    const receiversWithIsVisitor = Array(skill.receiverCount).fill().map(_ => '');
+    replace(receiversWithIsVisitor);
+  };
+
+  const onBlurReceiver = () => {
+    // TODO 効果を表示する。confirm前にrandomがabsoluteな結果を表示しておく
+  };
+
+  const doSurrender = () => {
+    if (window.confirm('降参してもよいですか？')) {
+      const turn = surrender(battle, actor, new Date());
+      battle.turns.push(turn);
+      setBattle(battle);
     }
   };
 
@@ -92,44 +127,60 @@ const BattleEditor: FC<{
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
-      {inoutButton}
-      <form onSubmit={handleSubmit(save)}>
-        {saveMessage.message && (
+      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson(battle.title)} >Export</Button>}
+      {battle.result !== GameOngoing && <Text type="button" >TODO Battleの結果</Text>}
+      <form onSubmit={handleSubmit(actSkill)}>
+        {saveMessage.message && /* TODO 同じキャラを複数回選んだ場合のエラー表示 */ (
           saveMessage.error
             ? <FormErrorMessage>{saveMessage.message}</FormErrorMessage>
             : <Text>{saveMessage.message}</Text>
         )}
-        {exist ? (
-          <Box as={'dl'}>
-            <Heading as={'dt'}>battle name</Heading>
-            <Text as={'dd'}>{battleForm.name}</Text>
-          </Box>
-        ) : (
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel htmlFor="name">name</FormLabel>
-            <Input id="name" placeholder="name" {...register('name')} />
-            <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
-          </FormControl>
-        )}
+        {battle.result === GameOngoing && <Button type="button" onClick={doSurrender} >降参</Button>}
+        <Box as={'dl'}>
+          <Heading as={'dt'}>battle title</Heading>
+          <Text as={'dd'}>{battleForm.title}</Text>
+        </Box>
+        <FormControl isInvalid={!!error.skillName}>
+          <FormLabel htmlFor='skill'>skill</FormLabel>
+          <Select  {...register('skillName', { onBlur: onBlurSkill })} placeholder='skill'>
+            {skillOptions.map(skillOption => (
+              <option key={`${skillOption.value}`} value={skillOption.value}>
+                {skillOption.label}
+              </option>
+            ))}
+          </Select>
+          <FormErrorMessage>{!!error && error.skillName}</FormErrorMessage>
+        </FormControl>
         <List>
           {fields.map((item, index) => (
-            <ListItem key={`charactor-${index}`}>
-              <CharactorCard register={register} getValues={getValues} remove={remove} errors={errors} index={index} />
+            <ListItem key={`receiversWithIsVisitor.${index}`}>
+              <FormControl isInvalid={!!error.skillName}>
+                <FormLabel htmlFor={`receiversWithIsVisitor.${index}` as const}>receiver</FormLabel>
+                <Select  {...register(`receiversWithIsVisitor.${index}` as const)} placeholder='skill'>
+                  {receiverOptions.map(receiverOption => (
+                    <option key={`${receiverOption.value}`} value={receiverOption.value}>
+                      {receiverOption.label}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+              <Box>
+                TODO ダメージ表示
+              </Box>
             </ListItem>
           ))}
         </List>
-        <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire</Button>
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">{exist ? 'Change' : 'Create'}</Button>
-        {exist && (
-          <Button type="button" onClick={() => deleteBattle(battleForm.name)} >Dismiss</Button>
-        )}
       </form>
+      <Box>
+        TODO ここにsortedCharactorの一覧を出したい。
+      </Box>
     </Box>
   );
 };
 
-export const BattleExsiting: FC<{ store: BattleStore, battleName: string }> = ({ store, battleName }) => {
-  const battle = useLiveQuery(() => store.get(battleName), [battleName]);
+export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = ({ store, battleTitle }) => {
+  const battle = useLiveQuery(() => store.get(battleTitle), [battleTitle]);
 
   if (!store.exportJson) {
     throw new Error('invalid store');
@@ -152,46 +203,107 @@ export const BattleExsiting: FC<{ store: BattleStore, battleName: string }> = ({
   if (!battle) {
     return (
       <Box>
-        <Text>{`${battleName}というbattleは見つかりません`}</Text>
+        <Text>{`${battleTitle}というbattleは見つかりません`}</Text>
         <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       </Box>
     );
   }
 
   return (
-    <BattleEditor exist={true} battleForm={toBattleForm(battle)} store={store} inoutButton={(
-      <Button type="button" onClick={() => store.exportJson && store.exportJson(battle.name, '')} >Export</Button>
-    )} />
+    <BattleTurn battle={battle} store={store} />
   );
 };
 
 export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
 
-  const [battle, setBattle] = useState<BattleForm>({ name: '', charactors: [] });
-  const importBattle = async () => {
-    if (!window.confirm('取り込むと入力したデータが削除されますがよいですか？')) {
+  const router = useRouter()
+
+  const [message, setMessage] = useState<string>('');
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<{ title: string }>();
+  const [homeParty, setHomeParty] = useState<Party | null>(null);
+  const [visitorParty, setVisitorParty] = useState<Party | null>(null);
+
+  const importParty = (type: string) => async () => {
+    const partyJson = await importJson();
+    if (!partyJson) {
       return;
     }
 
-    const battleJson = await importJson();
-    const battleObj = jsonToBattle(battleJson);
+    const party = jsonToParty(partyJson);
     if (
-      battleObj instanceof NotWearableErorr ||
-      battleObj instanceof DataNotFoundError ||
-      battleObj instanceof CharactorDuplicationError ||
-      battleObj instanceof JsonSchemaUnmatchError
+      party instanceof NotWearableErorr ||
+      party instanceof DataNotFoundError ||
+      party instanceof CharactorDuplicationError ||
+      party instanceof JsonSchemaUnmatchError
     ) {
-      window.alert(battleObj.message);
+      window.alert(party.message);
       return;
     }
 
-    setBattle(toBattleForm(battleObj));
+    if (type === 'home') {
+      setHomeParty(party);
+    } else if (type === 'visitor') {
+      setVisitorParty(party);
+    }
+    throw new Error('type is invalid');
+  };
+
+  const startBattle = async (battleTitle: any) => {
+    const messages = [];
+
+    const title = battleTitle.title;
+    if (!title) {
+      messages.push('titleを入力してください');
+    }
+    if (!homeParty) {
+      messages.push('home partyを入力してください');
+    }
+    if (!visitorParty) {
+      messages.push('visitor partyを入力してください');
+    }
+
+    if (messages.length > 0) {
+      setMessage(messages.join('\n'));
+      return;
+    }
+
+    const battle = createBattle(title, homeParty, visitorParty);
+    const turn = start(battle, new Date(), createRandoms());
+    battle.turns.push(turn);
+
+    const firstWaiting = nextActor(battle);
+    battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+
+    await store.save(battle);
+    await router.push({ pathname: 'battle', query: { title: battle.title } })
   };
 
   return (
-    <BattleEditor exist={false} battleForm={battle} store={store} inoutButton={(
-      <Button type="button" onClick={importBattle} >Import</Button>
-    )} />
+    <Box p={4}>
+      <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
+      <Text>This is the battle page</Text>
+      <form onSubmit={handleSubmit(startBattle)}>
+        {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
+        <FormControl isInvalid={!!errors.title}>
+          <FormLabel htmlFor="title">title</FormLabel>
+          <Input id="title" placeholder="title" {...register('title')} />
+          <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
+        </FormControl>
+        <Box>
+          {homeParty && <Text>{`HOME Party: ${homeParty.name}`}</Text>}
+          <Button type="button" onClick={importParty('home')} >Select Home Party</Button>
+        </Box>
+        <Box>
+          {visitorParty && <Text>{`VISITOR Party: ${visitorParty.name}`}</Text>}
+          <Button type="button" onClick={importParty('visitor')} >Select Visitor Party</Button>
+        </Box>
+        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">Start Battle</Button>
+      </form>
+    </Box>
   );
 };
 
@@ -203,11 +315,11 @@ export const BattleList: FC<{ store: BattleStore }> = ({ store }) => {
       <Box>
         <List>
           <ListItem key='battle-new'>
-            <Link href={{ pathname: 'battle', query: { name: '_new' } }}><a>新しく作る</a></Link>
+            <Link href={{ pathname: 'battle', query: { name: '__new' } }}><a>新しく作る</a></Link>
           </ListItem>
-          {battleNames && battleNames.map((battleName, index) => (
+          {battleNames && battleNames.map((battleTitle, index) => (
             <ListItem key={`battle-${index}`}>
-              <Link href={{ pathname: 'battle', query: { name: battleName } }}><a>{battleName}</a></Link>
+              <Link href={{ pathname: 'battle', query: { name: battleTitle } }}><a>{battleTitle}</a></Link>
             </ListItem>
           ))}
         </List>
