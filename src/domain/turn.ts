@@ -2,6 +2,8 @@ import type { Field } from 'src/domain/field';
 import type { Charactor } from 'src/domain/charactor';
 import type { Skill } from 'src/domain/skill';
 
+export const ACTION_DO_NOTHING = 'DO_NOTHING'
+
 export type DoSkill = {
   type: 'DO_SKILL';
   actor: Charactor;

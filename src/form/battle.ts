@@ -1,9 +1,11 @@
 import type { Battle } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
-import type { Charactor } from 'src/domain/charactor';
+import type { Charactor, CharactorBattling } from 'src/domain/charactor';
 import type { PartyForm } from 'src/form/party';
 import type { CharactorForm } from 'src/form/charactor';
 import type { Store } from 'src/store/store';
+import type { SelectOption } from 'src/io/standard_dialogue';
+import type { Skill } from 'src/domain/skill';
 
 import Ajv, { JSONSchemaType } from 'ajv';
 
@@ -11,6 +13,9 @@ import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from 'src/s
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { charactorFormSchema, toCharactor, toCharactorForm } from 'src/form/charactor';
 import { validate, CharactorDuplicationError } from 'src/domain/party';
+import { isVisitorString } from 'src/domain/charactor';
+import { getSkill } from 'src/store/skill';
+import { ACTION_DO_NOTHING } from 'src/domain/turn';
 
 // TODO
 // battle始まりは以下だが、react hook formで管理するのはtitleだけ。ほかはfile読み込みなので型チェックとかは独自実装
@@ -26,117 +31,104 @@ import { validate, CharactorDuplicationError } from 'src/domain/party';
 // { 名前, homeOrVisitor }を一つのselect boxで選びたいんだけど、stringのvalueを扱うので、JSON{parse,stringify}がいる
 // あとreact hook formで扱いづらいのでformの型としては、{ 名前, homeOrVisitor } -> stringとするかも
 
-export type BattlingCharactorForm = {
-  name: string;
-  home: boolean;
-};
-
-export type DoSkillForm = BattlingCharactorForm & {
+export type DoSkillForm = {
   skillName: string;
-  receivers: BattlingCharactor[];
+  receiversWithIsVisitor: string[];
 };
 
-export const partyFormSchema: JSONSchemaType<BattlingCharactorForm> = {
+export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
   type: 'object',
   properties: {
-    name: {
+    skillName: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
+      errorMessage: { minLength: 'skillName field is required' },
     },
-    home: { type: 'boolen' },
-  },
-  required: ['name', 'home'],
-} as const;
-
-export const partyFormSchema: JSONSchemaType<PartyForm> = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
-    },
-    charactors: {
+    receiversWithIsVisitor: {
       type: 'array',
-      items: charactorFormSchema,
+      items: {
+        type: 'string',
+        minLength: 1,
+        errorMessage: { minLength: 'receiversWithIsVisitor field is required' },
+      },
     },
   },
-  required: ['name', 'charactors'],
+  required: ['skillName', 'receiversWithIsVisitor'],
 } as const;
 
-export type ToPartyForm = (party: Party) => PartyForm;
-export const toPartyForm: ToPartyForm = party => ({
-  name: party.name,
-  charactors: party.charactors.map(toCharactorForm),
+
+export type SkillSelectOption = (skill: Skill) => SelectOption;
+export const skillSelectOption: SkillSelectOption => skill => ({ value: skill.name, label: skill.label })
+
+export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
+export const receiverSelectOption: ReceiverSelectOption => receiver => ({
+  value: `${receiver.name}__${isVisitorString(receiver.isVisitor)}`,
+  label: `${receiver.name}(${isVisitorString(receiver.isVisitor)})`,
 });
 
-export type ToParty = (
-  partyForm: any,
-) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
-export const toParty: ToParty = partyForm => {
+type ToReceiver = (receiver: string, candidates: CharactorBattling[]) => CharactorBattling | DataNotFoundError
+const toReceiver: ToReceiver = (receiver, candidates) => {
+  const matches = receiver.match(new RegExp('^(.*)__(HOME|VISITOR)$'));
+
+  const name = matches[0];
+  if (!name) {
+    throw new Error(`no name`);
+  }
+
+  const isVisitorStr = matches[1];
+  if (isVisitorStr !== 'HOME' && isVisitorStr !== 'VISITOR') {
+    throw new Error(`isVisitorStr must be HOME or VISITOR. (${isVisitorStr})`);
+  }
+  const isVisitor = isVisitorStr === 'VISITOR';
+
+  const willReceiver = candidates.find(candidate => candidate.name === name && candidate.isVisitor === isVisitor);
+  if (!willReceiver) {
+    return new DataNotFoundError(name, 'charactor', `${name}というcharactorは存在しません`);
+  }
+  return willReceiver;
+};
+
+
+export type DoAction = {
+  skill: Skill,
+  receivers: CharactorBattling[],
+} | null;
+
+export type ToAction = (
+  doSkillForm: any,
+) => DoAction | JsonSchemaUnmatchError | DataNotFoundError;
+export const toAction: ToAction = doSkillForm => {
   const ajv = new Ajv();
-  const validateSchema = ajv.compile<PartyForm>(partyFormSchema);
-  if (!validateSchema(partyForm)) {
+  const validateSchema = ajv.compile<DoSkillForm>(doSkillFormSchema);
+  if (!validateSchema(doSkillForm)) {
     // @ts-ignore
     const { errors } = validateSchema;
     console.debug(errors);
     return new JsonSchemaUnmatchError(errors, 'partyのformデータではありません');
   }
 
-  const { name } = partyForm;
-
-  const charactorObjs: Charactor[] = [];
-  for (const charactor of partyForm.charactors) {
-    const charactorObj = toCharactor(charactor);
-    if (
-      charactorObj instanceof DataNotFoundError ||
-      charactorObj instanceof NotWearableErorr ||
-      charactorObj instanceof JsonSchemaUnmatchError
-    ) {
-      return charactorObj;
-    }
-    charactorObjs.push(charactorObj);
+  const { skillName } = doSkillForm;
+  if (skill === ACTION_DO_NOTHING) {
+    return null;
   }
 
-  const validateResult = validate(name, charactorObjs);
-  if (validateResult instanceof CharactorDuplicationError) {
-    return validateResult;
+  const skill = getSkill(skillName);
+  if (skill) {
+    return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
+  }
+
+  const receivers: CharactorBattling[] = [];
+  for (const receiverStr of doSkillForm.receiversWithIsVisitor) {
+    const receiver = toReceiver();
+    if (receiver instanceof DataNotFoundError) {
+      return receiver;
+    }
+    receivers.push(receiver);
   }
 
   return {
-    name,
-    charactors: charactorObjs,
+    skill,
+    receivers,
   };
 };
 
-export type SaveParty = (
-  partyForm: any,
-) => Promise<
-  null | DataNotFoundError | NotWearableErorr | JsonSchemaUnmatchError | CharactorDuplicationError | DataExistError
->;
-export type CreateSaveParty = (
-  store: Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>,
-  checkExists: boolean,
-) => SaveParty;
-export const saveParty: CreateSaveParty = (store, checkExists) => async partyForm => {
-  const party = toParty(partyForm);
-  if (
-    party instanceof DataNotFoundError ||
-    party instanceof NotWearableErorr ||
-    party instanceof JsonSchemaUnmatchError ||
-    party instanceof CharactorDuplicationError
-  ) {
-    return party;
-  }
-
-  if (checkExists) {
-    const partyNames = await store.list();
-    if (partyNames.includes(party.name)) {
-      return new DataExistError(party.name, 'party', `${party.name}というpartyは既に存在します`);
-    }
-  }
-
-  await store.save(party);
-  return null;
-};
