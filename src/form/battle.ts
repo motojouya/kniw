@@ -31,6 +31,12 @@ import { ACTION_DO_NOTHING } from 'src/domain/turn';
 // { 名前, homeOrVisitor }を一つのselect boxで選びたいんだけど、stringのvalueを扱うので、JSON{parse,stringify}がいる
 // あとreact hook formで扱いづらいのでformの型としては、{ 名前, homeOrVisitor } -> stringとするかも
 
+export class CharactorDuplicationError {
+  constructor(
+    readonly message: string,
+  ) {}
+}
+
 export type DoSkillForm = {
   skillName: string;
   receiversWithIsVisitor: string[];
@@ -93,7 +99,7 @@ export type DoAction = {
 
 export type ToAction = (
   doSkillForm: any,
-) => DoAction | JsonSchemaUnmatchError | DataNotFoundError;
+) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | CharactorDuplicationError;
 export const toAction: ToAction = doSkillForm => {
   const ajv = new Ajv();
   const validateSchema = ajv.compile<DoSkillForm>(doSkillFormSchema);
@@ -112,6 +118,11 @@ export const toAction: ToAction = doSkillForm => {
   const skill = getSkill(skillName);
   if (skill) {
     return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
+  }
+
+  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor);
+  if (receiverSet.length !== doSkillForm.receiversWithIsVisitor.length) {
+    return new CharactorDuplicationError('同じキャラクターを複数回えらべません');
   }
 
   const receivers: CharactorBattling[] = [];

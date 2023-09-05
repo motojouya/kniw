@@ -1,5 +1,5 @@
 import type { FC, ReactNode } from 'react';
-import type { Battle } from 'src/domain/battle';
+import type { Battle, GameResult } from 'src/domain/battle';
 import type { BattleForm } from 'src/form/battle';
 import type { Store } from 'src/store/store';
 import type { DoSkillForm, DoAction } from 'src/form/battle';
@@ -7,7 +7,13 @@ import type { DoSkillForm, DoAction } from 'src/form/battle';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { CharactorCard } from 'src/components/charactor';
+import {
+  GameOngoing,
+  GameHome,
+  GameVisitor,
+  GameDraw,
+} from 'src/domain/battle';
+import { CharactorDetail } from 'src/components/charactor';
 import { useState } from 'react';
 import { ajvResolver } from '@hookform/resolvers/ajv';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -28,7 +34,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 import { battleFormSchema, toBattleForm, saveBattle } from 'src/form/battle';
 import { importJson } from 'src/io/indexed_db_repository';
 import { toParty as jsonToParty } from 'src/store/schema/party';
-import { skillSelectOption, receiverSelectOption, toAction } from 'src/form/battle';
+import { skillSelectOption, receiverSelectOption, toAction, CharactorDuplicationError as CharactorDuplicationInSelectError } from 'src/form/battle';
 import { getSkill } from 'src/store/skill';
 
 import { CharactorDuplicationError } from 'src/domain/party';
@@ -38,7 +44,17 @@ import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
+
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
+
+const getGameResult = (result: GameResult) => {
+  switch (result) {
+    case GameHome: return <Text>HOME側の勝利</Text>;
+    case GameVisitor: return <Text>VISITOR側の勝利</Text>;
+    case GameDraw: return <Text>引き分け</Text>;
+    default: return null;
+  }
+};
 
 const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ battle, setBattle, store }) => {
 
@@ -64,34 +80,45 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
     control,
   } = useForm<DoSkillForm>({ resolver: ajvResolver<DoSkillForm>(doSkillFormSchema) });
   const { fields, append, remove, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
-  const [saveMessage, setSaveMessage] = useState<{ error: boolean, message: string }>({ error: false, message: '' });
+  const [message, setMessage] = useState<string>('');
+  const [expectedTurn, setExpectedTurn] = useState<Turn | null>(null);
 
-  const actSkill = async (battle: any) => {
-    // TODO 未実装
-    toAction
-    const error = await saveBattle(store, !exist)(battle);
-    if (
-      error instanceof DataNotFoundError ||
-      error instanceof NotWearableErorr ||
-      error instanceof JsonSchemaUnmatchError ||
-      error instanceof CharactorDuplicationError ||
-      error instanceof DataExistError
-    ) {
-      setSaveMessage({
-        error: true,
-        message: error.message,
-      });
-    } else {
-      if (exist) {
-        setSaveMessage({
-          error: false,
-          message: '保存しました',
-        });
-      } else {
-        const saved = battle as BattleForm;
-        await router.push({ pathname: 'battle', query: { name: saved.name } })
-      }
+  const actSkill = async (doSkillForm: any) => {
+    const doAction = toAction(doSkillForm);
+    if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
+      setMessage('入力してください');
+      return;
     }
+    if (doAction instanceof CharactorDuplicationInSelectError) {
+      setMessage(doAction.message);
+      return;
+    }
+
+    if (!window.confirm('実行していいですか？')) {
+      return;
+    }
+
+    if (doAction === null) {
+      battle.turns.push(stay(battle, actor, new Date()));
+    } else {
+      const selectedSkill = doAction.skill;
+      const newTurn = selectedSkill.type === 'SKILL_TO_FIELD'
+        ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
+        : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
+      battle.turns.push(newTurn);
+    }
+
+    const firstWaiting = nextActor(battle);
+    battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+
+    if (underStatus(sleep, firstWaiting)) {
+      battle.turns.push(stay(battle, actor, new Date()));
+      const nextWaiting = nextActor(battle);
+      battle.turns.push(wait(battle, nextWaiting.restWt, new Date(), createRandoms()));
+    }
+
+    await store.save(battle);
+    setBattle(battle);
   };
 
   const onBlurSkill = () => {
@@ -115,26 +142,25 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
     // TODO 効果を表示する。confirm前にrandomがabsoluteな結果を表示しておく
   };
 
-  const doSurrender = () => {
+  const doSurrender = async () => {
     if (window.confirm('降参してもよいですか？')) {
       const turn = surrender(battle, actor, new Date());
       battle.turns.push(turn);
+      await store.save(battle);
       setBattle(battle);
     }
   };
+
+  const gameResult = getGameResult(battle.result);
 
   return (
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
       {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson(battle.title)} >Export</Button>}
-      {battle.result !== GameOngoing && <Text type="button" >TODO Battleの結果</Text>}
+      {gameResult}
       <form onSubmit={handleSubmit(actSkill)}>
-        {saveMessage.message && /* TODO 同じキャラを複数回選んだ場合のエラー表示 */ (
-          saveMessage.error
-            ? <FormErrorMessage>{saveMessage.message}</FormErrorMessage>
-            : <Text>{saveMessage.message}</Text>
-        )}
+        {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
         {battle.result === GameOngoing && <Button type="button" onClick={doSurrender} >降参</Button>}
         <Box as={'dl'}>
           <Heading as={'dt'}>battle title</Heading>
@@ -173,7 +199,13 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">{exist ? 'Change' : 'Create'}</Button>
       </form>
       <Box>
-        TODO ここにsortedCharactorの一覧を出したい。
+        <List>
+          {lastTurn.sortedCharactors.map(charactor => (
+            <ListItem>
+              <CharactorDetail charactor={charactor}>
+            </ListItem>
+          ))}
+        </List>
       </Box>
     </Box>
   );
