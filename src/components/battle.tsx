@@ -43,23 +43,89 @@ import { start, createBattle } from 'src/domain/battle';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
 
-const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
-
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
-const getGameResult = (result: GameResult) => {
-  switch (result) {
-    case GameHome: return <Text>HOME側の勝利</Text>;
-    case GameVisitor: return <Text>VISITOR側の勝利</Text>;
-    case GameDraw: return <Text>引き分け</Text>;
-    default: return null;
+const GameResultView: FC<{ battle: Battle }> = battle => {
+  const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
+  switch (battle.result) {
+    case GameHome: return <Text>{`${card} HOME側の勝利`}</Text>;
+    case GameVisitor: return <Text>{`${card} VISITOR側の勝利`}</Text>;
+    case GameDraw: return <Text>{`${card} 引き分け`}</Text>;
+    default: return <Text>{card}</Text>;
   }
 };
 
-const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ battle, setBattle, store }) => {
+const ReceiverSelect: FC<{
+  battle: Battle,
+  actor: Charactor,
+  lastTurn: Turn,
+  skill: Skill | null,
+  formItemName: string,
+  getValues: UseFormGetValues<DoSkillForm>,
+  register: UseFormRegister<DoSkillForm>,
+}> = ({ battle, actor, lastTurn, skill, formItemName, getValues, register }) => {
 
-  const lastTurn = arrayLast(battle.turns);
-  const actor = nextActor(battle);
+  const [receiverResult, setReceiverResult] = useState<Charactor | null>(null);
+
+  const onBlur = (index: number) => () => {
+    const receiverWithIsVisitor = getValues(formItemName);
+    const receiver = toReceiver(receiverWithIsVisitor, lastTurn.sortedCharactors);
+    if (receiver instanceof DataNotFoundError) {
+      setReceiverResult(null);
+      return;
+    }
+
+    const newTurn = actToCharactor(battle, actor, selectedSkill, [skill], new Date(), createAbsolute());
+    const receiverResult = newTurn.sortedCharactors.find(
+      charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
+    );
+    setReceiverResult(receiverResult);
+  };
+
+  if (!skill) {
+    return null;
+  }
+
+  const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
+
+  return (
+    <Box>
+      <FormControl>
+        <FormLabel htmlFor={formItemName}>receiver</FormLabel>
+        <Select  {...register(formItemName, { onBlur })} placeholder='receiver'>
+          {receiverOptions.map(receiverOption => (
+            <option key={`${receiverOption.value}`} value={receiverOption.value}>
+              {receiverOption.label}
+            </option>
+          ))}
+        </Select>
+      </FormControl>
+      <Box>
+        {receiverResult && <CharactorDetail charactor={receiverResult} />}
+      </Box>
+    </Box>
+  );
+};
+
+const Surrender: FC<{ battle: Battle, actor: Charactor, store: BattleStore }> = ({ battle, actor, store }) => {
+  const doSurrender = () => {
+    if (window.confirm('降参してもよいですか？')) {
+      const turn = surrender(battle, actor, new Date());
+      battle.turns.push(turn);
+      store.save(battle);
+    }
+  };
+
+  return <Button type="button" onClick={doSurrender} >降参</Button>;
+};
+
+const SkillSelect: FC<{
+  actor: Charactor,
+  replace: (obj: object[]) => void,
+  getValues: : UseFormGetValues<DoSkillForm>,
+  register: UseFormRegister<DoSkillForm>,
+  errors: FieldErrors<DoSkillForm>,
+}> = ({ actor, replace, getValues, register, errors }) => {
 
   const skills = getSkills(actor);
   const skillOptions = skills
@@ -68,9 +134,61 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
     .map(skill => ({ value: skill.name, label: skill.name }));
   skillOptions.push({ value: BACK, label: '戻る' });
 
-  const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
+  const onBlur = () => {
+    const skillName = getValues('skillName');
+    const skill = getSkill(skillName);
+    if (!skill || !skill.receiverCount) {
+      replace([]);
+      return;
+    } else {
+      const receiversWithIsVisitor = Array(skill.receiverCount).fill().map(_ => '');
+      replace(receiversWithIsVisitor);
+    }
+  };
 
-  const router = useRouter()
+  return (
+    <FormControl isInvalid={!!errors.skillName}>
+      <FormLabel htmlFor='skill'>skill</FormLabel>
+      <Select  {...register('skillName', { onBlur })} placeholder='skill'>
+        {skillOptions.map(skillOption => (
+          <option key={`${skillOption.value}`} value={skillOption.value}>
+            {skillOption.label}
+          </option>
+        ))}
+      </Select>
+      <FormErrorMessage>{!!errors.skillName && errors.skillName.message}</FormErrorMessage>
+    </FormControl>
+  );
+};
+
+const act = async (store: BattleStore, battle: Battle, actor: Charactor, doAction: DoAction) => {
+
+  if (doAction === null) {
+    battle.turns.push(stay(battle, actor, new Date()));
+  } else {
+    const selectedSkill = doAction.skill;
+    const newTurn = selectedSkill.type === 'SKILL_TO_FIELD'
+      ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
+      : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
+    battle.turns.push(newTurn);
+  }
+
+  let firstWaiting = nextActor(battle);
+  battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+
+  while (underStatus(sleep, firstWaiting)) {
+    battle.turns.push(stay(battle, firstWaiting, new Date()));
+    firstWaiting = nextActor(battle);
+    battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+  }
+
+  await store.save(battle);
+};
+
+const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store }) => {
+
+  const lastTurn = battle.turns.slice(-1)[0];
+  const actor = nextActor(battle);
 
   const {
     handleSubmit,
@@ -79,11 +197,11 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
     formState: { errors, isSubmitting },
     control,
   } = useForm<DoSkillForm>({ resolver: ajvResolver<DoSkillForm>(doSkillFormSchema) });
-  const { fields, append, remove, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
-  const [message, setMessage] = useState<string>('');
-  const [expectedTurn, setExpectedTurn] = useState<Turn | null>(null);
 
-  const actSkill = async (doSkillForm: any) => {
+  const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
+  const [message, setMessage] = useState<string>('');
+
+  const actSkill = (doSkillForm: any) => {
     const doAction = toAction(doSkillForm);
     if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
       setMessage('入力してください');
@@ -98,101 +216,45 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
       return;
     }
 
-    if (doAction === null) {
-      battle.turns.push(stay(battle, actor, new Date()));
-    } else {
-      const selectedSkill = doAction.skill;
-      const newTurn = selectedSkill.type === 'SKILL_TO_FIELD'
-        ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
-        : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
-      battle.turns.push(newTurn);
-    }
-
-    const firstWaiting = nextActor(battle);
-    battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
-
-    if (underStatus(sleep, firstWaiting)) {
-      battle.turns.push(stay(battle, actor, new Date()));
-      const nextWaiting = nextActor(battle);
-      battle.turns.push(wait(battle, nextWaiting.restWt, new Date(), createRandoms()));
-    }
-
-    await store.save(battle);
-    setBattle(battle);
+    act(store, battle, actor, doAction);
   };
 
-  const onBlurSkill = () => {
-    const skillName = getValues('skillName');
-    const skill = getSkill(skillName);
-    if (!skill) {
-      replace([]);
-      return;
-    }
-
-    if (!skill.receiverCount) {
-      replace([]);
-      return;
-    }
-
-    const receiversWithIsVisitor = Array(skill.receiverCount).fill().map(_ => '');
-    replace(receiversWithIsVisitor);
-  };
-
-  const onBlurReceiver = () => {
-    // TODO 効果を表示する。confirm前にrandomがabsoluteな結果を表示しておく
-  };
-
-  const doSurrender = async () => {
-    if (window.confirm('降参してもよいですか？')) {
-      const turn = surrender(battle, actor, new Date());
-      battle.turns.push(turn);
-      await store.save(battle);
-      setBattle(battle);
-    }
-  };
-
-  const gameResult = getGameResult(battle.result);
+  const isVisitorTag = charactor.isVisitor === undefined ? null
+    : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
+    : (<Tag>{'HOME'}</Tag>);
 
   return (
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
       {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson(battle.title)} >Export</Button>}
-      {gameResult}
+      <GameResultView battle={battle} />
       <form onSubmit={handleSubmit(actSkill)}>
         {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
-        {battle.result === GameOngoing && <Button type="button" onClick={doSurrender} >降参</Button>}
+        {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} store={store} />}
         <Box as={'dl'}>
           <Heading as={'dt'}>battle title</Heading>
           <Text as={'dd'}>{battleForm.title}</Text>
         </Box>
-        <FormControl isInvalid={!!error.skillName}>
-          <FormLabel htmlFor='skill'>skill</FormLabel>
-          <Select  {...register('skillName', { onBlur: onBlurSkill })} placeholder='skill'>
-            {skillOptions.map(skillOption => (
-              <option key={`${skillOption.value}`} value={skillOption.value}>
-                {skillOption.label}
-              </option>
-            ))}
-          </Select>
-          <FormErrorMessage>{!!error && error.skillName}</FormErrorMessage>
-        </FormControl>
+        <Text>{`${actor.name}(${isVisitorTag})のターン`}</Text>
+        <SkillSelect
+          actor={actor}
+          getValues={getValues}
+          register={register}
+          errors={errors}
+        />
         <List>
           {fields.map((item, index) => (
             <ListItem key={`receiversWithIsVisitor.${index}`}>
-              <FormControl isInvalid={!!error.skillName}>
-                <FormLabel htmlFor={`receiversWithIsVisitor.${index}` as const}>receiver</FormLabel>
-                <Select  {...register(`receiversWithIsVisitor.${index}` as const)} placeholder='skill'>
-                  {receiverOptions.map(receiverOption => (
-                    <option key={`${receiverOption.value}`} value={receiverOption.value}>
-                      {receiverOption.label}
-                    </option>
-                  ))}
-                </Select>
-              </FormControl>
-              <Box>
-                TODO ダメージ表示
-              </Box>
+              <ReceiverSelect
+                battle={battle}
+                actor={actor}
+                lastTurn={lastTurn}
+                skill={getSkill(getValues('skillName'))}
+                formItemName={`receiversWithIsVisitor.${index}` as const}
+                getValues={getValues}
+                register={register}
+              />
             </ListItem>
           ))}
         </List>
@@ -202,7 +264,7 @@ const BattleTurn: FC<{ battle: Battle, setBattle, store: BattleStore }> = ({ bat
         <List>
           {lastTurn.sortedCharactors.map(charactor => (
             <ListItem>
-              <CharactorDetail charactor={charactor}>
+              <CharactorDetail charactor={charactor} />
             </ListItem>
           ))}
         </List>
@@ -235,31 +297,22 @@ export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = (
   if (!battle) {
     return (
       <Box>
-        <Text>{`${battleTitle}というbattleは見つかりません`}</Text>
         <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
+        <Text>{`${battleTitle}というbattleは見つかりません`}</Text>
       </Box>
     );
   }
 
-  return (
-    <BattleTurn battle={battle} store={store} />
-  );
+  return (<BattleTurn battle={battle} store={store} />);
 };
 
-export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
+const ImportParty: FC<{
+  type: string,
+  party: Party | null,
+  setParty: (party: Party | null) => void,
+}> = ({ type, party, setParty }) => {
 
-  const router = useRouter()
-
-  const [message, setMessage] = useState<string>('');
-  const {
-    handleSubmit,
-    register,
-    formState: { errors, isSubmitting },
-  } = useForm<{ title: string }>();
-  const [homeParty, setHomeParty] = useState<Party | null>(null);
-  const [visitorParty, setVisitorParty] = useState<Party | null>(null);
-
-  const importParty = (type: string) => async () => {
+  const importParty = async () => {
     const partyJson = await importJson();
     if (!partyJson) {
       return;
@@ -276,13 +329,29 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
       return;
     }
 
-    if (type === 'home') {
-      setHomeParty(party);
-    } else if (type === 'visitor') {
-      setVisitorParty(party);
-    }
-    throw new Error('type is invalid');
+    setParty(party);
   };
+
+  return (
+    <Box>
+      {party && <Text>{`${type} Party: ${party.name}`}</Text>}
+      <Button type="button" onClick={importParty} >{`Select ${type} Party`}</Button>
+    </Box>
+  );
+};
+
+export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
+
+  const router = useRouter()
+
+  const [message, setMessage] = useState<string>('');
+  const {
+    handleSubmit,
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<{ title: string }>();
+  const [homeParty, setHomeParty] = useState<Party | null>(null);
+  const [visitorParty, setVisitorParty] = useState<Party | null>(null);
 
   const startBattle = async (battleTitle: any) => {
     const messages = [];
@@ -325,14 +394,8 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
           <Input id="title" placeholder="title" {...register('title')} />
           <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
         </FormControl>
-        <Box>
-          {homeParty && <Text>{`HOME Party: ${homeParty.name}`}</Text>}
-          <Button type="button" onClick={importParty('home')} >Select Home Party</Button>
-        </Box>
-        <Box>
-          {visitorParty && <Text>{`VISITOR Party: ${visitorParty.name}`}</Text>}
-          <Button type="button" onClick={importParty('visitor')} >Select Visitor Party</Button>
-        </Box>
+        <ImportParty type='HOME' party={homeParty} setParty={setHomeParty}/>
+        <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty}/>
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">Start Battle</Button>
       </form>
     </Box>

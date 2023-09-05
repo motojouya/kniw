@@ -17,20 +17,6 @@ import { isVisitorString } from 'src/domain/charactor';
 import { getSkill } from 'src/store/skill';
 import { ACTION_DO_NOTHING } from 'src/domain/turn';
 
-// TODO
-// battle始まりは以下だが、react hook formで管理するのはtitleだけ。ほかはfile読み込みなので型チェックとかは独自実装
-// - title: party
-// - home party
-// - visitor party
-//
-// アクション選択は以下
-// - アクター: { 名前, homeOrVisitor }
-// - スキル: string
-// - 受け手: { 名前, homeOrVisitor }[]
-// 
-// { 名前, homeOrVisitor }を一つのselect boxで選びたいんだけど、stringのvalueを扱うので、JSON{parse,stringify}がいる
-// あとreact hook formで扱いづらいのでformの型としては、{ 名前, homeOrVisitor } -> stringとするかも
-
 export class CharactorDuplicationError {
   constructor(
     readonly message: string,
@@ -69,8 +55,8 @@ export const receiverSelectOption: ReceiverSelectOption => receiver => ({
   label: `${receiver.name}(${isVisitorString(receiver.isVisitor)})`,
 });
 
-type ToReceiver = (receiver: string, candidates: CharactorBattling[]) => CharactorBattling | DataNotFoundError
-const toReceiver: ToReceiver = (receiver, candidates) => {
+export type ToReceiver = (receiver: string, candidates: CharactorBattling[]) => CharactorBattling | DataNotFoundError;
+export const toReceiver: ToReceiver = (receiver, candidates) => {
   const matches = receiver.match(new RegExp('^(.*)__(HOME|VISITOR)$'));
 
   const name = matches[0];
@@ -99,8 +85,9 @@ export type DoAction = {
 
 export type ToAction = (
   doSkillForm: any,
+  candidates: Charactor[]
 ) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | CharactorDuplicationError;
-export const toAction: ToAction = doSkillForm => {
+export const toAction: ToAction = (doSkillForm, candidates) => {
   const ajv = new Ajv();
   const validateSchema = ajv.compile<DoSkillForm>(doSkillFormSchema);
   if (!validateSchema(doSkillForm)) {
@@ -127,7 +114,7 @@ export const toAction: ToAction = doSkillForm => {
 
   const receivers: CharactorBattling[] = [];
   for (const receiverStr of doSkillForm.receiversWithIsVisitor) {
-    const receiver = toReceiver();
+    const receiver = toReceiver(receiverStr, candidates);
     if (receiver instanceof DataNotFoundError) {
       return receiver;
     }
