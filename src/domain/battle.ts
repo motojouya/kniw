@@ -35,7 +35,7 @@ export const nextActor: NextActor = battle => arrayLast(battle.turns).sortedChar
 
 type SortByWT = (charactors: Charactor[]) => Charactor[];
 const sortByWT: SortByWT = charactors =>
-  charactors.sort((left, right) => {
+  charactors.filter(charactor => charactor.hp > 0).sort((left, right) => {
     const leftPhysical = getPhysical(left);
     const rightPhysical = getPhysical(right);
     const wtDiff = left.restWt - right.restWt;

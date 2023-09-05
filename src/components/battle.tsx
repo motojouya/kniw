@@ -112,6 +112,7 @@ const Surrender: FC<{ battle: Battle, actor: Charactor, store: BattleStore }> = 
     if (window.confirm('降参してもよいですか？')) {
       const turn = surrender(battle, actor, new Date());
       battle.turns.push(turn);
+      battle.result = actor.isVisitor ? GameHome : GameVisitor;
       store.save(battle);
     }
   };
@@ -173,13 +174,36 @@ const act = async (store: BattleStore, battle: Battle, actor: Charactor, doActio
     battle.turns.push(newTurn);
   }
 
+  battle.result = isSettlement(battle);
+  if (battle.result !== GameOngoing) {
+    await battleStore.save(battle);
+    return;
+  }
+
   let firstWaiting = nextActor(battle);
   battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
 
+  battle.result = isSettlement(battle);
+  if (battle.result !== GameOngoing) {
+    await battleStore.save(battle);
+    return;
+  }
+
   while (underStatus(sleep, firstWaiting)) {
     battle.turns.push(stay(battle, firstWaiting, new Date()));
+    battle.result = isSettlement(battle);
+    if (battle.result !== GameOngoing) {
+      await battleStore.save(battle);
+      return;
+    }
+
     firstWaiting = nextActor(battle);
     battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+    battle.result = isSettlement(battle);
+    if (battle.result !== GameOngoing) {
+      await battleStore.save(battle);
+      return;
+    }
   }
 
   await store.save(battle);
