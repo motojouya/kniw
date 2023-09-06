@@ -154,5 +154,4 @@ export const createCharactor: CreateCharactor = (name, race, blessing, clothing,
 };
 
 export type IsVisitorString = (isVisitor: boolean) => string;
-export const isVisitorString: IsVisitorString = isVisitor => isVisitor ? 'VISITOR' : 'HOME';
-
+export const isVisitorString: IsVisitorString = isVisitor => (isVisitor ? 'VISITOR' : 'HOME');

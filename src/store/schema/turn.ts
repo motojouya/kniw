@@ -121,7 +121,9 @@ export const toTurnJson: ToTurnJson = turn => ({
   field: turn.field,
 });
 
-export type ToAction = (actionJson: any) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
+export type ToAction = (
+  actionJson: any,
+) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toAction: ToAction = actionJson => {
   const compile = createValidationCompiler();
   const validateSchema = compile(actionSchema);
@@ -217,7 +219,9 @@ export const toAction: ToAction = actionJson => {
   };
 };
 
-export type ToTurn = (turnJson: any) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
+export type ToTurn = (
+  turnJson: any,
+) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toTurn: ToTurn = turnJson => {
   const compile = createValidationCompiler();
   const validateSchema = compile(turnSchema);

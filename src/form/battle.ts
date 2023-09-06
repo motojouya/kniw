@@ -19,9 +19,7 @@ import { ACTION_DO_NOTHING } from 'src/domain/turn';
 export const DO_NOTHING = 'NOTHING';
 
 export class ReceiverDuplicationError {
-  constructor(
-    readonly message: string,
-  ) {}
+  constructor(readonly message: string) {}
 }
 
 export type DoSkillForm = {
@@ -55,7 +53,6 @@ export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
   required: ['skillName', 'receiversWithIsVisitor'],
 } as const;
 
-
 export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
 export const receiverSelectOption: ReceiverSelectOption = receiver => ({
   value: `${receiver.name}__${isVisitorString(receiver.isVisitor)}`,
@@ -88,15 +85,14 @@ export const toReceiver: ToReceiver = (receiver, candidates) => {
   return willReceiver;
 };
 
-
 export type DoAction = {
-  skill: Skill,
-  receivers: CharactorBattling[],
+  skill: Skill;
+  receivers: CharactorBattling[];
 } | null;
 
 export type ToAction = (
   doSkillForm: any,
-  candidates: CharactorBattling[]
+  candidates: CharactorBattling[],
 ) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | ReceiverDuplicationError;
 export const toAction: ToAction = (doSkillForm, candidates) => {
   const ajv = new Ajv();
@@ -137,4 +133,3 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
     receivers,
   };
 };
-

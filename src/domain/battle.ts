@@ -42,47 +42,49 @@ export const nextActor: NextActor = battle => arrayLast(battle.turns).sortedChar
 
 type SortByWT = (charactors: CharactorBattling[]) => CharactorBattling[];
 const sortByWT: SortByWT = charactors =>
-  charactors.filter(charactor => charactor.hp > 0).sort((left, right) => {
-    const leftPhysical = getPhysical(left);
-    const rightPhysical = getPhysical(right);
-    const wtDiff = left.restWt - right.restWt;
-    if (wtDiff !== 0) {
-      return wtDiff;
-    }
-    const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
-    if (agiDiff !== 0) {
-      return agiDiff;
-    }
-    const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
-    if (avdDiff !== 0) {
-      return avdDiff;
-    }
-    const hpDiff = left.hp - right.hp;
-    if (hpDiff !== 0) {
-      return hpDiff;
-    }
-    const mpDiff = left.mp - right.mp;
-    if (mpDiff !== 0) {
-      return mpDiff;
-    }
-    const statusDiff = left.statuses.length - right.statuses.length;
-    if (statusDiff !== 0) {
-      return statusDiff;
-    }
-    // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
-    // battleごとにseedを決定しつつ、CharactorBattlingをhash値になおして比較がいいんじゃないかな。
-    return 0;
-  });
+  charactors
+    .filter(charactor => charactor.hp > 0)
+    .sort((left, right) => {
+      const leftPhysical = getPhysical(left);
+      const rightPhysical = getPhysical(right);
+      const wtDiff = left.restWt - right.restWt;
+      if (wtDiff !== 0) {
+        return wtDiff;
+      }
+      const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
+      if (agiDiff !== 0) {
+        return agiDiff;
+      }
+      const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
+      if (avdDiff !== 0) {
+        return avdDiff;
+      }
+      const hpDiff = left.hp - right.hp;
+      if (hpDiff !== 0) {
+        return hpDiff;
+      }
+      const mpDiff = left.mp - right.mp;
+      if (mpDiff !== 0) {
+        return mpDiff;
+      }
+      const statusDiff = left.statuses.length - right.statuses.length;
+      if (statusDiff !== 0) {
+        return statusDiff;
+      }
+      // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
+      // battleごとにseedを決定しつつ、CharactorBattlingをhash値になおして比較がいいんじゃないかな。
+      return 0;
+    });
 
 export type CreateBattle = (title: string, home: Party, visitor: Party) => Battle;
 export const createBattle: CreateBattle = (title, home, visitor) => {
   const homeBatting: PartyBattling = {
     name: home.name,
-    charactors: home.charactors.map(charactor => ({ ...charactor, isVisitor: false }))
+    charactors: home.charactors.map(charactor => ({ ...charactor, isVisitor: false })),
   };
   const visitorBatting: PartyBattling = {
     name: visitor.name,
-    charactors: visitor.charactors.map(charactor => ({ ...charactor, isVisitor: true }))
+    charactors: visitor.charactors.map(charactor => ({ ...charactor, isVisitor: true })),
   };
   return {
     title,
@@ -205,7 +207,13 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   return newTurn;
 };
 
-export type ActToField = (battle: Battle, actor: CharactorBattling, skill: Skill, datetime: Date, randoms: Randoms) => Turn;
+export type ActToField = (
+  battle: Battle,
+  actor: CharactorBattling,
+  skill: Skill,
+  datetime: Date,
+  randoms: Randoms,
+) => Turn;
 export const actToField: ActToField = (battle, actor, skill, datetime, randoms) => {
   if (skill.type === 'SKILL_TO_CHARACTOR') {
     throw new Error('invalid skill type');

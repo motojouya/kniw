@@ -39,7 +39,13 @@ export const toBattleJson: ToBattleJson = battle => ({
 
 export type ToBattle = (
   battleJson: any,
-) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError;
+) =>
+  | Battle
+  | NotWearableErorr
+  | DataNotFoundError
+  | CharactorDuplicationError
+  | JsonSchemaUnmatchError
+  | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
   const compile = createValidationCompiler();
   const validateSchema = compile(battleSchema);
