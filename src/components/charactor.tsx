@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Acquirement } from 'src/domain/acquirement';
-import type { Charactor, AttachedStatus } from 'src/domain/charactor';
+import type { Charactor } from 'src/domain/charactor';
 import type { PartyForm } from 'src/form/party';
 
 import { useState } from 'react';
@@ -106,6 +106,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
 
   const statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
 
+  // eslint-disable-next-line no-nested-ternary
   const isVisitorTag = charactor.isVisitor === undefined ? null
     : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
     : (<Tag>{'HOME'}</Tag>);

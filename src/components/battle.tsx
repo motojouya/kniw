@@ -1,5 +1,5 @@
-import type { FC, ReactNode } from 'react';
-import type { Battle, GameResult } from 'src/domain/battle';
+import type { FC } from 'react';
+import type { Battle } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
 import type { CharactorBattling } from 'src/domain/charactor';
 import type { Skill } from 'src/domain/skill';
@@ -67,7 +67,7 @@ import {
   ReceiverDuplicationError,
 } from 'src/form/battle';
 import { ACTION_DO_NOTHING } from 'src/domain/turn';
-import { getSkills } from 'src/domain/charactor';
+import { getSkills, isVisitorString } from 'src/domain/charactor';
 import { getSkill } from 'src/store/skill';
 import { MAGIC_TYPE_NONE } from 'src/domain/skill';
 
@@ -76,7 +76,7 @@ import { sleep, silent } from 'src/data/status';
 import { CharactorDuplicationError } from 'src/domain/party';
 import { createRandoms, createAbsolute } from 'src/domain/random';
 import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
 
@@ -103,10 +103,10 @@ const ReceiverSelect: FC<{
   const formItemName = `receiversWithIsVisitor.${index}.value` as const;
   const [receiverResult, setReceiverResult] = useState<CharactorBattling | null>(null);
 
-  const onBlur = (index: number) => () => {
+  const onBlur = () => {
     if (!skill) {
       setReceiverResult(null);
-      return null;
+      return;
     }
 
     const receiverWithIsVisitor = getValues(formItemName);
@@ -117,10 +117,10 @@ const ReceiverSelect: FC<{
     }
 
     const newTurn = actToCharactor(battle, actor, skill, [receiver], new Date(), createAbsolute());
-    const receiverResult = newTurn.sortedCharactors.find(
+    const receiverWill = newTurn.sortedCharactors.find(
       charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
     );
-    setReceiverResult(receiverResult || null);
+    setReceiverResult(receiverWill || null);
   };
 
   if (!skill) {
@@ -149,12 +149,14 @@ const ReceiverSelect: FC<{
 };
 
 const Surrender: FC<{ battle: Battle, actor: CharactorBattling, store: BattleStore }> = ({ battle, actor, store }) => {
-  const doSurrender = () => {
+  const doSurrender = async () => {
     if (window.confirm('降参してもよいですか？')) {
       const turn = surrender(battle, actor, new Date());
       battle.turns.push(turn);
-      battle.result = actor.isVisitor ? GameHome : GameVisitor;
-      store.save(battle);
+      await store.save({
+        ...battle,
+        result: actor.isVisitor ? GameHome : GameVisitor,
+      });
     }
   };
 
@@ -220,6 +222,7 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
     battle.turns.push(newTurn);
   }
 
+  /* eslint-disable no-param-reassign */
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
     await store.save(battle);
@@ -239,6 +242,7 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
     battle.turns.push(stay(battle, firstWaiting, new Date()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
+      // eslint-disable-next-line no-await-in-loop
       await store.save(battle);
       return;
     }
@@ -247,10 +251,12 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
     battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
+      // eslint-disable-next-line no-await-in-loop
       await store.save(battle);
       return;
     }
   }
+  /* eslint-disable no-param-reassign */
 
   await store.save(battle);
 };
@@ -271,7 +277,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');
 
-  const actSkill = (doSkillForm: any) => {
+  const actSkill = async (doSkillForm: any) => {
     const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
     if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
       setMessage('入力してください');
@@ -286,12 +292,10 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
       return;
     }
 
-    act(store, battle, actor, doAction);
+    await act(store, battle, actor, doAction);
   };
 
-  const isVisitorTag = actor.isVisitor === undefined ? null
-    : actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
-    : (<Tag>{'HOME'}</Tag>);
+  const isVisitorTag = actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
 
   return (
     <Box p={4}>
@@ -306,7 +310,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
           <Heading as={'dt'}>battle title</Heading>
           <Text as={'dd'}>{battle.title}</Text>
         </Box>
-        <Text>{`${actor.name}(${isVisitorTag})のターン`}</Text>
+        <Text>{`${actor.name}のターン`}{isVisitorTag}</Text>
         <SkillSelect
           actor={actor}
           getValues={getValues}
@@ -334,7 +338,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
       <Box>
         <List>
           {lastTurn.sortedCharactors.map(charactor => (
-            <ListItem>
+            <ListItem key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
               <CharactorDetail charactor={charactor} />
             </ListItem>
           ))}
@@ -390,18 +394,18 @@ const ImportParty: FC<{
       return;
     }
 
-    const party = jsonToParty(partyJson);
+    const partyObj = jsonToParty(partyJson);
     if (
-      party instanceof NotWearableErorr ||
-      party instanceof DataNotFoundError ||
-      party instanceof CharactorDuplicationError ||
-      party instanceof JsonSchemaUnmatchError
+      partyObj instanceof NotWearableErorr ||
+      partyObj instanceof DataNotFoundError ||
+      partyObj instanceof CharactorDuplicationError ||
+      partyObj instanceof JsonSchemaUnmatchError
     ) {
-      window.alert(party.message);
+      window.alert(partyObj.message);
       return;
     }
 
-    setParty(party);
+    setParty(partyObj);
   };
 
   return (
@@ -428,7 +432,7 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
   const startBattle = async (battleTitle: any) => {
     const messages: string[] = [];
 
-    const title = battleTitle.title;
+    const { title } = battleTitle;
     if (!title) {
       messages.push('titleを入力してください');
       return;
@@ -447,7 +451,7 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
       return;
     }
 
-    const battle = createBattle(title, homeParty, visitorParty);
+    const battle = createBattle(title as string, homeParty, visitorParty);
     const turn = start(battle, new Date(), createRandoms());
     battle.turns.push(turn);
 
