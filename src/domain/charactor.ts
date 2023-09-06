@@ -5,6 +5,10 @@ import { Race, Weapon, Clothing, Blessing, NotWearableErorr } from 'src/domain/a
 import { Ability } from 'src/domain/ability';
 import { Skill } from 'src/domain/skill';
 
+export function isBattlingCharactor(charactor: Charactor): charactor is CharactorBattling {
+  return Object.prototype.hasOwnProperty.call(charactor, 'isVisitor') && typeof charactor.isVisitor === 'boolean';
+}
+
 const basePhysical: Physical = {
   MaxHP: 300,
   MaxMP: 200,
@@ -56,7 +60,7 @@ export const getSelectOption: GetSelectOption = charactor => ({
   value: `${charactor.isVisitor ? 'V' : 'H'}:${charactor.name}`,
 });
 
-export type SelectCharactor = (candidates: Charactor[], values: string[]) => Charactor[];
+export type SelectCharactor = (candidates: CharactorBattling[], values: string[]) => CharactorBattling[];
 export const selectCharactor: SelectCharactor = (candidates, values) =>
   candidates.filter(candidate => values.includes(`${candidate.isVisitor ? 'V' : 'H'}:${candidate.name}`));
 
@@ -148,3 +152,6 @@ export const createCharactor: CreateCharactor = (name, race, blessing, clothing,
 
   return someone;
 };
+
+export type IsVisitorString = (isVisitor: boolean) => string;
+export const isVisitorString: IsVisitorString = isVisitor => (isVisitor ? 'VISITOR' : 'HOME');

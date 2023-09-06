@@ -1,6 +1,6 @@
 import type { Dialogue } from 'src/io/standard_dialogue';
 import type { Repository } from 'src/io/repository';
-import type { Charactor } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 import { importJson } from 'src/io/file_repository';
 import { NotApplicable } from 'src/io/standard_dialogue';
 import type { Battle } from 'src/domain/battle';
@@ -20,6 +20,7 @@ import {
   GameVisitor,
   GameOngoing,
   getLastTurn,
+  NotBattlingError,
 } from 'src/domain/battle';
 import {
   getSkills,
@@ -48,7 +49,7 @@ const INTERRUPTION = 'INTERRUPTION';
 const SURRENDER = 'SURRENDER';
 const BACK = 'BACK';
 
-type ActSkill = (dialogue: Dialogue) => (actor: Charactor, battle: Battle) => Promise<Turn | null>;
+type ActSkill = (dialogue: Dialogue) => (actor: CharactorBattling, battle: Battle) => Promise<Turn | null>;
 const actSkill: ActSkill = dialogue => async (actor, battle) => {
   const lastTurn = getLastTurn(battle);
   /* eslint-disable no-await-in-loop */
@@ -195,7 +196,7 @@ const showCharactorStatus: ShowCharactorStatus =
     await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
   };
 
-type PlayerSelect = (dialogue: Dialogue) => (actor: Charactor, battle: Battle) => Promise<Turn | null>;
+type PlayerSelect = (dialogue: Dialogue) => (actor: CharactorBattling, battle: Battle) => Promise<Turn | null>;
 const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
   /* eslint-disable no-await-in-loop */
   for (;;) {
@@ -340,7 +341,8 @@ export const resume: Resume = (dialogue, repository) => async title => {
     battle instanceof NotWearableErorr ||
     battle instanceof DataNotFoundError ||
     battle instanceof CharactorDuplicationError ||
-    battle instanceof JsonSchemaUnmatchError
+    battle instanceof JsonSchemaUnmatchError ||
+    battle instanceof NotBattlingError
   ) {
     await dialogue.notice(`${title}のbattleは不正なデータです`);
     return;

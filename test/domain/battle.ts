@@ -1,7 +1,7 @@
 import type { Battle } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
 import type { Skill } from 'src/domain/skill';
-import type { Charactor } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 
 import assert from 'assert';
 import {
@@ -15,7 +15,8 @@ import {
   GameOngoing,
   GameHome,
   GameVisitor,
-  GameDraw
+  GameDraw,
+  NotBattlingError,
 } from 'src/domain/battle';
 import { toBattle } from 'src/store/schema/battle';
 import { toParty } from 'src/store/schema/party';
@@ -79,6 +80,7 @@ describe('Battle#toBattle', function () {
      || battle instanceof DataNotFoundError
      || battle instanceof CharactorDuplicationError
      || battle instanceof JsonSchemaUnmatchError
+     || battle instanceof NotBattlingError
     ) {
       assert.equal(true, false);
     } else {
@@ -136,8 +138,8 @@ describe('Battle#start', function () {
 describe('Battle#act', function () {
   it('charactor', function () {
     const battle = (toBattle(testData) as Battle);
-    const actor = (toCharactor(testData.home.charactors[0]) as Charactor);
-    const receiver = (toCharactor(testData.visitor.charactors[0]) as Charactor);
+    const actor = (toCharactor(testData.home.charactors[0]) as CharactorBattling);
+    const receiver = (toCharactor(testData.visitor.charactors[0]) as CharactorBattling);
     const skill = (getSkill('chop') as Skill);
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -174,7 +176,7 @@ describe('Battle#act', function () {
 describe('Battle#stay', function () {
   it('ok', function () {
     const battle = (toBattle(testData) as Battle);
-    const actor = (toCharactor(testData.home.charactors[0]) as Charactor);
+    const actor = (toCharactor(testData.home.charactors[0]) as CharactorBattling);
 
     const turn = stay(battle, actor, new Date());
 

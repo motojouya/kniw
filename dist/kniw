@@ -28539,7 +28539,8 @@ const resume = (dialogue, repository) => async (title) => {
     if (battle instanceof acquirement_1.NotWearableErorr ||
         battle instanceof store_1.DataNotFoundError ||
         battle instanceof party_1.CharactorDuplicationError ||
-        battle instanceof store_1.JsonSchemaUnmatchError) {
+        battle instanceof store_1.JsonSchemaUnmatchError ||
+        battle instanceof battle_1.NotBattlingError) {
         await dialogue.notice(`${title}のbattleは不正なデータです`);
         return;
     }
@@ -28606,6 +28607,7 @@ const battle_1 = __webpack_require__(5033);
 const acquirement_1 = __webpack_require__(8826);
 const store_1 = __webpack_require__(9895);
 const party_1 = __webpack_require__(7551);
+const battle_2 = __webpack_require__(3279);
 const showHistory = ({ notice }, repository) => async (title) => {
     const store = await (0, battle_1.createStore)(repository);
     const battle = await store.get(title);
@@ -28616,7 +28618,8 @@ const showHistory = ({ notice }, repository) => async (title) => {
     if (battle instanceof acquirement_1.NotWearableErorr ||
         battle instanceof store_1.DataNotFoundError ||
         battle instanceof party_1.CharactorDuplicationError ||
-        battle instanceof store_1.JsonSchemaUnmatchError) {
+        battle instanceof store_1.JsonSchemaUnmatchError ||
+        battle instanceof battle_2.NotBattlingError) {
         await notice(`${title}は不正なデータです。取り出せません。`);
         return;
     }
@@ -36358,13 +36361,20 @@ exports.createValidateWearable = createValidateWearable;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.isSettlement = exports.wait = exports.surrender = exports.actToField = exports.actToCharactor = exports.stay = exports.start = exports.createBattle = exports.nextActor = exports.getLastTurn = exports.GameDraw = exports.GameVisitor = exports.GameHome = exports.GameOngoing = void 0;
+exports.isSettlement = exports.wait = exports.surrender = exports.actToField = exports.actToCharactor = exports.stay = exports.start = exports.createBattle = exports.nextActor = exports.getLastTurn = exports.GameDraw = exports.GameVisitor = exports.GameHome = exports.GameOngoing = exports.NotBattlingError = void 0;
 const skill_1 = __webpack_require__(8841);
 const charactor_1 = __webpack_require__(657);
 const field_1 = __webpack_require__(4925);
 const status_1 = __webpack_require__(9538);
 const status_2 = __webpack_require__(7929);
 const arrayLast = (ary) => ary.slice(-1)[0];
+class NotBattlingError {
+    constructor(charactor, message) {
+        this.charactor = charactor;
+        this.message = message;
+    }
+}
+exports.NotBattlingError = NotBattlingError;
 exports.GameOngoing = 'ONGOING';
 exports.GameHome = 'HOME';
 exports.GameVisitor = 'VISITOR';
@@ -36373,7 +36383,9 @@ const getLastTurn = battle => arrayLast(battle.turns);
 exports.getLastTurn = getLastTurn;
 const nextActor = battle => arrayLast(battle.turns).sortedCharactors[0];
 exports.nextActor = nextActor;
-const sortByWT = charactors => charactors.sort((left, right) => {
+const sortByWT = charactors => charactors
+    .filter(charactor => charactor.hp > 0)
+    .sort((left, right) => {
     const leftPhysical = (0, charactor_1.getPhysical)(left);
     const rightPhysical = (0, charactor_1.getPhysical)(right);
     const wtDiff = left.restWt - right.restWt;
@@ -36401,21 +36413,22 @@ const sortByWT = charactors => charactors.sort((left, right) => {
         return statusDiff;
     }
     // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
+    // battleごとにseedを決定しつつ、CharactorBattlingをhash値になおして比較がいいんじゃないかな。
     return 0;
 });
 const createBattle = (title, home, visitor) => {
-    /* eslint-disable no-param-reassign */
-    home.charactors.forEach(charactor => {
-        charactor.isVisitor = false;
-    });
-    visitor.charactors.forEach(charactor => {
-        charactor.isVisitor = true;
-    });
-    /* eslint-enable no-param-reassign */
+    const homeBatting = {
+        name: home.name,
+        charactors: home.charactors.map(charactor => (Object.assign(Object.assign({}, charactor), { isVisitor: false }))),
+    };
+    const visitorBatting = {
+        name: visitor.name,
+        charactors: visitor.charactors.map(charactor => (Object.assign(Object.assign({}, charactor), { isVisitor: true }))),
+    };
     return {
         title,
-        home,
-        visitor,
+        home: homeBatting,
+        visitor: visitorBatting,
         turns: [],
         result: exports.GameOngoing,
     };
@@ -36636,9 +36649,13 @@ exports.isSettlement = isSettlement;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createCharactor = exports.validate = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = void 0;
+exports.isVisitorString = exports.createCharactor = exports.validate = exports.getPhysical = exports.getSkills = exports.getAbilities = exports.selectCharactor = exports.getSelectOption = exports.isBattlingCharactor = void 0;
 const physical_1 = __webpack_require__(8200);
 const acquirement_1 = __webpack_require__(8826);
+function isBattlingCharactor(charactor) {
+    return Object.prototype.hasOwnProperty.call(charactor, 'isVisitor') && typeof charactor.isVisitor === 'boolean';
+}
+exports.isBattlingCharactor = isBattlingCharactor;
 const basePhysical = {
     MaxHP: 300,
     MaxMP: 200,
@@ -36734,6 +36751,8 @@ const createCharactor = (name, race, blessing, clothing, weapon) => {
     return someone;
 };
 exports.createCharactor = createCharactor;
+const isVisitorString = isVisitor => (isVisitor ? 'VISITOR' : 'HOME');
+exports.isVisitorString = isVisitorString;
 
 
 /***/ }),
@@ -36784,12 +36803,17 @@ exports.changeClimate = changeClimate;
 /***/ }),
 
 /***/ 7551:
-/***/ ((__unused_webpack_module, exports) => {
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createParty = exports.validate = exports.CharactorDuplicationError = void 0;
+exports.createParty = exports.validate = exports.CharactorDuplicationError = exports.isBattlingParty = void 0;
+const charactor_1 = __webpack_require__(657);
+function isBattlingParty(party) {
+    return party.charactors.every(charactor => (0, charactor_1.isBattlingCharactor)(charactor));
+}
+exports.isBattlingParty = isBattlingParty;
 class CharactorDuplicationError {
     constructor(name, message) {
         this.name = name;
@@ -37575,8 +37599,8 @@ const turn_1 = __webpack_require__(4546);
 const party_1 = __webpack_require__(347);
 const acquirement_1 = __webpack_require__(8826);
 const store_1 = __webpack_require__(9895);
-const party_2 = __webpack_require__(7551);
 const battle_1 = __webpack_require__(3279);
+const party_2 = __webpack_require__(7551);
 exports.battleSchema = {
     type: 'object',
     properties: {
@@ -37613,6 +37637,9 @@ const toBattle = battleJson => {
         home instanceof store_1.JsonSchemaUnmatchError) {
         return home;
     }
+    if (!(0, party_2.isBattlingParty)(home)) {
+        return new battle_1.NotBattlingError(home, `home party(${home.name})のcharactorにisVisitor propertyがありません`);
+    }
     const visitor = (0, party_1.toParty)(battleJson.visitor);
     if (visitor instanceof acquirement_1.NotWearableErorr ||
         visitor instanceof store_1.DataNotFoundError ||
@@ -37620,12 +37647,16 @@ const toBattle = battleJson => {
         visitor instanceof store_1.JsonSchemaUnmatchError) {
         return visitor;
     }
+    if (!(0, party_2.isBattlingParty)(visitor)) {
+        return new battle_1.NotBattlingError(visitor, `visitor party(${visitor.name})のcharactorにisVisitor propertyがありません`);
+    }
     const turns = [];
     for (const turnJson of battleJson.turns) {
         const turn = (0, turn_1.toTurn)(turnJson);
         if (turn instanceof acquirement_1.NotWearableErorr ||
             turn instanceof store_1.DataNotFoundError ||
-            turn instanceof store_1.JsonSchemaUnmatchError) {
+            turn instanceof store_1.JsonSchemaUnmatchError ||
+            turn instanceof battle_1.NotBattlingError) {
             return turn;
         }
         turns.push(turn);
@@ -37700,7 +37731,6 @@ const toCharactorJson = charactor => {
         hp: charactor.hp,
         mp: charactor.mp,
         restWt: charactor.restWt,
-        isVisitor: charactor.isVisitor,
     };
     if (Object.prototype.hasOwnProperty.call(charactor, 'isVisitor')) {
         json.isVisitor = charactor.isVisitor;
@@ -37876,6 +37906,8 @@ const acquirement_1 = __webpack_require__(8826);
 const skill_1 = __webpack_require__(7239);
 const store_1 = __webpack_require__(9895);
 const charactor_1 = __webpack_require__(4821);
+const charactor_2 = __webpack_require__(657);
+const battle_1 = __webpack_require__(3279);
 exports.surrenderSchema = {
     type: 'object',
     properties: {
@@ -37977,6 +38009,9 @@ const toAction = actionJson => {
             skillActor instanceof store_1.JsonSchemaUnmatchError) {
             return skillActor;
         }
+        if (!(0, charactor_2.isBattlingCharactor)(skillActor)) {
+            return new battle_1.NotBattlingError(skillActor, `actor(${skillActor.name})にisVisitor propertyがありません`);
+        }
         const receivers = [];
         for (const receiverJson of actionJson.receivers) {
             const receiver = (0, charactor_1.toCharactor)(receiverJson);
@@ -37984,6 +38019,9 @@ const toAction = actionJson => {
                 receiver instanceof store_1.DataNotFoundError ||
                 receiver instanceof store_1.JsonSchemaUnmatchError) {
                 return receiver;
+            }
+            if (!(0, charactor_2.isBattlingCharactor)(receiver)) {
+                return new battle_1.NotBattlingError(receiver, `receiver(${receiver.name})にisVisitor propertyがありません`);
             }
             receivers.push(receiver);
         }
@@ -38005,6 +38043,9 @@ const toAction = actionJson => {
             surrenderActor instanceof store_1.JsonSchemaUnmatchError) {
             return surrenderActor;
         }
+        if (!(0, charactor_2.isBattlingCharactor)(surrenderActor)) {
+            return new battle_1.NotBattlingError(surrenderActor, `actor(${surrenderActor.name})にisVisitor propertyがありません`);
+        }
         return {
             type: 'SURRENDER',
             actor: surrenderActor,
@@ -38016,6 +38057,9 @@ const toAction = actionJson => {
             nothingActor instanceof store_1.DataNotFoundError ||
             nothingActor instanceof store_1.JsonSchemaUnmatchError) {
             return nothingActor;
+        }
+        if (!(0, charactor_2.isBattlingCharactor)(nothingActor)) {
+            return new battle_1.NotBattlingError(nothingActor, `actor(${nothingActor.name})にisVisitor propertyがありません`);
         }
         return {
             type: 'DO_NOTHING',
@@ -38047,7 +38091,8 @@ const toTurn = turnJson => {
     const action = (0, exports.toAction)(turnJson.action);
     if (action instanceof acquirement_1.NotWearableErorr ||
         action instanceof store_1.DataNotFoundError ||
-        action instanceof store_1.JsonSchemaUnmatchError) {
+        action instanceof store_1.JsonSchemaUnmatchError ||
+        action instanceof battle_1.NotBattlingError) {
         return action;
     }
     const sortedCharactors = [];
@@ -38057,6 +38102,9 @@ const toTurn = turnJson => {
             charactor instanceof store_1.DataNotFoundError ||
             charactor instanceof store_1.JsonSchemaUnmatchError) {
             return charactor;
+        }
+        if (!(0, charactor_2.isBattlingCharactor)(charactor)) {
+            return new battle_1.NotBattlingError(charactor, `charactor(${charactor.name})にisVisitor propertyがありません`);
         }
         sortedCharactors.push(charactor);
     }

@@ -1,6 +1,6 @@
 import type { Turn, Action } from 'src/domain/turn';
 import type { Climate } from 'src/domain/field';
-import type { Charactor } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { parse } from 'date-fns';
@@ -11,6 +11,8 @@ import { NotWearableErorr } from 'src/domain/acquirement';
 import { getSkill } from 'src/store/skill';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { toCharactor, toCharactorJson, charactorSchema } from 'src/store/schema/charactor';
+import { isBattlingCharactor } from 'src/domain/charactor';
+import { NotBattlingError } from 'src/domain/battle';
 
 export const surrenderSchema = {
   type: 'object',
@@ -119,7 +121,9 @@ export const toTurnJson: ToTurnJson = turn => ({
   field: turn.field,
 });
 
-export type ToAction = (actionJson: any) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+export type ToAction = (
+  actionJson: any,
+) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toAction: ToAction = actionJson => {
   const compile = createValidationCompiler();
   const validateSchema = compile(actionSchema);
@@ -140,7 +144,11 @@ export const toAction: ToAction = actionJson => {
       return skillActor;
     }
 
-    const receivers: Charactor[] = [];
+    if (!isBattlingCharactor(skillActor)) {
+      return new NotBattlingError(skillActor, `actor(${skillActor.name})にisVisitor propertyがありません`);
+    }
+
+    const receivers: CharactorBattling[] = [];
     for (const receiverJson of actionJson.receivers) {
       const receiver = toCharactor(receiverJson);
       if (
@@ -149,6 +157,9 @@ export const toAction: ToAction = actionJson => {
         receiver instanceof JsonSchemaUnmatchError
       ) {
         return receiver;
+      }
+      if (!isBattlingCharactor(receiver)) {
+        return new NotBattlingError(receiver, `receiver(${receiver.name})にisVisitor propertyがありません`);
       }
       receivers.push(receiver);
     }
@@ -175,6 +186,9 @@ export const toAction: ToAction = actionJson => {
     ) {
       return surrenderActor;
     }
+    if (!isBattlingCharactor(surrenderActor)) {
+      return new NotBattlingError(surrenderActor, `actor(${surrenderActor.name})にisVisitor propertyがありません`);
+    }
     return {
       type: 'SURRENDER',
       actor: surrenderActor,
@@ -190,6 +204,9 @@ export const toAction: ToAction = actionJson => {
     ) {
       return nothingActor;
     }
+    if (!isBattlingCharactor(nothingActor)) {
+      return new NotBattlingError(nothingActor, `actor(${nothingActor.name})にisVisitor propertyがありません`);
+    }
     return {
       type: 'DO_NOTHING',
       actor: nothingActor,
@@ -202,7 +219,9 @@ export const toAction: ToAction = actionJson => {
   };
 };
 
-export type ToTurn = (turnJson: any) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+export type ToTurn = (
+  turnJson: any,
+) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toTurn: ToTurn = turnJson => {
   const compile = createValidationCompiler();
   const validateSchema = compile(turnSchema);
@@ -224,12 +243,13 @@ export const toTurn: ToTurn = turnJson => {
   if (
     action instanceof NotWearableErorr ||
     action instanceof DataNotFoundError ||
-    action instanceof JsonSchemaUnmatchError
+    action instanceof JsonSchemaUnmatchError ||
+    action instanceof NotBattlingError
   ) {
     return action;
   }
 
-  const sortedCharactors: Charactor[] = [];
+  const sortedCharactors: CharactorBattling[] = [];
   for (const charactorJson of turnJson.sortedCharactors) {
     const charactor = toCharactor(charactorJson);
     if (
@@ -238,6 +258,9 @@ export const toTurn: ToTurn = turnJson => {
       charactor instanceof JsonSchemaUnmatchError
     ) {
       return charactor;
+    }
+    if (!isBattlingCharactor(charactor)) {
+      return new NotBattlingError(charactor, `charactor(${charactor.name})にisVisitor propertyがありません`);
     }
     sortedCharactors.push(charactor);
   }

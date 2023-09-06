@@ -1,6 +1,6 @@
 import type { Field } from 'src/domain/field';
 import type { Randoms } from 'src/domain/random';
-import type { Charactor } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 import type { Status } from 'src/domain/status';
 
 import { underStatus } from 'src/domain/status';
@@ -34,14 +34,14 @@ export const MAGIC_TYPE_NONE: MagicType = 'NONE';
 
 export type ActionToCharactor = (
   self: Skill,
-  actor: Charactor,
+  actor: CharactorBattling,
   randoms: Randoms,
   field: Field,
-  receiver: Charactor,
-) => Charactor;
-export type ActionToField = (self: Skill, actor: Charactor, randoms: Randoms, field: Field) => Field;
+  receiver: CharactorBattling,
+) => CharactorBattling;
+export type ActionToField = (self: Skill, actor: CharactorBattling, randoms: Randoms, field: Field) => Field;
 
-export type GetAccuracy = (self: Skill, actor: Charactor, field: Field, receiver: Charactor) => number;
+export type GetAccuracy = (self: Skill, actor: CharactorBattling, field: Field, receiver: CharactorBattling) => number;
 
 export type SkillToCharactor = {
   name: string;
@@ -76,7 +76,7 @@ export type SkillToField = {
 
 export type Skill = SkillToCharactor | SkillToField;
 
-type CalcMagicRate = (skill: Skill, charactor: Charactor) => number;
+type CalcMagicRate = (skill: Skill, charactor: CharactorBattling) => number;
 const calcMagicRate: CalcMagicRate = (skill, charactor) => {
   const physical = getPhysical(charactor);
   switch (skill.magicType) {
@@ -97,7 +97,7 @@ const calcMagicRate: CalcMagicRate = (skill, charactor) => {
   }
 };
 
-type CalcMagicRegistance = (skill: Skill, charactor: Charactor) => number;
+type CalcMagicRegistance = (skill: Skill, charactor: CharactorBattling) => number;
 const calcMagicRegistance: CalcMagicRegistance = (skill, charactor) => {
   const physical = getPhysical(charactor);
   switch (skill.magicType) {
@@ -115,7 +115,7 @@ const calcMagicRegistance: CalcMagicRegistance = (skill, charactor) => {
   }
 };
 
-type CalcDirectRegistance = (skill: Skill, charactor: Charactor) => number;
+type CalcDirectRegistance = (skill: Skill, charactor: CharactorBattling) => number;
 const calcDirectRegistance: CalcDirectRegistance = (skill, charactor) => {
   const physical = getPhysical(charactor);
   switch (skill.directType) {
@@ -130,7 +130,7 @@ const calcDirectRegistance: CalcDirectRegistance = (skill, charactor) => {
   }
 };
 
-type CalcDirectAttack = (skill: Skill, attacker: Charactor) => number;
+type CalcDirectAttack = (skill: Skill, attacker: CharactorBattling) => number;
 const calcDirectAttack: CalcDirectAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
@@ -142,7 +142,7 @@ const calcDirectAttack: CalcDirectAttack = (skill, attacker) => {
   return ((physical.STR + physical.DEX) * magicRate * upRate * downRate * fearRate) / 100;
 };
 
-type CalcDirectDefence = (skill: Skill, defencer: Charactor) => number;
+type CalcDirectDefence = (skill: Skill, defencer: CharactorBattling) => number;
 const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   const magicRegistance = calcMagicRegistance(skill, defencer);
@@ -183,7 +183,7 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
   };
 };
 
-type CalcMagicalAttack = (skill: Skill, attacker: Charactor) => number;
+type CalcMagicalAttack = (skill: Skill, attacker: CharactorBattling) => number;
 const calcMagicalAttack: CalcMagicalAttack = (skill, attacker) => {
   const physical = getPhysical(attacker);
   const magicRate = calcMagicRate(skill, attacker);
@@ -194,7 +194,7 @@ const calcMagicalAttack: CalcMagicalAttack = (skill, attacker) => {
   return ((physical.INT + physical.MND) * magicRate * upRate * downRate) / 100;
 };
 
-type CalcMagicalDefence = (skill: Skill, defencer: Charactor) => number;
+type CalcMagicalDefence = (skill: Skill, defencer: CharactorBattling) => number;
 const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
   const physical = getPhysical(defencer);
   const magicRegistance = calcMagicRegistance(skill, defencer);
@@ -257,13 +257,13 @@ export const addStatus: AddStatus = status => (self, actor, randoms, field, rece
  * avoidDown
  * avoidUp
  */
-type CalcAttackAccuracy = (skill: Skill, attacker: Charactor) => number;
+type CalcAttackAccuracy = (skill: Skill, attacker: CharactorBattling) => number;
 const calcAttackAccuracy: CalcAttackAccuracy = (skill, attacker) => {
   const physical = getPhysical(attacker);
   return (physical.DEX + physical.AGI) / 2;
 };
 
-type CalcDefenceAccuracy = (skill: Skill, defencer: Charactor) => number;
+type CalcDefenceAccuracy = (skill: Skill, defencer: CharactorBattling) => number;
 const calcDefenceAccuracy: CalcDefenceAccuracy = (skill, defencer) => {
   const physical = getPhysical(defencer);
   return (physical.DEX + physical.AVD) / 2;

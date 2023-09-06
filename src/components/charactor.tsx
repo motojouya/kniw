@@ -36,6 +36,7 @@ import {
   Td,
 //  TableCaption,
   TableContainer,
+  Tag,
 } from '@chakra-ui/react';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
@@ -94,7 +95,7 @@ const SelectAcquirement: FC<{
   </FormControl>
 );
 
-const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
+export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
   const physical = getPhysical(charactor);
 
   const abilities = getAbilities(charactor);
@@ -103,39 +104,69 @@ const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
   const skills = getSkills(charactor);
   const skillsText = skills.map(skill => skill.label).join(', ');
 
+  const statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
+
+  // eslint-disable-next-line no-nested-ternary
+  const isVisitorTag = charactor.isVisitor === undefined ? null
+    : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
+    : (<Tag>{'HOME'}</Tag>);
+
   return (
     <TableContainer>
       <Table variant='simple'>
         <Tbody>
-          <Tr><Th>名前      </Th><Td>{charactor.name}          </Td></Tr>
-          <Tr><Th>種族      </Th><Td>{charactor.race.label}    </Td></Tr>
-          <Tr><Th>祝福      </Th><Td>{charactor.blessing.label}</Td></Tr>
-          <Tr><Th>装備      </Th><Td>{charactor.clothing.label}</Td></Tr>
-          <Tr><Th>武器      </Th><Td>{charactor.weapon.label}  </Td></Tr>
-          <Tr><Th>MaxHP     </Th><Td>{physical.MaxHP}          </Td></Tr>
-          <Tr><Th>MaxMP     </Th><Td>{physical.MaxMP}          </Td></Tr>
-          <Tr><Th>STR       </Th><Td>{physical.STR}            </Td></Tr>
-          <Tr><Th>VIT       </Th><Td>{physical.VIT}            </Td></Tr>
-          <Tr><Th>DEX       </Th><Td>{physical.DEX}            </Td></Tr>
-          <Tr><Th>AGI       </Th><Td>{physical.AGI}            </Td></Tr>
-          <Tr><Th>AVD       </Th><Td>{physical.AVD}            </Td></Tr>
-          <Tr><Th>INT       </Th><Td>{physical.INT}            </Td></Tr>
-          <Tr><Th>MND       </Th><Td>{physical.MND}            </Td></Tr>
-          <Tr><Th>RES       </Th><Td>{physical.RES}            </Td></Tr>
-          <Tr><Th>WT        </Th><Td>{physical.WT}             </Td></Tr>
-          <Tr><Th>刺突耐性  </Th><Td>{physical.StabResistance} </Td></Tr>
-          <Tr><Th>斬撃耐性  </Th><Td>{physical.SlashResistance}</Td></Tr>
-          <Tr><Th>打撃耐性  </Th><Td>{physical.BlowResistance} </Td></Tr>
-          <Tr><Th>火属性    </Th><Td>{physical.FireSuitable}   </Td></Tr>
-          <Tr><Th>岩属性    </Th><Td>{physical.RockSuitable}   </Td></Tr>
-          <Tr><Th>水属性    </Th><Td>{physical.WaterSuitable}  </Td></Tr>
-          <Tr><Th>氷属性    </Th><Td>{physical.IceSuitable}    </Td></Tr>
-          <Tr><Th>風属性    </Th><Td>{physical.AirSuitable}    </Td></Tr>
-          <Tr><Th>雷属性    </Th><Td>{physical.ThunderSuitable}</Td></Tr>
-          <Tr><Th>移動距離  </Th><Td>{physical.move}           </Td></Tr>
-          <Tr><Th>移動高さ  </Th><Td>{physical.jump}           </Td></Tr>
-          <Tr><Th>アビリティ</Th><Td>{abilitiesText}           </Td></Tr>
-          <Tr><Th>スキル    </Th><Td>{skillsText}              </Td></Tr>
+          <Tr>
+            <Th>名前      </Th><Td>{`${charactor.name}`}{isVisitorTag}    </Td>
+            <Th>HP        </Th><Td>{`${charactor.hp}/${physical.MaxHP}`}  </Td>
+            <Th>MP        </Th><Td>{`${charactor.mp}/${physical.MaxMP}`}  </Td>
+            <Th>WT        </Th><Td>{`${charactor.restWt}(${physical.WT})`}</Td>
+          </Tr>
+          <Tr>
+            <Th colSpan={2}>ステータス</Th><Td colSpan={6}>{statusesText} </Td>
+          </Tr>
+          <Tr>
+            <Th>種族      </Th><Td>{charactor.race.label}                 </Td>
+            <Th>祝福      </Th><Td>{charactor.blessing.label}             </Td>
+            <Th>装備      </Th><Td>{charactor.clothing.label}             </Td>
+            <Th>武器      </Th><Td>{charactor.weapon.label}               </Td>
+          </Tr>
+          <Tr>
+            <Th>STR       </Th><Td>{physical.STR}                         </Td>
+            <Th>VIT       </Th><Td>{physical.VIT}                         </Td>
+            <Th>DEX       </Th><Td>{physical.DEX}                         </Td>
+            <Th>AGI       </Th><Td>{physical.AGI}                         </Td>
+          </Tr>
+          <Tr>
+            <Th>AVD       </Th><Td>{physical.AVD}                         </Td>
+            <Th>INT       </Th><Td>{physical.INT}                         </Td>
+            <Th>MND       </Th><Td>{physical.MND}                         </Td>
+            <Th>RES       </Th><Td>{physical.RES}                         </Td>
+          </Tr>
+          <Tr>
+            <Th>刺突耐性  </Th><Td>{physical.StabResistance}              </Td>
+            <Th>斬撃耐性  </Th><Td>{physical.SlashResistance}             </Td>
+            <Th>打撃耐性  </Th><Td>{physical.BlowResistance}              </Td>
+          </Tr>
+          <Tr>
+            <Th>火属性    </Th><Td>{physical.FireSuitable}                </Td>
+            <Th>岩属性    </Th><Td>{physical.RockSuitable}                </Td>
+            <Th>水属性    </Th><Td>{physical.WaterSuitable}               </Td>
+          </Tr>
+          <Tr>
+            <Th>氷属性    </Th><Td>{physical.IceSuitable}                 </Td>
+            <Th>風属性    </Th><Td>{physical.AirSuitable}                 </Td>
+            <Th>雷属性    </Th><Td>{physical.ThunderSuitable}             </Td>
+          </Tr>
+          <Tr>
+            <Th colSpan={2}>アビリティ</Th><Td colSpan={6}>{abilitiesText}</Td>
+          </Tr>
+          <Tr>
+            <Th colSpan={2}>スキル    </Th><Td colSpan={6}>{skillsText}   </Td>
+          </Tr>
+          <Tr>
+            <Th>移動距離  </Th><Td>{physical.move}                        </Td>
+            <Th>移動高さ  </Th><Td>{physical.jump}                        </Td>
+          </Tr>
         </Tbody>
       </Table>
     </TableContainer>

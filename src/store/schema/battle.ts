@@ -9,8 +9,8 @@ import { toParty, toPartyJson, partySchema } from 'src/store/schema/party';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
+import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
+import { CharactorDuplicationError, isBattlingParty } from 'src/domain/party';
 
 export const battleSchema = {
   type: 'object',
@@ -37,7 +37,13 @@ export const toBattleJson: ToBattleJson = battle => ({
 
 export type ToBattle = (
   battleJson: any,
-) => Battle | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+) =>
+  | Battle
+  | NotWearableErorr
+  | DataNotFoundError
+  | CharactorDuplicationError
+  | JsonSchemaUnmatchError
+  | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
   const compile = createValidationCompiler();
   const validateSchema = compile(battleSchema);
@@ -59,6 +65,9 @@ export const toBattle: ToBattle = battleJson => {
   ) {
     return home;
   }
+  if (!isBattlingParty(home)) {
+    return new NotBattlingError(home, `home party(${home.name})のcharactorにisVisitor propertyがありません`);
+  }
 
   const visitor = toParty(battleJson.visitor);
   if (
@@ -69,6 +78,9 @@ export const toBattle: ToBattle = battleJson => {
   ) {
     return visitor;
   }
+  if (!isBattlingParty(visitor)) {
+    return new NotBattlingError(visitor, `visitor party(${visitor.name})のcharactorにisVisitor propertyがありません`);
+  }
 
   const turns: Turn[] = [];
   for (const turnJson of battleJson.turns) {
@@ -76,7 +88,8 @@ export const toBattle: ToBattle = battleJson => {
     if (
       turn instanceof NotWearableErorr ||
       turn instanceof DataNotFoundError ||
-      turn instanceof JsonSchemaUnmatchError
+      turn instanceof JsonSchemaUnmatchError ||
+      turn instanceof NotBattlingError
     ) {
       return turn;
     }

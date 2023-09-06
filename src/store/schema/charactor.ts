@@ -50,7 +50,7 @@ export const toAttachedStatusJson: ToAttachedStatusJson = attached => ({
 
 export type ToCharactorJson = (charactor: Charactor) => CharactorJson;
 export const toCharactorJson: ToCharactorJson = charactor => {
-  const json = {
+  const json: CharactorJson = {
     name: charactor.name,
     race: charactor.race.name,
     blessing: charactor.blessing.name,
@@ -60,7 +60,6 @@ export const toCharactorJson: ToCharactorJson = charactor => {
     hp: charactor.hp,
     mp: charactor.mp,
     restWt: charactor.restWt,
-    isVisitor: charactor.isVisitor,
   };
 
   if (Object.prototype.hasOwnProperty.call(charactor, 'isVisitor')) {

@@ -1,5 +1,5 @@
-import type { Party } from 'src/domain/party';
-import type { Charactor } from 'src/domain/charactor';
+import type { Party, PartyBattling } from 'src/domain/party';
+import type { Charactor, CharactorBattling } from 'src/domain/charactor';
 import type { Skill } from 'src/domain/skill';
 import type { Randoms } from 'src/domain/random';
 import type { Turn } from 'src/domain/turn';
@@ -13,6 +13,13 @@ import { underStatus } from 'src/domain/status';
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
+export class NotBattlingError {
+  constructor(
+    readonly charactor: Charactor | Party,
+    readonly message: string,
+  ) {}
+}
+
 export type GameResult = 'ONGOING' | 'HOME' | 'VISITOR' | 'DRAW';
 export const GameOngoing: GameResult = 'ONGOING';
 export const GameHome: GameResult = 'HOME';
@@ -21,8 +28,8 @@ export const GameDraw: GameResult = 'DRAW';
 
 export type Battle = {
   title: string;
-  home: Party;
-  visitor: Party;
+  home: PartyBattling;
+  visitor: PartyBattling;
   turns: Turn[];
   result: GameResult;
 };
@@ -30,56 +37,59 @@ export type Battle = {
 export type GetLastTurn = (battle: Battle) => Turn;
 export const getLastTurn: GetLastTurn = battle => arrayLast(battle.turns);
 
-export type NextActor = (battle: Battle) => Charactor;
+export type NextActor = (battle: Battle) => CharactorBattling;
 export const nextActor: NextActor = battle => arrayLast(battle.turns).sortedCharactors[0];
 
-type SortByWT = (charactors: Charactor[]) => Charactor[];
+type SortByWT = (charactors: CharactorBattling[]) => CharactorBattling[];
 const sortByWT: SortByWT = charactors =>
-  charactors.sort((left, right) => {
-    const leftPhysical = getPhysical(left);
-    const rightPhysical = getPhysical(right);
-    const wtDiff = left.restWt - right.restWt;
-    if (wtDiff !== 0) {
-      return wtDiff;
-    }
-    const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
-    if (agiDiff !== 0) {
-      return agiDiff;
-    }
-    const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
-    if (avdDiff !== 0) {
-      return avdDiff;
-    }
-    const hpDiff = left.hp - right.hp;
-    if (hpDiff !== 0) {
-      return hpDiff;
-    }
-    const mpDiff = left.mp - right.mp;
-    if (mpDiff !== 0) {
-      return mpDiff;
-    }
-    const statusDiff = left.statuses.length - right.statuses.length;
-    if (statusDiff !== 0) {
-      return statusDiff;
-    }
-    // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
-    return 0;
-  });
+  charactors
+    .filter(charactor => charactor.hp > 0)
+    .sort((left, right) => {
+      const leftPhysical = getPhysical(left);
+      const rightPhysical = getPhysical(right);
+      const wtDiff = left.restWt - right.restWt;
+      if (wtDiff !== 0) {
+        return wtDiff;
+      }
+      const agiDiff = leftPhysical.AGI - rightPhysical.AGI;
+      if (agiDiff !== 0) {
+        return agiDiff;
+      }
+      const avdDiff = leftPhysical.AVD - rightPhysical.AVD;
+      if (avdDiff !== 0) {
+        return avdDiff;
+      }
+      const hpDiff = left.hp - right.hp;
+      if (hpDiff !== 0) {
+        return hpDiff;
+      }
+      const mpDiff = left.mp - right.mp;
+      if (mpDiff !== 0) {
+        return mpDiff;
+      }
+      const statusDiff = left.statuses.length - right.statuses.length;
+      if (statusDiff !== 0) {
+        return statusDiff;
+      }
+      // FIXME 最終的に元の並び順という感じだが、これで嫌な挙動した際は対策が必要
+      // battleごとにseedを決定しつつ、CharactorBattlingをhash値になおして比較がいいんじゃないかな。
+      return 0;
+    });
 
 export type CreateBattle = (title: string, home: Party, visitor: Party) => Battle;
 export const createBattle: CreateBattle = (title, home, visitor) => {
-  /* eslint-disable no-param-reassign */
-  home.charactors.forEach(charactor => {
-    charactor.isVisitor = false;
-  });
-  visitor.charactors.forEach(charactor => {
-    charactor.isVisitor = true;
-  });
-  /* eslint-enable no-param-reassign */
+  const homeBatting: PartyBattling = {
+    name: home.name,
+    charactors: home.charactors.map(charactor => ({ ...charactor, isVisitor: false })),
+  };
+  const visitorBatting: PartyBattling = {
+    name: visitor.name,
+    charactors: visitor.charactors.map(charactor => ({ ...charactor, isVisitor: true })),
+  };
   return {
     title,
-    home,
-    visitor,
+    home: homeBatting,
+    visitor: visitorBatting,
     turns: [],
     result: GameOngoing,
   };
@@ -98,7 +108,7 @@ export const start: Start = (battle, datetime, randoms) => ({
   },
 });
 
-export type Stay = (battle: Battle, actor: Charactor, datetime: Date) => Turn;
+export type Stay = (battle: Battle, actor: CharactorBattling, datetime: Date) => Turn;
 export const stay: Stay = (battle, actor, datetime) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
@@ -126,7 +136,7 @@ export const stay: Stay = (battle, actor, datetime) => {
   return newTurn;
 };
 
-type UpdateCharactor = (receivers: Charactor[]) => (charactor: Charactor) => Charactor;
+type UpdateCharactor = (receivers: CharactorBattling[]) => (charactor: CharactorBattling) => CharactorBattling;
 const updateCharactor: UpdateCharactor = receivers => charactor => {
   const foundReceiver = receivers.find(receiver => charactor.name === receiver.name);
   if (foundReceiver) {
@@ -137,9 +147,9 @@ const updateCharactor: UpdateCharactor = receivers => charactor => {
 
 export type ActToCharactor = (
   battle: Battle,
-  actor: Charactor,
+  actor: CharactorBattling,
   skill: Skill,
-  receivers: Charactor[],
+  receivers: CharactorBattling[],
   datetime: Date,
   randoms: Randoms,
 ) => Turn;
@@ -197,7 +207,13 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   return newTurn;
 };
 
-export type ActToField = (battle: Battle, actor: Charactor, skill: Skill, datetime: Date, randoms: Randoms) => Turn;
+export type ActToField = (
+  battle: Battle,
+  actor: CharactorBattling,
+  skill: Skill,
+  datetime: Date,
+  randoms: Randoms,
+) => Turn;
 export const actToField: ActToField = (battle, actor, skill, datetime, randoms) => {
   if (skill.type === 'SKILL_TO_CHARACTOR') {
     throw new Error('invalid skill type');
@@ -251,7 +267,7 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
   return newTurn;
 };
 
-export type Surrender = (battle: Battle, actor: Charactor, datetime: Date) => Turn;
+export type Surrender = (battle: Battle, actor: CharactorBattling, datetime: Date) => Turn;
 export const surrender: Surrender = (battle, actor, datetime) => {
   const lastTurn = arrayLast(battle.turns);
   return {
@@ -265,14 +281,14 @@ export const surrender: Surrender = (battle, actor, datetime) => {
   };
 };
 
-type WaitCharactor = (charactor: Charactor, wt: number, randoms: Randoms) => Charactor;
+type WaitCharactor = (charactor: CharactorBattling, wt: number, randoms: Randoms) => CharactorBattling;
 const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
   const abilities = getAbilities(charactor);
   /* eslint-disable @typescript-eslint/no-unsafe-return */
   const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), {
     ...charactor,
     statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
-  } as Charactor);
+  } as CharactorBattling);
   /* eslint-enable @typescript-eslint/no-unsafe-return */
 
   /* eslint-disable no-nested-ternary */
