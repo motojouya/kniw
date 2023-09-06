@@ -93,11 +93,12 @@ const ReceiverSelect: FC<{
   actor: Charactor,
   lastTurn: Turn,
   skill: Skill | null,
-  formItemName: string,
+  index: number,
   getValues: UseFormGetValues<DoSkillForm>,
   register: UseFormRegister<DoSkillForm>,
-}> = ({ battle, actor, lastTurn, skill, formItemName, getValues, register }) => {
+}> = ({ battle, actor, lastTurn, skill, index, getValues, register }) => {
 
+  const formItemName = `receiversWithIsVisitor.${index}` as const;
   const [receiverResult, setReceiverResult] = useState<Charactor | null>(null);
 
   const onBlur = (index: number) => () => {
@@ -106,7 +107,7 @@ const ReceiverSelect: FC<{
       return null;
     }
 
-    const receiverWithIsVisitor = getValues(formItemName);
+    const receiverWithIsVisitor = getValues();
     const receiver = toReceiver(receiverWithIsVisitor, lastTurn.sortedCharactors);
     if (receiver instanceof DataNotFoundError) {
       setReceiverResult(null);
@@ -309,6 +310,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
           getValues={getValues}
           register={register}
           errors={errors}
+          replace={replace}
         />
         <List>
           {fields.map((item, index) => (
@@ -318,9 +320,9 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
                 actor={actor}
                 lastTurn={lastTurn}
                 skill={getSkill(getValues('skillName'))}
-                formItemName={`receiversWithIsVisitor.${index}` as const}
                 getValues={getValues}
                 register={register}
+                index={index}
               />
             </ListItem>
           ))}
