@@ -1,22 +1,27 @@
 import type { FC, ReactNode } from 'react';
 import type { Battle, GameResult } from 'src/domain/battle';
-import type { BattleForm } from 'src/form/battle';
+import type { Party } from 'src/domain/party';
+import type { Charactor } from 'src/domain/charactor';
+import type { Skill } from 'src/domain/skill';
+import type { Turn } from 'src/domain/turn';
 import type { Store } from 'src/store/store';
 import type { DoSkillForm, DoAction } from 'src/form/battle';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
-
-import {
-  GameOngoing,
-  GameHome,
-  GameVisitor,
-  GameDraw,
-} from 'src/domain/battle';
-import { CharactorDetail } from 'src/components/charactor';
 import { useState } from 'react';
 import { ajvResolver } from '@hookform/resolvers/ajv';
-import { useForm, useFieldArray } from 'react-hook-form';
+import {
+  useForm,
+  useFieldArray,
+//  FieldError,
+  FieldErrors,
+//  Merge,
+//  FieldErrorsImpl,
+  UseFormRegister,
+//  UseFormRegisterReturn,
+  UseFormGetValues,
+} from 'react-hook-form';
 import {
   FormErrorMessage,
   FormLabel,
@@ -28,24 +33,52 @@ import {
   ListItem,
   Heading,
   Text,
+  Tag,
+  Select,
 } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { battleFormSchema, toBattleForm, saveBattle } from 'src/form/battle';
+import {
+  GameOngoing,
+  GameHome,
+  GameVisitor,
+  GameDraw,
+  wait,
+  stay,
+  nextActor,
+  isSettlement,
+  surrender,
+  actToField,
+  actToCharactor,
+  createBattle,
+  start,
+  getLastTurn,
+} from 'src/domain/battle';
+import { CharactorDetail } from 'src/components/charactor';
 import { importJson } from 'src/io/indexed_db_repository';
 import { toParty as jsonToParty } from 'src/store/schema/party';
-import { skillSelectOption, receiverSelectOption, toAction, CharactorDuplicationError as CharactorDuplicationInSelectError } from 'src/form/battle';
+import {
+  doSkillFormSchema,
+  receiverSelectOption,
+  toReceiver,
+  toAction,
+  ReceiverDuplicationError,
+} from 'src/form/battle';
+import { ACTION_DO_NOTHING } from 'src/domain/turn';
+import { getSkills } from 'src/domain/charactor';
 import { getSkill } from 'src/store/skill';
+import { MAGIC_TYPE_NONE } from 'src/domain/skill';
 
+import { underStatus } from 'src/domain/status';
+import { sleep, silent } from 'src/data/status';
 import { CharactorDuplicationError } from 'src/domain/party';
-import { createRandoms } from 'src/domain/random';
-import { start, createBattle } from 'src/domain/battle';
+import { createRandoms, createAbsolute } from 'src/domain/random';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
 
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
-const GameResultView: FC<{ battle: Battle }> = battle => {
+const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
   switch (battle.result) {
     case GameHome: return <Text>{`${card} HOME側の勝利`}</Text>;
@@ -68,6 +101,11 @@ const ReceiverSelect: FC<{
   const [receiverResult, setReceiverResult] = useState<Charactor | null>(null);
 
   const onBlur = (index: number) => () => {
+    if (!skill) {
+      setReceiverResult(null);
+      return null;
+    }
+
     const receiverWithIsVisitor = getValues(formItemName);
     const receiver = toReceiver(receiverWithIsVisitor, lastTurn.sortedCharactors);
     if (receiver instanceof DataNotFoundError) {
@@ -75,7 +113,7 @@ const ReceiverSelect: FC<{
       return;
     }
 
-    const newTurn = actToCharactor(battle, actor, selectedSkill, [skill], new Date(), createAbsolute());
+    const newTurn = actToCharactor(battle, actor, skill, [receiver], new Date(), createAbsolute());
     const receiverResult = newTurn.sortedCharactors.find(
       charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
     );
@@ -123,7 +161,7 @@ const Surrender: FC<{ battle: Battle, actor: Charactor, store: BattleStore }> = 
 const SkillSelect: FC<{
   actor: Charactor,
   replace: (obj: object[]) => void,
-  getValues: : UseFormGetValues<DoSkillForm>,
+  getValues: UseFormGetValues<DoSkillForm>,
   register: UseFormRegister<DoSkillForm>,
   errors: FieldErrors<DoSkillForm>,
 }> = ({ actor, replace, getValues, register, errors }) => {
@@ -133,18 +171,23 @@ const SkillSelect: FC<{
     .filter(skill => skill.mpConsumption <= actor.mp)
     .filter(skill => !underStatus(silent, actor) || skill.magicType === MAGIC_TYPE_NONE)
     .map(skill => ({ value: skill.name, label: skill.name }));
-  skillOptions.push({ value: BACK, label: '戻る' });
+  skillOptions.push({ value: ACTION_DO_NOTHING, label: '何もしない' });
 
   const onBlur = () => {
     const skillName = getValues('skillName');
+    if (skillName === ACTION_DO_NOTHING) {
+      replace([]);
+      return;
+    }
+
     const skill = getSkill(skillName);
     if (!skill || !skill.receiverCount) {
       replace([]);
       return;
-    } else {
-      const receiversWithIsVisitor = Array(skill.receiverCount).fill().map(_ => '');
-      replace(receiversWithIsVisitor);
     }
+
+    const receiversWithIsVisitor = Array(skill.receiverCount).fill().map(_ => '');
+    replace(receiversWithIsVisitor);
   };
 
   return (
@@ -176,7 +219,7 @@ const act = async (store: BattleStore, battle: Battle, actor: Charactor, doActio
 
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
-    await battleStore.save(battle);
+    await store.save(battle);
     return;
   }
 
@@ -185,7 +228,7 @@ const act = async (store: BattleStore, battle: Battle, actor: Charactor, doActio
 
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
-    await battleStore.save(battle);
+    await store.save(battle);
     return;
   }
 
@@ -193,7 +236,7 @@ const act = async (store: BattleStore, battle: Battle, actor: Charactor, doActio
     battle.turns.push(stay(battle, firstWaiting, new Date()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
-      await battleStore.save(battle);
+      await store.save(battle);
       return;
     }
 
@@ -201,7 +244,7 @@ const act = async (store: BattleStore, battle: Battle, actor: Charactor, doActio
     battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
-      await battleStore.save(battle);
+      await store.save(battle);
       return;
     }
   }
@@ -211,7 +254,7 @@ const act = async (store: BattleStore, battle: Battle, actor: Charactor, doActio
 
 const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store }) => {
 
-  const lastTurn = battle.turns.slice(-1)[0];
+  const lastTurn = getLastTurn(battle);
   const actor = nextActor(battle);
 
   const {
@@ -231,7 +274,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
       setMessage('入力してください');
       return;
     }
-    if (doAction instanceof CharactorDuplicationInSelectError) {
+    if (doAction instanceof ReceiverDuplicationError) {
       setMessage(doAction.message);
       return;
     }
@@ -243,8 +286,8 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     act(store, battle, actor, doAction);
   };
 
-  const isVisitorTag = charactor.isVisitor === undefined ? null
-    : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
+  const isVisitorTag = actor.isVisitor === undefined ? null
+    : actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
     : (<Tag>{'HOME'}</Tag>);
 
   return (
@@ -258,7 +301,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
         {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} store={store} />}
         <Box as={'dl'}>
           <Heading as={'dt'}>battle title</Heading>
-          <Text as={'dd'}>{battleForm.title}</Text>
+          <Text as={'dd'}>{battle.title}</Text>
         </Box>
         <Text>{`${actor.name}(${isVisitorTag})のターン`}</Text>
         <SkillSelect
@@ -282,7 +325,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
             </ListItem>
           ))}
         </List>
-        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">{exist ? 'Change' : 'Create'}</Button>
+        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">実行</Button>
       </form>
       <Box>
         <List>
@@ -383,12 +426,15 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
     const title = battleTitle.title;
     if (!title) {
       messages.push('titleを入力してください');
+      return;
     }
     if (!homeParty) {
       messages.push('home partyを入力してください');
+      return;
     }
     if (!visitorParty) {
       messages.push('visitor partyを入力してください');
+      return;
     }
 
     if (messages.length > 0) {

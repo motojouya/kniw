@@ -115,13 +115,13 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
       <Table variant='simple'>
         <Tbody>
           <Tr>
-            <Th>名前      </Th><Td>{`${charactor.name}`isVisitorTag}      </Td>
+            <Th>名前      </Th><Td>{`${charactor.name}`}{isVisitorTag}    </Td>
             <Th>HP        </Th><Td>{`${charactor.hp}/${physical.MaxHP}`}  </Td>
             <Th>MP        </Th><Td>{`${charactor.mp}/${physical.MaxMP}`}  </Td>
             <Th>WT        </Th><Td>{`${charactor.restWt}(${physical.WT})`}</Td>
           </Tr>
           <Tr>
-            <Th colspan={2}>ステータス</Th><Td colspan={6}>{statusesText} </Td>
+            <Th colSpan={2}>ステータス</Th><Td colSpan={6}>{statusesText} </Td>
           </Tr>
           <Tr>
             <Th>種族      </Th><Td>{charactor.race.label}                 </Td>
@@ -157,10 +157,10 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
             <Th>雷属性    </Th><Td>{physical.ThunderSuitable}             </Td>
           </Tr>
           <Tr>
-            <Th colspan={2}>アビリティ</Th><Td colspan={6}>{abilitiesText}</Td>
+            <Th colSpan={2}>アビリティ</Th><Td colSpan={6}>{abilitiesText}</Td>
           </Tr>
           <Tr>
-            <Th colspan={2}>スキル    </Th><Td colspan={6}>{skillsText}   </Td>
+            <Th colSpan={2}>スキル    </Th><Td colSpan={6}>{skillsText}   </Td>
           </Tr>
           <Tr>
             <Th>移動距離  </Th><Td>{physical.move}                        </Td>

@@ -12,12 +12,13 @@ import Ajv, { JSONSchemaType } from 'ajv';
 import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { charactorFormSchema, toCharactor, toCharactorForm } from 'src/form/charactor';
-import { validate, CharactorDuplicationError } from 'src/domain/party';
 import { isVisitorString } from 'src/domain/charactor';
 import { getSkill } from 'src/store/skill';
 import { ACTION_DO_NOTHING } from 'src/domain/turn';
 
-export class CharactorDuplicationError {
+export const DO_NOTHING = 'NOTHING';
+
+export class ReceiverDuplicationError {
   constructor(
     readonly message: string,
   ) {}
@@ -50,7 +51,7 @@ export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
 
 
 export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
-export const receiverSelectOption: ReceiverSelectOption => receiver => ({
+export const receiverSelectOption: ReceiverSelectOption = receiver => ({
   value: `${receiver.name}__${isVisitorString(receiver.isVisitor)}`,
   label: `${receiver.name}(${isVisitorString(receiver.isVisitor)})`,
 });
@@ -58,6 +59,10 @@ export const receiverSelectOption: ReceiverSelectOption => receiver => ({
 export type ToReceiver = (receiver: string, candidates: CharactorBattling[]) => CharactorBattling | DataNotFoundError;
 export const toReceiver: ToReceiver = (receiver, candidates) => {
   const matches = receiver.match(new RegExp('^(.*)__(HOME|VISITOR)$'));
+
+  if (!matches) {
+    throw new Error(`no match`);
+  }
 
   const name = matches[0];
   if (!name) {
@@ -85,8 +90,8 @@ export type DoAction = {
 
 export type ToAction = (
   doSkillForm: any,
-  candidates: Charactor[]
-) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | CharactorDuplicationError;
+  candidates: CharactorBattling[]
+) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | ReceiverDuplicationError;
 export const toAction: ToAction = (doSkillForm, candidates) => {
   const ajv = new Ajv();
   const validateSchema = ajv.compile<DoSkillForm>(doSkillFormSchema);
@@ -98,18 +103,18 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
   }
 
   const { skillName } = doSkillForm;
-  if (skill === ACTION_DO_NOTHING) {
+  if (skillName === ACTION_DO_NOTHING) {
     return null;
   }
 
   const skill = getSkill(skillName);
-  if (skill) {
+  if (!skill) {
     return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
   }
 
   const receiverSet = new Set(doSkillForm.receiversWithIsVisitor);
-  if (receiverSet.length !== doSkillForm.receiversWithIsVisitor.length) {
-    return new CharactorDuplicationError('同じキャラクターを複数回えらべません');
+  if (receiverSet.size !== doSkillForm.receiversWithIsVisitor.length) {
+    return new ReceiverDuplicationError('同じキャラクターを複数回えらべません');
   }
 
   const receivers: CharactorBattling[] = [];
