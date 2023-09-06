@@ -26,7 +26,7 @@ export class ReceiverDuplicationError {
 
 export type DoSkillForm = {
   skillName: string;
-  receiversWithIsVisitor: string[];
+  receiversWithIsVisitor: { value: string }[];
 };
 
 export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
@@ -40,9 +40,15 @@ export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
     receiversWithIsVisitor: {
       type: 'array',
       items: {
-        type: 'string',
-        minLength: 1,
-        errorMessage: { minLength: 'receiversWithIsVisitor field is required' },
+        type: 'object',
+        properties: {
+          value: {
+            type: 'string',
+            minLength: 1,
+            errorMessage: { minLength: 'receiversWithIsVisitor field is required' },
+          },
+        },
+        required: ['value'],
       },
     },
   },
@@ -112,14 +118,14 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
     return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
   }
 
-  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor);
+  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor.map(obj => obj.value));
   if (receiverSet.size !== doSkillForm.receiversWithIsVisitor.length) {
     return new ReceiverDuplicationError('同じキャラクターを複数回えらべません');
   }
 
   const receivers: CharactorBattling[] = [];
-  for (const receiverStr of doSkillForm.receiversWithIsVisitor) {
-    const receiver = toReceiver(receiverStr, candidates);
+  for (const receiverObj of doSkillForm.receiversWithIsVisitor) {
+    const receiver = toReceiver(receiverObj.value, candidates);
     if (receiver instanceof DataNotFoundError) {
       return receiver;
     }

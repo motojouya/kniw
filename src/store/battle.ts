@@ -1,6 +1,7 @@
 import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateStore } from 'src/store/store';
 import type { Battle } from 'src/domain/battle';
 
+import { NotBattlingError } from 'src/domain/battle';
 import { CharactorDuplicationError } from 'src/domain/party';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
@@ -13,7 +14,7 @@ const createSave: CreateSave<Battle> = repository => async obj =>
 
 type CreateGetBattle = CreateGet<
   Battle,
-  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError
 >;
 const createGet: CreateGetBattle = repository => async name => {
   const result = await repository.get(NAMESPACE, name);
@@ -32,7 +33,7 @@ const createExportJson: CreateExportJson = repository => async (name, file) =>
 
 type CreateStoreBattle = CreateStore<
   Battle,
-  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError
 >;
 export const createStore: CreateStoreBattle = async repository => {
   await repository.checkNamespace(NAMESPACE);

@@ -4,6 +4,7 @@ import { createStore } from 'src/store/battle';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { CharactorDuplicationError } from 'src/domain/party';
+import { NotBattlingError } from 'src/domain/battle';
 
 export type ShowHistory = (dialogue: Dialogue, repository: Repository) => (title: string) => Promise<void>;
 export const showHistory: ShowHistory =
@@ -19,7 +20,8 @@ export const showHistory: ShowHistory =
       battle instanceof NotWearableErorr ||
       battle instanceof DataNotFoundError ||
       battle instanceof CharactorDuplicationError ||
-      battle instanceof JsonSchemaUnmatchError
+      battle instanceof JsonSchemaUnmatchError ||
+      battle instanceof NotBattlingError
     ) {
       await notice(`${title}は不正なデータです。取り出せません。`);
       return;

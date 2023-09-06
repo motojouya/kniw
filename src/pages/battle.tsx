@@ -19,13 +19,14 @@ import {
 } from 'src/components/battle';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { CharactorDuplicationError } from 'src/domain/party';
+import { NotBattlingError } from 'src/domain/battle';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 
 const Index: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
-  const [store, setStore] = useState<Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null>(null);
+  const [store, setStore] = useState<Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null>(null);
   useEffect(() => {
     (async () => {
       const webRepository = await createRepository();

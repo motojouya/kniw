@@ -1,7 +1,7 @@
 import type { FC, ReactNode } from 'react';
 import type { Battle, GameResult } from 'src/domain/battle';
 import type { Party } from 'src/domain/party';
-import type { Charactor } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 import type { Skill } from 'src/domain/skill';
 import type { Turn } from 'src/domain/turn';
 import type { Store } from 'src/store/store';
@@ -21,6 +21,7 @@ import {
   UseFormRegister,
 //  UseFormRegisterReturn,
   UseFormGetValues,
+  UseFieldArrayReplace,
 } from 'react-hook-form';
 import {
   FormErrorMessage,
@@ -53,6 +54,7 @@ import {
   createBattle,
   start,
   getLastTurn,
+  NotBattlingError,
 } from 'src/domain/battle';
 import { CharactorDetail } from 'src/components/charactor';
 import { importJson } from 'src/io/indexed_db_repository';
@@ -76,7 +78,7 @@ import { createRandoms, createAbsolute } from 'src/domain/random';
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
 
-type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
+type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
 
 const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
@@ -90,7 +92,7 @@ const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
 
 const ReceiverSelect: FC<{
   battle: Battle,
-  actor: Charactor,
+  actor: CharactorBattling,
   lastTurn: Turn,
   skill: Skill | null,
   index: number,
@@ -98,8 +100,8 @@ const ReceiverSelect: FC<{
   register: UseFormRegister<DoSkillForm>,
 }> = ({ battle, actor, lastTurn, skill, index, getValues, register }) => {
 
-  const formItemName = `receiversWithIsVisitor.${index}` as const;
-  const [receiverResult, setReceiverResult] = useState<Charactor | null>(null);
+  const formItemName = `receiversWithIsVisitor.${index}.value` as const;
+  const [receiverResult, setReceiverResult] = useState<CharactorBattling | null>(null);
 
   const onBlur = (index: number) => () => {
     if (!skill) {
@@ -107,7 +109,7 @@ const ReceiverSelect: FC<{
       return null;
     }
 
-    const receiverWithIsVisitor = getValues();
+    const receiverWithIsVisitor = getValues(formItemName);
     const receiver = toReceiver(receiverWithIsVisitor, lastTurn.sortedCharactors);
     if (receiver instanceof DataNotFoundError) {
       setReceiverResult(null);
@@ -118,7 +120,7 @@ const ReceiverSelect: FC<{
     const receiverResult = newTurn.sortedCharactors.find(
       charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
     );
-    setReceiverResult(receiverResult);
+    setReceiverResult(receiverResult || null);
   };
 
   if (!skill) {
@@ -146,7 +148,7 @@ const ReceiverSelect: FC<{
   );
 };
 
-const Surrender: FC<{ battle: Battle, actor: Charactor, store: BattleStore }> = ({ battle, actor, store }) => {
+const Surrender: FC<{ battle: Battle, actor: CharactorBattling, store: BattleStore }> = ({ battle, actor, store }) => {
   const doSurrender = () => {
     if (window.confirm('降参してもよいですか？')) {
       const turn = surrender(battle, actor, new Date());
@@ -160,8 +162,8 @@ const Surrender: FC<{ battle: Battle, actor: Charactor, store: BattleStore }> = 
 };
 
 const SkillSelect: FC<{
-  actor: Charactor,
-  replace: (obj: object[]) => void,
+  actor: CharactorBattling,
+  replace: UseFieldArrayReplace<DoSkillForm, 'receiversWithIsVisitor'>
   getValues: UseFormGetValues<DoSkillForm>,
   register: UseFormRegister<DoSkillForm>,
   errors: FieldErrors<DoSkillForm>,
@@ -187,7 +189,7 @@ const SkillSelect: FC<{
       return;
     }
 
-    const receiversWithIsVisitor = Array(skill.receiverCount).fill().map(_ => '');
+    const receiversWithIsVisitor = Array(skill.receiverCount).fill('');
     replace(receiversWithIsVisitor);
   };
 
@@ -206,7 +208,7 @@ const SkillSelect: FC<{
   );
 };
 
-const act = async (store: BattleStore, battle: Battle, actor: Charactor, doAction: DoAction) => {
+const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling, doAction: DoAction) => {
 
   if (doAction === null) {
     battle.turns.push(stay(battle, actor, new Date()));
@@ -270,7 +272,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   const [message, setMessage] = useState<string>('');
 
   const actSkill = (doSkillForm: any) => {
-    const doAction = toAction(doSkillForm);
+    const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
     if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
       setMessage('入力してください');
       return;
@@ -295,7 +297,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
-      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson(battle.title)} >Export</Button>}
+      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson && store.exportJson(battle.title, '')} >Export</Button>}
       <GameResultView battle={battle} />
       <form onSubmit={handleSubmit(actSkill)}>
         {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
@@ -353,7 +355,8 @@ export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = (
     battle instanceof NotWearableErorr ||
     battle instanceof DataNotFoundError ||
     battle instanceof CharactorDuplicationError ||
-    battle instanceof JsonSchemaUnmatchError
+    battle instanceof JsonSchemaUnmatchError ||
+    battle instanceof NotBattlingError
   ) {
     return (
       <Box>
@@ -423,7 +426,7 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
   const [visitorParty, setVisitorParty] = useState<Party | null>(null);
 
   const startBattle = async (battleTitle: any) => {
-    const messages = [];
+    const messages: string[] = [];
 
     const title = battleTitle.title;
     if (!title) {
