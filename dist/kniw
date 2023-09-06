@@ -36383,7 +36383,9 @@ const getLastTurn = battle => arrayLast(battle.turns);
 exports.getLastTurn = getLastTurn;
 const nextActor = battle => arrayLast(battle.turns).sortedCharactors[0];
 exports.nextActor = nextActor;
-const sortByWT = charactors => charactors.filter(charactor => charactor.hp > 0).sort((left, right) => {
+const sortByWT = charactors => charactors
+    .filter(charactor => charactor.hp > 0)
+    .sort((left, right) => {
     const leftPhysical = (0, charactor_1.getPhysical)(left);
     const rightPhysical = (0, charactor_1.getPhysical)(right);
     const wtDiff = left.restWt - right.restWt;
@@ -36417,11 +36419,11 @@ const sortByWT = charactors => charactors.filter(charactor => charactor.hp > 0).
 const createBattle = (title, home, visitor) => {
     const homeBatting = {
         name: home.name,
-        charactors: home.charactors.map(charactor => (Object.assign(Object.assign({}, charactor), { isVisitor: false })))
+        charactors: home.charactors.map(charactor => (Object.assign(Object.assign({}, charactor), { isVisitor: false }))),
     };
     const visitorBatting = {
         name: visitor.name,
-        charactors: visitor.charactors.map(charactor => (Object.assign(Object.assign({}, charactor), { isVisitor: true })))
+        charactors: visitor.charactors.map(charactor => (Object.assign(Object.assign({}, charactor), { isVisitor: true }))),
     };
     return {
         title,
@@ -36749,7 +36751,7 @@ const createCharactor = (name, race, blessing, clothing, weapon) => {
     return someone;
 };
 exports.createCharactor = createCharactor;
-const isVisitorString = isVisitor => isVisitor ? 'VISITOR' : 'HOME';
+const isVisitorString = isVisitor => (isVisitor ? 'VISITOR' : 'HOME');
 exports.isVisitorString = isVisitorString;
 
 
@@ -37599,7 +37601,6 @@ const acquirement_1 = __webpack_require__(8826);
 const store_1 = __webpack_require__(9895);
 const battle_1 = __webpack_require__(3279);
 const party_2 = __webpack_require__(7551);
-const battle_2 = __webpack_require__(3279);
 exports.battleSchema = {
     type: 'object',
     properties: {
@@ -37607,7 +37608,7 @@ exports.battleSchema = {
         home: party_1.partySchema,
         visitor: party_1.partySchema,
         turns: { type: 'array', items: turn_1.turnSchema },
-        result: { enum: [battle_2.GameOngoing, battle_2.GameHome, battle_2.GameVisitor, battle_2.GameDraw] },
+        result: { enum: [battle_1.GameOngoing, battle_1.GameHome, battle_1.GameVisitor, battle_1.GameDraw] },
     },
     required: ['title', 'home', 'visitor', 'turns', 'result'],
 };
