@@ -1,6 +1,5 @@
 import type { Battle } from 'src/domain/battle';
 import type { Turn } from 'src/domain/turn';
-import type { Party, PartyBattling } from 'src/domain/party';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from 'src/io/json_schema';
@@ -10,9 +9,8 @@ import { toParty, toPartyJson, partySchema } from 'src/store/schema/party';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { NotBattlingError } from 'src/domain/battle';
+import { NotBattlingError , GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
 import { CharactorDuplicationError, isBattlingParty } from 'src/domain/party';
-import { GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
 
 export const battleSchema = {
   type: 'object',

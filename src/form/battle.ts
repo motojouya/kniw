@@ -1,17 +1,10 @@
-import type { Battle } from 'src/domain/battle';
-import type { Party } from 'src/domain/party';
-import type { Charactor, CharactorBattling } from 'src/domain/charactor';
-import type { PartyForm } from 'src/form/party';
-import type { CharactorForm } from 'src/form/charactor';
-import type { Store } from 'src/store/store';
+import type { CharactorBattling } from 'src/domain/charactor';
 import type { SelectOption } from 'src/io/standard_dialogue';
 import type { Skill } from 'src/domain/skill';
 
 import Ajv, { JSONSchemaType } from 'ajv';
 
-import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { charactorFormSchema, toCharactor, toCharactorForm } from 'src/form/charactor';
+import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { isVisitorString } from 'src/domain/charactor';
 import { getSkill } from 'src/store/skill';
 import { ACTION_DO_NOTHING } from 'src/domain/turn';
@@ -61,7 +54,7 @@ export const receiverSelectOption: ReceiverSelectOption = receiver => ({
 
 export type ToReceiver = (receiver: string, candidates: CharactorBattling[]) => CharactorBattling | DataNotFoundError;
 export const toReceiver: ToReceiver = (receiver, candidates) => {
-  const matches = receiver.match(new RegExp('^(.*)__(HOME|VISITOR)$'));
+  const matches = receiver.match(/^(.*)__(HOME|VISITOR)$/);
 
   if (!matches) {
     throw new Error(`no match`);

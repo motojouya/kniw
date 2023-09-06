@@ -1,6 +1,6 @@
 import type { Turn, Action } from 'src/domain/turn';
 import type { Climate } from 'src/domain/field';
-import type { Charactor, CharactorBattling } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { parse } from 'date-fns';
