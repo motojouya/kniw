@@ -1,5 +1,5 @@
 import assert from 'assert';
-import type { Charactor } from 'src/domain/charactor';
+import type { CharactorBattling } from 'src/domain/charactor';
 
 import { toCharactor } from 'src/store/schema/charactor';
 import { mpGainPlus } from 'src/data/ability/mpGainPlus';
@@ -11,7 +11,7 @@ describe('mpGainPlus#wait', function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as CharactorBattling);
     assert.equal(charactor.mp, 0);
 
     const result = mpGainPlus.wait(30, charactor, randoms);
@@ -23,7 +23,7 @@ describe('mpGainPlus#wait', function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as CharactorBattling);
     assert.equal(charactor.mp, 0);
 
     const result = mpGainPlus.wait(0, charactor, randoms);
@@ -35,7 +35,7 @@ describe('mpGainPlus#wait', function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as CharactorBattling);
     assert.equal(charactor.mp, 0);
 
     const result = mpGainPlus.wait(210, charactor, randoms);

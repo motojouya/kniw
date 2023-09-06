@@ -9,7 +9,7 @@ import { toParty, toPartyJson, partySchema } from 'src/store/schema/party';
 
 import { NotWearableErorr } from 'src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { NotBattlingError , GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
+import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
 import { CharactorDuplicationError, isBattlingParty } from 'src/domain/party';
 
 export const battleSchema = {
