@@ -26,7 +26,7 @@ export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
     skillName: {
       type: 'string',
       minLength: 1,
-//      errorMessage: { minLength: 'skillName field is required' },
+      //      errorMessage: { minLength: 'skillName field is required' },
     },
     receiversWithIsVisitor: {
       type: 'array',
@@ -36,7 +36,7 @@ export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
           value: {
             type: 'string',
             minLength: 1,
-//            errorMessage: { minLength: 'receiversWithIsVisitor field is required' },
+            //            errorMessage: { minLength: 'receiversWithIsVisitor field is required' },
           },
         },
         required: ['value'],

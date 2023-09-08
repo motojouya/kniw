@@ -38,7 +38,7 @@ export const partyFormSchema: JSONSchemaType<PartyForm> = {
     },
   },
   required: ['name', 'charactors'],
-//  errorMessage: { minLength: 'username field is required' },
+  //  errorMessage: { minLength: 'username field is required' },
 } as const;
 
 export type ToPartyForm = (party: Party) => PartyForm;
@@ -52,7 +52,7 @@ export type ToParty = (
 ) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toParty: ToParty = partyForm => {
   const ajv = new Ajv({ allErrors: true });
-//  ajvErrors(ajv);
+  //  ajvErrors(ajv);
   const validateSchema = ajv.compile<PartyForm>(partyFormSchema);
   if (!validateSchema(partyForm)) {
     // @ts-ignore
