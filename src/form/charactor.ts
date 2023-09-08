@@ -21,27 +21,27 @@ export const charactorFormSchema: JSONSchemaType<CharactorForm> = {
     name: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
+//      errorMessage: { minLength: 'username field is required' },
     },
     race: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
+//      errorMessage: { minLength: 'username field is required' },
     },
     blessing: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
+//      errorMessage: { minLength: 'username field is required' },
     },
     clothing: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
+//      errorMessage: { minLength: 'username field is required' },
     },
     weapon: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
+//      errorMessage: { minLength: 'username field is required' },
     },
   },
   required: ['name', 'race', 'blessing', 'clothing', 'weapon'],

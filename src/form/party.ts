@@ -4,6 +4,7 @@ import type { CharactorForm } from 'src/form/charactor';
 import type { Store } from 'src/store/store';
 
 import Ajv, { JSONSchemaType } from 'ajv';
+// import ajvErrors from 'ajv-errors'; // FIXME schema.errorMessageというpropertyを使いたかったがうまく動かない
 
 import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
 import { NotWearableErorr } from 'src/domain/acquirement';
@@ -30,7 +31,6 @@ export const partyFormSchema: JSONSchemaType<PartyForm> = {
     name: {
       type: 'string',
       minLength: 1,
-      errorMessage: { minLength: 'username field is required' },
     },
     charactors: {
       type: 'array',
@@ -38,6 +38,7 @@ export const partyFormSchema: JSONSchemaType<PartyForm> = {
     },
   },
   required: ['name', 'charactors'],
+//  errorMessage: { minLength: 'username field is required' },
 } as const;
 
 export type ToPartyForm = (party: Party) => PartyForm;
@@ -50,7 +51,8 @@ export type ToParty = (
   partyForm: any,
 ) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toParty: ToParty = partyForm => {
-  const ajv = new Ajv();
+  const ajv = new Ajv({ allErrors: true });
+//  ajvErrors(ajv);
   const validateSchema = ajv.compile<PartyForm>(partyFormSchema);
   if (!validateSchema(partyForm)) {
     // @ts-ignore
