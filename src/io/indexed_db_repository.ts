@@ -36,8 +36,12 @@ const getTable: GetTable = (db, tableName) => {
   throw new Error('no such tables');
 };
 
-type CreateDB = () => KniwDB;
-const createDB: CreateDB = () => new KniwDB();
+type CreateDB = () => Promise<KniwDB>;
+const createDB: CreateDB = async () => {
+  const db = new KniwDB();
+  await db.open();
+  return db;
+};
 // const createDB: CreateDB = () => new Dexie('KniwDB');
 
 type CreateSave = (table: KniwDB) => Save;
@@ -105,7 +109,7 @@ export const importJson: ImportJson = async () => {
 export type CreateRepository = () => Promise<Repository>;
 // eslint-disable-next-line @typescript-eslint/require-await
 export const createRepository: CreateRepository = async () => {
-  const db = createDB();
+  const db = await createDB();
   /* eslint-disable @typescript-eslint/no-unused-vars */
   return {
     checkNamespace: async namespace => {},
