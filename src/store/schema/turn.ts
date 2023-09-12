@@ -3,7 +3,7 @@ import type { Climate } from 'src/domain/field';
 import type { CharactorBattling } from 'src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
-import { parse } from 'date-fns';
+import { parse, format } from 'date-fns';
 // import ja from 'date-fns/locale/ja'
 
 import { createValidationCompiler } from 'src/io/json_schema';
@@ -113,9 +113,12 @@ export const toActionJson: ToActionJson = action => {
   };
 };
 
+type FormatDate = (date: Date) => string;
+const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss");
+
 export type ToTurnJson = (turn: Turn) => TurnJson;
 export const toTurnJson: ToTurnJson = turn => ({
-  datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+  datetime: formatDate(turn.datetime),
   action: toActionJson(turn.action),
   sortedCharactors: turn.sortedCharactors.map(toCharactorJson),
   field: turn.field,
