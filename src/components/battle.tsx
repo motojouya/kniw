@@ -489,11 +489,11 @@ export const BattleList: FC<{ store: BattleStore }> = ({ store }) => {
       <Box>
         <List>
           <ListItem key='battle-new'>
-            <Link href={{ pathname: 'battle', query: { name: '__new' } }}><a>新しく作る</a></Link>
+            <Link href={{ pathname: 'battle', query: { title: '__new' } }}><a>新しく作る</a></Link>
           </ListItem>
           {battleNames && battleNames.map((battleTitle, index) => (
             <ListItem key={`battle-${index}`}>
-              <Link href={{ pathname: 'battle', query: { name: battleTitle } }}><a>{battleTitle}</a></Link>
+              <Link href={{ pathname: 'battle', query: { title: battleTitle } }}><a>{battleTitle}</a></Link>
             </ListItem>
           ))}
         </List>

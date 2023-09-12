@@ -7,20 +7,16 @@ import { PartyJson } from 'src/store/schema/party';
 import { BattleJson } from 'src/store/schema/battle';
 
 class KniwDB extends Dexie {
-  party: Dexie.Table<PartyJson, string>;
+  party!: Dexie.Table<PartyJson, string>;
 
-  battle: Dexie.Table<BattleJson, string>;
+  battle!: Dexie.Table<BattleJson, string>;
 
   constructor() {
     super('KniwDB');
     this.version(1).stores({
-      patry: 'name',
+      party: 'name',
       battle: 'title',
     });
-
-    // TODO これ必要？
-    this.party = this.table('party');
-    this.battle = this.table('battle');
   }
 }
 
@@ -38,7 +34,6 @@ const getTable: GetTable = (db, tableName) => {
 
 type CreateDB = () => KniwDB;
 const createDB: CreateDB = () => new KniwDB();
-// const createDB: CreateDB = () => new Dexie('KniwDB');
 
 type CreateSave = (table: KniwDB) => Save;
 const createSave: CreateSave = db => async (namespace, objctKey, data) => {
