@@ -37989,8 +37989,9 @@ const toActionJson = action => {
     };
 };
 exports.toActionJson = toActionJson;
+const formatDate = date => (0, date_fns_1.format)(date, "yyyy-MM-dd'T'HH:mm:ss");
 const toTurnJson = turn => ({
-    datetime: turn.datetime.toLocaleString('ja-JP', { timeZone: 'Asia/Tokyo' }),
+    datetime: formatDate(turn.datetime),
     action: (0, exports.toActionJson)(turn.action),
     sortedCharactors: turn.sortedCharactors.map(charactor_1.toCharactorJson),
     field: turn.field,
