@@ -308,47 +308,51 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
       <Text>This is the battle page</Text>
       {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson && store.exportJson(battle.title, '')} >Export</Button>}
       <GameResultView battle={battle} />
-      <form onSubmit={handleSubmit(actSkill)}>
-        {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
-        {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} store={store} />}
-        <Box as={'dl'}>
-          <Heading as={'dt'}>battle title</Heading>
-          <Text as={'dd'}>{battle.title}</Text>
-        </Box>
-        <Text>{`${actor.name}のターン`}{isVisitorTag}</Text>
-        <SkillSelect
-          actor={actor}
-          getValues={getValues}
-          register={register}
-          errors={errors}
-          replace={replace}
-        />
-        <List>
-          {fields.map((item, index) => (
-            <ListItem key={`receiversWithIsVisitor.${index}`}>
-              <ReceiverSelect
-                battle={battle}
-                actor={actor}
-                lastTurn={lastTurn}
-                skill={getSkill(getValues('skillName'))}
-                getValues={getValues}
-                register={register}
-                index={index}
-              />
-            </ListItem>
-          ))}
-        </List>
-        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">実行</Button>
-      </form>
-      <Box>
-        <List>
-          {lastTurn.sortedCharactors.map(charactor => (
-            <ListItem key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
-              <CharactorDetail charactor={charactor} />
-            </ListItem>
-          ))}
-        </List>
-      </Box>
+      {battle.result === GameOngoing && (
+        <>
+          <form onSubmit={handleSubmit(actSkill)}>
+            {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
+            {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} store={store} />}
+            <Box as={'dl'}>
+              <Heading as={'dt'}>battle title</Heading>
+              <Text as={'dd'}>{battle.title}</Text>
+            </Box>
+            <Text>{`${actor.name}のターン`}{isVisitorTag}</Text>
+            <SkillSelect
+              actor={actor}
+              getValues={getValues}
+              register={register}
+              errors={errors}
+              replace={replace}
+            />
+            <List>
+              {fields.map((item, index) => (
+                <ListItem key={`receiversWithIsVisitor.${index}`}>
+                  <ReceiverSelect
+                    battle={battle}
+                    actor={actor}
+                    lastTurn={lastTurn}
+                    skill={getSkill(getValues('skillName'))}
+                    getValues={getValues}
+                    register={register}
+                    index={index}
+                  />
+                </ListItem>
+              ))}
+            </List>
+            <Button colorScheme="teal" isLoading={isSubmitting} type="submit">実行</Button>
+          </form>
+          <Box>
+            <List>
+              {lastTurn.sortedCharactors.map(charactor => (
+                <ListItem key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
+                  <CharactorDetail charactor={charactor} />
+                </ListItem>
+              ))}
+            </List>
+          </Box>
+        </>
+      )}
     </Box>
   );
 };
