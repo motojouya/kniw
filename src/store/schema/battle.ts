@@ -19,7 +19,10 @@ export const battleSchema = {
     home: partySchema,
     visitor: partySchema,
     turns: { type: 'array', items: turnSchema },
-    result: { enum: [GameOngoing, GameHome, GameVisitor, GameDraw] },
+    result: {
+      type: 'string',
+      enum: [GameOngoing, GameHome, GameVisitor, GameDraw],
+    },
   },
   required: ['title', 'home', 'visitor', 'turns', 'result'],
 } as const;
