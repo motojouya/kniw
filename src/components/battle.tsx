@@ -101,7 +101,7 @@ const ReceiverSelect: FC<{
 }> = ({ battle, actor, lastTurn, skill, index, getValues, register }) => {
 
   const formItemName = `receiversWithIsVisitor.${index}.value` as const;
-  const [receiverResult, setReceiverResult] = useState<CharactorBattling | null>(null);
+  const [receiverResult, setReceiverResult] = useState<CharactorBattling | string | null>(null);
 
   const onBlur = () => {
     if (!skill) {
@@ -120,6 +120,10 @@ const ReceiverSelect: FC<{
     const receiverWill = newTurn.sortedCharactors.find(
       charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
     );
+
+    if (!receiverWill) {
+      setReceiverResult(`${receiver.name} will dead`);
+    }
     setReceiverResult(receiverWill || null);
   };
 
@@ -142,7 +146,7 @@ const ReceiverSelect: FC<{
         </Select>
       </FormControl>
       <Box>
-        {receiverResult && <CharactorDetail charactor={receiverResult} />}
+        {receiverResult && (typeof receiverResult === 'string' ? receiverResult : <CharactorDetail charactor={receiverResult} />)}
       </Box>
     </Box>
   );
@@ -292,6 +296,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
       return;
     }
 
+    replace([]);
     await act(store, battle, actor, doAction);
   };
 
