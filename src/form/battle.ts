@@ -60,12 +60,12 @@ export const toReceiver: ToReceiver = (receiver, candidates) => {
     throw new Error(`no match`);
   }
 
-  const name = matches[0];
+  const name = matches[1];
   if (!name) {
     throw new Error(`no name`);
   }
 
-  const isVisitorStr = matches[1];
+  const isVisitorStr = matches[2];
   if (isVisitorStr !== 'HOME' && isVisitorStr !== 'VISITOR') {
     throw new Error(`isVisitorStr must be HOME or VISITOR. (${isVisitorStr})`);
   }
