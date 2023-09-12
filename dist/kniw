@@ -37608,7 +37608,10 @@ exports.battleSchema = {
         home: party_1.partySchema,
         visitor: party_1.partySchema,
         turns: { type: 'array', items: turn_1.turnSchema },
-        result: { enum: [battle_1.GameOngoing, battle_1.GameHome, battle_1.GameVisitor, battle_1.GameDraw] },
+        result: {
+            type: 'string',
+            enum: [battle_1.GameOngoing, battle_1.GameHome, battle_1.GameVisitor, battle_1.GameDraw],
+        },
     },
     required: ['title', 'home', 'visitor', 'turns', 'result'],
 };
