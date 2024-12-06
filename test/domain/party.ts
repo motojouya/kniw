@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import type { Party } from 'src/domain/party';
 import { CharactorDuplicationError } from 'src/domain/party';
 import { toParty } from 'src/store/schema/party';
@@ -10,11 +12,11 @@ describe('Party#toParty', function () {
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
-    assert.equal(party instanceof CharactorDuplicationError, true);
+    assert.strictEqual(party instanceof CharactorDuplicationError, true);
     if (party instanceof CharactorDuplicationError) {
-      assert.equal(party.message, 'Partyに同じ名前のキャラクターが存在します');
+      assert.strictEqual(party.message, 'Partyに同じ名前のキャラクターが存在します');
     } else {
-      assert.equal(true, false);
+      assert.strictEqual(true, false);
     }
   });
   it('ok', function () {
@@ -23,10 +25,10 @@ describe('Party#toParty', function () {
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
 
-    assert.equal(party.name, 'team01');
-    assert.equal(party.charactors.length, 2);
-    assert.equal(party.charactors[0].name, 'sam');
-    assert.equal(party.charactors[1].name, 'john');
+    assert.strictEqual(party.name, 'team01');
+    assert.strictEqual(party.charactors.length, 2);
+    assert.strictEqual(party.charactors[0].name, 'sam');
+    assert.strictEqual(party.charactors[1].name, 'john');
   });
 });
 

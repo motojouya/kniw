@@ -2,7 +2,9 @@ import type { Battle } from 'src/domain/battle';
 import type { Skill } from 'src/domain/skill';
 import type { CharactorBattling } from 'src/domain/charactor';
 
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import {
   actToCharactor,
   actToField,
@@ -91,13 +93,13 @@ describe('Damage#rapier', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[6].name, 'john');
-    assert.equal(turn.sortedCharactors[6].hp, 230);
-    assert.equal(turn.sortedCharactors[6].restWt, 135);
+    assert.strictEqual(turn.sortedCharactors[6].name, 'john');
+    assert.strictEqual(turn.sortedCharactors[6].hp, 230);
+    assert.strictEqual(turn.sortedCharactors[6].restWt, 135);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sam');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sam');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('前衛刺突耐性あり', function () {
     const battle = (toBattle(testData) as Battle);
@@ -111,13 +113,13 @@ describe('Damage#rapier', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[6].name, 'sam');
-    assert.equal(turn.sortedCharactors[6].hp, 280);
-    assert.equal(turn.sortedCharactors[6].restWt, 130);
+    assert.strictEqual(turn.sortedCharactors[6].name, 'sam');
+    assert.strictEqual(turn.sortedCharactors[6].hp, 280);
+    assert.strictEqual(turn.sortedCharactors[6].restWt, 130);
 
-    assert.equal(turn.sortedCharactors[7].name, 'john');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'john');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('弓使い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -131,13 +133,13 @@ describe('Damage#rapier', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[1].name, 'jonny');
-    assert.equal(turn.sortedCharactors[1].hp, 210);
-    assert.equal(turn.sortedCharactors[1].restWt, 105);
+    assert.strictEqual(turn.sortedCharactors[1].name, 'jonny');
+    assert.strictEqual(turn.sortedCharactors[1].hp, 210);
+    assert.strictEqual(turn.sortedCharactors[1].restWt, 105);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sam');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sam');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('魔法使い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -151,13 +153,13 @@ describe('Damage#rapier', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[5].name, 'noa');
-    assert.equal(turn.sortedCharactors[5].hp, 190);
-    assert.equal(turn.sortedCharactors[5].restWt, 125);
+    assert.strictEqual(turn.sortedCharactors[5].name, 'noa');
+    assert.strictEqual(turn.sortedCharactors[5].hp, 190);
+    assert.strictEqual(turn.sortedCharactors[5].restWt, 125);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sam');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sam');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
 });
 
@@ -174,13 +176,13 @@ describe('Damage#samuraiBow', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[6].name, 'john');
-    assert.equal(turn.sortedCharactors[6].hp, 230);
-    assert.equal(turn.sortedCharactors[6].restWt, 135);
+    assert.strictEqual(turn.sortedCharactors[6].name, 'john');
+    assert.strictEqual(turn.sortedCharactors[6].hp, 230);
+    assert.strictEqual(turn.sortedCharactors[6].restWt, 135);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sara');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('前衛刺突耐性あり', function () {
     const battle = (toBattle(testData) as Battle);
@@ -194,13 +196,13 @@ describe('Damage#samuraiBow', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[5].name, 'sam');
-    assert.equal(turn.sortedCharactors[5].hp, 280);
-    assert.equal(turn.sortedCharactors[5].restWt, 130);
+    assert.strictEqual(turn.sortedCharactors[5].name, 'sam');
+    assert.strictEqual(turn.sortedCharactors[5].hp, 280);
+    assert.strictEqual(turn.sortedCharactors[5].restWt, 130);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sara');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('弓使い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -214,13 +216,13 @@ describe('Damage#samuraiBow', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[0].name, 'jonny');
-    assert.equal(turn.sortedCharactors[0].hp, 210);
-    assert.equal(turn.sortedCharactors[0].restWt, 105);
+    assert.strictEqual(turn.sortedCharactors[0].name, 'jonny');
+    assert.strictEqual(turn.sortedCharactors[0].hp, 210);
+    assert.strictEqual(turn.sortedCharactors[0].restWt, 105);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sara');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('魔法使い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -234,13 +236,13 @@ describe('Damage#samuraiBow', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[4].name, 'noa');
-    assert.equal(turn.sortedCharactors[4].hp, 190);
-    assert.equal(turn.sortedCharactors[4].restWt, 125);
+    assert.strictEqual(turn.sortedCharactors[4].name, 'noa');
+    assert.strictEqual(turn.sortedCharactors[4].hp, 190);
+    assert.strictEqual(turn.sortedCharactors[4].restWt, 125);
 
-    assert.equal(turn.sortedCharactors[7].name, 'sara');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'sara');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
 });
 describe('Damage#flameFall', function () {
@@ -256,13 +258,13 @@ describe('Damage#flameFall', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[6].name, 'john');
-    assert.equal(turn.sortedCharactors[6].hp, 230);
-    assert.equal(turn.sortedCharactors[6].restWt, 135);
+    assert.strictEqual(turn.sortedCharactors[6].name, 'john');
+    assert.strictEqual(turn.sortedCharactors[6].hp, 230);
+    assert.strictEqual(turn.sortedCharactors[6].restWt, 135);
 
-    assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'nick');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('弓使い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -276,13 +278,13 @@ describe('Damage#flameFall', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[1].name, 'jonny');
-    assert.equal(turn.sortedCharactors[1].hp, 210);
-    assert.equal(turn.sortedCharactors[1].restWt, 105);
+    assert.strictEqual(turn.sortedCharactors[1].name, 'jonny');
+    assert.strictEqual(turn.sortedCharactors[1].hp, 210);
+    assert.strictEqual(turn.sortedCharactors[1].restWt, 105);
 
-    assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'nick');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('属性相性よい', function () {
     const battle = (toBattle(testData) as Battle);
@@ -296,13 +298,13 @@ describe('Damage#flameFall', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[3].name, 'funcy');
-    assert.equal(turn.sortedCharactors[3].hp, 154);
-    assert.equal(turn.sortedCharactors[3].restWt, 115);
+    assert.strictEqual(turn.sortedCharactors[3].name, 'funcy');
+    assert.strictEqual(turn.sortedCharactors[3].hp, 154);
+    assert.strictEqual(turn.sortedCharactors[3].restWt, 115);
 
-    assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'nick');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('属性相性悪い', function () {
     const battle = (toBattle(testData) as Battle);
@@ -316,13 +318,13 @@ describe('Damage#flameFall', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[2].name, 'yoshua');
-    assert.equal(turn.sortedCharactors[2].hp, 246);
-    assert.equal(turn.sortedCharactors[2].restWt, 110);
+    assert.strictEqual(turn.sortedCharactors[2].name, 'yoshua');
+    assert.strictEqual(turn.sortedCharactors[2].hp, 246);
+    assert.strictEqual(turn.sortedCharactors[2].restWt, 110);
 
-    assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'nick');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
   it('属性相性なし', function () {
     const battle = (toBattle(testData) as Battle);
@@ -336,12 +338,12 @@ describe('Damage#flameFall', function () {
       accuracy: 0.5,
     });
 
-    assert.equal(turn.sortedCharactors[4].name, 'noa');
-    assert.equal(turn.sortedCharactors[4].hp, 200);
-    assert.equal(turn.sortedCharactors[4].restWt, 125);
+    assert.strictEqual(turn.sortedCharactors[4].name, 'noa');
+    assert.strictEqual(turn.sortedCharactors[4].hp, 200);
+    assert.strictEqual(turn.sortedCharactors[4].restWt, 125);
 
-    assert.equal(turn.sortedCharactors[7].name, 'nick');
-    assert.equal(turn.sortedCharactors[7].hp, 300);
-    assert.equal(turn.sortedCharactors[7].restWt, 230);
+    assert.strictEqual(turn.sortedCharactors[7].name, 'nick');
+    assert.strictEqual(turn.sortedCharactors[7].hp, 300);
+    assert.strictEqual(turn.sortedCharactors[7].restWt, 230);
   });
 });

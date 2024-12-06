@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import type { Party } from 'src/domain/party';
 import type { Repository } from 'src/io/repository'
 import { toParty } from 'src/store/schema/party';
@@ -27,41 +29,41 @@ describe('Party#createStore', function () {
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
     await store.save(party);
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
   it('get', async () => {
     const store = await createStore(storeMock);
     const party = await store.get('team01');
     const typedParty = party as Party;
     if (typedParty) {
-      assert.equal(typedParty.name, 'team01');
+      assert.strictEqual(typedParty.name, 'team01');
       const charactors = typedParty.charactors;
-      assert.equal(charactors.length, 2);
-      assert.equal(charactors[0].name, 'sam');
-      assert.equal(charactors[0].race.name, 'human');
-      assert.equal(charactors[0].blessing.name, 'earth');
-      assert.equal(charactors[0].clothing.name, 'steelArmor');
-      assert.equal(charactors[0].weapon.name, 'swordAndShield');
-      assert.equal(charactors[1].name, 'john');
-      assert.equal(charactors[1].race.name, 'human');
-      assert.equal(charactors[1].blessing.name, 'earth');
-      assert.equal(charactors[1].clothing.name, 'redRobe');
-      assert.equal(charactors[1].weapon.name, 'rubyRod');
+      assert.strictEqual(charactors.length, 2);
+      assert.strictEqual(charactors[0].name, 'sam');
+      assert.strictEqual(charactors[0].race.name, 'human');
+      assert.strictEqual(charactors[0].blessing.name, 'earth');
+      assert.strictEqual(charactors[0].clothing.name, 'steelArmor');
+      assert.strictEqual(charactors[0].weapon.name, 'swordAndShield');
+      assert.strictEqual(charactors[1].name, 'john');
+      assert.strictEqual(charactors[1].race.name, 'human');
+      assert.strictEqual(charactors[1].blessing.name, 'earth');
+      assert.strictEqual(charactors[1].clothing.name, 'redRobe');
+      assert.strictEqual(charactors[1].weapon.name, 'rubyRod');
     } else {
-      assert.equal(true, false);
+      assert.strictEqual(true, false);
     }
   });
   it('remove', async () => {
     const store = await createStore(storeMock);
     await store.remove('team01');
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
   it('list', async () => {
     const store = await createStore(storeMock);
     const partyList = await store.list();
-    assert.equal(partyList.length, 2);
-    assert.equal(partyList[0], 'team01');
-    assert.equal(partyList[1], 'team02');
+    assert.strictEqual(partyList.length, 2);
+    assert.strictEqual(partyList[0], 'team01');
+    assert.strictEqual(partyList[1], 'team02');
   });
 });
 

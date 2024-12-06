@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import { NotWearableErorr } from 'src/domain/acquirement';
 
 import { earth } from 'src/data/acquirement/blessing/earth';
@@ -20,16 +22,16 @@ import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
 describe('redRobe#validateWearable', function () {
   it('ok', function () {
     const result = redRobe.validateWearable(human, earth, redRobe, rubyRod);
-    assert.equal(result, null);
+    assert.strictEqual(result, null);
   });
   //it('ng', function () {
   //  const result = redRobe.validateWearable(human, sky, redRobe, rubyRod);
   //  if (result instanceof NotWearableErorr) {
-  //    assert.equal(result.acquirement.name, 'redRobe');
-  //    assert.equal(result.cause.name, 'sky');
-  //    assert.equal(result.message, 'このキャラクターの設定ではredRobeを装備できません');
+  //    assert.strictEqual(result.acquirement.name, 'redRobe');
+  //    assert.strictEqual(result.cause.name, 'sky');
+  //    assert.strictEqual(result.message, 'このキャラクターの設定ではredRobeを装備できません');
   //  } else {
-  //    assert.equal(true, false);
+  //    assert.strictEqual(true, false);
   //  }
   //});
 });

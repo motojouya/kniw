@@ -1,7 +1,9 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 describe('something', function () {
   it('add', function () {
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
 });
 

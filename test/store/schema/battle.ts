@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import type { Battle } from 'src/domain/battle';
 import {
   GameOngoing,
@@ -65,6 +67,6 @@ describe('Battle#toBattle', function () {
   it('toBattle', async () => {
     const battle = (toBattle(testData) as Battle);
     console.log(battle);
-    assert.equal(battle.title, 'first-title');
+    assert.strictEqual(battle.title, 'first-title');
   });
 });

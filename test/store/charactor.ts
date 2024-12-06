@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import type { Charactor } from 'src/domain/charactor';
 import type { Repository } from 'src/io/repository'
 import { toCharactor } from 'src/store/schema/charactor';
@@ -19,33 +21,33 @@ describe('Charctor#createStore', function () {
     const store = await createStore(storeMock);
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
     await store.save(charactor);
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
   it('get', async () => {
     const store = await createStore(storeMock);
     const charactor = await store.get('sam');
     const typedCharactor = charactor as Charactor;
     if (typedCharactor) {
-      assert.equal(typedCharactor.name, 'sam');
-      assert.equal(typedCharactor.race.name, 'human');
-      assert.equal(typedCharactor.blessing.name, 'earth');
-      assert.equal(typedCharactor.clothing.name, 'redRobe');
-      assert.equal(typedCharactor.weapon.name, 'rubyRod');
+      assert.strictEqual(typedCharactor.name, 'sam');
+      assert.strictEqual(typedCharactor.race.name, 'human');
+      assert.strictEqual(typedCharactor.blessing.name, 'earth');
+      assert.strictEqual(typedCharactor.clothing.name, 'redRobe');
+      assert.strictEqual(typedCharactor.weapon.name, 'rubyRod');
     } else {
-      assert.equal(true, false);
+      assert.strictEqual(true, false);
     }
   });
   it('remove', async () => {
     const store = await createStore(storeMock);
     await store.remove('sam');
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
   it('list', async () => {
     const store = await createStore(storeMock);
     const charactorList = await store.list();
-    assert.equal(charactorList.length, 2);
-    assert.equal(charactorList[0], 'sam');
-    assert.equal(charactorList[1], 'john');
+    assert.strictEqual(charactorList.length, 2);
+    assert.strictEqual(charactorList[0], 'sam');
+    assert.strictEqual(charactorList[1], 'john');
   });
 });
 

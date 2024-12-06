@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import { NotWearableErorr } from 'src/domain/acquirement';
 
 // import { earth } from 'src/data/acquirement/blessing/earth';
@@ -20,16 +22,16 @@ import { swordAndShield } from 'src/data/acquirement/weapon/swordAndShield';
 describe('sky#validateWearable', function () {
   it('ok', function () {
     const result = sky.validateWearable(human, sky, steelArmor, swordAndShield);
-    assert.equal(result, null);
+    assert.strictEqual(result, null);
   });
   it('ng', function () {
     const result = sky.validateWearable(merman, sky, steelArmor, swordAndShield);
     if (result instanceof NotWearableErorr) {
-      assert.equal(result.acquirement.name, 'sky');
-      assert.equal(result.cause.name, 'merman');
-      assert.equal(result.message, 'このキャラクターの設定ではskyを装備できません');
+      assert.strictEqual(result.acquirement.name, 'sky');
+      assert.strictEqual(result.cause.name, 'merman');
+      assert.strictEqual(result.message, 'このキャラクターの設定ではskyを装備できません');
     } else {
-      assert.equal(true, false);
+      assert.strictEqual(true, false);
     }
   });
 });

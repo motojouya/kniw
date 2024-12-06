@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import type { Repository } from 'src/io/repository'
 import type { Battle } from 'src/domain/battle';
 import {
@@ -66,61 +68,61 @@ describe('Battle#createStore', function () {
     const store = await createStore(storeMock);
     const battle = (toBattle(testData) as Battle);
     await store.save(battle);
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
   it('get', async () => {
     const store = await createStore(storeMock);
     const battle = await store.get('2023-06-29T12:12:12');
     const typedBattle = battle as Battle;
     if (typedBattle) {
-      assert.equal(typedBattle.title, 'first-title');
+      assert.strictEqual(typedBattle.title, 'first-title');
 
       const home = typedBattle.home;
-      assert.equal(home.name, 'home');
-      assert.equal(home.charactors.length, 2);
-      assert.equal(home.charactors[0].name, 'sam');
-      assert.equal(home.charactors[1].name, 'sara');
+      assert.strictEqual(home.name, 'home');
+      assert.strictEqual(home.charactors.length, 2);
+      assert.strictEqual(home.charactors[0].name, 'sam');
+      assert.strictEqual(home.charactors[1].name, 'sara');
 
       const visitor = typedBattle.visitor;
-      assert.equal(visitor.name, 'visitor');
-      assert.equal(visitor.charactors.length, 2);
-      assert.equal(visitor.charactors[0].name, 'john');
-      assert.equal(visitor.charactors[1].name, 'noa');
+      assert.strictEqual(visitor.name, 'visitor');
+      assert.strictEqual(visitor.charactors.length, 2);
+      assert.strictEqual(visitor.charactors[0].name, 'john');
+      assert.strictEqual(visitor.charactors[1].name, 'noa');
 
       const turns = typedBattle.turns;
-      assert.equal(turns.length, 1);
-      assert.equal(formatDate(turns[0].datetime), '2023-06-29T12:12:21');
+      assert.strictEqual(turns.length, 1);
+      assert.strictEqual(formatDate(turns[0].datetime), '2023-06-29T12:12:21');
       if (turns[0].action.type === 'TIME_PASSING') {
-        assert.equal(turns[0].action.type, 'TIME_PASSING');
-        assert.equal(turns[0].action.wt, 0);
+        assert.strictEqual(turns[0].action.type, 'TIME_PASSING');
+        assert.strictEqual(turns[0].action.wt, 0);
       } else {
-        assert.equal(true, false);
+        assert.strictEqual(true, false);
       }
 
-      assert.equal(turns[0].sortedCharactors.length, 4);
-      assert.equal(turns[0].sortedCharactors[0].name, 'sam');
-      assert.equal(turns[0].sortedCharactors[1].name, 'sara');
-      assert.equal(turns[0].sortedCharactors[2].name, 'john');
-      assert.equal(turns[0].sortedCharactors[3].name, 'noa');
+      assert.strictEqual(turns[0].sortedCharactors.length, 4);
+      assert.strictEqual(turns[0].sortedCharactors[0].name, 'sam');
+      assert.strictEqual(turns[0].sortedCharactors[1].name, 'sara');
+      assert.strictEqual(turns[0].sortedCharactors[2].name, 'john');
+      assert.strictEqual(turns[0].sortedCharactors[3].name, 'noa');
 
-      assert.equal(turns[0].field.climate, 'SUNNY');
+      assert.strictEqual(turns[0].field.climate, 'SUNNY');
 
-      assert.equal(typedBattle.result, GameOngoing);
+      assert.strictEqual(typedBattle.result, GameOngoing);
     } else {
-      assert.equal(true, false);
+      assert.strictEqual(true, false);
     }
   });
   it('remove', async () => {
     const store = await createStore(storeMock);
     await store.remove('2023-06-29T12:12:12');
-    assert.equal(true, true);
+    assert.strictEqual(true, true);
   });
   it('list', async () => {
     const store = await createStore(storeMock);
     const battleList = await store.list();
-    assert.equal(battleList.length, 2);
-    assert.equal(battleList[0], '2023-06-29T12:12:12');
-    assert.equal(battleList[1], '2023-06-29T15:15:15');
+    assert.strictEqual(battleList.length, 2);
+    assert.strictEqual(battleList[0], '2023-06-29T12:12:12');
+    assert.strictEqual(battleList[1], '2023-06-29T15:15:15');
   });
 });
 

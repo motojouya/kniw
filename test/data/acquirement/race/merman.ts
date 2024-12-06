@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 // import { earth } from 'src/data/acquirement/blessing/earth';
 // import { mind } from 'src/data/acquirement/blessing/mind';
 // import { sea } from 'src/data/acquirement/blessing/sea';
@@ -18,7 +20,7 @@ import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
 describe('merman#validateWearable', function () {
   it('ok', function () {
     const result = merman.validateWearable(merman, sky, redRobe, rubyRod);
-    assert.equal(result, null);
+    assert.strictEqual(result, null);
   });
 });
 

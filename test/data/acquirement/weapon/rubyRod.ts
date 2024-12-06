@@ -1,4 +1,6 @@
-import assert from 'assert';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
 import { NotWearableErorr } from 'src/domain/acquirement';
 
 // import { earth } from 'src/data/acquirement/blessing/earth';
@@ -20,16 +22,16 @@ import { rubyRod } from 'src/data/acquirement/weapon/rubyRod';
 describe('rubyRod#validateWearable', function () {
   it('ok', function () {
     const result = rubyRod.validateWearable(human, sky, redRobe, rubyRod);
-    assert.equal(result, null);
+    assert.strictEqual(result, null);
   });
   //it('ng', function () {
   //  const result = rubyRod.validateWearable(human, sky, steelArmor, rubyRod);
   //  if (result instanceof NotWearableErorr) {
-  //    assert.equal(result.acquirement.name, 'rubyRod');
-  //    assert.equal(result.cause.name, 'steelArmor');
-  //    assert.equal(result.message, 'このキャラクターの設定ではrubyRodを装備できません');
+  //    assert.strictEqual(result.acquirement.name, 'rubyRod');
+  //    assert.strictEqual(result.cause.name, 'steelArmor');
+  //    assert.strictEqual(result.message, 'このキャラクターの設定ではrubyRodを装備できません');
   //  } else {
-  //    assert.equal(true, false);
+  //    assert.strictEqual(true, false);
   //  }
   //});
 });
