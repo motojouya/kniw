@@ -1,8 +1,8 @@
 {
-  "name": "kniw",
+  "name": "@motojouya/kniw",
   "version": "0.0.1",
   "description": "Node.js on Docker",
-  "author": "Motojouya (Takuya Sugiyama) <motojouya@gmail.com>",
+  "author": "Motojouya (Takuya Sugiyama)",
   "main": "index.js",
   "scripts": {
     "kniw": "ts-node -r tsconfig-paths/register src/index.ts",
