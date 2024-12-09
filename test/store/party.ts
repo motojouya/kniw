@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Party } from 'src/domain/party';
-import type { Repository } from 'src/io/repository'
-import { toParty } from 'src/store/schema/party';
-import { createStore } from 'src/store/party';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { Repository } from '@motojouya/kniw/src/io/repository'
+import { toParty } from '@motojouya/kniw/src/store/schema/party';
+import { createStore } from '@motojouya/kniw/src/store/party';
 
 const storeMock: Repository = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),

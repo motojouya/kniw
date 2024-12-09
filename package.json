@@ -2,8 +2,12 @@
   "name": "@motojouya/kniw",
   "version": "0.0.1",
   "description": "Node.js on Docker",
+  "type": "module",
   "author": "Motojouya (Takuya Sugiyama)",
   "main": "index.js",
+  "exports": {
+    "./src/*": "./src/*.ts"
+  },
   "scripts": {
     "kniw": "ts-node -r tsconfig-paths/register src/index.ts",
     "buildcli": "webpack",

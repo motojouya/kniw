@@ -1,9 +1,9 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { chop } from 'src/data/skill/chop';
-import { dazzle } from 'src/data/skill/dazzle';
-import { windEdge } from 'src/data/skill/windEdge';
-import { rampartForce } from 'src/data/ability/rampartForce';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { chop } from '@motojouya/kniw/src/data/skill/chop';
+import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
+import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
+import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
 
 export const emeraldSaber: Weapon = {
   name: 'emeraldSaber',

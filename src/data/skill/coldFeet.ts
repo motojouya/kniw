@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from 'src/domain/skill';
-import { avoidUp } from 'src/data/status/avoidUp';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+import { avoidUp } from '@motojouya/kniw/src/data/status/avoidUp';
 
 export const coldFeet: Skill = {
   name: 'coldFeet',

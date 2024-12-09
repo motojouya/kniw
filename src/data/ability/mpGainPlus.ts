@@ -1,5 +1,5 @@
-import type { Ability, Wait } from 'src/domain/ability';
-import { getPhysical } from 'src/domain/charactor';
+import type { Ability, Wait } from '@motojouya/kniw/src/domain/ability';
+import { getPhysical } from '@motojouya/kniw/src/domain/charactor';
 
 /* eslint-disable */
 const wait: Wait = (wt, charactor, randoms) => {

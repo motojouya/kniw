@@ -1,5 +1,5 @@
-import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from 'src/domain/skill';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from '@motojouya/kniw/src/domain/skill';
 
 export const flashFlood: Skill = {
   name: 'flashFlood',

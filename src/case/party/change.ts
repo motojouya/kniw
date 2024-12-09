@@ -1,12 +1,12 @@
-import type { Dialogue, SelectOption } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
-import type { Charactor } from 'src/domain/charactor';
-import { NotApplicable } from 'src/io/standard_dialogue';
-import { createStore as createCharactorStore } from 'src/store/charactor';
-import { createStore as createPartyStore } from 'src/store/party';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { createParty, CharactorDuplicationError } from 'src/domain/party';
+import type { Dialogue, SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
+import { createStore as createCharactorStore } from '@motojouya/kniw/src/store/charactor';
+import { createStore as createPartyStore } from '@motojouya/kniw/src/store/party';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { createParty, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 
 export type Change = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
 export const change: Change = (dialogue, repository) => async name => {

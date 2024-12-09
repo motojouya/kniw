@@ -3,7 +3,7 @@ import assert from "node:assert";
 
 import fs from 'fs'
 import path from 'path';
-import { createRepository } from 'src/io/file_repository'
+import { createRepository } from '@motojouya/kniw/src/io/file_repository'
 
 const DIRNAME = 'temp';
 const NAMESPACE = 'test';

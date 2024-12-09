@@ -1,18 +1,18 @@
-import type { Turn, Action } from 'src/domain/turn';
-import type { Climate } from 'src/domain/field';
-import type { CharactorBattling } from 'src/domain/charactor';
+import type { Turn, Action } from '@motojouya/kniw/src/domain/turn';
+import type { Climate } from '@motojouya/kniw/src/domain/field';
+import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
 import { parse, format } from 'date-fns';
 // import ja from 'date-fns/locale/ja'
 
-import { createValidationCompiler } from 'src/io/json_schema';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { getSkill } from 'src/store/skill';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { toCharactor, toCharactorJson, charactorSchema } from 'src/store/schema/charactor';
-import { isBattlingCharactor } from 'src/domain/charactor';
-import { NotBattlingError } from 'src/domain/battle';
+import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
+import { isBattlingCharactor } from '@motojouya/kniw/src/domain/charactor';
+import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
 
 export const surrenderSchema = {
   type: 'object',

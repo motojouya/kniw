@@ -1,7 +1,7 @@
-import type { CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
+import type { CheckNamespace, Save, List, Get, Remove, ExportJson, Repository } from '@motojouya/kniw/src/io/repository';
 import fs from 'fs';
 import path from 'path';
-import { CopyFailError } from 'src/io/repository';
+import { CopyFailError } from '@motojouya/kniw/src/io/repository';
 
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';

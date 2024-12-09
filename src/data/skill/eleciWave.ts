@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from 'src/domain/skill';
-import { paralysis } from 'src/data/status/paralysis';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from '@motojouya/kniw/src/domain/skill';
+import { paralysis } from '@motojouya/kniw/src/data/status/paralysis';
 
 export const eleciWave: Skill = {
   name: 'eleciWave',

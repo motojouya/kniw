@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Party } from 'src/domain/party';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { toParty } from 'src/store/schema/party';
-import { toCharactor } from 'src/store/schema/charactor';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { toParty } from '@motojouya/kniw/src/store/schema/party';
+import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
 
 describe('Party#toParty', function () {
   it('CharactorDuplicationError', function () {

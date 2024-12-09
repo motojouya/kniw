@@ -1,13 +1,13 @@
-import type { Charactor, AttachedStatus } from 'src/domain/charactor';
+import type { Charactor, AttachedStatus } from '@motojouya/kniw/src/domain/charactor';
 
 import { FromSchema } from 'json-schema-to-ts';
-import { createValidationCompiler } from 'src/io/json_schema';
+import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { validate } from 'src/domain/charactor';
-import { statusSchema, toStatus, toStatusJson } from 'src/store/schema/status';
-import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { validate } from '@motojouya/kniw/src/domain/charactor';
+import { statusSchema, toStatus, toStatusJson } from '@motojouya/kniw/src/store/schema/status';
+import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
 
 export const attachedStatusSchema = {
   type: 'object',

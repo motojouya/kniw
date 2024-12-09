@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { flameFall } from 'src/data/skill/flameFall';
-import { smallHeat } from 'src/data/skill/smallHeat';
-import { ghostFire } from 'src/data/skill/ghostFire';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
+import { smallHeat } from '@motojouya/kniw/src/data/skill/smallHeat';
+import { ghostFire } from '@motojouya/kniw/src/data/skill/ghostFire';
 
 export const rubyRod: Weapon = {
   name: 'rubyRod',

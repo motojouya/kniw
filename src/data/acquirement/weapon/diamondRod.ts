@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { gunStone } from 'src/data/skill/gunStone';
-import { mountFall } from 'src/data/skill/mountFall';
-import { copperBlue } from 'src/data/skill/copperBlue';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
+import { mountFall } from '@motojouya/kniw/src/data/skill/mountFall';
+import { copperBlue } from '@motojouya/kniw/src/data/skill/copperBlue';
 
 export const diamondRod: Weapon = {
   name: 'diamondRod',

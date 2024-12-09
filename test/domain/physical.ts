@@ -4,7 +4,7 @@ import assert from "node:assert";
 import {
   Physical,
   addPhysicals,
-} from 'src/domain/physical';
+} from '@motojouya/kniw/src/domain/physical';
 
 const basePhysical: Physical = {
   MaxHP: 100,

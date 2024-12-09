@@ -1,7 +1,7 @@
-import type { Clothing } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { mpGainPlus } from 'src/data/ability/mpGainPlus';
-import { waterCutter } from 'src/data/skill/waterCutter';
+import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
+import { waterCutter } from '@motojouya/kniw/src/data/skill/waterCutter';
 
 export const blueRobe: Clothing = {
   name: 'blueRobe',

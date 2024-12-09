@@ -1,3 +1,3 @@
-export { mpGainPlus } from 'src/data/ability/mpGainPlus';
-export { shootingGuard } from 'src/data/ability/shootingGuard';
-export { rampartForce } from 'src/data/ability/rampartForce';
+export { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
+export { shootingGuard } from '@motojouya/kniw/src/data/ability/shootingGuard';
+export { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';

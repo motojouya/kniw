@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from 'src/domain/skill';
-import { magicDiffenceDown } from 'src/data/status/magicDiffenceDown';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from '@motojouya/kniw/src/domain/skill';
+import { magicDiffenceDown } from '@motojouya/kniw/src/data/status/magicDiffenceDown';
 
 export const flameDigger: Skill = {
   name: 'flameDigger',

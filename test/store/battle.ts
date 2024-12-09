@@ -1,16 +1,16 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Repository } from 'src/io/repository'
-import type { Battle } from 'src/domain/battle';
+import type { Repository } from '@motojouya/kniw/src/io/repository'
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import {
   GameOngoing,
   GameHome,
   GameVisitor,
   GameDraw
-} from 'src/domain/battle';
-import { toBattle } from 'src/store/schema/battle';
-import { createStore } from 'src/store/battle';
+} from '@motojouya/kniw/src/domain/battle';
+import { toBattle } from '@motojouya/kniw/src/store/schema/battle';
+import { createStore } from '@motojouya/kniw/src/store/battle';
 import { parse, format } from 'date-fns';
 
 const testData = {

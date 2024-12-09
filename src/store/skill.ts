@@ -1,5 +1,5 @@
-import type { Skill } from 'src/domain/skill';
-import * as skills from 'src/data/skill';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import * as skills from '@motojouya/kniw/src/data/skill';
 
 type SkillDictionary = { [name: string]: Skill };
 

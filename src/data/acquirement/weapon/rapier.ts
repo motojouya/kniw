@@ -1,9 +1,9 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { stab } from 'src/data/skill/stab';
-import { dazzle } from 'src/data/skill/dazzle';
-import { saturnRing } from 'src/data/skill/saturnRing';
-import { rampartForce } from 'src/data/ability/rampartForce';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { stab } from '@motojouya/kniw/src/data/skill/stab';
+import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
+import { saturnRing } from '@motojouya/kniw/src/data/skill/saturnRing';
+import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
 
 export const rapier: Weapon = {
   name: 'rapier',

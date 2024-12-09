@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from 'src/domain/skill';
-import { acid } from 'src/data/status/acid';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from '@motojouya/kniw/src/domain/skill';
+import { acid } from '@motojouya/kniw/src/data/status/acid';
 
 export const copperBlue: Skill = {
   name: 'copperBlue',

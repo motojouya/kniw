@@ -1,10 +1,10 @@
-import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateStore } from 'src/store/store';
-import type { Party } from 'src/domain/party';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { toParty, toPartyJson } from 'src/store/schema/party';
+import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateStore } from '@motojouya/kniw/src/store/store';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { toParty, toPartyJson } from '@motojouya/kniw/src/store/schema/party';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 const NAMESPACE = 'party';
 

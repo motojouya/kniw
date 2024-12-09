@@ -1,7 +1,7 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
-import { createStore } from 'src/store/battle';
-import { CopyFailError } from 'src/io/repository';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
+import { createStore } from '@motojouya/kniw/src/store/battle';
+import { CopyFailError } from '@motojouya/kniw/src/io/repository';
 
 export type ExportJson = (dialogue: Dialogue, repository: Repository) => (title: string, file: string) => Promise<void>;
 export const exportJson: ExportJson = (dialogue, repository) => async (title, file) => {

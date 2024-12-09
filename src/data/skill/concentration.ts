@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from 'src/domain/skill';
-import { accuracyUp } from 'src/data/status/accuracyUp';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+import { accuracyUp } from '@motojouya/kniw/src/data/status/accuracyUp';
 
 export const concentration: Skill = {
   name: 'concentration',

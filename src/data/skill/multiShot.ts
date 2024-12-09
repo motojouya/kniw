@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from 'src/domain/skill';
-import { shotAction } from 'src/data/skill/shot';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+import { shotAction } from '@motojouya/kniw/src/data/skill/shot';
 
 export const multiShot: Skill = {
   name: 'multiShot',

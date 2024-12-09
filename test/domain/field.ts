@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import { changeClimate } from 'src/domain/field';
+import { changeClimate } from '@motojouya/kniw/src/domain/field';
 
 describe('Climate#changeClimate', function () {
   it('5 test', function () {

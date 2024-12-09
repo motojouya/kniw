@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { gunWater } from 'src/data/skill/gunWater';
-import { stickyRain } from 'src/data/skill/stickyRain';
-import { downRushing } from 'src/data/skill/downRushing';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { gunWater } from '@motojouya/kniw/src/data/skill/gunWater';
+import { stickyRain } from '@motojouya/kniw/src/data/skill/stickyRain';
+import { downRushing } from '@motojouya/kniw/src/data/skill/downRushing';
 
 export const sapphireStaff: Weapon = {
   name: 'sapphireStaff',

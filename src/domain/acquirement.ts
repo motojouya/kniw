@@ -1,6 +1,6 @@
-import { Ability } from 'src/domain/ability';
-import { Physical } from 'src/domain/physical';
-import { Skill } from 'src/domain/skill';
+import { Ability } from '@motojouya/kniw/src/domain/ability';
+import { Physical } from '@motojouya/kniw/src/domain/physical';
+import { Skill } from '@motojouya/kniw/src/domain/skill';
 
 export type Acquirement = {
   name: string;

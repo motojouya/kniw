@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from 'src/domain/skill';
-import { quick as quickStatus } from 'src/data/status/quick';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from '@motojouya/kniw/src/domain/skill';
+import { quick as quickStatus } from '@motojouya/kniw/src/data/status/quick';
 
 export const quick: Skill = {
   name: 'quick',

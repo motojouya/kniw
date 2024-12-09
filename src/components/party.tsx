@@ -1,12 +1,12 @@
 import type { FC, ReactNode } from 'react';
-import type { Party } from 'src/domain/party';
-import type { PartyForm } from 'src/form/party';
-import type { Store } from 'src/store/store';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { PartyForm } from '@motojouya/kniw/src/form/party';
+import type { Store } from '@motojouya/kniw/src/store/store';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-import { CharactorCard } from 'src/components/charactor';
+import { CharactorCard } from '@motojouya/kniw/src/components/charactor';
 import { useState } from 'react';
 import { ajvResolver } from '@hookform/resolvers/ajv';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -24,13 +24,13 @@ import {
 } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { partyFormSchema, toPartyForm, saveParty } from 'src/form/party';
-import { importJson } from 'src/io/indexed_db_repository';
-import { toParty as jsonToParty } from 'src/store/schema/party';
+import { partyFormSchema, toPartyForm, saveParty } from '@motojouya/kniw/src/form/party';
+import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
+import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
 
-import { CharactorDuplicationError } from 'src/domain/party';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from 'src/store/store';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/store';
 
 type PartyStore = Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 

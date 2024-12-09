@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from 'src/domain/skill';
-import { magicDiffenceUp } from 'src/data/status/magicDiffenceUp';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from '@motojouya/kniw/src/domain/skill';
+import { magicDiffenceUp } from '@motojouya/kniw/src/data/status/magicDiffenceUp';
 
 export const fireWall: Skill = {
   name: 'fireWall',

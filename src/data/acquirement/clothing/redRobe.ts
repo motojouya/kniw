@@ -1,7 +1,7 @@
-import type { Clothing } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { mpGainPlus } from 'src/data/ability/mpGainPlus';
-import { fireWall } from 'src/data/skill/fireWall';
+import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
+import { fireWall } from '@motojouya/kniw/src/data/skill/fireWall';
 
 export const redRobe: Clothing = {
   name: 'redRobe',

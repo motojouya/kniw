@@ -1,16 +1,16 @@
-import type { Battle } from 'src/domain/battle';
-import type { Turn } from 'src/domain/turn';
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
+import type { Turn } from '@motojouya/kniw/src/domain/turn';
 
 import { FromSchema } from 'json-schema-to-ts';
-import { createValidationCompiler } from 'src/io/json_schema';
+import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 
-import { toTurn, toTurnJson, turnSchema } from 'src/store/schema/turn';
-import { toParty, toPartyJson, partySchema } from 'src/store/schema/party';
+import { toTurn, toTurnJson, turnSchema } from '@motojouya/kniw/src/store/schema/turn';
+import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from 'src/domain/battle';
-import { CharactorDuplicationError, isBattlingParty } from 'src/domain/party';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from '@motojouya/kniw/src/domain/battle';
+import { CharactorDuplicationError, isBattlingParty } from '@motojouya/kniw/src/domain/party';
 
 export const battleSchema = {
   type: 'object',

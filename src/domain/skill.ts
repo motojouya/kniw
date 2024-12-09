@@ -1,10 +1,10 @@
-import type { Field } from 'src/domain/field';
-import type { Randoms } from 'src/domain/random';
-import type { CharactorBattling } from 'src/domain/charactor';
-import type { Status } from 'src/domain/status';
+import type { Field } from '@motojouya/kniw/src/domain/field';
+import type { Randoms } from '@motojouya/kniw/src/domain/random';
+import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { Status } from '@motojouya/kniw/src/domain/status';
 
-import { underStatus } from 'src/domain/status';
-import { getPhysical } from 'src/domain/charactor';
+import { underStatus } from '@motojouya/kniw/src/domain/status';
+import { getPhysical } from '@motojouya/kniw/src/domain/charactor';
 import {
   directAttackUp,
   directAttackDown,
@@ -15,7 +15,7 @@ import {
   magicDiffenceUp,
   magicDiffenceDown,
   fear,
-} from 'src/data/status';
+} from '@motojouya/kniw/src/data/status';
 
 export type DirectType = 'SLASH' | 'STAB' | 'BLOW' | 'NONE';
 export const DIRECT_TYPE_SLASH: DirectType = 'SLASH';

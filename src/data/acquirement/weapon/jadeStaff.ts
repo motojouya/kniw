@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { hailstone } from 'src/data/skill/hailstone';
-import { frostbite } from 'src/data/skill/frostbite';
-import { cumulonimbus } from 'src/data/skill/cumulonimbus';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { hailstone } from '@motojouya/kniw/src/data/skill/hailstone';
+import { frostbite } from '@motojouya/kniw/src/data/skill/frostbite';
+import { cumulonimbus } from '@motojouya/kniw/src/data/skill/cumulonimbus';
 
 export const jadeStaff: Weapon = {
   name: 'jadeStaff',

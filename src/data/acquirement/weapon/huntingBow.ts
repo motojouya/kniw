@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { toxicShot } from 'src/data/skill/toxicShot';
-import { paralysisShot } from 'src/data/skill/paralysisShot';
-import { silentShot } from 'src/data/skill/silentShot';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { toxicShot } from '@motojouya/kniw/src/data/skill/toxicShot';
+import { paralysisShot } from '@motojouya/kniw/src/data/skill/paralysisShot';
+import { silentShot } from '@motojouya/kniw/src/data/skill/silentShot';
 
 export const huntingBow: Weapon = {
   name: 'huntingBow',

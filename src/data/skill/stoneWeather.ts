@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from 'src/domain/skill';
-import { directDiffenceDown } from 'src/data/status/directDiffenceDown';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from '@motojouya/kniw/src/domain/skill';
+import { directDiffenceDown } from '@motojouya/kniw/src/data/status/directDiffenceDown';
 
 export const stoneWeather: Skill = {
   name: 'stoneWeather',

@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { hailstone } from 'src/data/skill/hailstone';
-import { frostbite } from 'src/data/skill/frostbite';
-import { silent } from 'src/data/skill/silent';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { hailstone } from '@motojouya/kniw/src/data/skill/hailstone';
+import { frostbite } from '@motojouya/kniw/src/data/skill/frostbite';
+import { silent } from '@motojouya/kniw/src/data/skill/silent';
 
 export const jadeRod: Weapon = {
   name: 'jadeRod',

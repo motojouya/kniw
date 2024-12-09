@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Charactor } from 'src/domain/charactor';
-import type { Repository } from 'src/io/repository'
-import { toCharactor } from 'src/store/schema/charactor';
-import { createStore } from 'src/store/charactor';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { Repository } from '@motojouya/kniw/src/io/repository'
+import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
+import { createStore } from '@motojouya/kniw/src/store/charactor';
 
 
 const storeMock: Repository = {

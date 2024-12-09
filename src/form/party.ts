@@ -1,22 +1,22 @@
-import type { Party } from 'src/domain/party';
-import type { Charactor } from 'src/domain/charactor';
-import type { CharactorForm } from 'src/form/charactor';
-import type { Store } from 'src/store/store';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { CharactorForm } from '@motojouya/kniw/src/form/charactor';
+import type { Store } from '@motojouya/kniw/src/store/store';
 
 import Ajv, { JSONSchemaType } from 'ajv';
 // import ajvErrors from 'ajv-errors'; // FIXME schema.errorMessageというpropertyを使いたかったがうまく動かない
 
-import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { charactorFormSchema, toCharactor, toCharactorForm } from 'src/form/charactor';
-import { validate, CharactorDuplicationError } from 'src/domain/party';
+import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { charactorFormSchema, toCharactor, toCharactorForm } from '@motojouya/kniw/src/form/charactor';
+import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 
 // FIXME json-schema-to-tsの導入
 // import { FromSchema } from 'json-schema-to-ts';
 // type PartyForm = FromSchema<typeof partyFormSchema>;
 //
 // json-schema-to-tsに変更すると、validationのtype guardも変わる
-// import { createValidationCompiler } from 'src/io/json_schema';
+// import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 // const compile = createValidationCompiler();
 // const validateSchema = compile(partyFormSchema);
 

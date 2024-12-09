@@ -1,5 +1,5 @@
-import type { Blessing } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
+import type { Blessing } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
 
 export const sky: Blessing = {
   name: 'sky',

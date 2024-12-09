@@ -1,11 +1,11 @@
 import type { FC } from 'react';
-import type { Battle } from 'src/domain/battle';
-import type { Party } from 'src/domain/party';
-import type { CharactorBattling } from 'src/domain/charactor';
-import type { Skill } from 'src/domain/skill';
-import type { Turn } from 'src/domain/turn';
-import type { Store } from 'src/store/store';
-import type { DoSkillForm, DoAction } from 'src/form/battle';
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Turn } from '@motojouya/kniw/src/domain/turn';
+import type { Store } from '@motojouya/kniw/src/store/store';
+import type { DoSkillForm, DoAction } from '@motojouya/kniw/src/form/battle';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -55,28 +55,28 @@ import {
   start,
   getLastTurn,
   NotBattlingError,
-} from 'src/domain/battle';
-import { CharactorDetail } from 'src/components/charactor';
-import { importJson } from 'src/io/indexed_db_repository';
-import { toParty as jsonToParty } from 'src/store/schema/party';
+} from '@motojouya/kniw/src/domain/battle';
+import { CharactorDetail } from '@motojouya/kniw/src/components/charactor';
+import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
+import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
 import {
   doSkillFormSchema,
   receiverSelectOption,
   toReceiver,
   toAction,
   ReceiverDuplicationError,
-} from 'src/form/battle';
-import { ACTION_DO_NOTHING } from 'src/domain/turn';
-import { getSkills, isVisitorString } from 'src/domain/charactor';
-import { getSkill } from 'src/store/skill';
-import { MAGIC_TYPE_NONE } from 'src/domain/skill';
+} from '@motojouya/kniw/src/form/battle';
+import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
+import { getSkills, isVisitorString } from '@motojouya/kniw/src/domain/charactor';
+import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
 
-import { underStatus } from 'src/domain/status';
-import { sleep, silent } from 'src/data/status';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { createRandoms, createAbsolute } from 'src/domain/random';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { underStatus } from '@motojouya/kniw/src/domain/status';
+import { sleep, silent } from '@motojouya/kniw/src/data/status';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { createRandoms, createAbsolute } from '@motojouya/kniw/src/domain/random';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
 

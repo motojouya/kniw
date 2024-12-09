@@ -1,5 +1,5 @@
-import type { Skill } from 'src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from 'src/domain/skill';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
 
 export const saturnRing: Skill = {
   name: 'saturnRing',

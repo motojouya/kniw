@@ -1,13 +1,13 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { Command } from '@commander-js/extra-typings';
-import { list } from 'src/case/party/list';
-import { showStatus } from 'src/case/party/showStatus';
-import { build } from 'src/case/party/build';
-import { change } from 'src/case/party/change';
-import { dismiss } from 'src/case/party/dismiss';
-import { exportJson } from 'src/case/party/exportJson';
+import { list } from '@motojouya/kniw/src/case/party/list';
+import { showStatus } from '@motojouya/kniw/src/case/party/showStatus';
+import { build } from '@motojouya/kniw/src/case/party/build';
+import { change } from '@motojouya/kniw/src/case/party/change';
+import { dismiss } from '@motojouya/kniw/src/case/party/dismiss';
+import { exportJson } from '@motojouya/kniw/src/case/party/exportJson';
 
 export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
   const party = new Command('party');

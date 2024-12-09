@@ -1,4 +1,4 @@
-import { Status } from 'src/domain/status';
+import { Status } from '@motojouya/kniw/src/domain/status';
 
 export const accuracyDown: Status = {
   name: 'accuracyDown',

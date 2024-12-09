@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from 'src/domain/skill';
-import { sleep } from 'src/data/status/sleep';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from '@motojouya/kniw/src/domain/skill';
+import { sleep } from '@motojouya/kniw/src/data/status/sleep';
 
 export const heavyWind: Skill = {
   name: 'heavyWind',

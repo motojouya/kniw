@@ -1,8 +1,8 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
-import { NotApplicable } from 'src/io/standard_dialogue';
-import { createStore } from 'src/store/charactor';
-import { createRandoms } from 'src/domain/random';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
+import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
+import { createStore } from '@motojouya/kniw/src/store/charactor';
+import { createRandoms } from '@motojouya/kniw/src/domain/random';
 
 const byebyeMessages = [
   '君とは馬が合わないと思っていたんだ',
