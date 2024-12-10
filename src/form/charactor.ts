@@ -1,6 +1,7 @@
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import Ajv, { JSONSchemaType } from 'ajv';
+import type { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';

@@ -1,10 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import {
-  Physical,
-  addPhysicals,
-} from '@motojouya/kniw/src/domain/physical';
+import type { Physical } from '@motojouya/kniw/src/domain/physical';
+import { addPhysicals } from '@motojouya/kniw/src/domain/physical';
 
 const basePhysical: Physical = {
   MaxHP: 100,

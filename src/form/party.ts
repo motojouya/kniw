@@ -3,7 +3,8 @@ import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 import type { CharactorForm } from '@motojouya/kniw/src/form/charactor';
 import type { Store } from '@motojouya/kniw/src/store/store';
 
-import Ajv, { JSONSchemaType } from 'ajv';
+import type { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 // import ajvErrors from 'ajv-errors'; // FIXME schema.errorMessageというpropertyを使いたかったがうまく動かない
 
 import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';

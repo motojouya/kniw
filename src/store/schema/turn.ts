@@ -2,7 +2,7 @@ import type { Turn, Action } from '@motojouya/kniw/src/domain/turn';
 import type { Climate } from '@motojouya/kniw/src/domain/field';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { parse, format } from 'date-fns';
 // import ja from 'date-fns/locale/ja'
 

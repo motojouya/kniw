@@ -1,6 +1,6 @@
 import type { Status } from '@motojouya/kniw/src/domain/status';
 
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 
 import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';

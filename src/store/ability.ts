@@ -1,5 +1,5 @@
 import type { Ability } from '@motojouya/kniw/src/domain/ability';
-import * as abilities from '@motojouya/kniw/src/data/ability';
+import * as abilities from '@motojouya/kniw/src/data/ability/index';
 
 type AbilityDictionary = { [name: string]: Ability };
 

@@ -1,7 +1,7 @@
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
 
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 
 import { toTurn, toTurnJson, turnSchema } from '@motojouya/kniw/src/store/schema/turn';

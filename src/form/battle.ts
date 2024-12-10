@@ -2,7 +2,8 @@ import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import type { SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
 
-import Ajv, { JSONSchemaType } from 'ajv';
+import type { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';

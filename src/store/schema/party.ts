@@ -1,7 +1,7 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import { FromSchema } from 'json-schema-to-ts';
+import type { FromSchema } from 'json-schema-to-ts';
 import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';

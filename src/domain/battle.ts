@@ -8,7 +8,7 @@ import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
 import { getPhysical, getAbilities } from '@motojouya/kniw/src/domain/charactor';
 import { changeClimate } from '@motojouya/kniw/src/domain/field';
 
-import { acid, paralysis, quick, silent, sleep, slow } from '@motojouya/kniw/src/data/status';
+import { acid, paralysis, quick, silent, sleep, slow } from '@motojouya/kniw/src/data/status/index';
 import { underStatus } from '@motojouya/kniw/src/domain/status';
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];

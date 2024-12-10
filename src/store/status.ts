@@ -1,5 +1,5 @@
 import type { Status } from '@motojouya/kniw/src/domain/status';
-import * as statuses from '@motojouya/kniw/src/data/status';
+import * as statuses from '@motojouya/kniw/src/data/status/index';
 
 type StatusDictionary = { [name: string]: Status };
 

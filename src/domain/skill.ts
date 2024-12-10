@@ -15,7 +15,7 @@ import {
   magicDiffenceUp,
   magicDiffenceDown,
   fear,
-} from '@motojouya/kniw/src/data/status';
+} from '@motojouya/kniw/src/data/status/index';
 
 export type DirectType = 'SLASH' | 'STAB' | 'BLOW' | 'NONE';
 export const DIRECT_TYPE_SLASH: DirectType = 'SLASH';
