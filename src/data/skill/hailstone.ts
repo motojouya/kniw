@@ -1,5 +1,10 @@
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from '@motojouya/kniw/src/domain/skill';
+import {
+  calcOrdinaryMagicalDamage,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_NONE,
+  MAGIC_TYPE_ICE,
+} from '@motojouya/kniw/src/domain/skill';
 
 export const hailstone: Skill = {
   name: 'hailstone',

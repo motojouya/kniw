@@ -1,6 +1,11 @@
 import { getAbilities } from '@motojouya/kniw/src/domain/charactor';
 import type { Skill, ActionToCharactor } from '@motojouya/kniw/src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+import {
+  calcOrdinaryDirectDamage,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_STAB,
+  MAGIC_TYPE_NONE,
+} from '@motojouya/kniw/src/domain/skill';
 import { shootingGuard } from '@motojouya/kniw/src/data/ability/shootingGuard';
 
 export const shotAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {

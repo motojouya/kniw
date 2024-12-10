@@ -1,5 +1,10 @@
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from '@motojouya/kniw/src/domain/skill';
+import {
+  calcOrdinaryDirectDamage,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_NONE,
+  MAGIC_TYPE_ROCK,
+} from '@motojouya/kniw/src/domain/skill';
 
 export const gravelWall: Skill = {
   name: 'gravelWall',

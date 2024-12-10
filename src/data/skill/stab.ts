@@ -1,5 +1,10 @@
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+import {
+  calcOrdinaryDirectDamage,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_STAB,
+  MAGIC_TYPE_NONE,
+} from '@motojouya/kniw/src/domain/skill';
 
 export const stab: Skill = {
   name: 'stab',

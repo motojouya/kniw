@@ -1,5 +1,10 @@
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from '@motojouya/kniw/src/domain/skill';
+import {
+  addStatus,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_NONE,
+  MAGIC_TYPE_THUNDER,
+} from '@motojouya/kniw/src/domain/skill';
 import { magicAttackUp } from '@motojouya/kniw/src/data/status/magicAttackUp';
 
 export const electoricBrain: Skill = {

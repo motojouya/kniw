@@ -1,4 +1,11 @@
-import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateStore } from '@motojouya/kniw/src/store/store';
+import type {
+  CreateSave,
+  CreateGet,
+  CreateRemove,
+  CreateList,
+  CreateExportJson,
+  CreateStore,
+} from '@motojouya/kniw/src/store/store';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toParty, toPartyJson } from '@motojouya/kniw/src/store/schema/party';
