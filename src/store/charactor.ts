@@ -1,9 +1,9 @@
-import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateStore } from 'src/store/store';
-import type { Charactor } from 'src/domain/charactor';
+import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateStore } from '@motojouya/kniw/src/store/store';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import { toCharactor, toCharactorJson } from 'src/store/schema/charactor';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+import { toCharactor, toCharactorJson } from '@motojouya/kniw/src/store/schema/charactor';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 const NAMESPACE = 'charactor';
 

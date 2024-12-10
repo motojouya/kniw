@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { shot } from 'src/data/skill/shot';
-import { hardRain } from 'src/data/skill/hardRain';
-import { overbear } from 'src/data/skill/overbear';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { shot } from '@motojouya/kniw/src/data/skill/shot';
+import { hardRain } from '@motojouya/kniw/src/data/skill/hardRain';
+import { overbear } from '@motojouya/kniw/src/data/skill/overbear';
 
 export const samuraiBow: Weapon = {
   name: 'samuraiBow',

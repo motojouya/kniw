@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { windEdge } from 'src/data/skill/windEdge';
-import { heavyWind } from 'src/data/skill/heavyWind';
-import { danceLeaves } from 'src/data/skill/danceLeaves';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
+import { heavyWind } from '@motojouya/kniw/src/data/skill/heavyWind';
+import { danceLeaves } from '@motojouya/kniw/src/data/skill/danceLeaves';
 
 export const emeraldWand: Weapon = {
   name: 'emeraldWand',

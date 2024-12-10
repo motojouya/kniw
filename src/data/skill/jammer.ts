@@ -1,6 +1,11 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from 'src/domain/skill';
-import { magicAttackDown } from 'src/data/status/magicAttackDown';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import {
+  addStatus,
+  calcOrdinaryAccuracy,
+  DIRECT_TYPE_NONE,
+  MAGIC_TYPE_THUNDER,
+} from '@motojouya/kniw/src/domain/skill';
+import { magicAttackDown } from '@motojouya/kniw/src/data/status/magicAttackDown';
 
 export const jammer: Skill = {
   name: 'jammer',

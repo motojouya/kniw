@@ -1,8 +1,8 @@
-import { Acquirement, Race, Weapon, Clothing, Blessing } from 'src/domain/acquirement';
-import * as races from 'src/data/acquirement/race';
-import * as weapons from 'src/data/acquirement/weapon';
-import * as clothings from 'src/data/acquirement/clothing';
-import * as blessings from 'src/data/acquirement/blessing';
+import type { Acquirement, Race, Weapon, Clothing, Blessing } from '@motojouya/kniw/src/domain/acquirement';
+import * as races from '@motojouya/kniw/src/data/acquirement/race/index';
+import * as weapons from '@motojouya/kniw/src/data/acquirement/weapon/index';
+import * as clothings from '@motojouya/kniw/src/data/acquirement/clothing/index';
+import * as blessings from '@motojouya/kniw/src/data/acquirement/blessing/index';
 
 type AcquirementDictionary = { [name: string]: Acquirement };
 

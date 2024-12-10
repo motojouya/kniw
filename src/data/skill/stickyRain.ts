@@ -1,6 +1,6 @@
-import type { Skill } from 'src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from 'src/domain/skill';
-import { directAttackDown } from 'src/data/status/directAttackDown';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from '@motojouya/kniw/src/domain/skill';
+import { directAttackDown } from '@motojouya/kniw/src/data/status/directAttackDown';
 
 export const stickyRain: Skill = {
   name: 'stickyRain',

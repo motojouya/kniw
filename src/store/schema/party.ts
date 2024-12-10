@@ -1,13 +1,13 @@
-import type { Party } from 'src/domain/party';
-import type { Charactor } from 'src/domain/charactor';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import { FromSchema } from 'json-schema-to-ts';
-import { createValidationCompiler } from 'src/io/json_schema';
+import type { FromSchema } from 'json-schema-to-ts';
+import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { validate, CharactorDuplicationError } from 'src/domain/party';
-import { toCharactor, toCharactorJson, charactorSchema } from 'src/store/schema/charactor';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 
 export const partySchema = {
   type: 'object',

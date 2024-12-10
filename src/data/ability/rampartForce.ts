@@ -1,5 +1,5 @@
-import type { Ability } from 'src/domain/ability';
-import { justWait } from 'src/domain/ability';
+import type { Ability } from '@motojouya/kniw/src/domain/ability';
+import { justWait } from '@motojouya/kniw/src/domain/ability';
 
 export const rampartForce: Ability = {
   name: 'rampartForce',

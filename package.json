@@ -1,14 +1,16 @@
 {
-  "name": "kniw",
+  "name": "@motojouya/kniw",
   "version": "0.0.1",
   "description": "Node.js on Docker",
-  "author": "Motojouya (Takuya Sugiyama) <motojouya@gmail.com>",
+  "author": "Motojouya (Takuya Sugiyama)",
   "main": "index.js",
+  "exports": {
+    "./src/*": "./src/*.ts"
+  },
   "scripts": {
     "kniw": "ts-node -r tsconfig-paths/register src/index.ts",
     "buildcli": "webpack",
-    "test": "mocha --require ts-node/register --require tsconfig-paths/register --watch-extensions ts 'test/**/*.ts'",
-    "testsingle": "mocha --require ts-node/register --require tsconfig-paths/register --watch-extensions ts",
+    "test": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning --test",
     "try": "ts-node -r tsconfig-paths/register",
     "manual": "ts-node -r tsconfig-paths/register manually_test/io/standard_dialogue.ts",
     "prettier": "npx prettier --write 'src/**/*.ts'",
@@ -34,7 +36,6 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "mocha": "^10.2.0",
     "prettier": "^3.0.0",
     "serve": "^14.2.0",
     "ts-loader": "^9.3.0",
@@ -51,7 +52,6 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@hookform/resolvers": "^3.2.0",
-    "@types/mocha": "^10.0.1",
     "@types/prompts": "^2.4.4",
     "ajv": "^8.12.0",
     "ajv-errors": "^3.0.0",

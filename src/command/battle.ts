@@ -1,11 +1,11 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { Command } from '@commander-js/extra-typings';
-import { histories } from 'src/case/battle/histories';
-import { showHistory } from 'src/case/battle/showHistory';
-import { start, resume } from 'src/case/battle/battle';
-import { exportJson } from 'src/case/battle/exportJson';
+import { histories } from '@motojouya/kniw/src/case/battle/histories';
+import { showHistory } from '@motojouya/kniw/src/case/battle/showHistory';
+import { start, resume } from '@motojouya/kniw/src/case/battle/battle';
+import { exportJson } from '@motojouya/kniw/src/case/battle/exportJson';
 
 export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
   const battle = new Command('battle');

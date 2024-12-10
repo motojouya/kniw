@@ -1,13 +1,14 @@
-import type { CharactorBattling } from 'src/domain/charactor';
-import type { SelectOption } from 'src/io/standard_dialogue';
-import type { Skill } from 'src/domain/skill';
+import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
 
-import Ajv, { JSONSchemaType } from 'ajv';
+import type { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { isVisitorString } from 'src/domain/charactor';
-import { getSkill } from 'src/store/skill';
-import { ACTION_DO_NOTHING } from 'src/domain/turn';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';
+import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
 
 export const DO_NOTHING = 'NOTHING';
 

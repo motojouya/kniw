@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import type { Acquirement } from 'src/domain/acquirement';
-import type { Charactor } from 'src/domain/charactor';
-import type { PartyForm } from 'src/form/party';
+import type { Acquirement } from '@motojouya/kniw/src/domain/acquirement';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { PartyForm } from '@motojouya/kniw/src/form/party';
 
 import { useState } from 'react';
 import {
@@ -39,7 +39,7 @@ import {
   Tag,
 } from '@chakra-ui/react';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import {
   getRace,
   getBlessing,
@@ -49,13 +49,13 @@ import {
   allWeapons,
   allClothings,
   allBlessings,
-} from 'src/store/acquirement';
+} from '@motojouya/kniw/src/store/acquirement';
 import {
   createCharactor,
   getPhysical,
   getAbilities,
   getSkills,
-} from 'src/domain/charactor';
+} from '@motojouya/kniw/src/domain/charactor';
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
 const getCharactorError: GetCharactorError = (errors, i, property) => {

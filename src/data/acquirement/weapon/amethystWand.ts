@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { higherBolt } from 'src/data/skill/higherBolt';
-import { electricShock } from 'src/data/skill/electricShock';
-import { eleciWave } from 'src/data/skill/eleciWave';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
+import { electricShock } from '@motojouya/kniw/src/data/skill/electricShock';
+import { eleciWave } from '@motojouya/kniw/src/data/skill/eleciWave';
 
 export const amethystWand: Weapon = {
   name: 'amethystWand',

@@ -1,5 +1,5 @@
-import type { Clothing } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
+import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
 
 export const silkSuit: Clothing = {
   name: 'silkSuit',

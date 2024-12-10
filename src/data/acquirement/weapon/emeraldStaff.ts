@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { windEdge } from 'src/data/skill/windEdge';
-import { clearCloud } from 'src/data/skill/clearCloud';
-import { tornade } from 'src/data/skill/tornade';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
+import { clearCloud } from '@motojouya/kniw/src/data/skill/clearCloud';
+import { tornade } from '@motojouya/kniw/src/data/skill/tornade';
 
 export const emeraldStaff: Weapon = {
   name: 'emeraldStaff',

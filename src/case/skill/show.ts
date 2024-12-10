@@ -1,5 +1,5 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import { getSkill } from 'src/store/skill';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import { getSkill } from '@motojouya/kniw/src/store/skill';
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =

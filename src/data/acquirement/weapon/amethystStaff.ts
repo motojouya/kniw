@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { higherBolt } from 'src/data/skill/higherBolt';
-import { thunder } from 'src/data/skill/thunder';
-import { jammer } from 'src/data/skill/jammer';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
+import { thunder } from '@motojouya/kniw/src/data/skill/thunder';
+import { jammer } from '@motojouya/kniw/src/data/skill/jammer';
 
 export const amethystStaff: Weapon = {
   name: 'amethystStaff',

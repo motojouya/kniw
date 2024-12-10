@@ -1,11 +1,11 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { Command } from '@commander-js/extra-typings';
-import { list } from 'src/case/charactor/list';
-import { showStatus } from 'src/case/charactor/showStatus';
-import { fire } from 'src/case/charactor/fire';
-import { hire } from 'src/case/charactor/hire';
+import { list } from '@motojouya/kniw/src/case/charactor/list';
+import { showStatus } from '@motojouya/kniw/src/case/charactor/showStatus';
+import { fire } from '@motojouya/kniw/src/case/charactor/fire';
+import { hire } from '@motojouya/kniw/src/case/charactor/hire';
 
 export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
   const charactor = new Command('charactor');

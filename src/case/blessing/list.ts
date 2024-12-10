@@ -1,5 +1,5 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import { blessingNames } from 'src/store/acquirement';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import { blessingNames } from '@motojouya/kniw/src/store/acquirement';
 
 export type List = (dialogue: Dialogue) => Promise<void>;
 export const list: List = async dialogue =>

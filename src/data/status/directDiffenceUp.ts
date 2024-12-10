@@ -1,4 +1,4 @@
-import { Status } from 'src/domain/status';
+import type { Status } from '@motojouya/kniw/src/domain/status';
 
 export const directDiffenceUp: Status = {
   name: 'directDiffenceUp',

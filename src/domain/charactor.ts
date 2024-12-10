@@ -1,9 +1,12 @@
-import type { Status } from 'src/domain/status';
-import type { SelectOption } from 'src/io/standard_dialogue';
-import { Physical, addPhysicals } from 'src/domain/physical';
-import { Race, Weapon, Clothing, Blessing, NotWearableErorr } from 'src/domain/acquirement';
-import { Ability } from 'src/domain/ability';
-import { Skill } from 'src/domain/skill';
+import type { Status } from '@motojouya/kniw/src/domain/status';
+import type { SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Physical } from '@motojouya/kniw/src/domain/physical';
+import type { Race, Weapon, Clothing, Blessing } from '@motojouya/kniw/src/domain/acquirement';
+import type { Ability } from '@motojouya/kniw/src/domain/ability';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
+
+import { addPhysicals } from '@motojouya/kniw/src/domain/physical';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 
 export function isBattlingCharactor(charactor: Charactor): charactor is CharactorBattling {
   return Object.prototype.hasOwnProperty.call(charactor, 'isVisitor') && typeof charactor.isVisitor === 'boolean';

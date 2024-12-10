@@ -5,7 +5,7 @@ import {
   clear,
   multiSelect,
   select,
-} from 'src/io/standard_dialogue'
+} from '@motojouya/kniw/src/io/standard_dialogue'
 
 const testTextInput = async () => {
   const r = await textInput('テキスト入力してください。');

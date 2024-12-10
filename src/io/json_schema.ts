@@ -1,6 +1,7 @@
 import Ajv from 'ajv';
 import addFormats from 'ajv-formats';
-import { $Compiler, wrapCompilerAsTypeGuard } from 'json-schema-to-ts';
+import type { $Compiler } from 'json-schema-to-ts';
+import { wrapCompilerAsTypeGuard } from 'json-schema-to-ts';
 
 const ajv = new Ajv();
 addFormats(ajv);

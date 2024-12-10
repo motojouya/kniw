@@ -1,6 +1,6 @@
-import type { Clothing } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { concentration } from 'src/data/skill/concentration';
+import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { concentration } from '@motojouya/kniw/src/data/skill/concentration';
 
 export const furAironArmor: Clothing = {
   name: 'furAironArmor',

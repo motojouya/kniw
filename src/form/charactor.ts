@@ -1,11 +1,12 @@
-import type { Charactor } from 'src/domain/charactor';
+import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import Ajv, { JSONSchemaType } from 'ajv';
+import type { JSONSchemaType } from 'ajv';
+import Ajv from 'ajv';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { getPhysical, validate } from 'src/domain/charactor';
-import { getRace, getWeapon, getClothing, getBlessing } from 'src/store/acquirement';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
+import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
 
 export type CharactorForm = {
   name: string;

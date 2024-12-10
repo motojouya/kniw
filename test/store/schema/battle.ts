@@ -1,12 +1,14 @@
-import assert from 'assert';
-import type { Battle } from 'src/domain/battle';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import {
   GameOngoing,
   GameHome,
   GameVisitor,
   GameDraw
-} from 'src/domain/battle';
-import { toBattle } from 'src/store/schema/battle';
+} from '@motojouya/kniw/src/domain/battle';
+import { toBattle } from '@motojouya/kniw/src/store/schema/battle';
 
 const testData = {
   title: 'first-title',
@@ -65,6 +67,6 @@ describe('Battle#toBattle', function () {
   it('toBattle', async () => {
     const battle = (toBattle(testData) as Battle);
     console.log(battle);
-    assert.equal(battle.title, 'first-title');
+    assert.strictEqual(battle.title, 'first-title');
   });
 });

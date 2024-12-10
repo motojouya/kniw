@@ -1,8 +1,10 @@
-import assert from 'assert';
-import type { CharactorBattling } from 'src/domain/charactor';
+import { describe, it } from "node:test";
+import assert from "node:assert";
 
-import { toCharactor } from 'src/store/schema/charactor';
-import { mpGainPlus } from 'src/data/ability/mpGainPlus';
+import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+
+import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
+import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
 
 describe('mpGainPlus#wait', function () {
   it('calc', function () {
@@ -12,10 +14,10 @@ describe('mpGainPlus#wait', function () {
       accuracy: 0.1,
     };
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as CharactorBattling);
-    assert.equal(charactor.mp, 0);
+    assert.strictEqual(charactor.mp, 0);
 
     const result = mpGainPlus.wait(30, charactor, randoms);
-    assert.equal(result.mp, 2);
+    assert.strictEqual(result.mp, 2);
   });
   it('zero', function () {
     const randoms = {
@@ -24,10 +26,10 @@ describe('mpGainPlus#wait', function () {
       accuracy: 0.1,
     };
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as CharactorBattling);
-    assert.equal(charactor.mp, 0);
+    assert.strictEqual(charactor.mp, 0);
 
     const result = mpGainPlus.wait(0, charactor, randoms);
-    assert.equal(result.mp, 0);
+    assert.strictEqual(result.mp, 0);
   });
   it('over', function () {
     const randoms = {
@@ -36,10 +38,10 @@ describe('mpGainPlus#wait', function () {
       accuracy: 0.1,
     };
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as CharactorBattling);
-    assert.equal(charactor.mp, 0);
+    assert.strictEqual(charactor.mp, 0);
 
     const result = mpGainPlus.wait(210, charactor, randoms);
-    assert.equal(result.mp, 11);
+    assert.strictEqual(result.mp, 11);
   });
 });
 

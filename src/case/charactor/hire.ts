@@ -1,7 +1,7 @@
-import type { Dialogue, SelectOption } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
-import { NotApplicable } from 'src/io/standard_dialogue';
-import { createStore } from 'src/store/charactor';
+import type { Dialogue, SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
+import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
+import { createStore } from '@motojouya/kniw/src/store/charactor';
 import {
   getRace,
   getBlessing,
@@ -11,9 +11,9 @@ import {
   allWeapons,
   allClothings,
   allBlessings,
-} from 'src/store/acquirement';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { createCharactor } from 'src/domain/charactor';
+} from '@motojouya/kniw/src/store/acquirement';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { createCharactor } from '@motojouya/kniw/src/domain/charactor';
 
 export type Hire = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
 export const hire: Hire = (dialogue, repository) => async name => {

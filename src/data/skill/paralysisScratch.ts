@@ -1,12 +1,12 @@
-import type { Skill, ActionToCharactor } from 'src/domain/skill';
+import type { Skill, ActionToCharactor } from '@motojouya/kniw/src/domain/skill';
 import {
   calcOrdinaryDirectDamage,
   addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_SLASH,
   MAGIC_TYPE_NONE,
-} from 'src/domain/skill';
-import { paralysis } from 'src/data/status/paralysis';
+} from '@motojouya/kniw/src/domain/skill';
+import { paralysis } from '@motojouya/kniw/src/data/status/paralysis';
 
 export const paralysisAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);

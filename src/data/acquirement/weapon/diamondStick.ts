@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { gunStone } from 'src/data/skill/gunStone';
-import { rockWave } from 'src/data/skill/rockWave';
-import { stoneWeather } from 'src/data/skill/stoneWeather';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
+import { rockWave } from '@motojouya/kniw/src/data/skill/rockWave';
+import { stoneWeather } from '@motojouya/kniw/src/data/skill/stoneWeather';
 
 export const diamondStick: Weapon = {
   name: 'diamondStick',

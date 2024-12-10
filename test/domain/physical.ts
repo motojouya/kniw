@@ -1,8 +1,8 @@
-import assert from 'assert';
-import {
-  Physical,
-  addPhysicals,
-} from 'src/domain/physical';
+import { describe, it } from "node:test";
+import assert from "node:assert";
+
+import type { Physical } from '@motojouya/kniw/src/domain/physical';
+import { addPhysicals } from '@motojouya/kniw/src/domain/physical';
 
 const basePhysical: Physical = {
   MaxHP: 100,
@@ -83,28 +83,28 @@ describe('Physical#addPhysicals', function () {
       },
     ]);
 
-    assert.equal(result.MaxHP, 111);
-    assert.equal(result.MaxMP, 111);
-    assert.equal(result.STR, 111);
-    assert.equal(result.VIT, 111);
-    assert.equal(result.DEX, 111);
-    assert.equal(result.AGI, 111);
-    assert.equal(result.AVD, 111);
-    assert.equal(result.INT, 111);
-    assert.equal(result.MND, 111);
-    assert.equal(result.RES, 111);
-    assert.equal(result.WT, 111);
-    assert.equal(result.StabResistance, 11);
-    assert.equal(result.SlashResistance, 11);
-    assert.equal(result.BlowResistance, 11);
-    assert.equal(result.FireSuitable, 11);
-    assert.equal(result.RockSuitable, 11);
-    assert.equal(result.WaterSuitable, 11);
-    assert.equal(result.IceSuitable, 11);
-    assert.equal(result.AirSuitable, 11);
-    assert.equal(result.ThunderSuitable, 11);
-    assert.equal(result.move, 7);
-    assert.equal(result.jump, 6);
+    assert.strictEqual(result.MaxHP, 111);
+    assert.strictEqual(result.MaxMP, 111);
+    assert.strictEqual(result.STR, 111);
+    assert.strictEqual(result.VIT, 111);
+    assert.strictEqual(result.DEX, 111);
+    assert.strictEqual(result.AGI, 111);
+    assert.strictEqual(result.AVD, 111);
+    assert.strictEqual(result.INT, 111);
+    assert.strictEqual(result.MND, 111);
+    assert.strictEqual(result.RES, 111);
+    assert.strictEqual(result.WT, 111);
+    assert.strictEqual(result.StabResistance, 11);
+    assert.strictEqual(result.SlashResistance, 11);
+    assert.strictEqual(result.BlowResistance, 11);
+    assert.strictEqual(result.FireSuitable, 11);
+    assert.strictEqual(result.RockSuitable, 11);
+    assert.strictEqual(result.WaterSuitable, 11);
+    assert.strictEqual(result.IceSuitable, 11);
+    assert.strictEqual(result.AirSuitable, 11);
+    assert.strictEqual(result.ThunderSuitable, 11);
+    assert.strictEqual(result.move, 7);
+    assert.strictEqual(result.jump, 6);
   });
 
   it('minus', function () {
@@ -160,28 +160,28 @@ describe('Physical#addPhysicals', function () {
       },
     ]);
 
-    assert.equal(result.MaxHP, 91);
-    assert.equal(result.MaxMP, 91);
-    assert.equal(result.STR, 91);
-    assert.equal(result.VIT, 91);
-    assert.equal(result.DEX, 91);
-    assert.equal(result.AGI, 91);
-    assert.equal(result.AVD, 91);
-    assert.equal(result.INT, 91);
-    assert.equal(result.MND, 91);
-    assert.equal(result.RES, 91);
-    assert.equal(result.WT, 91);
-    assert.equal(result.StabResistance, 9);
-    assert.equal(result.SlashResistance, 9);
-    assert.equal(result.BlowResistance, 9);
-    assert.equal(result.FireSuitable, 9);
-    assert.equal(result.RockSuitable, 9);
-    assert.equal(result.WaterSuitable, 9);
-    assert.equal(result.IceSuitable, 9);
-    assert.equal(result.AirSuitable, 9);
-    assert.equal(result.ThunderSuitable, 9);
-    assert.equal(result.move, 4);
-    assert.equal(result.jump, 3);
+    assert.strictEqual(result.MaxHP, 91);
+    assert.strictEqual(result.MaxMP, 91);
+    assert.strictEqual(result.STR, 91);
+    assert.strictEqual(result.VIT, 91);
+    assert.strictEqual(result.DEX, 91);
+    assert.strictEqual(result.AGI, 91);
+    assert.strictEqual(result.AVD, 91);
+    assert.strictEqual(result.INT, 91);
+    assert.strictEqual(result.MND, 91);
+    assert.strictEqual(result.RES, 91);
+    assert.strictEqual(result.WT, 91);
+    assert.strictEqual(result.StabResistance, 9);
+    assert.strictEqual(result.SlashResistance, 9);
+    assert.strictEqual(result.BlowResistance, 9);
+    assert.strictEqual(result.FireSuitable, 9);
+    assert.strictEqual(result.RockSuitable, 9);
+    assert.strictEqual(result.WaterSuitable, 9);
+    assert.strictEqual(result.IceSuitable, 9);
+    assert.strictEqual(result.AirSuitable, 9);
+    assert.strictEqual(result.ThunderSuitable, 9);
+    assert.strictEqual(result.move, 4);
+    assert.strictEqual(result.jump, 3);
   });
 });
 

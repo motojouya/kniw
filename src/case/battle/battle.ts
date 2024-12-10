@@ -1,10 +1,10 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
-import type { CharactorBattling } from 'src/domain/charactor';
-import { importJson } from 'src/io/file_repository';
-import { NotApplicable } from 'src/io/standard_dialogue';
-import type { Battle } from 'src/domain/battle';
-import type { Turn } from 'src/domain/turn';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
+import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import { importJson } from '@motojouya/kniw/src/io/file_repository';
+import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
+import type { Turn } from '@motojouya/kniw/src/domain/turn';
 import {
   createBattle,
   actToField,
@@ -21,25 +21,25 @@ import {
   GameOngoing,
   getLastTurn,
   NotBattlingError,
-} from 'src/domain/battle';
+} from '@motojouya/kniw/src/domain/battle';
 import {
   getSkills,
   getPhysical,
   getAbilities,
   getSelectOption as charactorSelectOption,
   selectCharactor,
-} from 'src/domain/charactor';
-import { createStore as createBattleStore } from 'src/store/battle';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { toParty } from 'src/store/schema/party';
-import { createAbsolute, createRandoms } from 'src/domain/random';
-import { getSkill } from 'src/store/skill';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
-import { underStatus } from 'src/domain/status';
-import { sleep } from 'src/data/status/sleep';
-import { MAGIC_TYPE_NONE } from 'src/domain/skill';
-import { silent } from 'src/data/status';
+} from '@motojouya/kniw/src/domain/charactor';
+import { createStore as createBattleStore } from '@motojouya/kniw/src/store/battle';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { toParty } from '@motojouya/kniw/src/store/schema/party';
+import { createAbsolute, createRandoms } from '@motojouya/kniw/src/domain/random';
+import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { underStatus } from '@motojouya/kniw/src/domain/status';
+import { sleep } from '@motojouya/kniw/src/data/status/sleep';
+import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+import { silent } from '@motojouya/kniw/src/data/status';
 
 const SKILL = 'SKILL';
 const LIST = 'LIST';

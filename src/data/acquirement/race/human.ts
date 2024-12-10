@@ -1,5 +1,5 @@
-import type { Race } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
+import type { Race } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
 
 export const human: Race = {
   name: 'human',

@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import type { Party } from 'src/domain/party';
-import type { Store } from 'src/store/store';
+import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { Store } from '@motojouya/kniw/src/store/store';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
@@ -10,16 +10,16 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { createStore } from 'src/store/party';
-import { createRepository } from 'src/io/indexed_db_repository';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { createStore } from '@motojouya/kniw/src/store/party';
+import { createRepository } from '@motojouya/kniw/src/io/indexed_db_repository';
 import {
   PartyList,
   PartyNew,
   PartyExsiting,
-} from 'src/components/party';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+} from '@motojouya/kniw/src/components/party';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 const Index: FC = () => {
   const searchParams = useSearchParams();

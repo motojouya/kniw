@@ -1,6 +1,6 @@
 import type { FC } from 'react';
-import type { Battle } from 'src/domain/battle';
-import type { Store } from 'src/store/store';
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
+import type { Store } from '@motojouya/kniw/src/store/store';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
@@ -10,17 +10,17 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { createStore } from 'src/store/battle';
-import { createRepository } from 'src/io/indexed_db_repository';
+import { createStore } from '@motojouya/kniw/src/store/battle';
+import { createRepository } from '@motojouya/kniw/src/io/indexed_db_repository';
 import {
   BattleList,
   BattleNew,
   BattleExsiting,
-} from 'src/components/battle';
-import { NotWearableErorr } from 'src/domain/acquirement';
-import { CharactorDuplicationError } from 'src/domain/party';
-import { NotBattlingError } from 'src/domain/battle';
-import { JsonSchemaUnmatchError, DataNotFoundError } from 'src/store/store';
+} from '@motojouya/kniw/src/components/battle';
+import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 const Index: FC = () => {
   const searchParams = useSearchParams();

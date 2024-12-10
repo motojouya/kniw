@@ -1,7 +1,7 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
-import type { Repository } from 'src/io/repository';
-import { NotApplicable } from 'src/io/standard_dialogue';
-import { createStore } from 'src/store/party';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
+import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
+import { createStore } from '@motojouya/kniw/src/store/party';
 
 export type Dismiss = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
 export const dismiss: Dismiss = (dialogue, repository) => async name => {

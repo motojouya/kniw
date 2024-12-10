@@ -1,10 +1,10 @@
-import type { Save, List, Get, Remove, ExportJson, Repository } from 'src/io/repository';
+import type { Save, List, Get, Remove, ExportJson, Repository } from '@motojouya/kniw/src/io/repository';
 
 import Dexie from 'dexie';
 
-import { CopyFailError } from 'src/io/repository';
-import { PartyJson } from 'src/store/schema/party';
-import { BattleJson } from 'src/store/schema/battle';
+import { CopyFailError } from '@motojouya/kniw/src/io/repository';
+import { PartyJson } from '@motojouya/kniw/src/store/schema/party';
+import { BattleJson } from '@motojouya/kniw/src/store/schema/battle';
 
 class KniwDB extends Dexie {
   party!: Dexie.Table<PartyJson, string>;

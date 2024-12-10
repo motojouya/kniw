@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { flameFall } from 'src/data/skill/flameFall';
-import { crossFire } from 'src/data/skill/crossFire';
-import { ghostFire } from 'src/data/skill/ghostFire';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
+import { crossFire } from '@motojouya/kniw/src/data/skill/crossFire';
+import { ghostFire } from '@motojouya/kniw/src/data/skill/ghostFire';
 
 export const rubyWand: Weapon = {
   name: 'rubyWand',

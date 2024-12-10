@@ -1,8 +1,8 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { flameFall } from 'src/data/skill/flameFall';
-import { smallHeat } from 'src/data/skill/smallHeat';
-import { flameDigger } from 'src/data/skill/flameDigger';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
+import { smallHeat } from '@motojouya/kniw/src/data/skill/smallHeat';
+import { flameDigger } from '@motojouya/kniw/src/data/skill/flameDigger';
 
 export const rubyStaff: Weapon = {
   name: 'rubyStaff',

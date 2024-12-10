@@ -1,9 +1,9 @@
-import type { Weapon } from 'src/domain/acquirement';
-import { createValidateWearable } from 'src/domain/acquirement';
-import { blow } from 'src/data/skill/blow';
-import { gunStone } from 'src/data/skill/gunStone';
-import { dazzle } from 'src/data/skill/dazzle';
-import { rampartForce } from 'src/data/ability/rampartForce';
+import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
+import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import { blow } from '@motojouya/kniw/src/data/skill/blow';
+import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
+import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
+import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
 
 export const diamondFlail: Weapon = {
   name: 'diamondFlail',

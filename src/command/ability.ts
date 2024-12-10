@@ -1,8 +1,8 @@
-import type { Dialogue } from 'src/io/standard_dialogue';
+import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
 
 import { Command } from '@commander-js/extra-typings';
-import { list } from 'src/case/ability/list';
-import { show } from 'src/case/ability/show';
+import { list } from '@motojouya/kniw/src/case/ability/list';
+import { show } from '@motojouya/kniw/src/case/ability/show';
 
 export const makeCommand = (dialogue: Dialogue) => {
   const ability = new Command('ability');

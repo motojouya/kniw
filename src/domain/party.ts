@@ -1,5 +1,5 @@
-import type { Charactor, CharactorBattling } from 'src/domain/charactor';
-import { isBattlingCharactor } from 'src/domain/charactor';
+import type { Charactor, CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import { isBattlingCharactor } from '@motojouya/kniw/src/domain/charactor';
 
 export type Party = {
   name: string;
