@@ -3,6 +3,9 @@
     "target": "es2017",
     "module": "commonjs",
     "baseUrl": "./",
+    "paths": {
+      "@motojouya/kniw/*": ["*"]
+    },
     "outDir": "dist",
     "noEmit": false,
     "esModuleInterop": true,

@@ -36365,8 +36365,8 @@ exports.isSettlement = exports.wait = exports.surrender = exports.actToField = e
 const skill_1 = __webpack_require__(8841);
 const charactor_1 = __webpack_require__(657);
 const field_1 = __webpack_require__(4925);
-const status_1 = __webpack_require__(9538);
-const status_2 = __webpack_require__(7929);
+const index_1 = __webpack_require__(9538);
+const status_1 = __webpack_require__(7929);
 const arrayLast = (ary) => ary.slice(-1)[0];
 class NotBattlingError {
     constructor(charactor, message) {
@@ -36482,14 +36482,14 @@ const actToCharactor = (battle, actor, skill, receivers, datetime, randoms) => {
     if (skill.mpConsumption > actor.mp) {
         throw new Error('mp shortage');
     }
-    if ((0, status_2.underStatus)(status_1.silent, actor) && skill.magicType !== skill_1.MAGIC_TYPE_NONE) {
+    if ((0, status_1.underStatus)(index_1.silent, actor) && skill.magicType !== skill_1.MAGIC_TYPE_NONE) {
         throw new Error('silent cannot do magic');
     }
-    if ((0, status_2.underStatus)(status_1.sleep, actor)) {
+    if ((0, status_1.underStatus)(index_1.sleep, actor)) {
         return (0, exports.stay)(battle, actor, datetime);
     }
     // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
-    if ((0, status_2.underStatus)(status_1.paralysis, actor) && randoms.accuracy > 0.5) {
+    if ((0, status_1.underStatus)(index_1.paralysis, actor) && randoms.accuracy > 0.5) {
         return (0, exports.stay)(battle, actor, datetime);
     }
     const lastTurn = arrayLast(battle.turns);
@@ -36525,14 +36525,14 @@ const actToField = (battle, actor, skill, datetime, randoms) => {
     if (skill.mpConsumption > actor.mp) {
         throw new Error('mp shortage');
     }
-    if ((0, status_2.underStatus)(status_1.silent, actor) && skill.magicType !== skill_1.MAGIC_TYPE_NONE) {
+    if ((0, status_1.underStatus)(index_1.silent, actor) && skill.magicType !== skill_1.MAGIC_TYPE_NONE) {
         throw new Error('silent cannot do magic');
     }
-    if ((0, status_2.underStatus)(status_1.sleep, actor)) {
+    if ((0, status_1.underStatus)(index_1.sleep, actor)) {
         return (0, exports.stay)(battle, actor, datetime);
     }
     // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
-    if ((0, status_2.underStatus)(status_1.paralysis, actor) && randoms.accuracy > 0.5) {
+    if ((0, status_1.underStatus)(index_1.paralysis, actor) && randoms.accuracy > 0.5) {
         return (0, exports.stay)(battle, actor, datetime);
     }
     const lastTurn = arrayLast(battle.turns);
@@ -36580,12 +36580,12 @@ const waitCharactor = (charactor, wt, randoms) => {
     /* eslint-enable @typescript-eslint/no-unsafe-return */
     /* eslint-disable no-nested-ternary */
     // prettier-ignore
-    const wtRate = (0, status_2.underStatus)(status_1.quick, newCharactor) ? 1.5
-        : (0, status_2.underStatus)(status_1.slow, newCharactor) ? 0.75
+    const wtRate = (0, status_1.underStatus)(index_1.quick, newCharactor) ? 1.5
+        : (0, status_1.underStatus)(index_1.slow, newCharactor) ? 0.75
             : 1;
     /* eslint-enable no-nested-ternary */
     newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
-    if ((0, status_2.underStatus)(status_1.acid, newCharactor)) {
+    if ((0, status_1.underStatus)(index_1.acid, newCharactor)) {
         newCharactor.hp = Math.max(newCharactor.hp - wt / 10, 0);
     }
     newCharactor.statuses = newCharactor.statuses
@@ -36967,7 +36967,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.calcOrdinaryAccuracy = exports.addStatus = exports.calcOrdinaryMagicalDamage = exports.calcOrdinaryDirectDamage = exports.MAGIC_TYPE_NONE = exports.MAGIC_TYPE_THUNDER = exports.MAGIC_TYPE_WIND = exports.MAGIC_TYPE_ICE = exports.MAGIC_TYPE_WATER = exports.MAGIC_TYPE_ROCK = exports.MAGIC_TYPE_FIRE = exports.DIRECT_TYPE_NONE = exports.DIRECT_TYPE_BLOW = exports.DIRECT_TYPE_STAB = exports.DIRECT_TYPE_SLASH = void 0;
 const status_1 = __webpack_require__(7929);
 const charactor_1 = __webpack_require__(657);
-const status_2 = __webpack_require__(9538);
+const index_1 = __webpack_require__(9538);
 exports.DIRECT_TYPE_SLASH = 'SLASH';
 exports.DIRECT_TYPE_STAB = 'STAB';
 exports.DIRECT_TYPE_BLOW = 'BLOW';
@@ -37030,18 +37030,18 @@ const calcDirectRegistance = (skill, charactor) => {
 const calcDirectAttack = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
     const magicRate = calcMagicRate(skill, attacker);
-    const upRate = (0, status_1.underStatus)(status_2.directAttackUp, attacker) ? 1.2 : 1;
-    const downRate = (0, status_1.underStatus)(status_2.directAttackDown, attacker) ? 0.8 : 1;
-    const fearRate = (0, status_1.underStatus)(status_2.fear, attacker) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(index_1.directAttackUp, attacker) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(index_1.directAttackDown, attacker) ? 0.8 : 1;
+    const fearRate = (0, status_1.underStatus)(index_1.fear, attacker) ? 0.8 : 1;
     return ((physical.STR + physical.DEX) * magicRate * upRate * downRate * fearRate) / 100;
 };
 const calcDirectDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
     const magicRegistance = calcMagicRegistance(skill, defencer);
     const directRegistance = calcDirectRegistance(skill, defencer);
-    const upRate = (0, status_1.underStatus)(status_2.directDiffenceUp, defencer) ? 1.2 : 1;
-    const downRate = (0, status_1.underStatus)(status_2.directDiffenceDown, defencer) ? 0.8 : 1;
-    const fearRate = (0, status_1.underStatus)(status_2.fear, defencer) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(index_1.directDiffenceUp, defencer) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(index_1.directDiffenceDown, defencer) ? 0.8 : 1;
+    const fearRate = (0, status_1.underStatus)(index_1.fear, defencer) ? 0.8 : 1;
     return (((physical.VIT + physical.STR) * directRegistance * magicRegistance * upRate * downRate * fearRate) / 100 / 100);
 };
 const calcOrdinaryDirectDamage = (self, actor, randoms, field, receiver) => {
@@ -37063,16 +37063,16 @@ exports.calcOrdinaryDirectDamage = calcOrdinaryDirectDamage;
 const calcMagicalAttack = (skill, attacker) => {
     const physical = (0, charactor_1.getPhysical)(attacker);
     const magicRate = calcMagicRate(skill, attacker);
-    const upRate = (0, status_1.underStatus)(status_2.magicAttackUp, attacker) ? 1.2 : 1;
-    const downRate = (0, status_1.underStatus)(status_2.magicAttackDown, attacker) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(index_1.magicAttackUp, attacker) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(index_1.magicAttackDown, attacker) ? 0.8 : 1;
     return ((physical.INT + physical.MND) * magicRate * upRate * downRate) / 100;
 };
 const calcMagicalDefence = (skill, defencer) => {
     const physical = (0, charactor_1.getPhysical)(defencer);
     const magicRegistance = calcMagicRegistance(skill, defencer);
     const directRegistance = calcDirectRegistance(skill, defencer);
-    const upRate = (0, status_1.underStatus)(status_2.magicDiffenceUp, defencer) ? 1.2 : 1;
-    const downRate = (0, status_1.underStatus)(status_2.magicDiffenceDown, defencer) ? 0.8 : 1;
+    const upRate = (0, status_1.underStatus)(index_1.magicDiffenceUp, defencer) ? 1.2 : 1;
+    const downRate = (0, status_1.underStatus)(index_1.magicDiffenceDown, defencer) ? 0.8 : 1;
     return ((physical.VIT + physical.MND) * directRegistance * magicRegistance * upRate * downRate) / 100 / 100;
 };
 const calcOrdinaryMagicalDamage = (self, actor, randoms, field, receiver) => {
