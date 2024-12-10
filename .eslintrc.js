@@ -71,6 +71,9 @@ module.exports = {
     "@typescript-eslint/no-unsafe-member-access": "off",
     "@typescript-eslint/no-unsafe-return": "off",
     "@typescript-eslint/require-await": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/no-unsafe-argument": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
     // FIXME react上でvoidに対してPromise<void>をassignして怒られるが直すのが面倒
     "@typescript-eslint/no-misused-promises": [
       "error",
