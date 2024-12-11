@@ -29,7 +29,6 @@ export type ToCharactor = (
   charactorForm: any,
 ) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toCharactor: ToCharactor = charactorForm => {
-
   const result = charactorFormSchema.safeParse(charactorForm);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'charactorのデータではありません');
@@ -64,7 +63,11 @@ export const toCharactor: ToCharactor = charactorForm => {
 
   const weapon = getWeapon(charactorFormTyped.weapon);
   if (!weapon) {
-    return new DataNotFoundError(charactorFormTyped.weapon, 'weapon', `${charactorFormTyped.weapon}という武器は存在しません`);
+    return new DataNotFoundError(
+      charactorFormTyped.weapon,
+      'weapon',
+      `${charactorFormTyped.weapon}という武器は存在しません`,
+    );
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

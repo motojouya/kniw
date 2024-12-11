@@ -276,7 +276,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     getValues,
     formState: { errors, isSubmitting },
     control,
-  } = useForm<DoSkillForm>({ resolver: zodResolver<DoSkillForm>(doSkillFormSchema) });
+  } = useForm<DoSkillForm>({ resolver: zodResolver(doSkillFormSchema) });
 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');

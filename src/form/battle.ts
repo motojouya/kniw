@@ -63,7 +63,6 @@ export type ToAction = (
   candidates: CharactorBattling[],
 ) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | ReceiverDuplicationError;
 export const toAction: ToAction = (doSkillForm, candidates) => {
-
   const result = doSkillFormSchema.safeParse(doSkillForm);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'partyのformデータではありません');

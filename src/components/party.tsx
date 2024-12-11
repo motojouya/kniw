@@ -49,7 +49,7 @@ const PartyEditor: FC<{
     formState: { errors, isSubmitting },
     control,
   } = useForm<PartyForm>({
-    resolver: zodResolver<PartyForm>(partyFormSchema),
+    resolver: zodResolver(partyFormSchema),
     defaultValues: partyForm,
   });
   const { fields, append, remove } = useFieldArray({ control, name: "charactors" });

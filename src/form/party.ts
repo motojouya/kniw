@@ -1,6 +1,5 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { CharactorForm } from '@motojouya/kniw/src/form/charactor';
 import type { Store } from '@motojouya/kniw/src/store/store';
 
 import { z } from 'zod';
@@ -26,7 +25,6 @@ export type ToParty = (
   partyForm: any,
 ) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toParty: ToParty = partyForm => {
-
   const result = partyFormSchema.safeParse(partyForm);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'partyのformデータではありません');
