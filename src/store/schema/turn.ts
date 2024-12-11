@@ -99,7 +99,6 @@ export type ToAction = (
   actionJson: any,
 ) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toAction: ToAction = actionJson => {
-
   const result = actionSchema.safeParse(actionJson);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'actionのjsonデータではありません');
