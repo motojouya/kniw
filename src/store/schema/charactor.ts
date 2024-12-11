@@ -1,6 +1,6 @@
 import type { Charactor, AttachedStatus } from '@motojouya/kniw/src/domain/charactor';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
@@ -59,7 +59,6 @@ export type ToCharactor = (
   charactorJson: any,
 ) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toCharactor: ToCharactor = charactorJson => {
-
   const result = charactorSchema.safeParse(charactorJson);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'charactorのjsonデータではありません');
@@ -94,7 +93,11 @@ export const toCharactor: ToCharactor = charactorJson => {
 
   const weapon = getWeapon(charactorJsonTyped.weapon);
   if (!weapon) {
-    return new DataNotFoundError(charactorJsonTyped.weapon, 'weapon', `${charactorJsonTyped.weapon}という武器は存在しません`);
+    return new DataNotFoundError(
+      charactorJsonTyped.weapon,
+      'weapon',
+      `${charactorJsonTyped.weapon}という武器は存在しません`,
+    );
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

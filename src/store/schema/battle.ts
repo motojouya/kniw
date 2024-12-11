@@ -1,7 +1,7 @@
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 import { toTurn, toTurnJson, turnSchema } from '@motojouya/kniw/src/store/schema/turn';
 import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
@@ -39,7 +39,6 @@ export type ToBattle = (
   | JsonSchemaUnmatchError
   | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
-
   const parseResult = charactorSchema.safeParse(battleJson);
   if (!parseResult.success) {
     return new JsonSchemaUnmatchError(parseResult.error, 'battleのjsonデータではありません');

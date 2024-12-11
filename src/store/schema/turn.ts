@@ -5,7 +5,7 @@ import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import { parse, format } from 'date-fns';
 // import ja from 'date-fns/locale/ja'
 
-import { z } from "zod";
+import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { getSkill } from '@motojouya/kniw/src/store/skill';
@@ -40,12 +40,7 @@ export const timePassingSchema = z.object({
 });
 export type TimePassingJson = z.infer<typeof timePassingSchema>;
 
-const actionSchema = z.discriminatedUnion("type", [
-  doSkillSchema,
-  doNothingSchema,
-  timePassingSchema,
-  surrenderSchema,
-]);
+const actionSchema = z.discriminatedUnion('type', [doSkillSchema, doNothingSchema, timePassingSchema, surrenderSchema]);
 export type ActionJson = z.infer<typeof actionSchema>;
 
 export const turnSchema = z.object({
@@ -202,7 +197,6 @@ export type ToTurn = (
   turnJson: any,
 ) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toTurn: ToTurn = turnJson => {
-
   const result = charactorSchema.safeParse(turnJson);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'turnのjsonデータではありません');

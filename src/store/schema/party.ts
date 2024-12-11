@@ -1,7 +1,7 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import { z } from "zod";
+import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
@@ -24,7 +24,6 @@ export type ToParty = (
   partyJson: any,
 ) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toParty: ToParty = partyJson => {
-
   const result = partySchema.safeParse(partyJson);
   if (!result.success) {
     return new JsonSchemaUnmatchError(result.error, 'partyのjsonデータではありません');
