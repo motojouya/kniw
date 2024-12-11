@@ -8,7 +8,7 @@ import Link from 'next/link'
 
 import { CharactorCard } from '@motojouya/kniw/src/components/charactor';
 import { useState } from 'react';
-import { ajvResolver } from '@hookform/resolvers/ajv';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import {
   FormErrorMessage,
@@ -49,7 +49,7 @@ const PartyEditor: FC<{
     formState: { errors, isSubmitting },
     control,
   } = useForm<PartyForm>({
-    resolver: ajvResolver<PartyForm>(partyFormSchema),
+    resolver: zodResolver<PartyForm>(partyFormSchema),
     defaultValues: partyForm,
   });
   const { fields, append, remove } = useFieldArray({ control, name: "charactors" });

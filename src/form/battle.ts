@@ -2,8 +2,7 @@ import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import type { SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
 
-import type { JSONSchemaType } from 'ajv';
-import Ajv from 'ajv';
+import { z } from 'zod';
 
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';
@@ -16,36 +15,11 @@ export class ReceiverDuplicationError {
   constructor(readonly message: string) {}
 }
 
-export type DoSkillForm = {
-  skillName: string;
-  receiversWithIsVisitor: { value: string }[];
-};
-
-export const doSkillFormSchema: JSONSchemaType<DoSkillForm> = {
-  type: 'object',
-  properties: {
-    skillName: {
-      type: 'string',
-      minLength: 1,
-      //      errorMessage: { minLength: 'skillName field is required' },
-    },
-    receiversWithIsVisitor: {
-      type: 'array',
-      items: {
-        type: 'object',
-        properties: {
-          value: {
-            type: 'string',
-            minLength: 1,
-            //            errorMessage: { minLength: 'receiversWithIsVisitor field is required' },
-          },
-        },
-        required: ['value'],
-      },
-    },
-  },
-  required: ['skillName', 'receiversWithIsVisitor'],
-} as const;
+export const doSkillFormSchema = z.object({
+  skillName: z.string().min(1),
+  receiversWithIsVisitor: z.array(z.object({ value: z.string().min(1) })),
+});
+export type DoSkillForm = z.infer<typeof doSkillFormSchema>;
 
 export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
 export const receiverSelectOption: ReceiverSelectOption = receiver => ({
@@ -89,16 +63,15 @@ export type ToAction = (
   candidates: CharactorBattling[],
 ) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | ReceiverDuplicationError;
 export const toAction: ToAction = (doSkillForm, candidates) => {
-  const ajv = new Ajv();
-  const validateSchema = ajv.compile<DoSkillForm>(doSkillFormSchema);
-  if (!validateSchema(doSkillForm)) {
-    // @ts-ignore
-    const { errors } = validateSchema;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'partyのformデータではありません');
+
+  const result = doSkillFormSchema.safeParse(doSkillForm);
+  if (!result.success) {
+    return new JsonSchemaUnmatchError(result.error, 'partyのformデータではありません');
   }
 
-  const { skillName } = doSkillForm;
+  const doSkillFormTyped = result.data;
+
+  const { skillName } = doSkillFormTyped;
   if (skillName === ACTION_DO_NOTHING) {
     return null;
   }
@@ -108,13 +81,13 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
     return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
   }
 
-  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor.map(obj => obj.value));
-  if (receiverSet.size !== doSkillForm.receiversWithIsVisitor.length) {
+  const receiverSet = new Set(doSkillFormTyped.receiversWithIsVisitor.map(obj => obj.value));
+  if (receiverSet.size !== doSkillFormTyped.receiversWithIsVisitor.length) {
     return new ReceiverDuplicationError('同じキャラクターを複数回えらべません');
   }
 
   const receivers: CharactorBattling[] = [];
-  for (const receiverObj of doSkillForm.receiversWithIsVisitor) {
+  for (const receiverObj of doSkillFormTyped.receiversWithIsVisitor) {
     const receiver = toReceiver(receiverObj.value, candidates);
     if (receiver instanceof DataNotFoundError) {
       return receiver;
