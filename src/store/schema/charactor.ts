@@ -10,7 +10,7 @@ import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/sr
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,
-  restWt: z.integer(),
+  restWt: z.number().int(),
 });
 export type AttachedStatusJson = z.infer<typeof attachedStatusSchema>;
 
@@ -21,9 +21,9 @@ export const charactorSchema = z.object({
   clothing: z.string(),
   weapon: z.string(),
   statuses: z.array(attachedStatusSchema),
-  hp: z.integer(),
-  mp: z.integer(),
-  restWt: z.integer(),
+  hp: z.number().int(),
+  mp: z.number().int(),
+  restWt: z.number().int(),
   isVisitor: z.boolean().optional(),
 });
 export type CharactorJson = z.infer<typeof charactorSchema>;

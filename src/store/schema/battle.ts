@@ -39,7 +39,7 @@ export type ToBattle = (
   | JsonSchemaUnmatchError
   | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
-  const parseResult = charactorSchema.safeParse(battleJson);
+  const parseResult = battleSchema.safeParse(battleJson);
   if (!parseResult.success) {
     return new JsonSchemaUnmatchError(parseResult.error, 'battleのjsonデータではありません');
   }
