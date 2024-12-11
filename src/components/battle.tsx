@@ -10,7 +10,7 @@ import type { DoSkillForm, DoAction } from '@motojouya/kniw/src/form/battle';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 import { useState } from 'react';
-import { ajvResolver } from '@hookform/resolvers/ajv';
+import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useForm,
   useFieldArray,
@@ -276,7 +276,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     getValues,
     formState: { errors, isSubmitting },
     control,
-  } = useForm<DoSkillForm>({ resolver: ajvResolver<DoSkillForm>(doSkillFormSchema) });
+  } = useForm<DoSkillForm>({ resolver: zodResolver(doSkillFormSchema) });
 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');

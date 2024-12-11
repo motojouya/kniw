@@ -1,46 +1,19 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { CharactorForm } from '@motojouya/kniw/src/form/charactor';
 import type { Store } from '@motojouya/kniw/src/store/store';
 
-import type { JSONSchemaType } from 'ajv';
-import Ajv from 'ajv';
-// import ajvErrors from 'ajv-errors'; // FIXME schema.errorMessageというpropertyを使いたかったがうまく動かない
+import { z } from 'zod';
 
 import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { charactorFormSchema, toCharactor, toCharactorForm } from '@motojouya/kniw/src/form/charactor';
 import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 
-// FIXME json-schema-to-tsの導入
-// import { FromSchema } from 'json-schema-to-ts';
-// type PartyForm = FromSchema<typeof partyFormSchema>;
-//
-// json-schema-to-tsに変更すると、validationのtype guardも変わる
-// import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
-// const compile = createValidationCompiler();
-// const validateSchema = compile(partyFormSchema);
-
-export type PartyForm = {
-  name: string;
-  charactors: CharactorForm[];
-};
-
-export const partyFormSchema: JSONSchemaType<PartyForm> = {
-  type: 'object',
-  properties: {
-    name: {
-      type: 'string',
-      minLength: 1,
-    },
-    charactors: {
-      type: 'array',
-      items: charactorFormSchema,
-    },
-  },
-  required: ['name', 'charactors'],
-  //  errorMessage: { minLength: 'username field is required' },
-} as const;
+export const partyFormSchema = z.object({
+  name: z.string().min(1),
+  charactors: z.array(charactorFormSchema),
+});
+export type PartyForm = z.infer<typeof partyFormSchema>;
 
 export type ToPartyForm = (party: Party) => PartyForm;
 export const toPartyForm: ToPartyForm = party => ({
@@ -52,20 +25,17 @@ export type ToParty = (
   partyForm: any,
 ) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
 export const toParty: ToParty = partyForm => {
-  const ajv = new Ajv({ allErrors: true });
-  //  ajvErrors(ajv);
-  const validateSchema = ajv.compile<PartyForm>(partyFormSchema);
-  if (!validateSchema(partyForm)) {
-    // @ts-ignore
-    const { errors } = validateSchema;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'partyのformデータではありません');
+  const result = partyFormSchema.safeParse(partyForm);
+  if (!result.success) {
+    return new JsonSchemaUnmatchError(result.error, 'partyのformデータではありません');
   }
 
-  const { name } = partyForm;
+  const partyFormTyped = result.data;
+
+  const { name } = partyFormTyped;
 
   const charactorObjs: Charactor[] = [];
-  for (const charactor of partyForm.charactors) {
+  for (const charactor of partyFormTyped.charactors) {
     const charactorObj = toCharactor(charactor);
     if (
       charactorObj instanceof DataNotFoundError ||

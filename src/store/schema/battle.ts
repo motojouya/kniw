@@ -1,8 +1,7 @@
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
 
-import type { FromSchema } from 'json-schema-to-ts';
-import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
+import { z } from 'zod';
 
 import { toTurn, toTurnJson, turnSchema } from '@motojouya/kniw/src/store/schema/turn';
 import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
@@ -12,22 +11,14 @@ import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/s
 import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDuplicationError, isBattlingParty } from '@motojouya/kniw/src/domain/party';
 
-export const battleSchema = {
-  type: 'object',
-  properties: {
-    title: { type: 'string' },
-    home: partySchema,
-    visitor: partySchema,
-    turns: { type: 'array', items: turnSchema },
-    result: {
-      type: 'string',
-      enum: [GameOngoing, GameHome, GameVisitor, GameDraw],
-    },
-  },
-  required: ['title', 'home', 'visitor', 'turns', 'result'],
-} as const;
-
-export type BattleJson = FromSchema<typeof battleSchema>;
+export const battleSchema = z.object({
+  title: z.string(),
+  home: partySchema,
+  visitor: partySchema,
+  turns: z.array(turnSchema),
+  result: z.enum([GameOngoing, GameHome, GameVisitor, GameDraw]),
+});
+export type BattleJson = z.infer<typeof battleSchema>;
 
 export type ToBattleJson = (battle: Battle) => BattleJson;
 export const toBattleJson: ToBattleJson = battle => ({
@@ -48,18 +39,16 @@ export type ToBattle = (
   | JsonSchemaUnmatchError
   | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
-  const compile = createValidationCompiler();
-  const validateSchema = compile(battleSchema);
-  if (!validateSchema(battleJson)) {
-    // @ts-ignore
-    const { errors } = validateSchema;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'battleのjsonデータではありません');
+  const parseResult = battleSchema.safeParse(battleJson);
+  if (!parseResult.success) {
+    return new JsonSchemaUnmatchError(parseResult.error, 'battleのjsonデータではありません');
   }
 
-  const { title } = battleJson;
+  const battleJsonTyped = parseResult.data;
 
-  const home = toParty(battleJson.home);
+  const { title } = battleJsonTyped;
+
+  const home = toParty(battleJsonTyped.home);
   if (
     home instanceof NotWearableErorr ||
     home instanceof DataNotFoundError ||
@@ -72,7 +61,7 @@ export const toBattle: ToBattle = battleJson => {
     return new NotBattlingError(home, `home party(${home.name})のcharactorにisVisitor propertyがありません`);
   }
 
-  const visitor = toParty(battleJson.visitor);
+  const visitor = toParty(battleJsonTyped.visitor);
   if (
     visitor instanceof NotWearableErorr ||
     visitor instanceof DataNotFoundError ||
@@ -86,7 +75,7 @@ export const toBattle: ToBattle = battleJson => {
   }
 
   const turns: Turn[] = [];
-  for (const turnJson of battleJson.turns) {
+  for (const turnJson of battleJsonTyped.turns) {
     const turn = toTurn(turnJson);
     if (
       turn instanceof NotWearableErorr ||
@@ -99,7 +88,7 @@ export const toBattle: ToBattle = battleJson => {
     turns.push(turn);
   }
 
-  const { result } = battleJson;
+  const { result } = battleJsonTyped;
 
   return {
     title,

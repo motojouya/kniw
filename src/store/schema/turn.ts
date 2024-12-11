@@ -2,11 +2,11 @@ import type { Turn, Action } from '@motojouya/kniw/src/domain/turn';
 import type { Climate } from '@motojouya/kniw/src/domain/field';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 
-import type { FromSchema } from 'json-schema-to-ts';
 import { parse, format } from 'date-fns';
 // import ja from 'date-fns/locale/ja'
 
-import { createValidationCompiler } from '@motojouya/kniw/src/io/json_schema';
+import { z } from 'zod';
+
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { getSkill } from '@motojouya/kniw/src/store/skill';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
@@ -14,73 +14,44 @@ import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/s
 import { isBattlingCharactor } from '@motojouya/kniw/src/domain/charactor';
 import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
 
-export const surrenderSchema = {
-  type: 'object',
-  properties: {
-    type: { const: 'SURRENDER' },
-    actor: charactorSchema,
-  },
-  required: ['type', 'actor'],
-} as const;
+export const surrenderSchema = z.object({
+  type: z.literal('SURRENDER'),
+  actor: charactorSchema,
+});
+export type SurrenderJson = z.infer<typeof surrenderSchema>;
 
-export type SurrenderJson = FromSchema<typeof surrenderSchema>;
+export const doSkillSchema = z.object({
+  type: z.literal('DO_SKILL'),
+  actor: charactorSchema,
+  skill: z.string(),
+  receivers: z.array(charactorSchema),
+});
+export type DoSkillJson = z.infer<typeof doSkillSchema>;
 
-export const doSkillSchema = {
-  type: 'object',
-  properties: {
-    type: { const: 'DO_SKILL' },
-    actor: charactorSchema,
-    skill: { type: 'string' },
-    receivers: { type: 'array', items: charactorSchema },
-  },
-  required: ['type', 'actor', 'skill', 'receivers'],
-} as const;
+export const doNothingSchema = z.object({
+  type: z.literal('DO_NOTHING'),
+  actor: charactorSchema,
+});
+export type DoNothingJson = z.infer<typeof doNothingSchema>;
 
-export type DoSkillJson = FromSchema<typeof doSkillSchema>;
+export const timePassingSchema = z.object({
+  type: z.literal('TIME_PASSING'),
+  wt: z.number().int(),
+});
+export type TimePassingJson = z.infer<typeof timePassingSchema>;
 
-export const doNothingSchema = {
-  type: 'object',
-  properties: {
-    type: { const: 'DO_NOTHING' },
-    actor: charactorSchema,
-  },
-  required: ['type', 'actor'],
-} as const;
+const actionSchema = z.discriminatedUnion('type', [doSkillSchema, doNothingSchema, timePassingSchema, surrenderSchema]);
+export type ActionJson = z.infer<typeof actionSchema>;
 
-export type DoNothingJson = FromSchema<typeof doNothingSchema>;
-
-export const timePassingSchema = {
-  type: 'object',
-  properties: {
-    type: { const: 'TIME_PASSING' },
-    wt: { type: 'integer' },
-  },
-  required: ['type', 'wt'],
-} as const;
-
-export type TimePassingJson = FromSchema<typeof timePassingSchema>;
-
-export const actionSchema = { anyOf: [doSkillSchema, doNothingSchema, timePassingSchema, surrenderSchema] } as const;
-export type ActionJson = FromSchema<typeof actionSchema>;
-
-export const turnSchema = {
-  type: 'object',
-  properties: {
-    datetime: { type: 'string', format: 'date-time' },
-    action: actionSchema,
-    sortedCharactors: { type: 'array', items: charactorSchema },
-    field: {
-      type: 'object',
-      properties: {
-        climate: { type: 'string' },
-      },
-      required: ['climate'],
-    },
-  },
-  required: ['datetime', 'action', 'sortedCharactors', 'field'],
-} as const;
-
-export type TurnJson = FromSchema<typeof turnSchema>;
+export const turnSchema = z.object({
+  datetime: z.string().datetime({ local: true }),
+  action: actionSchema,
+  sortedCharactors: z.array(charactorSchema),
+  field: z.object({
+    climate: z.string(),
+  }),
+});
+export type TurnJson = z.infer<typeof turnSchema>;
 
 export type ToActionJson = (action: Action) => ActionJson;
 export const toActionJson: ToActionJson = action => {
@@ -128,17 +99,15 @@ export type ToAction = (
   actionJson: any,
 ) => Action | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toAction: ToAction = actionJson => {
-  const compile = createValidationCompiler();
-  const validateSchema = compile(actionSchema);
-  if (!validateSchema(actionJson)) {
-    // @ts-ignore
-    const { errors } = validateSchema;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'actionのjsonデータではありません');
+  const result = actionSchema.safeParse(actionJson);
+  if (!result.success) {
+    return new JsonSchemaUnmatchError(result.error, 'actionのjsonデータではありません');
   }
 
-  if (actionJson.type === 'DO_SKILL') {
-    const skillActor = toCharactor(actionJson.actor);
+  const actionJsonTyped = result.data;
+
+  if (actionJsonTyped.type === 'DO_SKILL') {
+    const skillActor = toCharactor(actionJsonTyped.actor);
     if (
       skillActor instanceof NotWearableErorr ||
       skillActor instanceof DataNotFoundError ||
@@ -152,7 +121,7 @@ export const toAction: ToAction = actionJson => {
     }
 
     const receivers: CharactorBattling[] = [];
-    for (const receiverJson of actionJson.receivers) {
+    for (const receiverJson of actionJsonTyped.receivers) {
       const receiver = toCharactor(receiverJson);
       if (
         receiver instanceof NotWearableErorr ||
@@ -167,9 +136,9 @@ export const toAction: ToAction = actionJson => {
       receivers.push(receiver);
     }
 
-    const skill = getSkill(actionJson.skill);
+    const skill = getSkill(actionJsonTyped.skill);
     if (!skill) {
-      return new DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill}というskillは存在しません`);
+      return new DataNotFoundError(actionJsonTyped.skill, 'skill', `${actionJsonTyped.skill}というskillは存在しません`);
     }
 
     return {
@@ -180,8 +149,8 @@ export const toAction: ToAction = actionJson => {
     };
   }
 
-  if (actionJson.type === 'SURRENDER') {
-    const surrenderActor = toCharactor(actionJson.actor);
+  if (actionJsonTyped.type === 'SURRENDER') {
+    const surrenderActor = toCharactor(actionJsonTyped.actor);
     if (
       surrenderActor instanceof NotWearableErorr ||
       surrenderActor instanceof DataNotFoundError ||
@@ -198,8 +167,8 @@ export const toAction: ToAction = actionJson => {
     };
   }
 
-  if (actionJson.type === 'DO_NOTHING') {
-    const nothingActor = toCharactor(actionJson.actor);
+  if (actionJsonTyped.type === 'DO_NOTHING') {
+    const nothingActor = toCharactor(actionJsonTyped.actor);
     if (
       nothingActor instanceof NotWearableErorr ||
       nothingActor instanceof DataNotFoundError ||
@@ -218,7 +187,7 @@ export const toAction: ToAction = actionJson => {
 
   return {
     type: 'TIME_PASSING',
-    wt: 0 + actionJson.wt,
+    wt: 0 + actionJsonTyped.wt,
   };
 };
 
@@ -226,23 +195,21 @@ export type ToTurn = (
   turnJson: any,
 ) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
 export const toTurn: ToTurn = turnJson => {
-  const compile = createValidationCompiler();
-  const validateSchema = compile(turnSchema);
-  if (!validateSchema(turnJson)) {
-    // @ts-ignore
-    const { errors } = validateSchema;
-    console.debug(errors);
-    return new JsonSchemaUnmatchError(errors, 'turnのjsonデータではありません');
+  const result = turnSchema.safeParse(turnJson);
+  if (!result.success) {
+    return new JsonSchemaUnmatchError(result.error, 'turnのjsonデータではありません');
   }
+
+  const turnJsonTyped = result.data;
 
   let datetime = null;
   try {
-    datetime = parse(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+    datetime = parse(turnJsonTyped.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
   } catch (e) {
     return new JsonSchemaUnmatchError(e, '日付が間違っています');
   }
 
-  const action = toAction(turnJson.action);
+  const action = toAction(turnJsonTyped.action);
   if (
     action instanceof NotWearableErorr ||
     action instanceof DataNotFoundError ||
@@ -253,7 +220,7 @@ export const toTurn: ToTurn = turnJson => {
   }
 
   const sortedCharactors: CharactorBattling[] = [];
-  for (const charactorJson of turnJson.sortedCharactors) {
+  for (const charactorJson of turnJsonTyped.sortedCharactors) {
     const charactor = toCharactor(charactorJson);
     if (
       charactor instanceof NotWearableErorr ||
@@ -269,7 +236,7 @@ export const toTurn: ToTurn = turnJson => {
   }
 
   const field = {
-    climate: turnJson.field.climate as Climate,
+    climate: turnJsonTyped.field.climate as Climate,
   };
 
   return {
