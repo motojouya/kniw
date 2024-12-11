@@ -40,12 +40,12 @@ export type ToBattle = (
   | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
 
-  const result = charactorSchema.safeParse(battleJson);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'battleのjsonデータではありません');
+  const parseResult = charactorSchema.safeParse(battleJson);
+  if (!parseResult.success) {
+    return new JsonSchemaUnmatchError(parseResult.error, 'battleのjsonデータではありません');
   }
 
-  const battleJsonTyped = result.data;
+  const battleJsonTyped = parseResult.data;
 
   const { title } = battleJsonTyped;
 
