@@ -55,16 +55,26 @@ export const toCharactorJson: ToCharactorJson = charactor => {
   return json;
 };
 
+export function parseJson<S extends z.ZodTypeAny>(schema: S): (json: unknown) => z.infer<S> | JsonSchemaUnmatchError {
+  return function (json) {
+
+    const result = schema.safeParse(json);
+    if (result.success) {
+      return result.data;
+    } else {
+      return new JsonSchemaUnmatchError(result.error, '想定されたjson schemaのデータではありません');
+    }
+  };
+}
+
 export type ToCharactor = (
   charactorJson: any,
 ) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
 export const toCharactor: ToCharactor = charactorJson => {
-  const result = charactorSchema.safeParse(charactorJson);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'charactorのjsonデータではありません');
+  const charactorJsonTyped = parseJson(charactorSchema)(charactorJson);
+  if (charactorJsonTyped instanceof JsonSchemaUnmatchError) {
+    return charactorJsonTyped;
   }
-
-  const charactorJsonTyped = result.data;
 
   const { name } = charactorJsonTyped;
 
