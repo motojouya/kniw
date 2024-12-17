@@ -3,7 +3,7 @@ import type { Charactor, AttachedStatus } from '@motojouya/kniw/src/domain/chara
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { validate } from '@motojouya/kniw/src/domain/charactor';
 import { statusSchema, toStatus, toStatusJson } from '@motojouya/kniw/src/store/schema/status';
 import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
@@ -55,58 +55,41 @@ export const toCharactorJson: ToCharactorJson = charactor => {
   return json;
 };
 
-export function parseJson<S extends z.ZodTypeAny>(schema: S): (json: unknown) => z.infer<S> | JsonSchemaUnmatchError {
-  return function (json) {
-
-    const result = schema.safeParse(json);
-    if (result.success) {
-      return result.data;
-    } else {
-      return new JsonSchemaUnmatchError(result.error, '想定されたjson schemaのデータではありません');
-    }
-  };
-}
-
 export type ToCharactor = (
-  charactorJson: any,
-) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+  charactorJson: CharactorJson,
+) => Charactor | NotWearableErorr | DataNotFoundError;
 export const toCharactor: ToCharactor = charactorJson => {
-  const charactorJsonTyped = parseJson(charactorSchema)(charactorJson);
-  if (charactorJsonTyped instanceof JsonSchemaUnmatchError) {
-    return charactorJsonTyped;
-  }
+  const { name } = charactorJson;
 
-  const { name } = charactorJsonTyped;
-
-  const race = getRace(charactorJsonTyped.race);
+  const race = getRace(charactorJson.race);
   if (!race) {
-    return new DataNotFoundError(charactorJsonTyped.race, 'race', `${charactorJsonTyped.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(charactorJsonTyped.blessing);
+  const blessing = getBlessing(charactorJson.blessing);
   if (!blessing) {
     return new DataNotFoundError(
-      charactorJsonTyped.blessing,
+      charactorJson.blessing,
       'blessing',
-      `${charactorJsonTyped.blessing}という祝福は存在しません`,
+      `${charactorJson.blessing}という祝福は存在しません`,
     );
   }
 
-  const clothing = getClothing(charactorJsonTyped.clothing);
+  const clothing = getClothing(charactorJson.clothing);
   if (!clothing) {
     return new DataNotFoundError(
-      charactorJsonTyped.clothing,
+      charactorJson.clothing,
       'clothing',
-      `${charactorJsonTyped.clothing}という装備は存在しません`,
+      `${charactorJson.clothing}という装備は存在しません`,
     );
   }
 
-  const weapon = getWeapon(charactorJsonTyped.weapon);
+  const weapon = getWeapon(charactorJson.weapon);
   if (!weapon) {
     return new DataNotFoundError(
-      charactorJsonTyped.weapon,
+      charactorJson.weapon,
       'weapon',
-      `${charactorJsonTyped.weapon}という武器は存在しません`,
+      `${charactorJson.weapon}という武器は存在しません`,
     );
   }
 
@@ -116,10 +99,10 @@ export const toCharactor: ToCharactor = charactorJson => {
   }
 
   const statuses: AttachedStatus[] = [];
-  for (const attachedStatusJson of charactorJsonTyped.statuses) {
+  for (const attachedStatusJson of charactorJson.statuses) {
     const statusObj = toStatus(attachedStatusJson.status);
 
-    if (statusObj instanceof JsonSchemaUnmatchError || statusObj instanceof DataNotFoundError) {
+    if (statusObj instanceof DataNotFoundError) {
       return statusObj;
     }
 
@@ -136,13 +119,13 @@ export const toCharactor: ToCharactor = charactorJson => {
     clothing,
     weapon,
     statuses,
-    hp: 0 + charactorJsonTyped.hp,
-    mp: 0 + charactorJsonTyped.mp,
-    restWt: 0 + charactorJsonTyped.restWt,
+    hp: 0 + charactorJson.hp,
+    mp: 0 + charactorJson.mp,
+    restWt: 0 + charactorJson.restWt,
   };
 
-  if (Object.prototype.hasOwnProperty.call(charactorJsonTyped, 'isVisitor')) {
-    someone.isVisitor = charactorJsonTyped.isVisitor;
+  if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
+    someone.isVisitor = charactorJson.isVisitor;
   }
 
   return someone;

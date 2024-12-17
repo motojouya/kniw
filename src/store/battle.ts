@@ -12,7 +12,7 @@ import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
-import { toBattleJson, toBattle } from '@motojouya/kniw/src/store/schema/battle';
+import { toBattleJson, toBattle, battleSchema } from '@motojouya/kniw/src/store/schema/battle';
 
 const NAMESPACE = 'battle';
 
@@ -28,7 +28,13 @@ const createGet: CreateGetBattle = repository => async name => {
   if (!result) {
     return null;
   }
-  return toBattle(result);
+
+  const battleJson = parseJson(battleSchema)(result);
+  if (battleJson instanceof JsonSchemaUnmatchError) {
+    return battleJson;
+  }
+
+  return toBattle(battleJson);
 };
 
 const createRemove: CreateRemove = repository => async name => repository.remove(NAMESPACE, name);

@@ -22,6 +22,18 @@ export type Store<T, E> = {
 };
 export type CreateStore<T, E> = (repository: Repository) => Promise<Store<T, E>>;
 
+export function parseJson<S extends z.ZodTypeAny>(schema: S): (json: unknown) => z.infer<S> | JsonSchemaUnmatchError {
+  return function (json) {
+
+    const result = schema.safeParse(json);
+    if (result.success) {
+      return result.data;
+    } else {
+      return new JsonSchemaUnmatchError(result.error, '想定されたjson schemaのデータではありません');
+    }
+  };
+}
+
 export class JsonSchemaUnmatchError {
   constructor(
     readonly error: any,

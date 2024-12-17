@@ -4,7 +4,7 @@ import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 
@@ -21,23 +21,17 @@ export const toPartyJson: ToPartyJson = party => ({
 });
 
 export type ToParty = (
-  partyJson: any,
-) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+  partyJson: PartyJson,
+) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError;
 export const toParty: ToParty = partyJson => {
-  const result = partySchema.safeParse(partyJson);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'partyのjsonデータではありません');
-  }
-
-  const { name } = result.data;
+  const { name } = partyJson;
 
   const charactorObjs: Charactor[] = [];
-  for (const charactor of result.data.charactors) {
+  for (const charactor of partyJson.charactors) {
     const charactorObj = toCharactor(charactor);
     if (
       charactorObj instanceof DataNotFoundError ||
       charactorObj instanceof NotWearableErorr ||
-      charactorObj instanceof JsonSchemaUnmatchError
     ) {
       return charactorObj;
     }
