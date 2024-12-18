@@ -6,6 +6,7 @@ import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
 import type { Store } from '@motojouya/kniw/src/store/store';
 import type { DoSkillForm, DoAction } from '@motojouya/kniw/src/form/battle';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -57,8 +58,8 @@ import {
   NotBattlingError,
 } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDetail } from '@motojouya/kniw/src/components/charactor';
-import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
 import { toParty as jsonToParty, partySchema } from '@motojouya/kniw/src/store/schema/party';
+import { toBattleJson } from '@motojouya/kniw/src/store/schema/battle';
 import {
   doSkillFormSchema,
   receiverSelectOption,
@@ -265,7 +266,7 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
   await store.save(battle);
 };
 
-const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store }) => {
+const BattleTurn: FC<{ battle: Battle, repository: Repository, store: BattleStore }> = ({ battle, repository, store }) => {
 
   const lastTurn = getLastTurn(battle);
   const actor = nextActor(battle);
@@ -301,12 +302,13 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   };
 
   const isVisitorTag = actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
+  const exportBattleJson = () => repository.exportJson(toBattleJson(battle), '');
 
   return (
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
-      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson && store.exportJson(battle.title, '')} >Export</Button>}
+      {battle.result !== GameOngoing && <Button type="button" onClick={exportBattleJson} >Export</Button>}
       <GameResultView battle={battle} />
       {battle.result === GameOngoing && (
         <>
@@ -357,12 +359,8 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   );
 };
 
-export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = ({ store, battleTitle }) => {
+export const BattleExsiting: FC<{ repository: Repository, store: BattleStore, battleTitle: string }> = ({ repository, store, battleTitle }) => {
   const battle = useLiveQuery(() => store.get(battleTitle), [battleTitle]);
-
-  if (!store.exportJson) {
-    throw new Error('invalid store');
-  }
 
   if (
     battle instanceof NotWearableErorr ||
@@ -388,17 +386,18 @@ export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = (
     );
   }
 
-  return (<BattleTurn battle={battle} store={store} />);
+  return (<BattleTurn battle={battle} repository={repository} store={store} />);
 };
 
 const ImportParty: FC<{
   type: string,
   party: Party | null,
   setParty: (party: Party | null) => void,
-}> = ({ type, party, setParty }) => {
+  repository: Repository,
+}> = ({ type, party, setParty, repository }) => {
 
   const importParty = async () => {
-    const json = await importJson();
+    const json = await repository.importJson('');
     if (!json) {
       return;
     }
@@ -430,7 +429,7 @@ const ImportParty: FC<{
   );
 };
 
-export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
+export const BattleNew: FC<{ repository: Repository, store: BattleStore }> = ({ repository, store }) => {
 
   const router = useRouter()
 
@@ -487,8 +486,8 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
           <Input id="title" placeholder="title" {...register('title')} />
           <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
         </FormControl>
-        <ImportParty type='HOME' party={homeParty} setParty={setHomeParty}/>
-        <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty}/>
+        <ImportParty type='HOME' party={homeParty} setParty={setHomeParty} repository={repository}/>
+        <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty} repository={repository}/>
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">Start Battle</Button>
       </form>
     </Box>

@@ -3,7 +3,6 @@ import type {
   CreateGet,
   CreateRemove,
   CreateList,
-  CreateExportJson,
   CreateStore,
 } from '@motojouya/kniw/src/store/store';
 import type { Party } from '@motojouya/kniw/src/domain/party';
@@ -39,8 +38,6 @@ const createRemove: CreateRemove = storage => async name => storage.remove(NAMES
 
 const createList: CreateList = storage => async () => storage.list(NAMESPACE);
 
-const createExportJson: CreateExportJson = storage => async (name, file) => storage.exportJson(NAMESPACE, name, file);
-
 type CreateStoreParty = CreateStore<
   Party,
   NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
@@ -52,6 +49,5 @@ export const createStore: CreateStoreParty = async storage => {
     list: createList(storage),
     get: createGet(storage),
     remove: createRemove(storage),
-    exportJson: createExportJson(storage),
   };
 };

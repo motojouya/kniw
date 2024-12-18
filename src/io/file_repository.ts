@@ -5,6 +5,7 @@ import type {
   Get,
   Remove,
   ExportJson,
+  ImportJson,
   Repository,
 } from '@motojouya/kniw/src/io/repository';
 import fs from 'fs';
@@ -93,21 +94,22 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
 
 // FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
 // ただし、fsのエラーメッセージが一緒なら意味がない
-type CreateExportJson = (basePath: string) => ExportJson;
-const createExportJson: CreateExportJson = basePath => async (namespace, objctKey, fileName) => {
+const exportJson: ExportJson = async (json, fileName) => {
+  const text = JSON.stringify(json);
   try {
-    await fs.promises.copyFile(
-      resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
-      fileName,
-      fs.constants.COPYFILE_EXCL,
-    );
+    await fs.promises.writeFile(fileName, text, { signal: true });
+    // FIXME old copy pattern
+    // await fs.promises.copyFile(
+    //   resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), // storageFileName
+    //   fileName,
+    //   fs.constants.COPYFILE_EXCL,
+    // );
     return null;
   } catch (e) {
     return new CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
   }
 };
 
-export type ImportJson = (fileName: string) => Promise<object | null>;
 export const importJson: ImportJson = async fileName => {
   try {
     const contents = await fs.promises.readFile(fileName, {
@@ -136,6 +138,7 @@ export const createRepository: CreateRepository = async basePath => {
     list: createList(basePath),
     get: createGet(basePath),
     remove: createRemove(basePath),
-    exportJson: createExportJson(basePath),
+    importJson: importJson,
+    exportJson: exportJson,
   };
 };

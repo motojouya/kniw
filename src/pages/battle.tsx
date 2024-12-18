@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Store } from '@motojouya/kniw/src/store/store';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
@@ -26,28 +27,30 @@ const Index: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
-  const [store, setStore] = useState<Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null>(null);
+  const [store, setStore] = useState<[Repository, Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null]>([]);
   useEffect(() => {
     (async () => {
       const webRepository = await createRepository();
       const battleStore = await createStore(webRepository);
-      setStore(battleStore);
+      setStore([webRepository, battleStore]);
     })();
   }, []);
 
-  if (!store) {
+  if (storeTuple.length === 0) {
     return (<Box><Text>loading...</Text></Box>);
   }
+
+  const [repository, store] = storeTuple;
 
   if (!title) {
     return (<BattleList store={store} />);
   }
 
   if (title === '__new') {
-    return <BattleNew store={store} />
+    return <BattleNew repository={repository} store={store} />
   }
 
-  return <BattleExsiting battleTitle={title} store={store} />
+  return <BattleExsiting battleTitle={title} repository={repository} store={store} />
 };
 
 export default Index;

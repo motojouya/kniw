@@ -3,7 +3,6 @@ import type {
   CreateGet,
   CreateRemove,
   CreateList,
-  CreateExportJson,
   CreateStore,
 } from '@motojouya/kniw/src/store/store';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
@@ -41,9 +40,6 @@ const createRemove: CreateRemove = repository => async name => repository.remove
 
 const createList: CreateList = repository => async () => repository.list(NAMESPACE);
 
-const createExportJson: CreateExportJson = repository => async (name, file) =>
-  repository.exportJson(NAMESPACE, name, file);
-
 type CreateStoreBattle = CreateStore<
   Battle,
   NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError
@@ -55,6 +51,5 @@ export const createStore: CreateStoreBattle = async repository => {
     list: createList(repository),
     get: createGet(repository),
     remove: createRemove(repository),
-    exportJson: createExportJson(repository),
   };
 };
