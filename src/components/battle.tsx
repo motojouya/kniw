@@ -58,7 +58,7 @@ import {
 } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDetail } from '@motojouya/kniw/src/components/charactor';
 import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
-import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
+import { toParty as jsonToParty, partySchema } from '@motojouya/kniw/src/store/schema/party';
 import {
   doSkillFormSchema,
   receiverSelectOption,
@@ -76,7 +76,7 @@ import { sleep, silent } from '@motojouya/kniw/src/data/status';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { createRandoms, createAbsolute } from '@motojouya/kniw/src/domain/random';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { parseJson, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
 
@@ -281,9 +281,9 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');
 
-  const actSkill = async (doSkillForm: any) => {
+  const actSkill = async (doSkillForm: DoSkillForm) => {
     const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
-    if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
+    if (doAction instanceof DataNotFoundError) {
       setMessage('入力してください');
       return;
     }
@@ -398,8 +398,14 @@ const ImportParty: FC<{
 }> = ({ type, party, setParty }) => {
 
   const importParty = async () => {
-    const partyJson = await importJson();
-    if (!partyJson) {
+    const json = await importJson();
+    if (!json) {
+      return;
+    }
+
+    const partyJson = parseJson(partySchema)(json);
+    if (partyJson instanceof JsonSchemaUnmatchError) {
+      window.alert(partyJson.message);
       return;
     }
 
@@ -407,8 +413,7 @@ const ImportParty: FC<{
     if (
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
-      partyObj instanceof CharactorDuplicationError ||
-      partyObj instanceof JsonSchemaUnmatchError
+      partyObj instanceof CharactorDuplicationError
     ) {
       window.alert(partyObj.message);
       return;

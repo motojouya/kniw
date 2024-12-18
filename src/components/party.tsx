@@ -26,11 +26,11 @@ import { useLiveQuery } from "dexie-react-hooks";
 
 import { partyFormSchema, toPartyForm, saveParty } from '@motojouya/kniw/src/form/party';
 import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
-import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
+import { toParty as jsonToParty, partySchema } from '@motojouya/kniw/src/store/schema/party';
 
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/store';
+import { parseJson, JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/store';
 
 type PartyStore = Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
@@ -55,7 +55,7 @@ const PartyEditor: FC<{
   const { fields, append, remove } = useFieldArray({ control, name: "charactors" });
   const [saveMessage, setSaveMessage] = useState<{ error: boolean, message: string }>({ error: false, message: '' });
 
-  const save = async (party: any) => {
+  const save = async (party: PartyForm) => {
     const error = await saveParty(store, !exist)(party);
     if (
       error instanceof DataNotFoundError ||
@@ -173,8 +173,14 @@ export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
       return;
     }
 
-    const partyJson = await importJson();
-    if (!partyJson) {
+    const json = await importJson();
+    if (!json) {
+      return;
+    }
+
+    const partyJson = parseJson(partySchema)(json)
+    if (partyJson instanceof JsonSchemaUnmatchError) {
+      window.alert(partyJson.message);
       return;
     }
 
@@ -183,7 +189,6 @@ export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
       partyObj instanceof CharactorDuplicationError ||
-      partyObj instanceof JsonSchemaUnmatchError
     ) {
       window.alert(partyObj.message);
       return;
