@@ -1,9 +1,9 @@
 import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateStore } from '@motojouya/kniw/src/store/store';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 
-import { toCharactor, toCharactorJson } from '@motojouya/kniw/src/store/schema/charactor';
+import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { parseJson, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 const NAMESPACE = 'charactor';
 
@@ -16,7 +16,13 @@ const createGet: CreateGetCharactor = repository => async name => {
   if (!result) {
     return null;
   }
-  return toCharactor(result);
+
+  const charactorJson = parseJson(charactorSchema)(result);
+  if (charactorJson instanceof JsonSchemaUnmatchError) {
+    return charactorJson;
+  }
+
+  return toCharactor(charactorJson);
 };
 
 const createRemove: CreateRemove = repository => async name => repository.remove(NAMESPACE, name);

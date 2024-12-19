@@ -3,12 +3,11 @@ import type {
   CreateGet,
   CreateRemove,
   CreateList,
-  CreateExportJson,
   CreateStore,
 } from '@motojouya/kniw/src/store/store';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { toParty, toPartyJson } from '@motojouya/kniw/src/store/schema/party';
+import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
@@ -26,14 +25,18 @@ const createGet: CreateGetParty = storage => async name => {
   if (!result) {
     return null;
   }
-  return toParty(result);
+
+  const partyJson = parseJson(partySchema)(result);
+  if (partyJson instanceof JsonSchemaUnmatchError) {
+    return partyJson;
+  }
+
+  return toParty(partyJson);
 };
 
 const createRemove: CreateRemove = storage => async name => storage.remove(NAMESPACE, name);
 
 const createList: CreateList = storage => async () => storage.list(NAMESPACE);
-
-const createExportJson: CreateExportJson = storage => async (name, file) => storage.exportJson(NAMESPACE, name, file);
 
 type CreateStoreParty = CreateStore<
   Party,
@@ -46,6 +49,5 @@ export const createStore: CreateStoreParty = async storage => {
     list: createList(storage),
     get: createGet(storage),
     remove: createRemove(storage),
-    exportJson: createExportJson(storage),
   };
 };
