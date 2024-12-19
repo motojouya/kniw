@@ -2,7 +2,6 @@ import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Repository } from '@motojouya/kniw/src/io/repository';
 import { createStore } from '@motojouya/kniw/src/store/party';
 import { CopyFailError } from '@motojouya/kniw/src/io/repository';
-import { toPartyJson } from '@motojouya/kniw/src/store/schema/party';
 
 export type ExportJson = (dialogue: Dialogue, repository: Repository) => (name: string, file: string) => Promise<void>;
 export const exportJson: ExportJson = (dialogue, repository) => async (name, file) => {
@@ -19,7 +18,7 @@ export const exportJson: ExportJson = (dialogue, repository) => async (name, fil
     return;
   }
 
-  const result = await repository.exportJson(toPartyJson(party), file);
+  const result = await store.exportJson(party, file);
   if (result instanceof CopyFailError) {
     await dialogue.notice(`${name}を出力できませんでした`);
     return;

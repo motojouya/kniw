@@ -2,7 +2,6 @@ import type { FC, ReactNode } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { PartyForm } from '@motojouya/kniw/src/form/party';
 import type { Store } from '@motojouya/kniw/src/store/store';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -26,7 +25,6 @@ import {
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { partyFormSchema, toPartyForm, saveParty } from '@motojouya/kniw/src/form/party';
-import { toParty as jsonToParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
 
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
@@ -128,7 +126,7 @@ const PartyEditor: FC<{
   );
 };
 
-export const PartyExsiting: FC<{ repository: Repository, store: PartyStore, partyName: string }> = ({ repository, store, partyName }) => {
+export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ store, partyName }) => {
   const party = useLiveQuery(() => store.get(partyName), [partyName]);
 
   if (
@@ -154,16 +152,14 @@ export const PartyExsiting: FC<{ repository: Repository, store: PartyStore, part
     );
   }
 
-  const exportPartyJson = () => repository.exportJson(toPartyJson(party), '');
-
   return (
     <PartyEditor exist={true} partyForm={toPartyForm(party)} store={store} inoutButton={(
-      <Button type="button" onClick={exportPartyJson} >Export</Button>
+      <Button type="button" onClick={() => store.exportJson(party, '')} >Export</Button>
     )} />
   );
 };
 
-export const PartyNew: FC<{ repository: Repository, store: PartyStore }> = ({ repository, store }) => {
+export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
 
   const [party, setParty] = useState<PartyForm>({ name: '', charactors: [] });
   const importParty = async () => {
@@ -171,19 +167,9 @@ export const PartyNew: FC<{ repository: Repository, store: PartyStore }> = ({ re
       return;
     }
 
-    const json = await repository.importJson('');
-    if (!json) {
-      return;
-    }
-
-    const partyJson = parseJson(partySchema)(json)
-    if (partyJson instanceof JsonSchemaUnmatchError) {
-      window.alert(partyJson.message);
-      return;
-    }
-
-    const partyObj = jsonToParty(partyJson);
+    const partyObj = await store.importJson('');
     if (
+      partyObj instanceof JsonSchemaUnmatchError ||
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
       partyObj instanceof CharactorDuplicationError ||

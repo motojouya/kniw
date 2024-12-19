@@ -27,30 +27,28 @@ const Index: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
-  const [store, setStore] = useState<[Repository, Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null]>([]);
+  const [store, setStore] = useState<Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null>(null);
   useEffect(() => {
     (async () => {
       const webRepository = await createRepository();
       const battleStore = await createStore(webRepository);
-      setStore([webRepository, battleStore]);
+      setStore(battleStore);
     })();
   }, []);
 
-  if (storeTuple.length === 0) {
+  if (!store) {
     return (<Box><Text>loading...</Text></Box>);
   }
-
-  const [repository, store] = storeTuple;
 
   if (!title) {
     return (<BattleList store={store} />);
   }
 
   if (title === '__new') {
-    return <BattleNew repository={repository} store={store} />
+    return <BattleNew store={store} />
   }
 
-  return <BattleExsiting battleTitle={title} repository={repository} store={store} />
+  return <BattleExsiting battleTitle={title} store={store} />
 };
 
 export default Index;

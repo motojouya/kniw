@@ -1,10 +1,4 @@
-import type {
-  CreateSave,
-  CreateGet,
-  CreateRemove,
-  CreateList,
-  CreateStore,
-} from '@motojouya/kniw/src/store/store';
+import type { CreateSave, CreateGet, CreateRemove, CreateList, CreateExportJson, CreateImportJson, CreateStore } from '@motojouya/kniw/src/store/store';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
@@ -38,6 +32,26 @@ const createRemove: CreateRemove = storage => async name => storage.remove(NAMES
 
 const createList: CreateList = storage => async () => storage.list(NAMESPACE);
 
+const createExportJson: CreateExportJson<Party> = storage => async (obj, fileName) => storage.exportJson(toPartyJson(obj), fileName);
+
+type CreateImportJsonParty = CreateImportJson<
+  Party,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
+>;
+const createImportJson: CreateImportJsonParty = storage => async fileName => {
+  const result = await storage.importJson(fileName);
+  if (!result) {
+    return null;
+  }
+
+  const partyJson = parseJson(partySchema)(result);
+  if (partyJson instanceof JsonSchemaUnmatchError) {
+    return partyJson;
+  }
+
+  return toParty(partyJson);
+};
+
 type CreateStoreParty = CreateStore<
   Party,
   NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
@@ -49,5 +63,7 @@ export const createStore: CreateStoreParty = async storage => {
     list: createList(storage),
     get: createGet(storage),
     remove: createRemove(storage),
+    importJson: createImportJson(storage),
+    exportJson: createExportJson(storage),
   };
 };

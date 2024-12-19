@@ -1,7 +1,6 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Repository } from '@motojouya/kniw/src/io/repository';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import { importJson } from '@motojouya/kniw/src/io/file_repository';
 import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
@@ -30,6 +29,7 @@ import {
   selectCharactor,
 } from '@motojouya/kniw/src/domain/charactor';
 import { createStore as createBattleStore } from '@motojouya/kniw/src/store/battle';
+import { createStore as createPartyStore } from '@motojouya/kniw/src/store/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toParty } from '@motojouya/kniw/src/store/schema/party';
 import { createAbsolute, createRandoms } from '@motojouya/kniw/src/domain/random';
@@ -292,13 +292,11 @@ export type Start = (
   repository: Repository,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, repository) => async (title, home, visitor) => {
-  const homeJson = await importJson(home);
-  if (!homeJson) {
-    await dialogue.notice(`homeのデータがありません`);
-    return;
-  }
-  const homeParty = toParty(homeJson);
+  const partyStore = createPartyStore(repository);
+
+  const homeParty = await partyStore.importJson(home);
   if (
+    homeParty instanceof JsonSchemaUnmatchError ||
     homeParty instanceof NotWearableErorr ||
     homeParty instanceof DataNotFoundError ||
     homeParty instanceof CharactorDuplicationError ||
@@ -308,12 +306,9 @@ export const start: Start = (dialogue, repository) => async (title, home, visito
     return;
   }
 
-  const visitorJson = await importJson(visitor);
-  if (!visitorJson) {
-    await dialogue.notice(`visitorのデータがありません`);
-  }
-  const visitorParty = toParty(visitorJson);
+  const visitorParty = await partyStore.importJson(visitor);
   if (
+    visitorParty instanceof JsonSchemaUnmatchError ||
     visitorParty instanceof NotWearableErorr ||
     visitorParty instanceof DataNotFoundError ||
     visitorParty instanceof CharactorDuplicationError ||

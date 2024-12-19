@@ -26,30 +26,28 @@ const Index: FC = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
 
-  const [storeTuple, setStore] = useState<[Repository, Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null]>([]);
+  const [store, setStore] = useState<Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null>(null);
   useEffect(() => {
     (async () => {
       const webRepository = await createRepository();
       const partyStore = await createStore(webRepository);
-      setStore([webRepository, partyStore]);
+      setStore(partyStore);
     })();
   }, []);
 
-  if (storeTuple.length === 0) {
+  if (!store) {
     return (<Box><Text>loading...</Text></Box>);
   }
-
-  const [repository, store] = storeTuple;
 
   if (!name) {
     return (<PartyList store={store} />);
   }
 
   if (name === '__new') {
-    return <PartyNew repository={repository} store={store} />
+    return <PartyNew store={store} />
   }
 
-  return <PartyExsiting partyName={name} repository={repository} store={store} />
+  return <PartyExsiting partyName={name} store={store} />
 };
 
 export default Index;
