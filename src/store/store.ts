@@ -59,3 +59,17 @@ export class DataExistError {
     readonly message: string,
   ) {}
 }
+
+// TODO on memoryなやつの実装。こっちに換えたい。
+// type Dictionary<T> = { [name: string]: T };
+// type Store<T> = {
+//   get: (name: string) => T | null,
+//   list: string[],
+//   all: T[],
+// };
+// type CreateStore<T> = (items: T[]) => Store<T>;
+// const createStore: CreateStore<T> = <T>(items) => ({
+//   get: (name) => (items as Dictionary<T>)[name],
+//   list: Object.keys(items as Dictionary<T>),
+//   all: Object.values(items as Dictionary<T>)
+// });

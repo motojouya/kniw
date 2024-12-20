@@ -66,5 +66,7 @@ export const createStore: CreateStoreBattle = async repository => {
     list: createList(repository),
     get: createGet(repository),
     remove: createRemove(repository),
+    importJson: createImportJson(repository),
+    exportJson: createExportJson(repository),
   };
 };
