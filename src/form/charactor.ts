@@ -3,7 +3,7 @@ import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
 import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
 
@@ -26,47 +26,40 @@ export const toCharactorForm: ToCharactorForm = charactor => ({
 });
 
 export type ToCharactor = (
-  charactorForm: any,
-) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+  charactorForm: CharactorForm,
+) => Charactor | NotWearableErorr | DataNotFoundError;
 export const toCharactor: ToCharactor = charactorForm => {
-  const result = charactorFormSchema.safeParse(charactorForm);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'charactorのデータではありません');
-  }
+  const { name } = charactorForm;
 
-  const charactorFormTyped = result.data;
-
-  const { name } = charactorFormTyped;
-
-  const race = getRace(charactorFormTyped.race);
+  const race = getRace(charactorForm.race);
   if (!race) {
-    return new DataNotFoundError(charactorFormTyped.race, 'race', `${charactorFormTyped.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorForm.race, 'race', `${charactorForm.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(charactorFormTyped.blessing);
+  const blessing = getBlessing(charactorForm.blessing);
   if (!blessing) {
     return new DataNotFoundError(
-      charactorFormTyped.blessing,
+      charactorForm.blessing,
       'blessing',
-      `${charactorFormTyped.blessing}という祝福は存在しません`,
+      `${charactorForm.blessing}という祝福は存在しません`,
     );
   }
 
-  const clothing = getClothing(charactorFormTyped.clothing);
+  const clothing = getClothing(charactorForm.clothing);
   if (!clothing) {
     return new DataNotFoundError(
-      charactorFormTyped.clothing,
+      charactorForm.clothing,
       'clothing',
-      `${charactorFormTyped.clothing}という装備は存在しません`,
+      `${charactorForm.clothing}という装備は存在しません`,
     );
   }
 
-  const weapon = getWeapon(charactorFormTyped.weapon);
+  const weapon = getWeapon(charactorForm.weapon);
   if (!weapon) {
     return new DataNotFoundError(
-      charactorFormTyped.weapon,
+      charactorForm.weapon,
       'weapon',
-      `${charactorFormTyped.weapon}という武器は存在しません`,
+      `${charactorForm.weapon}という武器は存在しません`,
     );
   }
 

@@ -30,7 +30,7 @@ export const toBattleJson: ToBattleJson = battle => ({
 });
 
 export type ToBattle = (
-  battleJson: any,
+  battleJson: BattleJson,
 ) =>
   | Battle
   | NotWearableErorr
@@ -39,21 +39,13 @@ export type ToBattle = (
   | JsonSchemaUnmatchError
   | NotBattlingError;
 export const toBattle: ToBattle = battleJson => {
-  const parseResult = battleSchema.safeParse(battleJson);
-  if (!parseResult.success) {
-    return new JsonSchemaUnmatchError(parseResult.error, 'battleのjsonデータではありません');
-  }
+  const { title } = battleJson;
 
-  const battleJsonTyped = parseResult.data;
-
-  const { title } = battleJsonTyped;
-
-  const home = toParty(battleJsonTyped.home);
+  const home = toParty(battleJson.home);
   if (
     home instanceof NotWearableErorr ||
     home instanceof DataNotFoundError ||
     home instanceof CharactorDuplicationError ||
-    home instanceof JsonSchemaUnmatchError
   ) {
     return home;
   }
@@ -61,12 +53,11 @@ export const toBattle: ToBattle = battleJson => {
     return new NotBattlingError(home, `home party(${home.name})のcharactorにisVisitor propertyがありません`);
   }
 
-  const visitor = toParty(battleJsonTyped.visitor);
+  const visitor = toParty(battleJson.visitor);
   if (
     visitor instanceof NotWearableErorr ||
     visitor instanceof DataNotFoundError ||
     visitor instanceof CharactorDuplicationError ||
-    visitor instanceof JsonSchemaUnmatchError
   ) {
     return visitor;
   }
@@ -75,7 +66,7 @@ export const toBattle: ToBattle = battleJson => {
   }
 
   const turns: Turn[] = [];
-  for (const turnJson of battleJsonTyped.turns) {
+  for (const turnJson of battleJson.turns) {
     const turn = toTurn(turnJson);
     if (
       turn instanceof NotWearableErorr ||
@@ -88,7 +79,7 @@ export const toBattle: ToBattle = battleJson => {
     turns.push(turn);
   }
 
-  const { result } = battleJsonTyped;
+  const { result } = battleJson;
 
   return {
     title,

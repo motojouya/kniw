@@ -25,12 +25,10 @@ import {
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { partyFormSchema, toPartyForm, saveParty } from '@motojouya/kniw/src/form/party';
-import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
-import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
 
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/store';
+import { parseJson, JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/store';
 
 type PartyStore = Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
@@ -55,7 +53,7 @@ const PartyEditor: FC<{
   const { fields, append, remove } = useFieldArray({ control, name: "charactors" });
   const [saveMessage, setSaveMessage] = useState<{ error: boolean, message: string }>({ error: false, message: '' });
 
-  const save = async (party: any) => {
+  const save = async (party: PartyForm) => {
     const error = await saveParty(store, !exist)(party);
     if (
       error instanceof DataNotFoundError ||
@@ -131,10 +129,6 @@ const PartyEditor: FC<{
 export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ store, partyName }) => {
   const party = useLiveQuery(() => store.get(partyName), [partyName]);
 
-  if (!store.exportJson) {
-    throw new Error('invalid store');
-  }
-
   if (
     party instanceof NotWearableErorr ||
     party instanceof DataNotFoundError ||
@@ -160,7 +154,7 @@ export const PartyExsiting: FC<{ store: PartyStore, partyName: string }> = ({ st
 
   return (
     <PartyEditor exist={true} partyForm={toPartyForm(party)} store={store} inoutButton={(
-      <Button type="button" onClick={() => store.exportJson && store.exportJson(party.name, '')} >Export</Button>
+      <Button type="button" onClick={() => store.exportJson(party, '')} >Export</Button>
     )} />
   );
 };
@@ -173,17 +167,12 @@ export const PartyNew: FC<{ store: PartyStore }> = ({ store }) => {
       return;
     }
 
-    const partyJson = await importJson();
-    if (!partyJson) {
-      return;
-    }
-
-    const partyObj = jsonToParty(partyJson);
+    const partyObj = await store.importJson('');
     if (
+      partyObj instanceof JsonSchemaUnmatchError ||
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
       partyObj instanceof CharactorDuplicationError ||
-      partyObj instanceof JsonSchemaUnmatchError
     ) {
       window.alert(partyObj.message);
       return;

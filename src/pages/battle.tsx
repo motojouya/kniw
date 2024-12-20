@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Store } from '@motojouya/kniw/src/store/store';
+import type { Repository } from '@motojouya/kniw/src/io/repository';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'

@@ -57,8 +57,6 @@ import {
   NotBattlingError,
 } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDetail } from '@motojouya/kniw/src/components/charactor';
-import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
-import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
 import {
   doSkillFormSchema,
   receiverSelectOption,
@@ -76,7 +74,7 @@ import { sleep, silent } from '@motojouya/kniw/src/data/status';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { createRandoms, createAbsolute } from '@motojouya/kniw/src/domain/random';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { parseJson, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 
 type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
 
@@ -281,9 +279,9 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');
 
-  const actSkill = async (doSkillForm: any) => {
+  const actSkill = async (doSkillForm: DoSkillForm) => {
     const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
-    if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
+    if (doAction instanceof DataNotFoundError) {
       setMessage('入力してください');
       return;
     }
@@ -306,7 +304,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
-      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson && store.exportJson(battle.title, '')} >Export</Button>}
+      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson(battle, '')} >Export</Button>}
       <GameResultView battle={battle} />
       {battle.result === GameOngoing && (
         <>
@@ -360,10 +358,6 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
 export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = ({ store, battleTitle }) => {
   const battle = useLiveQuery(() => store.get(battleTitle), [battleTitle]);
 
-  if (!store.exportJson) {
-    throw new Error('invalid store');
-  }
-
   if (
     battle instanceof NotWearableErorr ||
     battle instanceof DataNotFoundError ||
@@ -395,20 +389,16 @@ const ImportParty: FC<{
   type: string,
   party: Party | null,
   setParty: (party: Party | null) => void,
-}> = ({ type, party, setParty }) => {
+  store: BattleStore,
+}> = ({ type, party, setParty, store }) => {
 
   const importParty = async () => {
-    const partyJson = await importJson();
-    if (!partyJson) {
-      return;
-    }
-
-    const partyObj = jsonToParty(partyJson);
+    const partyObj = await store.importJson('');
     if (
+      partyObj instanceof JsonSchemaUnmatchError ||
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
-      partyObj instanceof CharactorDuplicationError ||
-      partyObj instanceof JsonSchemaUnmatchError
+      partyObj instanceof CharactorDuplicationError
     ) {
       window.alert(partyObj.message);
       return;
