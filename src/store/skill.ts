@@ -1,4 +1,3 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import * as skills from '@motojouya/kniw/src/data/skill/index';
 import { createMemoryRepository } from '@motojouya/kniw/src/store/memory_repository';
 

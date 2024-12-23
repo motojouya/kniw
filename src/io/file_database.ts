@@ -138,7 +138,7 @@ export const createDatabase: CreateDatabase = async basePath => {
     list: createList(basePath),
     get: createGet(basePath),
     remove: createRemove(basePath),
-    importJson: importJson,
-    exportJson: exportJson,
+    importJson,
+    exportJson,
   };
 };

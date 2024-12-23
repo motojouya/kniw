@@ -2,7 +2,6 @@ import type { Save, List, Get, Remove, ExportJson, ImportJson, Database } from '
 
 import Dexie from 'dexie';
 
-import { CopyFailError } from '@motojouya/kniw/src/io/repository';
 import { PartyJson } from '@motojouya/kniw/src/store/schema/party';
 import { BattleJson } from '@motojouya/kniw/src/store/schema/battle';
 
@@ -82,6 +81,7 @@ const pickerOpts = {
   multiple: false,
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const importJson: ImportJson = async (dammyFileName) => {
   const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
   const file = await fileHandle.getFile();
@@ -100,8 +100,8 @@ export const createDatabase: CreateDatabase = async () => {
     list: createList(db),
     get: createGet(db),
     remove: createRemove(db),
-    importJson: importJson,
-    exportJson: exportJson,
+    importJson,
+    exportJson,
   };
   /* eslint-enable @typescript-eslint/no-unused-vars */
 };
