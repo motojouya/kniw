@@ -1,16 +1,18 @@
 import type { Database } from '@motojouya/kniw/src/io/database';
 import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
+
+import { z } from 'zod';
 import { CopyFailError } from '@motojouya/kniw/src/io/database';
 import { parseJson, JsonSchemaUnmatchError } from '@motojouya/kniw/src/store/schema/schema';
 
-export type Save<M> = (obj: M) => Promise<void>;
-export type Get<M, E> = (name: string) => Promise<M | E | JsonSchemaUnmatchError | null>;
+export type Save<M extends Record<string, unknown>> = (obj: M) => Promise<void>;
+export type Get<M extends Record<string, unknown>, E> = (name: string) => Promise<M | E | JsonSchemaUnmatchError | null>;
 export type Remove = (name: string) => Promise<void>;
 export type List = () => Promise<string[]>;
-export type ImportJson<M, E> = (fileName: string) => Promise<M | E | JsonSchemaUnmatchError | null>;
-export type ExportJson<M> = (obj: M, fileName: string) => Promise<CopyFailError | null>;
+export type ImportJson<M extends Record<string, unknown>, E> = (fileName: string) => Promise<M | E | JsonSchemaUnmatchError | null>;
+export type ExportJson<M extends Record<string, unknown>> = (obj: M, fileName: string) => Promise<CopyFailError | null>;
 
-export type Repository<M, E> = {
+export type Repository<M extends Record<string, unknown>, E> = {
   save: Save<M>;
   list: List;
   get: Get<M, E | JsonSchemaUnmatchError>;
@@ -19,15 +21,13 @@ export type Repository<M, E> = {
   exportJson: ExportJson<M>;
 };
 
-type CreateSave<M, J> = <M, J>(namespace: string, key: string, toJson: ToJson<M, J>) => (database: Database) => Save<M>
-const createSave: CreateSave<Battle> = (namespace, key, toJson) => (database) => async obj =>
-  database.save(namespace, obj[key], toJson(obj));
+const createSave = <M extends Record<string, unknown>, J extends Record<string, unknown>>(namespace: string, key: string, toJson: ToJson<M, J>) => (database: Database): Save<M> => async obj =>
+  database.save(namespace, (obj[key] as string), toJson(obj));
 
 type CreateList = (namespace: string) => (database: Database) => List;
-const createList: CreateList = (namespace) => database => async () => repository.list(namespace);
+const createList: CreateList = (namespace) => database => async () => database.list(namespace);
 
-type CreateGet<S, M, J, E> = <S, M, J, E>(namespace: string, schema: S, toModel: ToModel<M, J, E>) => (database: Database) => Get<M, E | JsonSchemaUnmatchError>;
-const createGet: CreateGet<S, M, J, E> = (namespace, schema, toModel) => (database) => async name => {
+const createGet = <S extends z.ZodTypeAny, M extends Record<string, unknown>, J extends Record<string, unknown>, E>(namespace: string, schema: S, toModel: ToModel<M, J, E>) => (database: Database): Get<M, E | JsonSchemaUnmatchError> => async name => {
   const result = await database.get(namespace, name);
   if (!result) {
     return null;
@@ -42,10 +42,9 @@ const createGet: CreateGet<S, M, J, E> = (namespace, schema, toModel) => (databa
 };
 
 type CreateRemove = (namespace: string) => (database: Database) => Remove;
-const createRemove: CreateRemove = (namespace: string) => (database) => async name => repository.remove(namespace, name);
+const createRemove: CreateRemove = (namespace: string) => (database) => async name => database.remove(namespace, name);
 
-type CreateImportJson<S, M, J, E> = <S, M, J, E>(schema: S, toModel: ToModel<M, J, E>) => (database: Database) => ImportJson<M, E | JsonSchemaUnmatchError>;
-const createImportJson: CreateImportJson = (schema, toModel) => (database) => async (fileName) => {
+const createImportJson = <S extends z.ZodTypeAny, M extends Record<string, unknown>, J extends Record<string, unknown>, E>(schema: S, toModel: ToModel<M, J, E>) => (database: Database): ImportJson<M, E | JsonSchemaUnmatchError> => async (fileName) => {
   const result = await database.importJson(fileName);
   if (!result) {
     return null;
@@ -59,12 +58,10 @@ const createImportJson: CreateImportJson = (schema, toModel) => (database) => as
   return toModel(json);
 };
 
-type CreateExportJson<M, J> = <M, J>(schema: S, toJson: ToJson<M, J>) => (database: Database) => ExportJson<M>
-const createSave: CreateExportJson<Battle> = (toJson) => (database) => async (obj, fileName) =>
+const createExportJson = <M extends Record<string, unknown>, J extends Record<string, unknown>>(toJson: ToJson<M, J>) => (database: Database): ExportJson<M> => async (obj, fileName) =>
   database.exportJson(toJson(obj), fileName);
 
-export type CreateRepository<S, M, J, E> = (namespace: string, schema: S, toModel: ToModel<M, J, E>, toJson: ToJson<M, J>, key: string) => (database: Database) => Promise<Repository<M, E>>;
-export const createRepository: createRepository<S, M, J, E> = (namespace, schema, toModel, toJson, key) => async (database) => {
+export const createRepository = <S extends z.ZodTypeAny, M extends Record<string, unknown>, J extends Record<string, unknown>, E>(namespace: string, schema: S, toModel: ToModel<M, J, E>, toJson: ToJson<M, J>, key: string) => async (database: Database): Promise<Repository<M, E>> => {
   await database.checkNamespace(namespace);
   return {
     save: createSave(namespace, key, toJson)(database),
@@ -72,6 +69,6 @@ export const createRepository: createRepository<S, M, J, E> = (namespace, schema
     get: createGet(namespace, schema, toModel)(database),
     remove: createRemove(namespace)(database),
     importJson: createImportJson(schema, toModel)(database),
-    exportJson: createExportJson(schema, toJson)(database),
+    exportJson: createExportJson(toJson)(database),
   };
 };
