@@ -439,15 +439,12 @@ export const BattleNew: FC<{ battleRepository: BattleRepository, partyRepository
     const { title } = battleTitle;
     if (!title) {
       messages.push('titleを入力してください');
-      return;
     }
     if (!homeParty) {
       messages.push('home partyを入力してください');
-      return;
     }
     if (!visitorParty) {
       messages.push('visitor partyを入力してください');
-      return;
     }
 
     if (messages.length > 0) {
@@ -455,7 +452,7 @@ export const BattleNew: FC<{ battleRepository: BattleRepository, partyRepository
       return;
     }
 
-    const battle = createBattle(title as string, homeParty, visitorParty);
+    const battle = createBattle(title as string, homeParty as Party, visitorParty as Party);
     const turn = start(battle, new Date(), createRandoms());
     battle.turns.push(turn);
 
