@@ -1,4 +1,5 @@
 import type { Status } from '@motojouya/kniw/src/domain/status';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { z } from 'zod';
 
@@ -6,13 +7,12 @@ import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { getStatus } from '@motojouya/kniw/src/store/status';
 
 export const statusSchema = z.string();
-export type StatusJson = z.infer<typeof statusSchema>;
+export type StatusSchema = typeof statusSchema;
+export type StatusJson = z.infer<StatusSchema>;
 
-export type ToStatusJson = (status: Status) => StatusJson;
-export const toStatusJson: ToStatusJson = status => status.name;
+export const toStatusJson: ToJson<Status, StatusJson> = status => status.name;
 
-export type ToStatus = (statusJson: StatusJson) => Status | DataNotFoundError;
-export const toStatus: ToStatus = statusJson => {
+export const toStatus: ToModel<Status, StatusJson, DataNotFoundError> = statusJson => {
 
   const status = getStatus(statusJson);
   if (!status) {

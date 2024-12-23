@@ -1,5 +1,6 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { z } from 'zod';
 
@@ -12,18 +13,16 @@ export const partySchema = z.object({
   name: z.string(),
   charactors: z.array(charactorSchema),
 });
-export type PartyJson = z.infer<typeof partySchema>;
+export type PartySchema = typeof partySchema;
+export type PartyJson = z.infer<PartySchema>;
 
 export type ToPartyJson = (party: Party) => PartyJson;
-export const toPartyJson: ToPartyJson = party => ({
+export const toPartyJson: ToJson<Party, PartyJson> = party => ({
   name: party.name,
   charactors: party.charactors.map(toCharactorJson),
 });
 
-export type ToParty = (
-  partyJson: PartyJson,
-) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError;
-export const toParty: ToParty = partyJson => {
+export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = partyJson => {
   const { name } = partyJson;
 
   const charactorObjs: Charactor[] = [];

@@ -1,4 +1,5 @@
 import type { Charactor, AttachedStatus } from '@motojouya/kniw/src/domain/charactor';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { z } from 'zod';
 
@@ -12,7 +13,8 @@ export const attachedStatusSchema = z.object({
   status: statusSchema,
   restWt: z.number().int(),
 });
-export type AttachedStatusJson = z.infer<typeof attachedStatusSchema>;
+export type AttachedStatusSchema = typeof attachedStatusSchema;
+export type AttachedStatusJson = z.infer<AttachedStatusSchema>;
 
 export const charactorSchema = z.object({
   name: z.string(),
@@ -26,16 +28,15 @@ export const charactorSchema = z.object({
   restWt: z.number().int(),
   isVisitor: z.boolean().optional(),
 });
-export type CharactorJson = z.infer<typeof charactorSchema>;
+export type CharactorSchema = typeof charactorSchema;
+export type CharactorJson = z.infer<CharactorSchema>;
 
-export type ToAttachedStatusJson = (attached: AttachedStatus) => AttachedStatusJson;
-export const toAttachedStatusJson: ToAttachedStatusJson = attached => ({
+export const toAttachedStatusJson: ToJson<AttachedStatus, AttachedStatusJson> = attached => ({
   status: toStatusJson(attached.status),
   restWt: attached.restWt,
 });
 
-export type ToCharactorJson = (charactor: Charactor) => CharactorJson;
-export const toCharactorJson: ToCharactorJson = charactor => {
+export const toCharactorJson: ToJson<Charactor, CharactorJson> = charactor => {
   const json: CharactorJson = {
     name: charactor.name,
     race: charactor.race.name,
@@ -55,10 +56,7 @@ export const toCharactorJson: ToCharactorJson = charactor => {
   return json;
 };
 
-export type ToCharactor = (
-  charactorJson: CharactorJson,
-) => Charactor | NotWearableErorr | DataNotFoundError;
-export const toCharactor: ToCharactor = charactorJson => {
+export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | DataNotFoundError> = charactorJson => {
   const { name } = charactorJson;
 
   const race = getRace(charactorJson.race);

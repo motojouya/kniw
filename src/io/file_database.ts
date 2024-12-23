@@ -6,11 +6,11 @@ import type {
   Remove,
   ExportJson,
   ImportJson,
-  Repository,
-} from '@motojouya/kniw/src/io/repository';
+  Database,
+} from '@motojouya/kniw/src/io/database';
 import fs from 'fs';
 import path from 'path';
-import { CopyFailError } from '@motojouya/kniw/src/io/repository';
+import { CopyFailError } from '@motojouya/kniw/src/io/database';
 
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
@@ -129,8 +129,8 @@ export const importJson: ImportJson = async fileName => {
   }
 };
 
-export type CreateRepository = (basePath: string) => Promise<Repository>;
-export const createRepository: CreateRepository = async basePath => {
+export type CreateDatabase = (basePath: string) => Promise<Database>;
+export const createDatabase: CreateDatabase = async basePath => {
   await createDirctory(basePath);
   return {
     checkNamespace: createCheckNamespace(basePath),

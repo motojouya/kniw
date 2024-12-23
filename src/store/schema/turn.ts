@@ -1,6 +1,7 @@
 import type { Turn, Action } from '@motojouya/kniw/src/domain/turn';
 import type { Climate } from '@motojouya/kniw/src/domain/field';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { parse, format } from 'date-fns';
 // import ja from 'date-fns/locale/ja'
@@ -18,7 +19,8 @@ export const surrenderSchema = z.object({
   type: z.literal('SURRENDER'),
   actor: charactorSchema,
 });
-export type SurrenderJson = z.infer<typeof surrenderSchema>;
+export type SurrenderSchema = typeof surrenderSchema;
+export type SurrenderJson = z.infer<SurrenderSchema>;
 
 export const doSkillSchema = z.object({
   type: z.literal('DO_SKILL'),
@@ -26,22 +28,26 @@ export const doSkillSchema = z.object({
   skill: z.string(),
   receivers: z.array(charactorSchema),
 });
-export type DoSkillJson = z.infer<typeof doSkillSchema>;
+export type DoSkillSchema = typeof doSkillSchema;
+export type DoSkillJson = z.infer<DoSkillSchema>;
 
 export const doNothingSchema = z.object({
   type: z.literal('DO_NOTHING'),
   actor: charactorSchema,
 });
-export type DoNothingJson = z.infer<typeof doNothingSchema>;
+export type DoNothingSchema = typeof doNothingSchema;
+export type DoNothingJson = z.infer<DoNothingSchema>;
 
 export const timePassingSchema = z.object({
   type: z.literal('TIME_PASSING'),
   wt: z.number().int(),
 });
-export type TimePassingJson = z.infer<typeof timePassingSchema>;
+export type TimePassingSchema = typeof timePassingSchema;
+export type TimePassingJson = z.infer<TimePassingSchema>;
 
 const actionSchema = z.discriminatedUnion('type', [doSkillSchema, doNothingSchema, timePassingSchema, surrenderSchema]);
-export type ActionJson = z.infer<typeof actionSchema>;
+export type ActionSchema = typeof actionSchema;
+export type ActionJson = z.infer<ActionSchema>;
 
 export const turnSchema = z.object({
   datetime: z.string().datetime({ local: true }),
@@ -51,10 +57,10 @@ export const turnSchema = z.object({
     climate: z.string(),
   }),
 });
-export type TurnJson = z.infer<typeof turnSchema>;
+export type TurnSchema = typeof turnSchema;
+export type TurnJson = z.infer<TurnSchema>;
 
-export type ToActionJson = (action: Action) => ActionJson;
-export const toActionJson: ToActionJson = action => {
+export const toActionJson: ToJson<Action, ActionJson> = action => {
   if (action.type === 'DO_SKILL') {
     return {
       type: 'DO_SKILL',
@@ -87,18 +93,14 @@ export const toActionJson: ToActionJson = action => {
 type FormatDate = (date: Date) => string;
 const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss");
 
-export type ToTurnJson = (turn: Turn) => TurnJson;
-export const toTurnJson: ToTurnJson = turn => ({
+export const toTurnJson: ToJson<Turn, TurnJson> = turn => ({
   datetime: formatDate(turn.datetime),
   action: toActionJson(turn.action),
   sortedCharactors: turn.sortedCharactors.map(toCharactorJson),
   field: turn.field,
 });
 
-export type ToAction = (
-  actionJson: ActionJson,
-) => Action | NotWearableErorr | DataNotFoundError | NotBattlingError;
-export const toAction: ToAction = actionJson => {
+export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFoundError | NotBattlingError> = actionJson => {
   if (actionJson.type === 'DO_SKILL') {
     const skillActor = toCharactor(actionJson.actor);
     if (
@@ -180,10 +182,7 @@ export const toAction: ToAction = actionJson => {
   };
 };
 
-export type ToTurn = (
-  turnJson: TurnJson,
-) => Turn | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError;
-export const toTurn: ToTurn = turnJson => {
+export const toTurn: ToModel<Turn, TurnJson, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError> = turnJson => {
   // TODO date parse不要では？JsonSchemaUnmatchErrorも
   let datetime = null;
   try {

@@ -17,7 +17,7 @@ export type Remove = (namespace: string, objctKey: string) => Promise<void>;
 export type ExportJson = (json: object, fileName: string) => Promise<null | CopyFailError>;
 export type ImportJson = (fileName: string) => Promise<object | null>;
 
-export type Repository = {
+export type Database = {
   checkNamespace: CheckNamespace;
   save: Save;
   list: List;

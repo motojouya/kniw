@@ -1,5 +1,6 @@
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { z } from 'zod';
 
@@ -18,10 +19,10 @@ export const battleSchema = z.object({
   turns: z.array(turnSchema),
   result: z.enum([GameOngoing, GameHome, GameVisitor, GameDraw]),
 });
-export type BattleJson = z.infer<typeof battleSchema>;
+export type BattleSchema = typeof battleSchema;
+export type BattleJson = z.infer<BattleSchema>;
 
-export type ToBattleJson = (battle: Battle) => BattleJson;
-export const toBattleJson: ToBattleJson = battle => ({
+export const toBattleJson: ToJson<Battle, BattleJson> = battle => ({
   title: battle.title,
   home: toPartyJson(battle.home),
   visitor: toPartyJson(battle.visitor),
@@ -29,15 +30,13 @@ export const toBattleJson: ToBattleJson = battle => ({
   result: battle.result,
 });
 
-export type ToBattle = (
-  battleJson: BattleJson,
-) =>
-  | Battle
+export type ToBattle = ToJson<Battle, BattleJson,
   | NotWearableErorr
   | DataNotFoundError
   | CharactorDuplicationError
   | JsonSchemaUnmatchError
-  | NotBattlingError;
+  | NotBattlingError
+>
 export const toBattle: ToBattle = battleJson => {
   const { title } = battleJson;
 

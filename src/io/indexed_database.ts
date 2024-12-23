@@ -1,4 +1,4 @@
-import type { Save, List, Get, Remove, ExportJson, ImportJson, Repository } from '@motojouya/kniw/src/io/repository';
+import type { Save, List, Get, Remove, ExportJson, ImportJson, Database } from '@motojouya/kniw/src/io/database';
 
 import Dexie from 'dexie';
 
@@ -89,9 +89,9 @@ export const importJson: ImportJson = async (dammyFileName) => {
   return JSON.parse(text) as object;
 };
 
-export type CreateRepository = () => Promise<Repository>;
+export type CreateDatabase = () => Promise<Database>;
 // eslint-disable-next-line @typescript-eslint/require-await
-export const createRepository: CreateRepository = async () => {
+export const createDatabase: CreateDatabase = async () => {
   const db = createDB();
   /* eslint-disable @typescript-eslint/no-unused-vars */
   return {
