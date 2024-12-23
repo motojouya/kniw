@@ -1,18 +1,25 @@
 import type { Charactor, AttachedStatus } from '@motojouya/kniw/src/domain/charactor';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { validate } from '@motojouya/kniw/src/domain/charactor';
 import { statusSchema, toStatus, toStatusJson } from '@motojouya/kniw/src/store/schema/status';
-import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
+import {
+  raceRepository,
+  weaponRepository,
+  clothingRepository,
+  blessingRepository,
+} from '@motojouya/kniw/src/store/acquirement';
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,
   restWt: z.number().int(),
 });
-export type AttachedStatusJson = z.infer<typeof attachedStatusSchema>;
+export type AttachedStatusSchema = typeof attachedStatusSchema;
+export type AttachedStatusJson = z.infer<AttachedStatusSchema>;
 
 export const charactorSchema = z.object({
   name: z.string(),
@@ -26,16 +33,15 @@ export const charactorSchema = z.object({
   restWt: z.number().int(),
   isVisitor: z.boolean().optional(),
 });
-export type CharactorJson = z.infer<typeof charactorSchema>;
+export type CharactorSchema = typeof charactorSchema;
+export type CharactorJson = z.infer<CharactorSchema>;
 
-export type ToAttachedStatusJson = (attached: AttachedStatus) => AttachedStatusJson;
-export const toAttachedStatusJson: ToAttachedStatusJson = attached => ({
+export const toAttachedStatusJson: ToJson<AttachedStatus, AttachedStatusJson> = attached => ({
   status: toStatusJson(attached.status),
   restWt: attached.restWt,
 });
 
-export type ToCharactorJson = (charactor: Charactor) => CharactorJson;
-export const toCharactorJson: ToCharactorJson = charactor => {
+export const toCharactorJson: ToJson<Charactor, CharactorJson> = charactor => {
   const json: CharactorJson = {
     name: charactor.name,
     race: charactor.race.name,
@@ -55,49 +61,35 @@ export const toCharactorJson: ToCharactorJson = charactor => {
   return json;
 };
 
-export type ToCharactor = (
-  charactorJson: any,
-) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
-export const toCharactor: ToCharactor = charactorJson => {
-  const result = charactorSchema.safeParse(charactorJson);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'charactorのjsonデータではありません');
-  }
+export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | DataNotFoundError> = charactorJson => {
+  const { name } = charactorJson;
 
-  const charactorJsonTyped = result.data;
-
-  const { name } = charactorJsonTyped;
-
-  const race = getRace(charactorJsonTyped.race);
+  const race = raceRepository.get(charactorJson.race);
   if (!race) {
-    return new DataNotFoundError(charactorJsonTyped.race, 'race', `${charactorJsonTyped.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(charactorJsonTyped.blessing);
+  const blessing = blessingRepository.get(charactorJson.blessing);
   if (!blessing) {
     return new DataNotFoundError(
-      charactorJsonTyped.blessing,
+      charactorJson.blessing,
       'blessing',
-      `${charactorJsonTyped.blessing}という祝福は存在しません`,
+      `${charactorJson.blessing}という祝福は存在しません`,
     );
   }
 
-  const clothing = getClothing(charactorJsonTyped.clothing);
+  const clothing = clothingRepository.get(charactorJson.clothing);
   if (!clothing) {
     return new DataNotFoundError(
-      charactorJsonTyped.clothing,
+      charactorJson.clothing,
       'clothing',
-      `${charactorJsonTyped.clothing}という装備は存在しません`,
+      `${charactorJson.clothing}という装備は存在しません`,
     );
   }
 
-  const weapon = getWeapon(charactorJsonTyped.weapon);
+  const weapon = weaponRepository.get(charactorJson.weapon);
   if (!weapon) {
-    return new DataNotFoundError(
-      charactorJsonTyped.weapon,
-      'weapon',
-      `${charactorJsonTyped.weapon}という武器は存在しません`,
-    );
+    return new DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);
@@ -106,10 +98,10 @@ export const toCharactor: ToCharactor = charactorJson => {
   }
 
   const statuses: AttachedStatus[] = [];
-  for (const attachedStatusJson of charactorJsonTyped.statuses) {
+  for (const attachedStatusJson of charactorJson.statuses) {
     const statusObj = toStatus(attachedStatusJson.status);
 
-    if (statusObj instanceof JsonSchemaUnmatchError || statusObj instanceof DataNotFoundError) {
+    if (statusObj instanceof DataNotFoundError) {
       return statusObj;
     }
 
@@ -126,13 +118,13 @@ export const toCharactor: ToCharactor = charactorJson => {
     clothing,
     weapon,
     statuses,
-    hp: 0 + charactorJsonTyped.hp,
-    mp: 0 + charactorJsonTyped.mp,
-    restWt: 0 + charactorJsonTyped.restWt,
+    hp: 0 + charactorJson.hp,
+    mp: 0 + charactorJson.mp,
+    restWt: 0 + charactorJson.restWt,
   };
 
-  if (Object.prototype.hasOwnProperty.call(charactorJsonTyped, 'isVisitor')) {
-    someone.isVisitor = charactorJsonTyped.isVisitor;
+  if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
+    someone.isVisitor = charactorJson.isVisitor;
   }
 
   return someone;

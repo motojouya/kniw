@@ -1,9 +1,4 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import * as skills from '@motojouya/kniw/src/data/skill/index';
+import { createMemoryRepository } from '@motojouya/kniw/src/store/memory_repository';
 
-type SkillDictionary = { [name: string]: Skill };
-
-export type GetSkill = (name: string) => Skill | null;
-export const getSkill: GetSkill = name => (skills as SkillDictionary)[name];
-export const skillNames: string[] = Object.keys(skills as SkillDictionary);
-export const allSkills: Skill[] = Object.values(skills as SkillDictionary);
+export const skillRepository = createMemoryRepository(skills);

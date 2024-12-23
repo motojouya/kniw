@@ -2,11 +2,11 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { Repository } from '@motojouya/kniw/src/io/repository'
+import type { Database } from '@motojouya/kniw/src/io/database'
 import { toParty } from '@motojouya/kniw/src/store/schema/party';
-import { createStore } from '@motojouya/kniw/src/store/party';
+import { createRepository } from '@motojouya/kniw/src/store/party';
 
-const storeMock: Repository = {
+const dbMock: Database = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({
     name: 'team01',
@@ -18,22 +18,29 @@ const storeMock: Repository = {
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['team01', 'team02'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  exportJson: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
+  importJson: (fileName) => new Promise((resolve, reject) => resolve({
+    name: 'team01',
+    charactors: [
+      { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
+      { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
+    ],
+  })),
+  exportJson: (obj, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
-describe('Party#createStore', function () {
+describe('Party#createRepository', function () {
   it('save', async () => {
-    const store = await createStore(storeMock);
+    const repository = await createRepository(dbMock);
     const party = (toParty({ name: 'team01', charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ]}) as Party);
-    await store.save(party);
+    await repository.save(party);
     assert.strictEqual(true, true);
   });
   it('get', async () => {
-    const store = await createStore(storeMock);
-    const party = await store.get('team01');
+    const repository = await createRepository(dbMock);
+    const party = await repository.get('team01');
     const typedParty = party as Party;
     if (typedParty) {
       assert.strictEqual(typedParty.name, 'team01');
@@ -54,13 +61,13 @@ describe('Party#createStore', function () {
     }
   });
   it('remove', async () => {
-    const store = await createStore(storeMock);
-    await store.remove('team01');
+    const repository = await createRepository(dbMock);
+    await repository.remove('team01');
     assert.strictEqual(true, true);
   });
   it('list', async () => {
-    const store = await createStore(storeMock);
-    const partyList = await store.list();
+    const repository = await createRepository(dbMock);
+    const partyList = await repository.list();
     assert.strictEqual(partyList.length, 2);
     assert.strictEqual(partyList[0], 'team01');
     assert.strictEqual(partyList[1], 'team02');

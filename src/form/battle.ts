@@ -4,9 +4,9 @@ import type { Skill } from '@motojouya/kniw/src/domain/skill';
 
 import { z } from 'zod';
 
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
 
 export const DO_NOTHING = 'NOTHING';
@@ -59,34 +59,27 @@ export type DoAction = {
 } | null;
 
 export type ToAction = (
-  doSkillForm: any,
+  doSkillForm: DoSkillForm,
   candidates: CharactorBattling[],
-) => DoAction | JsonSchemaUnmatchError | DataNotFoundError | ReceiverDuplicationError;
+) => DoAction | DataNotFoundError | ReceiverDuplicationError;
 export const toAction: ToAction = (doSkillForm, candidates) => {
-  const result = doSkillFormSchema.safeParse(doSkillForm);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'partyのformデータではありません');
-  }
-
-  const doSkillFormTyped = result.data;
-
-  const { skillName } = doSkillFormTyped;
+  const { skillName } = doSkillForm;
   if (skillName === ACTION_DO_NOTHING) {
     return null;
   }
 
-  const skill = getSkill(skillName);
+  const skill = skillRepository.get(skillName);
   if (!skill) {
     return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
   }
 
-  const receiverSet = new Set(doSkillFormTyped.receiversWithIsVisitor.map(obj => obj.value));
-  if (receiverSet.size !== doSkillFormTyped.receiversWithIsVisitor.length) {
+  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor.map(obj => obj.value));
+  if (receiverSet.size !== doSkillForm.receiversWithIsVisitor.length) {
     return new ReceiverDuplicationError('同じキャラクターを複数回えらべません');
   }
 
   const receivers: CharactorBattling[] = [];
-  for (const receiverObj of doSkillFormTyped.receiversWithIsVisitor) {
+  for (const receiverObj of doSkillForm.receiversWithIsVisitor) {
     const receiver = toReceiver(receiverObj.value, candidates);
     if (receiver instanceof DataNotFoundError) {
       return receiver;

@@ -3,9 +3,14 @@ import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
-import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
+import {
+  raceRepository,
+  weaponRepository,
+  clothingRepository,
+  blessingRepository,
+} from '@motojouya/kniw/src/store/acquirement';
 
 export const charactorFormSchema = z.object({
   name: z.string().min(1),
@@ -25,49 +30,36 @@ export const toCharactorForm: ToCharactorForm = charactor => ({
   weapon: charactor.weapon.name,
 });
 
-export type ToCharactor = (
-  charactorForm: any,
-) => Charactor | NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError;
+export type ToCharactor = (charactorForm: CharactorForm) => Charactor | NotWearableErorr | DataNotFoundError;
 export const toCharactor: ToCharactor = charactorForm => {
-  const result = charactorFormSchema.safeParse(charactorForm);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'charactorのデータではありません');
-  }
+  const { name } = charactorForm;
 
-  const charactorFormTyped = result.data;
-
-  const { name } = charactorFormTyped;
-
-  const race = getRace(charactorFormTyped.race);
+  const race = raceRepository.get(charactorForm.race);
   if (!race) {
-    return new DataNotFoundError(charactorFormTyped.race, 'race', `${charactorFormTyped.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorForm.race, 'race', `${charactorForm.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(charactorFormTyped.blessing);
+  const blessing = blessingRepository.get(charactorForm.blessing);
   if (!blessing) {
     return new DataNotFoundError(
-      charactorFormTyped.blessing,
+      charactorForm.blessing,
       'blessing',
-      `${charactorFormTyped.blessing}という祝福は存在しません`,
+      `${charactorForm.blessing}という祝福は存在しません`,
     );
   }
 
-  const clothing = getClothing(charactorFormTyped.clothing);
+  const clothing = clothingRepository.get(charactorForm.clothing);
   if (!clothing) {
     return new DataNotFoundError(
-      charactorFormTyped.clothing,
+      charactorForm.clothing,
       'clothing',
-      `${charactorFormTyped.clothing}という装備は存在しません`,
+      `${charactorForm.clothing}という装備は存在しません`,
     );
   }
 
-  const weapon = getWeapon(charactorFormTyped.weapon);
+  const weapon = weaponRepository.get(charactorForm.weapon);
   if (!weapon) {
-    return new DataNotFoundError(
-      charactorFormTyped.weapon,
-      'weapon',
-      `${charactorFormTyped.weapon}という武器は存在しません`,
-    );
+    return new DataNotFoundError(charactorForm.weapon, 'weapon', `${charactorForm.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

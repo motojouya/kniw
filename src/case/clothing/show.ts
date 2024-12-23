@@ -1,11 +1,11 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { getClothing } from '@motojouya/kniw/src/store/acquirement';
+import { clothingRepository } from '@motojouya/kniw/src/store/acquirement';
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =
   ({ notice }) =>
   async name => {
-    const clothing = getClothing(name);
+    const clothing = clothingRepository.get(name);
     if (!clothing) {
       await notice(`${name}というclothingは存在しません`);
       return;

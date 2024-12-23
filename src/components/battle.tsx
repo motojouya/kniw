@@ -4,7 +4,7 @@ import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
-import type { Store } from '@motojouya/kniw/src/store/store';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 import type { DoSkillForm, DoAction } from '@motojouya/kniw/src/form/battle';
 
 import { useRouter } from 'next/router'
@@ -57,8 +57,6 @@ import {
   NotBattlingError,
 } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDetail } from '@motojouya/kniw/src/components/charactor';
-import { importJson } from '@motojouya/kniw/src/io/indexed_db_repository';
-import { toParty as jsonToParty } from '@motojouya/kniw/src/store/schema/party';
 import {
   doSkillFormSchema,
   receiverSelectOption,
@@ -68,7 +66,7 @@ import {
 } from '@motojouya/kniw/src/form/battle';
 import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
 import { getSkills, isVisitorString } from '@motojouya/kniw/src/domain/charactor';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
 
 import { underStatus } from '@motojouya/kniw/src/domain/status';
@@ -76,9 +74,10 @@ import { sleep, silent } from '@motojouya/kniw/src/data/status';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { createRandoms, createAbsolute } from '@motojouya/kniw/src/domain/random';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 
-type BattleStore = Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
+type BattleRepository = Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
+type PartyRepository = Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
 const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
@@ -152,12 +151,12 @@ const ReceiverSelect: FC<{
   );
 };
 
-const Surrender: FC<{ battle: Battle, actor: CharactorBattling, store: BattleStore }> = ({ battle, actor, store }) => {
+const Surrender: FC<{ battle: Battle, actor: CharactorBattling, repository: BattleRepository }> = ({ battle, actor, repository }) => {
   const doSurrender = async () => {
     if (window.confirm('降参してもよいですか？')) {
       const turn = surrender(battle, actor, new Date());
       battle.turns.push(turn);
-      await store.save({
+      await repository.save({
         ...battle,
         result: actor.isVisitor ? GameHome : GameVisitor,
       });
@@ -189,7 +188,7 @@ const SkillSelect: FC<{
       return;
     }
 
-    const skill = getSkill(skillName);
+    const skill = skillRepository.get(skillName);
     if (!skill || !skill.receiverCount) {
       replace([]);
       return;
@@ -214,7 +213,7 @@ const SkillSelect: FC<{
   );
 };
 
-const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling, doAction: DoAction) => {
+const act = async (repository: BattleRepository, battle: Battle, actor: CharactorBattling, doAction: DoAction) => {
 
   if (doAction === null) {
     battle.turns.push(stay(battle, actor, new Date()));
@@ -229,7 +228,7 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
   /* eslint-disable no-param-reassign */
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
-    await store.save(battle);
+    await repository.save(battle);
     return;
   }
 
@@ -238,7 +237,7 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
 
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
-    await store.save(battle);
+    await repository.save(battle);
     return;
   }
 
@@ -247,7 +246,7 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
       // eslint-disable-next-line no-await-in-loop
-      await store.save(battle);
+      await repository.save(battle);
       return;
     }
 
@@ -256,16 +255,16 @@ const act = async (store: BattleStore, battle: Battle, actor: CharactorBattling,
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
       // eslint-disable-next-line no-await-in-loop
-      await store.save(battle);
+      await repository.save(battle);
       return;
     }
   }
   /* eslint-disable no-param-reassign */
 
-  await store.save(battle);
+  await repository.save(battle);
 };
 
-const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store }) => {
+const BattleTurn: FC<{ battle: Battle, repository: BattleRepository }> = ({ battle, repository }) => {
 
   const lastTurn = getLastTurn(battle);
   const actor = nextActor(battle);
@@ -281,9 +280,9 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');
 
-  const actSkill = async (doSkillForm: any) => {
+  const actSkill = async (doSkillForm: DoSkillForm) => {
     const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
-    if (doAction instanceof JsonSchemaUnmatchError || doAction instanceof DataNotFoundError) {
+    if (doAction instanceof DataNotFoundError) {
       setMessage('入力してください');
       return;
     }
@@ -297,7 +296,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     }
 
     replace([]);
-    await act(store, battle, actor, doAction);
+    await act(repository, battle, actor, doAction);
   };
 
   const isVisitorTag = actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
@@ -306,13 +305,13 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
     <Box p={4}>
       <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
       <Text>This is the battle page</Text>
-      {battle.result !== GameOngoing && <Button type="button" onClick={() => store.exportJson && store.exportJson(battle.title, '')} >Export</Button>}
+      {battle.result !== GameOngoing && <Button type="button" onClick={() => repository.exportJson(battle, '')} >Export</Button>}
       <GameResultView battle={battle} />
       {battle.result === GameOngoing && (
         <>
           <form onSubmit={handleSubmit(actSkill)}>
             {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
-            {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} store={store} />}
+            {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} repository={repository} />}
             <Box as={'dl'}>
               <Heading as={'dt'}>battle title</Heading>
               <Text as={'dd'}>{battle.title}</Text>
@@ -332,7 +331,7 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
                     battle={battle}
                     actor={actor}
                     lastTurn={lastTurn}
-                    skill={getSkill(getValues('skillName'))}
+                    skill={skillRepository.get(getValues('skillName'))}
                     getValues={getValues}
                     register={register}
                     index={index}
@@ -357,12 +356,8 @@ const BattleTurn: FC<{ battle: Battle, store: BattleStore }> = ({ battle, store 
   );
 };
 
-export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = ({ store, battleTitle }) => {
-  const battle = useLiveQuery(() => store.get(battleTitle), [battleTitle]);
-
-  if (!store.exportJson) {
-    throw new Error('invalid store');
-  }
+export const BattleExsiting: FC<{ repository: BattleRepository, battleTitle: string }> = ({ repository, battleTitle }) => {
+  const battle = useLiveQuery(() => repository.get(battleTitle), [battleTitle]);
 
   if (
     battle instanceof NotWearableErorr ||
@@ -388,27 +383,27 @@ export const BattleExsiting: FC<{ store: BattleStore, battleTitle: string }> = (
     );
   }
 
-  return (<BattleTurn battle={battle} store={store} />);
+  return (<BattleTurn battle={battle} repository={repository} />);
 };
 
 const ImportParty: FC<{
   type: string,
   party: Party | null,
   setParty: (party: Party | null) => void,
-}> = ({ type, party, setParty }) => {
+  repository: PartyRepository,
+}> = ({ type, party, setParty, repository }) => {
 
   const importParty = async () => {
-    const partyJson = await importJson();
-    if (!partyJson) {
+    const partyObj = await repository.importJson('');
+    if (!partyObj) {
+      window.alert('patryがありません');
       return;
     }
-
-    const partyObj = jsonToParty(partyJson);
     if (
+      partyObj instanceof JsonSchemaUnmatchError ||
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
-      partyObj instanceof CharactorDuplicationError ||
-      partyObj instanceof JsonSchemaUnmatchError
+      partyObj instanceof CharactorDuplicationError
     ) {
       window.alert(partyObj.message);
       return;
@@ -425,7 +420,7 @@ const ImportParty: FC<{
   );
 };
 
-export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
+export const BattleNew: FC<{ battleRepository: BattleRepository, partyRepository: PartyRepository }> = ({ battleRepository, partyRepository }) => {
 
   const router = useRouter()
 
@@ -467,7 +462,7 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
     const firstWaiting = nextActor(battle);
     battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
 
-    await store.save(battle);
+    await battleRepository.save(battle);
     await router.push({ pathname: 'battle', query: { title: battle.title } })
   };
 
@@ -482,16 +477,16 @@ export const BattleNew: FC<{ store: BattleStore }> = ({ store }) => {
           <Input id="title" placeholder="title" {...register('title')} />
           <FormErrorMessage>{errors.title && errors.title.message}</FormErrorMessage>
         </FormControl>
-        <ImportParty type='HOME' party={homeParty} setParty={setHomeParty}/>
-        <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty}/>
+        <ImportParty type='HOME' party={homeParty} setParty={setHomeParty} repository={partyRepository}/>
+        <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty} repository={partyRepository}/>
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">Start Battle</Button>
       </form>
     </Box>
   );
 };
 
-export const BattleList: FC<{ store: BattleStore }> = ({ store }) => {
-  const battleNames = useLiveQuery(() => store.list(), []);
+export const BattleList: FC<{ repository: BattleRepository }> = ({ repository }) => {
+  const battleNames = useLiveQuery(() => repository.list(), []);
   return (
     <Box>
       <Link href={{ pathname: '/' }}><a>戻る</a></Link>

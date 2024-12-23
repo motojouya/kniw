@@ -1,16 +1,16 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
-import { createStore } from '@motojouya/kniw/src/store/charactor';
+import type { Database } from '@motojouya/kniw/src/io/database';
+import { createRepository } from '@motojouya/kniw/src/store/charactor';
 import { getPhysical, getAbilities, getSkills } from '@motojouya/kniw/src/domain/charactor';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 
-export type ShowStatus = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
+export type ShowStatus = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const showStatus: ShowStatus =
-  ({ notice }, repository) =>
+  ({ notice }, database) =>
   async name => {
-    const store = await createStore(repository);
-    const characor = await store.get(name);
+    const repository = await createRepository(database);
+    const characor = await repository.get(name);
     if (!characor) {
       await notice(`${name}というcharactorは存在しません`);
       return;

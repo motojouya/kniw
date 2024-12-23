@@ -1,10 +1,11 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 
@@ -12,33 +13,26 @@ export const partySchema = z.object({
   name: z.string(),
   charactors: z.array(charactorSchema),
 });
-export type PartyJson = z.infer<typeof partySchema>;
+export type PartySchema = typeof partySchema;
+export type PartyJson = z.infer<PartySchema>;
 
 export type ToPartyJson = (party: Party) => PartyJson;
-export const toPartyJson: ToPartyJson = party => ({
+export const toPartyJson: ToJson<Party, PartyJson> = party => ({
   name: party.name,
   charactors: party.charactors.map(toCharactorJson),
 });
 
-export type ToParty = (
-  partyJson: any,
-) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
-export const toParty: ToParty = partyJson => {
-  const result = partySchema.safeParse(partyJson);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'partyのjsonデータではありません');
-  }
-
-  const { name } = result.data;
+export const toParty: ToModel<
+  Party,
+  PartyJson,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError
+> = partyJson => {
+  const { name } = partyJson;
 
   const charactorObjs: Charactor[] = [];
-  for (const charactor of result.data.charactors) {
+  for (const charactor of partyJson.charactors) {
     const charactorObj = toCharactor(charactor);
-    if (
-      charactorObj instanceof DataNotFoundError ||
-      charactorObj instanceof NotWearableErorr ||
-      charactorObj instanceof JsonSchemaUnmatchError
-    ) {
+    if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {
       return charactorObj;
     }
     charactorObjs.push(charactorObj);

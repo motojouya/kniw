@@ -21995,7 +21995,7 @@ module.exports = { cursor, scroll, erase, beep };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const ability_1 = __webpack_require__(410);
-const list = async (dialogue) => ability_1.abilityNames.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+const list = async (dialogue) => ability_1.abilityRepository.list.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 exports.list = list;
 
 
@@ -22010,7 +22010,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.show = void 0;
 const ability_1 = __webpack_require__(410);
 const show = ({ notice }) => async (name) => {
-    const ability = (0, ability_1.getAbility)(name);
+    const ability = ability_1.abilityRepository.get(name);
     if (!ability) {
         await notice(`${name}というabilityは存在しません`);
         return;
@@ -22030,17 +22030,16 @@ exports.show = show;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.resume = exports.start = exports.continueBattle = void 0;
-const file_repository_1 = __webpack_require__(9195);
 const standard_dialogue_1 = __webpack_require__(3092);
 const battle_1 = __webpack_require__(3279);
 const charactor_1 = __webpack_require__(657);
 const battle_2 = __webpack_require__(5033);
-const party_1 = __webpack_require__(7551);
-const party_2 = __webpack_require__(347);
+const party_1 = __webpack_require__(2228);
+const party_2 = __webpack_require__(7551);
 const random_1 = __webpack_require__(8708);
 const skill_1 = __webpack_require__(7239);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const status_1 = __webpack_require__(7929);
 const sleep_1 = __webpack_require__(6120);
 const skill_2 = __webpack_require__(8841);
@@ -22066,7 +22065,7 @@ const actSkill = dialogue => async (actor, battle) => {
         if (selectedName instanceof standard_dialogue_1.NotApplicable || selectedName === BACK) {
             return null;
         }
-        const selectedSkill = (0, skill_1.getSkill)(selectedName);
+        const selectedSkill = skill_1.skillRepository.get(selectedName);
         if (!selectedSkill) {
             await dialogue.notice(`${selectedName}というskillはありません`);
             return null;
@@ -22201,8 +22200,8 @@ const playerSelect = dialogue => async (actor, battle) => {
     }
     /* eslint-enable no-await-in-loop */
 };
-const continueBattle = (dialogue, repository) => async (battle) => {
-    const battleStore = await (0, battle_2.createStore)(repository);
+const continueBattle = (dialogue, database) => async (battle) => {
+    const battleRepository = await (0, battle_2.createRepository)(database);
     const { turns } = battle;
     /* eslint-disable no-await-in-loop */
     for (;;) {
@@ -22211,7 +22210,7 @@ const continueBattle = (dialogue, repository) => async (battle) => {
         const actor = (0, battle_1.nextActor)(battle);
         if ((0, status_1.underStatus)(sleep_1.sleep, actor)) {
             turns.push((0, battle_1.stay)(battle, actor, new Date()));
-            await battleStore.save(battle);
+            await battleRepository.save(battle);
         }
         else {
             const turn = await playerSelect(dialogue)(actor, battle);
@@ -22219,7 +22218,7 @@ const continueBattle = (dialogue, repository) => async (battle) => {
                 break;
             }
             turns.push(turn);
-            await battleStore.save(battle);
+            await battleRepository.save(battle);
         }
         // eslint-disable-next-line no-param-reassign
         battle.result = (0, battle_1.isSettlement)(battle);
@@ -22228,7 +22227,7 @@ const continueBattle = (dialogue, repository) => async (battle) => {
         }
     }
     /* eslint-enable no-await-in-loop */
-    await battleStore.save(battle);
+    await battleRepository.save(battle);
     if (battle.result === battle_1.GameOngoing) {
         await dialogue.notice('勝負を中断しました');
     }
@@ -22240,53 +22239,55 @@ const continueBattle = (dialogue, repository) => async (battle) => {
     }
 };
 exports.continueBattle = continueBattle;
-const start = (dialogue, repository) => async (title, home, visitor) => {
-    const homeJson = await (0, file_repository_1.importJson)(home);
-    if (!homeJson) {
+const start = (dialogue, database) => async (title, home, visitor) => {
+    const partyRepository = await (0, party_1.createRepository)(database);
+    const homeParty = await partyRepository.importJson(home);
+    if (!homeParty) {
         await dialogue.notice(`homeのデータがありません`);
         return;
     }
-    const homeParty = (0, party_2.toParty)(homeJson);
-    if (homeParty instanceof acquirement_1.NotWearableErorr ||
-        homeParty instanceof store_1.DataNotFoundError ||
-        homeParty instanceof party_1.CharactorDuplicationError ||
-        homeParty instanceof store_1.JsonSchemaUnmatchError) {
+    if (homeParty instanceof schema_1.JsonSchemaUnmatchError ||
+        homeParty instanceof acquirement_1.NotWearableErorr ||
+        homeParty instanceof schema_1.DataNotFoundError ||
+        homeParty instanceof party_2.CharactorDuplicationError ||
+        homeParty instanceof schema_1.JsonSchemaUnmatchError) {
         await dialogue.notice(`homeのpartyは不正なデータです`);
         return;
     }
-    const visitorJson = await (0, file_repository_1.importJson)(visitor);
-    if (!visitorJson) {
+    const visitorParty = await partyRepository.importJson(visitor);
+    if (!visitorParty) {
         await dialogue.notice(`visitorのデータがありません`);
+        return;
     }
-    const visitorParty = (0, party_2.toParty)(visitorJson);
-    if (visitorParty instanceof acquirement_1.NotWearableErorr ||
-        visitorParty instanceof store_1.DataNotFoundError ||
-        visitorParty instanceof party_1.CharactorDuplicationError ||
-        visitorParty instanceof store_1.JsonSchemaUnmatchError) {
+    if (visitorParty instanceof schema_1.JsonSchemaUnmatchError ||
+        visitorParty instanceof acquirement_1.NotWearableErorr ||
+        visitorParty instanceof schema_1.DataNotFoundError ||
+        visitorParty instanceof party_2.CharactorDuplicationError ||
+        visitorParty instanceof schema_1.JsonSchemaUnmatchError) {
         await dialogue.notice(`visitorのpartyは不正なデータです`);
         return;
     }
     const battle = (0, battle_1.createBattle)(title, homeParty, visitorParty);
     battle.turns.push((0, battle_1.start)(battle, new Date(), (0, random_1.createRandoms)()));
-    await (0, exports.continueBattle)(dialogue, repository)(battle);
+    await (0, exports.continueBattle)(dialogue, database)(battle);
 };
 exports.start = start;
-const resume = (dialogue, repository) => async (title) => {
-    const battleStore = await (0, battle_2.createStore)(repository);
-    const battle = await battleStore.get(title);
+const resume = (dialogue, database) => async (title) => {
+    const battleRepository = await (0, battle_2.createRepository)(database);
+    const battle = await battleRepository.get(title);
     if (!battle) {
         await dialogue.notice(`${title}というbattleはありません`);
         return;
     }
     if (battle instanceof acquirement_1.NotWearableErorr ||
-        battle instanceof store_1.DataNotFoundError ||
-        battle instanceof party_1.CharactorDuplicationError ||
-        battle instanceof store_1.JsonSchemaUnmatchError ||
+        battle instanceof schema_1.DataNotFoundError ||
+        battle instanceof party_2.CharactorDuplicationError ||
+        battle instanceof schema_1.JsonSchemaUnmatchError ||
         battle instanceof battle_1.NotBattlingError) {
         await dialogue.notice(`${title}のbattleは不正なデータです`);
         return;
     }
-    await (0, exports.continueBattle)(dialogue, repository)(battle);
+    await (0, exports.continueBattle)(dialogue, database)(battle);
 };
 exports.resume = resume;
 
@@ -22301,17 +22302,30 @@ exports.resume = resume;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.exportJson = void 0;
 const battle_1 = __webpack_require__(5033);
-const repository_1 = __webpack_require__(6039);
-const exportJson = (dialogue, repository) => async (title, file) => {
-    const store = await (0, battle_1.createStore)(repository);
-    if (!store.exportJson) {
-        const message = 'no copy function on party store!';
-        console.debug(message);
-        throw new Error(message);
+const database_1 = __webpack_require__(671);
+const battle_2 = __webpack_require__(3279);
+const party_1 = __webpack_require__(7551);
+const acquirement_1 = __webpack_require__(8826);
+const schema_1 = __webpack_require__(7653);
+const exportJson = (dialogue, database) => async (title, file) => {
+    const repository = await (0, battle_1.createRepository)(database);
+    const battle = await repository.get(title);
+    if (!battle) {
+        await dialogue.notice(`${title}というbattleはありません`);
+        return;
     }
-    const result = store.exportJson(title, file);
-    if (result instanceof repository_1.CopyFailError) {
+    if (battle instanceof acquirement_1.NotWearableErorr ||
+        battle instanceof schema_1.DataNotFoundError ||
+        battle instanceof party_1.CharactorDuplicationError ||
+        battle instanceof schema_1.JsonSchemaUnmatchError ||
+        battle instanceof battle_2.NotBattlingError) {
+        await dialogue.notice(`${title}のbattleは不正なデータです`);
+        return;
+    }
+    const result = await repository.exportJson(battle, file);
+    if (result instanceof database_1.CopyFailError) {
         await dialogue.notice(`${title}を出力できませんでした`);
+        return;
     }
     await dialogue.notice(`${title}を${file}に出力しました`);
 };
@@ -22328,9 +22342,9 @@ exports.exportJson = exportJson;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.histories = void 0;
 const battle_1 = __webpack_require__(5033);
-const histories = async (dialogue, repository) => {
-    const store = await (0, battle_1.createStore)(repository);
-    const battleList = await store.list();
+const histories = async (dialogue, database) => {
+    const repository = await (0, battle_1.createRepository)(database);
+    const battleList = await repository.list();
     await battleList.reduce((p, title) => p.then(() => dialogue.notice(`- ${title}`)), Promise.resolve());
 };
 exports.histories = histories;
@@ -22347,20 +22361,20 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.showHistory = void 0;
 const battle_1 = __webpack_require__(5033);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const party_1 = __webpack_require__(7551);
 const battle_2 = __webpack_require__(3279);
-const showHistory = ({ notice }, repository) => async (title) => {
-    const store = await (0, battle_1.createStore)(repository);
-    const battle = await store.get(title);
+const showHistory = ({ notice }, database) => async (title) => {
+    const repository = await (0, battle_1.createRepository)(database);
+    const battle = await repository.get(title);
     if (!battle) {
         await notice(`${title}という名前のタイトルは存在しません`);
         return;
     }
     if (battle instanceof acquirement_1.NotWearableErorr ||
-        battle instanceof store_1.DataNotFoundError ||
+        battle instanceof schema_1.DataNotFoundError ||
         battle instanceof party_1.CharactorDuplicationError ||
-        battle instanceof store_1.JsonSchemaUnmatchError ||
+        battle instanceof schema_1.JsonSchemaUnmatchError ||
         battle instanceof battle_2.NotBattlingError) {
         await notice(`${title}は不正なデータです。取り出せません。`);
         return;
@@ -22397,7 +22411,7 @@ exports.showHistory = showHistory;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const acquirement_1 = __webpack_require__(2066);
-const list = async (dialogue) => acquirement_1.blessingNames.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+const list = async (dialogue) => acquirement_1.blessingRepository.list.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 exports.list = list;
 
 
@@ -22412,7 +22426,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.show = void 0;
 const acquirement_1 = __webpack_require__(2066);
 const show = ({ notice }) => async (name) => {
-    const blessing = (0, acquirement_1.getBlessing)(name);
+    const blessing = acquirement_1.blessingRepository.get(name);
     if (!blessing) {
         await notice(`${name}というblessingは存在しません`);
         return;
@@ -22470,13 +22484,13 @@ const byebyeMessages = [
     'わ、私を捨てるのか',
     'あの時に交わした約束は嘘だったのだな',
 ];
-const fire = (dialogue, repository) => async (name) => {
-    const store = await (0, charactor_1.createStore)(repository);
+const fire = (dialogue, database) => async (name) => {
+    const repository = await (0, charactor_1.createRepository)(database);
     const confirmAnswer = await dialogue.confirm(`本当に${name}を解雇してもよろしいですか？`);
     if (!confirmAnswer || confirmAnswer instanceof standard_dialogue_1.NotApplicable) {
         return;
     }
-    await store.remove(name);
+    await repository.remove(name);
     await dialogue.notice(`${name}を解雇しました。言伝を預かっております。`);
     const randoms = (0, random_1.createRandoms)();
     const message = byebyeMessages[Math.floor(randoms.accuracy * byebyeMessages.length)];
@@ -22499,24 +22513,24 @@ const charactor_1 = __webpack_require__(7281);
 const acquirement_1 = __webpack_require__(2066);
 const acquirement_2 = __webpack_require__(8826);
 const charactor_2 = __webpack_require__(657);
-const hire = (dialogue, repository) => async (name) => {
+const hire = (dialogue, database) => async (name) => {
     const { notice, select } = dialogue;
-    const store = await (0, charactor_1.createStore)(repository);
-    const charactorNames = await store.list();
+    const repository = await (0, charactor_1.createRepository)(database);
+    const charactorNames = await repository.list();
     if (charactorNames.includes(name)) {
         await notice(`${name}は既に雇っています`);
     }
-    const raceOptions = acquirement_1.allRaces.map(race => ({ value: race.name, label: race.label }));
+    const raceOptions = acquirement_1.raceRepository.all.map(race => ({ value: race.name, label: race.label }));
     const raceName = await select('種族を選んでください', raceOptions);
     if (!raceName || raceName instanceof standard_dialogue_1.NotApplicable) {
         return;
     }
-    const race = (0, acquirement_1.getRace)(raceName);
+    const race = acquirement_1.raceRepository.get(raceName);
     if (!race) {
         await notice(`${raceName}という種族は存在しません`);
         return;
     }
-    const blessingOptions = acquirement_1.allBlessings.map(blessing => ({
+    const blessingOptions = acquirement_1.blessingRepository.all.map(blessing => ({
         value: blessing.name,
         label: blessing.label,
     }));
@@ -22524,12 +22538,12 @@ const hire = (dialogue, repository) => async (name) => {
     if (!blessingName || blessingName instanceof standard_dialogue_1.NotApplicable) {
         return;
     }
-    const blessing = (0, acquirement_1.getBlessing)(blessingName);
+    const blessing = acquirement_1.blessingRepository.get(blessingName);
     if (!blessing) {
         await notice(`${blessingName}という祝福は存在しません`);
         return;
     }
-    const clothingOptions = acquirement_1.allClothings.map(clothing => ({
+    const clothingOptions = acquirement_1.clothingRepository.all.map(clothing => ({
         value: clothing.name,
         label: clothing.label,
     }));
@@ -22537,17 +22551,20 @@ const hire = (dialogue, repository) => async (name) => {
     if (!clothingName || clothingName instanceof standard_dialogue_1.NotApplicable) {
         return;
     }
-    const clothing = (0, acquirement_1.getClothing)(clothingName);
+    const clothing = acquirement_1.clothingRepository.get(clothingName);
     if (!clothing) {
         await notice(`${clothingName}という装備は存在しません`);
         return;
     }
-    const weaponOptions = acquirement_1.allWeapons.map(weapon => ({ value: weapon.name, label: weapon.label }));
+    const weaponOptions = acquirement_1.weaponRepository.all.map(weapon => ({
+        value: weapon.name,
+        label: weapon.label,
+    }));
     const weaponName = await select('種族を選んでください', weaponOptions);
     if (!weaponName || weaponName instanceof standard_dialogue_1.NotApplicable) {
         return;
     }
-    const weapon = (0, acquirement_1.getWeapon)(weaponName);
+    const weapon = acquirement_1.weaponRepository.get(weaponName);
     if (!weapon) {
         await notice(`${weaponName}という種族は存在しません`);
         return;
@@ -22557,7 +22574,7 @@ const hire = (dialogue, repository) => async (name) => {
         await notice(charactor.message);
         return;
     }
-    await store.save(charactor);
+    await repository.save(charactor);
     await notice(`${name}を雇いました`);
 };
 exports.hire = hire;
@@ -22573,9 +22590,9 @@ exports.hire = hire;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const charactor_1 = __webpack_require__(7281);
-const list = async (dialogue, repository) => {
-    const store = await (0, charactor_1.createStore)(repository);
-    const characorList = await store.list();
+const list = async (dialogue, database) => {
+    const repository = await (0, charactor_1.createRepository)(database);
+    const characorList = await repository.list();
     await characorList.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 };
 exports.list = list;
@@ -22593,17 +22610,17 @@ exports.showStatus = void 0;
 const charactor_1 = __webpack_require__(7281);
 const charactor_2 = __webpack_require__(657);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
-const showStatus = ({ notice }, repository) => async (name) => {
-    const store = await (0, charactor_1.createStore)(repository);
-    const characor = await store.get(name);
+const schema_1 = __webpack_require__(7653);
+const showStatus = ({ notice }, database) => async (name) => {
+    const repository = await (0, charactor_1.createRepository)(database);
+    const characor = await repository.get(name);
     if (!characor) {
         await notice(`${name}というcharactorは存在しません`);
         return;
     }
     if (characor instanceof acquirement_1.NotWearableErorr ||
-        characor instanceof store_1.DataNotFoundError ||
-        characor instanceof store_1.JsonSchemaUnmatchError) {
+        characor instanceof schema_1.DataNotFoundError ||
+        characor instanceof schema_1.JsonSchemaUnmatchError) {
         await notice(`${name}は不正なデータです。取り出せません。`);
         return;
     }
@@ -22656,7 +22673,7 @@ exports.showStatus = showStatus;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const acquirement_1 = __webpack_require__(2066);
-const list = async (dialogue) => acquirement_1.clothingNames.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+const list = async (dialogue) => acquirement_1.clothingRepository.list.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 exports.list = list;
 
 
@@ -22671,7 +22688,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.show = void 0;
 const acquirement_1 = __webpack_require__(2066);
 const show = ({ notice }) => async (name) => {
-    const clothing = (0, acquirement_1.getClothing)(name);
+    const clothing = acquirement_1.clothingRepository.get(name);
     if (!clothing) {
         await notice(`${name}というclothingは存在しません`);
         return;
@@ -22723,17 +22740,17 @@ const standard_dialogue_1 = __webpack_require__(3092);
 const charactor_1 = __webpack_require__(7281);
 const party_1 = __webpack_require__(2228);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const party_2 = __webpack_require__(7551);
-const build = (dialogue, repository) => async (name) => {
+const build = (dialogue, database) => async (name) => {
     const { notice, multiSelect } = dialogue;
-    const partyStore = await (0, party_1.createStore)(repository);
-    const charactorStore = await (0, charactor_1.createStore)(repository);
-    const partyNames = await partyStore.list();
+    const partyRepository = await (0, party_1.createRepository)(database);
+    const charactorRepository = await (0, charactor_1.createRepository)(database);
+    const partyNames = await partyRepository.list();
     if (partyNames.includes(name)) {
         await notice(`${name}というparty名は既に使われています`);
     }
-    const charactorNames = await charactorStore.list();
+    const charactorNames = await charactorRepository.list();
     const charactorOptions = charactorNames.map(charactorName => ({
         value: charactorName,
         label: charactorName,
@@ -22745,15 +22762,15 @@ const build = (dialogue, repository) => async (name) => {
     const charactors = [];
     for (const selectedName of selectedNames) {
         // eslint-disable-next-line no-await-in-loop
-        const charactor = await charactorStore.get(selectedName);
+        const charactor = await charactorRepository.get(selectedName);
         if (!charactor) {
             // eslint-disable-next-line no-await-in-loop
             await notice(`${selectedName}というキャラクターはいません`);
             return;
         }
         if (charactor instanceof acquirement_1.NotWearableErorr ||
-            charactor instanceof store_1.DataNotFoundError ||
-            charactor instanceof store_1.JsonSchemaUnmatchError) {
+            charactor instanceof schema_1.DataNotFoundError ||
+            charactor instanceof schema_1.JsonSchemaUnmatchError) {
             // eslint-disable-next-line no-await-in-loop
             await notice(charactor.message);
             return;
@@ -22765,7 +22782,7 @@ const build = (dialogue, repository) => async (name) => {
         await notice(party.message);
         return;
     }
-    await partyStore.save(party);
+    await partyRepository.save(party);
     await notice(`${name}を組みました`);
 };
 exports.build = build;
@@ -22784,21 +22801,21 @@ const standard_dialogue_1 = __webpack_require__(3092);
 const charactor_1 = __webpack_require__(7281);
 const party_1 = __webpack_require__(2228);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const party_2 = __webpack_require__(7551);
-const change = (dialogue, repository) => async (name) => {
+const change = (dialogue, database) => async (name) => {
     const { notice, multiSelect } = dialogue;
-    const partyStore = await (0, party_1.createStore)(repository);
-    const charactorStore = await (0, charactor_1.createStore)(repository);
-    const party = await partyStore.get(name);
+    const partyRepository = await (0, party_1.createRepository)(database);
+    const charactorRepository = await (0, charactor_1.createRepository)(database);
+    const party = await partyRepository.get(name);
     if (!party) {
         await notice(`${name}というpartyは存在しません`);
         return;
     }
     if (party instanceof acquirement_1.NotWearableErorr ||
-        party instanceof store_1.DataNotFoundError ||
+        party instanceof schema_1.DataNotFoundError ||
         party instanceof party_2.CharactorDuplicationError ||
-        party instanceof store_1.JsonSchemaUnmatchError) {
+        party instanceof schema_1.JsonSchemaUnmatchError) {
         await notice(`${name}は不正なデータです。取り出せません。`);
         return;
     }
@@ -22811,7 +22828,7 @@ const change = (dialogue, repository) => async (name) => {
     if (!(fireNames instanceof standard_dialogue_1.NotApplicable) && fireNames.length !== 0) {
         newCharactors = newCharactors.filter(newName => !fireNames.includes(newName));
     }
-    const charactorNames = await charactorStore.list();
+    const charactorNames = await charactorRepository.list();
     const hireOptions = charactorNames
         .filter(charactorName => !newCharactors.includes(charactorName))
         .map(charactorName => ({ value: charactorName, label: charactorName }));
@@ -22823,15 +22840,15 @@ const change = (dialogue, repository) => async (name) => {
     const charactors = [];
     for (const newName of newCharactors) {
         // eslint-disable-next-line no-await-in-loop
-        const charactor = await charactorStore.get(newName);
+        const charactor = await charactorRepository.get(newName);
         if (!charactor) {
             // eslint-disable-next-line no-await-in-loop
             await notice(`${newName}というキャラクターはいません`);
             return;
         }
         if (charactor instanceof acquirement_1.NotWearableErorr ||
-            charactor instanceof store_1.DataNotFoundError ||
-            charactor instanceof store_1.JsonSchemaUnmatchError) {
+            charactor instanceof schema_1.DataNotFoundError ||
+            charactor instanceof schema_1.JsonSchemaUnmatchError) {
             // eslint-disable-next-line no-await-in-loop
             await notice(charactor.message);
             return;
@@ -22843,7 +22860,7 @@ const change = (dialogue, repository) => async (name) => {
         await notice(newParty.message);
         return;
     }
-    await partyStore.save(newParty);
+    await partyRepository.save(newParty);
     await notice(`${name}を組み直しました`);
 };
 exports.change = change;
@@ -22860,13 +22877,13 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.dismiss = void 0;
 const standard_dialogue_1 = __webpack_require__(3092);
 const party_1 = __webpack_require__(2228);
-const dismiss = (dialogue, repository) => async (name) => {
-    const store = await (0, party_1.createStore)(repository);
+const dismiss = (dialogue, database) => async (name) => {
+    const repository = await (0, party_1.createRepository)(database);
     const confirmAnswer = await dialogue.confirm(`本当に${name}を解散してもよろしいですか？`);
     if (!confirmAnswer || confirmAnswer instanceof standard_dialogue_1.NotApplicable) {
         return;
     }
-    await store.remove(name);
+    await repository.remove(name);
     await dialogue.notice(`${name}を解散しました`);
 };
 exports.dismiss = dismiss;
@@ -22882,17 +22899,28 @@ exports.dismiss = dismiss;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.exportJson = void 0;
 const party_1 = __webpack_require__(2228);
-const repository_1 = __webpack_require__(6039);
-const exportJson = (dialogue, repository) => async (name, file) => {
-    const store = await (0, party_1.createStore)(repository);
-    if (!store.exportJson) {
-        const message = 'no copy function on party store!';
-        console.debug(message);
-        throw new Error(message);
+const database_1 = __webpack_require__(671);
+const party_2 = __webpack_require__(7551);
+const acquirement_1 = __webpack_require__(8826);
+const schema_1 = __webpack_require__(7653);
+const exportJson = (dialogue, database) => async (name, file) => {
+    const repository = await (0, party_1.createRepository)(database);
+    const party = await repository.get(name);
+    if (!party) {
+        await dialogue.notice(`${name}というpartyはありません`);
+        return;
     }
-    const result = store.exportJson(name, file);
-    if (result instanceof repository_1.CopyFailError) {
+    if (party instanceof acquirement_1.NotWearableErorr ||
+        party instanceof schema_1.DataNotFoundError ||
+        party instanceof party_2.CharactorDuplicationError ||
+        party instanceof schema_1.JsonSchemaUnmatchError) {
+        await dialogue.notice(`${name}は不正なデータです`);
+        return;
+    }
+    const result = await repository.exportJson(party, file);
+    if (result instanceof database_1.CopyFailError) {
         await dialogue.notice(`${name}を出力できませんでした`);
+        return;
     }
     await dialogue.notice(`${name}を${file}に出力しました`);
 };
@@ -22909,9 +22937,9 @@ exports.exportJson = exportJson;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const party_1 = __webpack_require__(2228);
-const list = async (dialogue, repository) => {
-    const store = await (0, party_1.createStore)(repository);
-    const partyList = await store.list();
+const list = async (dialogue, database) => {
+    const repository = await (0, party_1.createRepository)(database);
+    const partyList = await repository.list();
     await partyList.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 };
 exports.list = list;
@@ -22928,19 +22956,19 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.showStatus = void 0;
 const party_1 = __webpack_require__(2228);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const party_2 = __webpack_require__(7551);
-const showStatus = ({ notice }, repository) => async (name) => {
-    const store = await (0, party_1.createStore)(repository);
-    const party = await store.get(name);
+const showStatus = ({ notice }, database) => async (name) => {
+    const repository = await (0, party_1.createRepository)(database);
+    const party = await repository.get(name);
     if (!party) {
         await notice(`${name}というpartyは存在しません`);
         return;
     }
     if (party instanceof acquirement_1.NotWearableErorr ||
-        party instanceof store_1.DataNotFoundError ||
+        party instanceof schema_1.DataNotFoundError ||
         party instanceof party_2.CharactorDuplicationError ||
-        party instanceof store_1.JsonSchemaUnmatchError) {
+        party instanceof schema_1.JsonSchemaUnmatchError) {
         await notice(`${name}は不正なデータです。取り出せません。`);
         return;
     }
@@ -22967,7 +22995,7 @@ exports.showStatus = showStatus;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const acquirement_1 = __webpack_require__(2066);
-const list = async (dialogue) => acquirement_1.raceNames.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+const list = async (dialogue) => acquirement_1.raceRepository.list.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 exports.list = list;
 
 
@@ -22982,7 +23010,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.show = void 0;
 const acquirement_1 = __webpack_require__(2066);
 const show = ({ notice }) => async (name) => {
-    const race = (0, acquirement_1.getRace)(name);
+    const race = acquirement_1.raceRepository.get(name);
     if (!race) {
         await notice(`${name}というraceは存在しません`);
         return;
@@ -23031,7 +23059,7 @@ exports.show = show;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const skill_1 = __webpack_require__(7239);
-const list = async (dialogue) => skill_1.skillNames.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+const list = async (dialogue) => skill_1.skillRepository.list.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 exports.list = list;
 
 
@@ -23046,7 +23074,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.show = void 0;
 const skill_1 = __webpack_require__(7239);
 const show = ({ notice }) => async (name) => {
-    const skill = (0, skill_1.getSkill)(name);
+    const skill = skill_1.skillRepository.get(name);
     if (!skill) {
         await notice(`${name}というskillは存在しません`);
         return;
@@ -23080,7 +23108,7 @@ exports.show = show;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.list = void 0;
 const acquirement_1 = __webpack_require__(2066);
-const list = async (dialogue) => acquirement_1.weaponNames.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
+const list = async (dialogue) => acquirement_1.weaponRepository.list.reduce((p, name) => p.then(() => dialogue.notice(`- ${name}`)), Promise.resolve());
 exports.list = list;
 
 
@@ -23095,7 +23123,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.show = void 0;
 const acquirement_1 = __webpack_require__(2066);
 const show = ({ notice }) => async (name) => {
-    const weapon = (0, acquirement_1.getWeapon)(name);
+    const weapon = acquirement_1.weaponRepository.get(name);
     if (!weapon) {
         await notice(`${name}というweaponは存在しません`);
         return;
@@ -23176,35 +23204,35 @@ const histories_1 = __webpack_require__(4138);
 const showHistory_1 = __webpack_require__(9522);
 const battle_1 = __webpack_require__(1569);
 const exportJson_1 = __webpack_require__(9494);
-const makeCommand = (dialogue, repository) => {
+const makeCommand = (dialogue, database) => {
     const battle = new extra_typings_1.Command('battle');
     battle
         .command('histories')
         .description('list histories')
-        .action(async () => (0, histories_1.histories)(dialogue, repository));
+        .action(async () => (0, histories_1.histories)(dialogue, database));
     battle
         .command('history')
         .argument('<title>', 'party name you looking')
         .description('look party as you like')
-        .action(async (title) => (0, showHistory_1.showHistory)(dialogue, repository)(title));
+        .action(async (title) => (0, showHistory_1.showHistory)(dialogue, database)(title));
     battle
         .command('start')
         .argument('<title>', 'building party name')
         .argument('<home>', 'building party file path')
         .argument('<vistor>', 'building party file path')
         .description('build a party as you like')
-        .action(async (title, home, visitor) => (0, battle_1.start)(dialogue, repository)(title, home, visitor));
+        .action(async (title, home, visitor) => (0, battle_1.start)(dialogue, database)(title, home, visitor));
     battle
         .command('resume')
         .argument('<title>', 'resume battle title')
         .description('resume battle')
-        .action(async (title) => (0, battle_1.resume)(dialogue, repository)(title));
+        .action(async (title) => (0, battle_1.resume)(dialogue, database)(title));
     battle
         .command('export')
         .argument('<title>', 'export battle history')
         .argument('<file>', 'export file')
         .description('export battle history')
-        .action(async (title, file) => (0, exportJson_1.exportJson)(dialogue, repository)(title, file));
+        .action(async (title, file) => (0, exportJson_1.exportJson)(dialogue, database)(title, file));
     return battle;
 };
 exports.makeCommand = makeCommand;
@@ -23252,27 +23280,27 @@ const list_1 = __webpack_require__(1609);
 const showStatus_1 = __webpack_require__(3773);
 const fire_1 = __webpack_require__(1360);
 const hire_1 = __webpack_require__(4437);
-const makeCommand = (dialogue, repository) => {
+const makeCommand = (dialogue, database) => {
     const charactor = new extra_typings_1.Command('charactor');
     charactor
         .command('list')
         .description('hire charactor as you like')
-        .action(async () => (0, list_1.list)(dialogue, repository));
+        .action(async () => (0, list_1.list)(dialogue, database));
     charactor
         .command('hire')
         .argument('<name>', 'hiring charactor name')
         .description('hire charactor as you like')
-        .action(async (name) => (0, hire_1.hire)(dialogue, repository)(name));
+        .action(async (name) => (0, hire_1.hire)(dialogue, database)(name));
     charactor
         .command('status')
         .argument('<name>', 'charactor name you looking')
         .description('look charactor as you like')
-        .action(async (name) => (0, showStatus_1.showStatus)(dialogue, repository)(name));
+        .action(async (name) => (0, showStatus_1.showStatus)(dialogue, database)(name));
     charactor
         .command('fire')
         .argument('<name>', 'firing charactor name')
         .description('fire charactor as you like')
-        .action(async (name) => (0, fire_1.fire)(dialogue, repository)(name));
+        .action(async (name) => (0, fire_1.fire)(dialogue, database)(name));
     return charactor;
 };
 exports.makeCommand = makeCommand;
@@ -23326,7 +23354,7 @@ const weapon_1 = __webpack_require__(7378);
 const charactor_1 = __webpack_require__(8796);
 const party_1 = __webpack_require__(4950);
 const battle_1 = __webpack_require__(6103);
-const makeCommand = (dialogue, repository) => {
+const makeCommand = (dialogue, database) => {
     const program = new extra_typings_1.Command();
     program.addCommand((0, skill_1.makeCommand)(dialogue));
     program.addCommand((0, ability_1.makeCommand)(dialogue));
@@ -23334,9 +23362,9 @@ const makeCommand = (dialogue, repository) => {
     program.addCommand((0, blessing_1.makeCommand)(dialogue));
     program.addCommand((0, clothing_1.makeCommand)(dialogue));
     program.addCommand((0, weapon_1.makeCommand)(dialogue));
-    program.addCommand((0, charactor_1.makeCommand)(dialogue, repository));
-    program.addCommand((0, party_1.makeCommand)(dialogue, repository));
-    program.addCommand((0, battle_1.makeCommand)(dialogue, repository));
+    program.addCommand((0, charactor_1.makeCommand)(dialogue, database));
+    program.addCommand((0, party_1.makeCommand)(dialogue, database));
+    program.addCommand((0, battle_1.makeCommand)(dialogue, database));
     return program;
 };
 exports.makeCommand = makeCommand;
@@ -23358,38 +23386,38 @@ const build_1 = __webpack_require__(7376);
 const change_1 = __webpack_require__(4746);
 const dismiss_1 = __webpack_require__(2898);
 const exportJson_1 = __webpack_require__(1091);
-const makeCommand = (dialogue, repository) => {
+const makeCommand = (dialogue, database) => {
     const party = new extra_typings_1.Command('party');
     party
         .command('list')
         .description('list parties')
-        .action(async () => (0, list_1.list)(dialogue, repository));
+        .action(async () => (0, list_1.list)(dialogue, database));
     party
         .command('build')
         .argument('<name>', 'building party name')
         .description('build a party as you like')
-        .action(async (name) => (0, build_1.build)(dialogue, repository)(name));
+        .action(async (name) => (0, build_1.build)(dialogue, database)(name));
     party
         .command('status')
         .argument('<name>', 'party name you looking')
         .description('look party as you like')
-        .action(async (name) => (0, showStatus_1.showStatus)(dialogue, repository)(name));
+        .action(async (name) => (0, showStatus_1.showStatus)(dialogue, database)(name));
     party
         .command('change')
         .argument('<name>', 'changing party name')
         .description('change a party as you like')
-        .action(async (name) => (0, change_1.change)(dialogue, repository)(name));
+        .action(async (name) => (0, change_1.change)(dialogue, database)(name));
     party
         .command('dismiss')
         .argument('<name>', 'dismiss party name')
         .description('dismiss party as you like')
-        .action(async (name) => (0, dismiss_1.dismiss)(dialogue, repository)(name));
+        .action(async (name) => (0, dismiss_1.dismiss)(dialogue, database)(name));
     party
         .command('export')
         .argument('<name>', 'export party name')
         .argument('<file>', 'export file')
         .description('export party as you like')
-        .action(async (name, file) => (0, exportJson_1.exportJson)(dialogue, repository)(name, file));
+        .action(async (name, file) => (0, exportJson_1.exportJson)(dialogue, database)(name, file));
     return party;
 };
 exports.makeCommand = makeCommand;
@@ -30871,7 +30899,26 @@ exports.underStatus = underStatus;
 
 /***/ }),
 
-/***/ 9195:
+/***/ 671:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.CopyFailError = void 0;
+class CopyFailError {
+    constructor(fileName, exception, message) {
+        this.fileName = fileName;
+        this.exception = exception;
+        this.message = message;
+    }
+}
+exports.CopyFailError = CopyFailError;
+
+
+/***/ }),
+
+/***/ 4316:
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -30880,10 +30927,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createRepository = exports.importJson = exports.repositoryDirectory = void 0;
+exports.createDatabase = exports.importJson = exports.repositoryDirectory = void 0;
 const fs_1 = __importDefault(__webpack_require__(7147));
 const path_1 = __importDefault(__webpack_require__(1017));
-const repository_1 = __webpack_require__(6039);
+const database_1 = __webpack_require__(671);
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
 const userHome = process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME'];
@@ -30947,13 +30994,22 @@ const createRemove = basePath => async (namespace, objctKey) => {
         }
     }
 };
-const createExportJson = basePath => async (namespace, objctKey, fileName) => {
+// FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
+// ただし、fsのエラーメッセージが一緒なら意味がない
+const exportJson = async (json, fileName) => {
+    const text = JSON.stringify(json);
     try {
-        await fs_1.default.promises.copyFile(resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), fileName, fs_1.default.constants.COPYFILE_EXCL);
+        await fs_1.default.promises.writeFile(fileName, text);
+        // FIXME old copy pattern
+        // await fs.promises.copyFile(
+        //   resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), // storageFileName
+        //   fileName,
+        //   fs.constants.COPYFILE_EXCL,
+        // );
         return null;
     }
     catch (e) {
-        return new repository_1.CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
+        return new database_1.CopyFailError(fileName, e, `${fileName}へコピーに失敗しました`);
     }
 };
 const importJson = async (fileName) => {
@@ -30977,7 +31033,7 @@ const importJson = async (fileName) => {
     }
 };
 exports.importJson = importJson;
-const createRepository = async (basePath) => {
+const createDatabase = async (basePath) => {
     await createDirctory(basePath);
     return {
         checkNamespace: createCheckNamespace(basePath),
@@ -30985,29 +31041,11 @@ const createRepository = async (basePath) => {
         list: createList(basePath),
         get: createGet(basePath),
         remove: createRemove(basePath),
-        exportJson: createExportJson(basePath),
+        importJson: exports.importJson,
+        exportJson,
     };
 };
-exports.createRepository = createRepository;
-
-
-/***/ }),
-
-/***/ 6039:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.CopyFailError = void 0;
-class CopyFailError {
-    constructor(fileName, exception, message) {
-        this.fileName = fileName;
-        this.exception = exception;
-        this.message = message;
-    }
-}
-exports.CopyFailError = CopyFailError;
+exports.createDatabase = createDatabase;
 
 
 /***/ }),
@@ -31140,12 +31178,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.allAbility = exports.abilityNames = exports.getAbility = void 0;
+exports.abilityRepository = void 0;
 const abilities = __importStar(__webpack_require__(8266));
-const getAbility = name => abilities[name];
-exports.getAbility = getAbility;
-exports.abilityNames = Object.keys(abilities);
-exports.allAbility = Object.values(abilities);
+const memory_repository_1 = __webpack_require__(5393);
+exports.abilityRepository = (0, memory_repository_1.createMemoryRepository)(abilities);
 
 
 /***/ }),
@@ -31179,27 +31215,16 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.allBlessings = exports.blessingNames = exports.getBlessing = exports.allClothings = exports.clothingNames = exports.getClothing = exports.allWeapons = exports.weaponNames = exports.getWeapon = exports.allRaces = exports.raceNames = exports.getRace = void 0;
+exports.blessingRepository = exports.clothingRepository = exports.weaponRepository = exports.raceRepository = void 0;
 const races = __importStar(__webpack_require__(90));
 const weapons = __importStar(__webpack_require__(8253));
 const clothings = __importStar(__webpack_require__(3538));
 const blessings = __importStar(__webpack_require__(1163));
-const getRace = name => races[name];
-exports.getRace = getRace;
-exports.raceNames = Object.keys(races);
-exports.allRaces = Object.values(races);
-const getWeapon = name => weapons[name];
-exports.getWeapon = getWeapon;
-exports.weaponNames = Object.keys(weapons);
-exports.allWeapons = Object.values(weapons);
-const getClothing = name => clothings[name];
-exports.getClothing = getClothing;
-exports.clothingNames = Object.keys(clothings);
-exports.allClothings = Object.values(clothings);
-const getBlessing = name => blessings[name];
-exports.getBlessing = getBlessing;
-exports.blessingNames = Object.keys(blessings);
-exports.allBlessings = Object.values(blessings);
+const memory_repository_1 = __webpack_require__(5393);
+exports.raceRepository = (0, memory_repository_1.createMemoryRepository)(races);
+exports.weaponRepository = (0, memory_repository_1.createMemoryRepository)(weapons);
+exports.clothingRepository = (0, memory_repository_1.createMemoryRepository)(clothings);
+exports.blessingRepository = (0, memory_repository_1.createMemoryRepository)(blessings);
 
 
 /***/ }),
@@ -31210,31 +31235,12 @@ exports.allBlessings = Object.values(blessings);
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createStore = void 0;
+exports.createRepository = exports.SCHEMA_KEY = exports.NAMESPACE = void 0;
 const battle_1 = __webpack_require__(3747);
-const NAMESPACE = 'battle';
-const createSave = repository => async (obj) => repository.save(NAMESPACE, obj.title, (0, battle_1.toBattleJson)(obj));
-const createGet = repository => async (name) => {
-    const result = await repository.get(NAMESPACE, name);
-    if (!result) {
-        return null;
-    }
-    return (0, battle_1.toBattle)(result);
-};
-const createRemove = repository => async (name) => repository.remove(NAMESPACE, name);
-const createList = repository => async () => repository.list(NAMESPACE);
-const createExportJson = repository => async (name, file) => repository.exportJson(NAMESPACE, name, file);
-const createStore = async (repository) => {
-    await repository.checkNamespace(NAMESPACE);
-    return {
-        save: createSave(repository),
-        list: createList(repository),
-        get: createGet(repository),
-        remove: createRemove(repository),
-        exportJson: createExportJson(repository),
-    };
-};
-exports.createStore = createStore;
+const disk_repository_1 = __webpack_require__(1133);
+exports.NAMESPACE = 'battle';
+exports.SCHEMA_KEY = 'title';
+exports.createRepository = (0, disk_repository_1.createRepository)(exports.NAMESPACE, battle_1.battleSchema, battle_1.toBattle, battle_1.toBattleJson, exports.SCHEMA_KEY);
 
 
 /***/ }),
@@ -31245,29 +31251,79 @@ exports.createStore = createStore;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createStore = void 0;
+exports.createRepository = exports.SCHEMA_KEY = exports.NAMESPACE = void 0;
 const charactor_1 = __webpack_require__(4821);
-const NAMESPACE = 'charactor';
-const createSave = repository => async (obj) => repository.save(NAMESPACE, obj.name, (0, charactor_1.toCharactorJson)(obj));
-const createGet = repository => async (name) => {
-    const result = await repository.get(NAMESPACE, name);
+const disk_repository_1 = __webpack_require__(1133);
+exports.NAMESPACE = 'charactor';
+exports.SCHEMA_KEY = 'name';
+exports.createRepository = (0, disk_repository_1.createRepository)(exports.NAMESPACE, charactor_1.charactorSchema, charactor_1.toCharactor, charactor_1.toCharactorJson, exports.SCHEMA_KEY);
+
+
+/***/ }),
+
+/***/ 1133:
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createRepository = void 0;
+const schema_1 = __webpack_require__(7653);
+const createSave = (namespace, key, toJson) => (database) => async (obj) => database.save(namespace, obj[key], toJson(obj));
+const createList = namespace => database => async () => database.list(namespace);
+const createGet = (namespace, schema, toModel) => (database) => async (name) => {
+    const result = await database.get(namespace, name);
     if (!result) {
         return null;
     }
-    return (0, charactor_1.toCharactor)(result);
+    const json = (0, schema_1.parseJson)(schema)(result);
+    if (json instanceof schema_1.JsonSchemaUnmatchError) {
+        return json;
+    }
+    return toModel(json);
 };
-const createRemove = repository => async (name) => repository.remove(NAMESPACE, name);
-const createList = repository => async () => repository.list(NAMESPACE);
-const createStore = async (repository) => {
-    await repository.checkNamespace(NAMESPACE);
+const createRemove = (namespace) => database => async (name) => database.remove(namespace, name);
+const createImportJson = (schema, toModel) => (database) => async (fileName) => {
+    const result = await database.importJson(fileName);
+    if (!result) {
+        return null;
+    }
+    const json = (0, schema_1.parseJson)(schema)(result);
+    if (json instanceof schema_1.JsonSchemaUnmatchError) {
+        return json;
+    }
+    return toModel(json);
+};
+const createExportJson = (toJson) => (database) => async (obj, fileName) => database.exportJson(toJson(obj), fileName);
+const createRepository = (namespace, schema, toModel, toJson, key) => async (database) => {
+    await database.checkNamespace(namespace);
     return {
-        save: createSave(repository),
-        list: createList(repository),
-        get: createGet(repository),
-        remove: createRemove(repository),
+        save: createSave(namespace, key, toJson)(database),
+        list: createList(namespace)(database),
+        get: createGet(namespace, schema, toModel)(database),
+        remove: createRemove(namespace)(database),
+        importJson: createImportJson(schema, toModel)(database),
+        exportJson: createExportJson(toJson)(database),
     };
 };
-exports.createStore = createStore;
+exports.createRepository = createRepository;
+
+
+/***/ }),
+
+/***/ 5393:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.createMemoryRepository = void 0;
+const createMemoryRepository = (items) => ({
+    get: name => items[name],
+    list: Object.keys(items),
+    all: Object.values(items),
+});
+exports.createMemoryRepository = createMemoryRepository;
 
 
 /***/ }),
@@ -31278,31 +31334,12 @@ exports.createStore = createStore;
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.createStore = void 0;
+exports.createRepository = exports.SCHEMA_KEY = exports.NAMESPACE = void 0;
 const party_1 = __webpack_require__(347);
-const NAMESPACE = 'party';
-const createSave = storage => async (obj) => storage.save(NAMESPACE, obj.name, (0, party_1.toPartyJson)(obj));
-const createGet = storage => async (name) => {
-    const result = await storage.get(NAMESPACE, name);
-    if (!result) {
-        return null;
-    }
-    return (0, party_1.toParty)(result);
-};
-const createRemove = storage => async (name) => storage.remove(NAMESPACE, name);
-const createList = storage => async () => storage.list(NAMESPACE);
-const createExportJson = storage => async (name, file) => storage.exportJson(NAMESPACE, name, file);
-const createStore = async (storage) => {
-    await storage.checkNamespace(NAMESPACE);
-    return {
-        save: createSave(storage),
-        list: createList(storage),
-        get: createGet(storage),
-        remove: createRemove(storage),
-        exportJson: createExportJson(storage),
-    };
-};
-exports.createStore = createStore;
+const disk_repository_1 = __webpack_require__(1133);
+exports.NAMESPACE = 'party';
+exports.SCHEMA_KEY = 'name';
+exports.createRepository = (0, disk_repository_1.createRepository)(exports.NAMESPACE, party_1.partySchema, party_1.toParty, party_1.toPartyJson, exports.SCHEMA_KEY);
 
 
 /***/ }),
@@ -31318,7 +31355,7 @@ const zod_1 = __webpack_require__(8754);
 const turn_1 = __webpack_require__(4546);
 const party_1 = __webpack_require__(347);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const battle_1 = __webpack_require__(3279);
 const party_2 = __webpack_require__(7551);
 exports.battleSchema = zod_1.z.object({
@@ -31337,44 +31374,37 @@ const toBattleJson = battle => ({
 });
 exports.toBattleJson = toBattleJson;
 const toBattle = battleJson => {
-    const parseResult = exports.battleSchema.safeParse(battleJson);
-    if (!parseResult.success) {
-        return new store_1.JsonSchemaUnmatchError(parseResult.error, 'battleのjsonデータではありません');
-    }
-    const battleJsonTyped = parseResult.data;
-    const { title } = battleJsonTyped;
-    const home = (0, party_1.toParty)(battleJsonTyped.home);
+    const { title } = battleJson;
+    const home = (0, party_1.toParty)(battleJson.home);
     if (home instanceof acquirement_1.NotWearableErorr ||
-        home instanceof store_1.DataNotFoundError ||
-        home instanceof party_2.CharactorDuplicationError ||
-        home instanceof store_1.JsonSchemaUnmatchError) {
+        home instanceof schema_1.DataNotFoundError ||
+        home instanceof party_2.CharactorDuplicationError) {
         return home;
     }
     if (!(0, party_2.isBattlingParty)(home)) {
         return new battle_1.NotBattlingError(home, `home party(${home.name})のcharactorにisVisitor propertyがありません`);
     }
-    const visitor = (0, party_1.toParty)(battleJsonTyped.visitor);
+    const visitor = (0, party_1.toParty)(battleJson.visitor);
     if (visitor instanceof acquirement_1.NotWearableErorr ||
-        visitor instanceof store_1.DataNotFoundError ||
-        visitor instanceof party_2.CharactorDuplicationError ||
-        visitor instanceof store_1.JsonSchemaUnmatchError) {
+        visitor instanceof schema_1.DataNotFoundError ||
+        visitor instanceof party_2.CharactorDuplicationError) {
         return visitor;
     }
     if (!(0, party_2.isBattlingParty)(visitor)) {
         return new battle_1.NotBattlingError(visitor, `visitor party(${visitor.name})のcharactorにisVisitor propertyがありません`);
     }
     const turns = [];
-    for (const turnJson of battleJsonTyped.turns) {
+    for (const turnJson of battleJson.turns) {
         const turn = (0, turn_1.toTurn)(turnJson);
         if (turn instanceof acquirement_1.NotWearableErorr ||
-            turn instanceof store_1.DataNotFoundError ||
-            turn instanceof store_1.JsonSchemaUnmatchError ||
+            turn instanceof schema_1.DataNotFoundError ||
+            turn instanceof schema_1.JsonSchemaUnmatchError ||
             turn instanceof battle_1.NotBattlingError) {
             return turn;
         }
         turns.push(turn);
     }
-    const { result } = battleJsonTyped;
+    const { result } = battleJson;
     return {
         title,
         home,
@@ -31397,7 +31427,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.toCharactor = exports.toCharactorJson = exports.toAttachedStatusJson = exports.charactorSchema = exports.attachedStatusSchema = void 0;
 const zod_1 = __webpack_require__(8754);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const charactor_1 = __webpack_require__(657);
 const status_1 = __webpack_require__(2399);
 const acquirement_2 = __webpack_require__(2066);
@@ -31441,36 +31471,31 @@ const toCharactorJson = charactor => {
 };
 exports.toCharactorJson = toCharactorJson;
 const toCharactor = charactorJson => {
-    const result = exports.charactorSchema.safeParse(charactorJson);
-    if (!result.success) {
-        return new store_1.JsonSchemaUnmatchError(result.error, 'charactorのjsonデータではありません');
-    }
-    const charactorJsonTyped = result.data;
-    const { name } = charactorJsonTyped;
-    const race = (0, acquirement_2.getRace)(charactorJsonTyped.race);
+    const { name } = charactorJson;
+    const race = acquirement_2.raceRepository.get(charactorJson.race);
     if (!race) {
-        return new store_1.DataNotFoundError(charactorJsonTyped.race, 'race', `${charactorJsonTyped.race}という種族は存在しません`);
+        return new schema_1.DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
     }
-    const blessing = (0, acquirement_2.getBlessing)(charactorJsonTyped.blessing);
+    const blessing = acquirement_2.blessingRepository.get(charactorJson.blessing);
     if (!blessing) {
-        return new store_1.DataNotFoundError(charactorJsonTyped.blessing, 'blessing', `${charactorJsonTyped.blessing}という祝福は存在しません`);
+        return new schema_1.DataNotFoundError(charactorJson.blessing, 'blessing', `${charactorJson.blessing}という祝福は存在しません`);
     }
-    const clothing = (0, acquirement_2.getClothing)(charactorJsonTyped.clothing);
+    const clothing = acquirement_2.clothingRepository.get(charactorJson.clothing);
     if (!clothing) {
-        return new store_1.DataNotFoundError(charactorJsonTyped.clothing, 'clothing', `${charactorJsonTyped.clothing}という装備は存在しません`);
+        return new schema_1.DataNotFoundError(charactorJson.clothing, 'clothing', `${charactorJson.clothing}という装備は存在しません`);
     }
-    const weapon = (0, acquirement_2.getWeapon)(charactorJsonTyped.weapon);
+    const weapon = acquirement_2.weaponRepository.get(charactorJson.weapon);
     if (!weapon) {
-        return new store_1.DataNotFoundError(charactorJsonTyped.weapon, 'weapon', `${charactorJsonTyped.weapon}という武器は存在しません`);
+        return new schema_1.DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon}という武器は存在しません`);
     }
     const validateResult = (0, charactor_1.validate)(name, race, blessing, clothing, weapon);
     if (validateResult instanceof acquirement_1.NotWearableErorr) {
         return validateResult;
     }
     const statuses = [];
-    for (const attachedStatusJson of charactorJsonTyped.statuses) {
+    for (const attachedStatusJson of charactorJson.statuses) {
         const statusObj = (0, status_1.toStatus)(attachedStatusJson.status);
-        if (statusObj instanceof store_1.JsonSchemaUnmatchError || statusObj instanceof store_1.DataNotFoundError) {
+        if (statusObj instanceof schema_1.DataNotFoundError) {
             return statusObj;
         }
         statuses.push({
@@ -31485,12 +31510,12 @@ const toCharactor = charactorJson => {
         clothing,
         weapon,
         statuses,
-        hp: 0 + charactorJsonTyped.hp,
-        mp: 0 + charactorJsonTyped.mp,
-        restWt: 0 + charactorJsonTyped.restWt,
+        hp: 0 + charactorJson.hp,
+        mp: 0 + charactorJson.mp,
+        restWt: 0 + charactorJson.restWt,
     };
-    if (Object.prototype.hasOwnProperty.call(charactorJsonTyped, 'isVisitor')) {
-        someone.isVisitor = charactorJsonTyped.isVisitor;
+    if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
+        someone.isVisitor = charactorJson.isVisitor;
     }
     return someone;
 };
@@ -31508,7 +31533,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.toParty = exports.toPartyJson = exports.partySchema = void 0;
 const zod_1 = __webpack_require__(8754);
 const acquirement_1 = __webpack_require__(8826);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const party_1 = __webpack_require__(7551);
 const charactor_1 = __webpack_require__(4821);
 exports.partySchema = zod_1.z.object({
@@ -31521,17 +31546,11 @@ const toPartyJson = party => ({
 });
 exports.toPartyJson = toPartyJson;
 const toParty = partyJson => {
-    const result = exports.partySchema.safeParse(partyJson);
-    if (!result.success) {
-        return new store_1.JsonSchemaUnmatchError(result.error, 'partyのjsonデータではありません');
-    }
-    const { name } = result.data;
+    const { name } = partyJson;
     const charactorObjs = [];
-    for (const charactor of result.data.charactors) {
+    for (const charactor of partyJson.charactors) {
         const charactorObj = (0, charactor_1.toCharactor)(charactor);
-        if (charactorObj instanceof store_1.DataNotFoundError ||
-            charactorObj instanceof acquirement_1.NotWearableErorr ||
-            charactorObj instanceof store_1.JsonSchemaUnmatchError) {
+        if (charactorObj instanceof schema_1.DataNotFoundError || charactorObj instanceof acquirement_1.NotWearableErorr) {
             return charactorObj;
         }
         charactorObjs.push(charactorObj);
@@ -31550,6 +31569,53 @@ exports.toParty = toParty;
 
 /***/ }),
 
+/***/ 7653:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.parseJson = exports.DataExistError = exports.DataNotFoundError = exports.JsonSchemaUnmatchError = void 0;
+class JsonSchemaUnmatchError {
+    constructor(error, message) {
+        this.error = error;
+        this.message = message;
+    }
+}
+exports.JsonSchemaUnmatchError = JsonSchemaUnmatchError;
+class DataNotFoundError {
+    constructor(name, type, message) {
+        this.name = name;
+        this.type = type;
+        this.message = message;
+    }
+}
+exports.DataNotFoundError = DataNotFoundError;
+class DataExistError {
+    constructor(name, type, message) {
+        this.name = name;
+        this.type = type;
+        this.message = message;
+    }
+}
+exports.DataExistError = DataExistError;
+function parseJson(schema) {
+    // eslint-disable-next-line func-names
+    return function (json) {
+        const result = schema.safeParse(json);
+        if (result.success) {
+            return result.data;
+        }
+        else {
+            return new JsonSchemaUnmatchError(result.error, '想定されたjson schemaのデータではありません');
+        }
+    };
+}
+exports.parseJson = parseJson;
+
+
+/***/ }),
+
 /***/ 2399:
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
@@ -31558,19 +31624,15 @@ exports.toParty = toParty;
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.toStatus = exports.toStatusJson = exports.statusSchema = void 0;
 const zod_1 = __webpack_require__(8754);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const status_1 = __webpack_require__(3244);
 exports.statusSchema = zod_1.z.string();
 const toStatusJson = status => status.name;
 exports.toStatusJson = toStatusJson;
 const toStatus = statusJson => {
-    const result = exports.statusSchema.safeParse(statusJson);
-    if (!result.success) {
-        return new store_1.JsonSchemaUnmatchError(result.error, 'statusのjsonデータではありません');
-    }
-    const status = (0, status_1.getStatus)(result.data);
+    const status = status_1.statusRepository.get(statusJson);
     if (!status) {
-        return new store_1.DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);
+        return new schema_1.DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);
     }
     return status;
 };
@@ -31591,7 +31653,7 @@ const date_fns_1 = __webpack_require__(105);
 const zod_1 = __webpack_require__(8754);
 const acquirement_1 = __webpack_require__(8826);
 const skill_1 = __webpack_require__(7239);
-const store_1 = __webpack_require__(9895);
+const schema_1 = __webpack_require__(7653);
 const charactor_1 = __webpack_require__(4821);
 const charactor_2 = __webpack_require__(657);
 const battle_1 = __webpack_require__(3279);
@@ -31658,27 +31720,18 @@ const toTurnJson = turn => ({
 });
 exports.toTurnJson = toTurnJson;
 const toAction = actionJson => {
-    const result = actionSchema.safeParse(actionJson);
-    if (!result.success) {
-        return new store_1.JsonSchemaUnmatchError(result.error, 'actionのjsonデータではありません');
-    }
-    const actionJsonTyped = result.data;
-    if (actionJsonTyped.type === 'DO_SKILL') {
-        const skillActor = (0, charactor_1.toCharactor)(actionJsonTyped.actor);
-        if (skillActor instanceof acquirement_1.NotWearableErorr ||
-            skillActor instanceof store_1.DataNotFoundError ||
-            skillActor instanceof store_1.JsonSchemaUnmatchError) {
+    if (actionJson.type === 'DO_SKILL') {
+        const skillActor = (0, charactor_1.toCharactor)(actionJson.actor);
+        if (skillActor instanceof acquirement_1.NotWearableErorr || skillActor instanceof schema_1.DataNotFoundError) {
             return skillActor;
         }
         if (!(0, charactor_2.isBattlingCharactor)(skillActor)) {
             return new battle_1.NotBattlingError(skillActor, `actor(${skillActor.name})にisVisitor propertyがありません`);
         }
         const receivers = [];
-        for (const receiverJson of actionJsonTyped.receivers) {
+        for (const receiverJson of actionJson.receivers) {
             const receiver = (0, charactor_1.toCharactor)(receiverJson);
-            if (receiver instanceof acquirement_1.NotWearableErorr ||
-                receiver instanceof store_1.DataNotFoundError ||
-                receiver instanceof store_1.JsonSchemaUnmatchError) {
+            if (receiver instanceof acquirement_1.NotWearableErorr || receiver instanceof schema_1.DataNotFoundError) {
                 return receiver;
             }
             if (!(0, charactor_2.isBattlingCharactor)(receiver)) {
@@ -31686,9 +31739,9 @@ const toAction = actionJson => {
             }
             receivers.push(receiver);
         }
-        const skill = (0, skill_1.getSkill)(actionJsonTyped.skill);
+        const skill = skill_1.skillRepository.get(actionJson.skill);
         if (!skill) {
-            return new store_1.DataNotFoundError(actionJsonTyped.skill, 'skill', `${actionJsonTyped.skill}というskillは存在しません`);
+            return new schema_1.DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill}というskillは存在しません`);
         }
         return {
             type: 'DO_SKILL',
@@ -31697,11 +31750,9 @@ const toAction = actionJson => {
             receivers,
         };
     }
-    if (actionJsonTyped.type === 'SURRENDER') {
-        const surrenderActor = (0, charactor_1.toCharactor)(actionJsonTyped.actor);
-        if (surrenderActor instanceof acquirement_1.NotWearableErorr ||
-            surrenderActor instanceof store_1.DataNotFoundError ||
-            surrenderActor instanceof store_1.JsonSchemaUnmatchError) {
+    if (actionJson.type === 'SURRENDER') {
+        const surrenderActor = (0, charactor_1.toCharactor)(actionJson.actor);
+        if (surrenderActor instanceof acquirement_1.NotWearableErorr || surrenderActor instanceof schema_1.DataNotFoundError) {
             return surrenderActor;
         }
         if (!(0, charactor_2.isBattlingCharactor)(surrenderActor)) {
@@ -31712,11 +31763,9 @@ const toAction = actionJson => {
             actor: surrenderActor,
         };
     }
-    if (actionJsonTyped.type === 'DO_NOTHING') {
-        const nothingActor = (0, charactor_1.toCharactor)(actionJsonTyped.actor);
-        if (nothingActor instanceof acquirement_1.NotWearableErorr ||
-            nothingActor instanceof store_1.DataNotFoundError ||
-            nothingActor instanceof store_1.JsonSchemaUnmatchError) {
+    if (actionJson.type === 'DO_NOTHING') {
+        const nothingActor = (0, charactor_1.toCharactor)(actionJson.actor);
+        if (nothingActor instanceof acquirement_1.NotWearableErorr || nothingActor instanceof schema_1.DataNotFoundError) {
             return nothingActor;
         }
         if (!(0, charactor_2.isBattlingCharactor)(nothingActor)) {
@@ -31729,36 +31778,27 @@ const toAction = actionJson => {
     }
     return {
         type: 'TIME_PASSING',
-        wt: 0 + actionJsonTyped.wt,
+        wt: 0 + actionJson.wt,
     };
 };
 exports.toAction = toAction;
 const toTurn = turnJson => {
-    const result = exports.turnSchema.safeParse(turnJson);
-    if (!result.success) {
-        return new store_1.JsonSchemaUnmatchError(result.error, 'turnのjsonデータではありません');
-    }
-    const turnJsonTyped = result.data;
+    // TODO date parse不要では？JsonSchemaUnmatchErrorも
     let datetime = null;
     try {
-        datetime = (0, date_fns_1.parse)(turnJsonTyped.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
+        datetime = (0, date_fns_1.parse)(turnJson.datetime, "yyyy-MM-dd'T'HH:mm:ss", new Date());
     }
     catch (e) {
-        return new store_1.JsonSchemaUnmatchError(e, '日付が間違っています');
+        return new schema_1.JsonSchemaUnmatchError(e, '日付が間違っています');
     }
-    const action = (0, exports.toAction)(turnJsonTyped.action);
-    if (action instanceof acquirement_1.NotWearableErorr ||
-        action instanceof store_1.DataNotFoundError ||
-        action instanceof store_1.JsonSchemaUnmatchError ||
-        action instanceof battle_1.NotBattlingError) {
+    const action = (0, exports.toAction)(turnJson.action);
+    if (action instanceof acquirement_1.NotWearableErorr || action instanceof schema_1.DataNotFoundError || action instanceof battle_1.NotBattlingError) {
         return action;
     }
     const sortedCharactors = [];
-    for (const charactorJson of turnJsonTyped.sortedCharactors) {
+    for (const charactorJson of turnJson.sortedCharactors) {
         const charactor = (0, charactor_1.toCharactor)(charactorJson);
-        if (charactor instanceof acquirement_1.NotWearableErorr ||
-            charactor instanceof store_1.DataNotFoundError ||
-            charactor instanceof store_1.JsonSchemaUnmatchError) {
+        if (charactor instanceof acquirement_1.NotWearableErorr || charactor instanceof schema_1.DataNotFoundError) {
             return charactor;
         }
         if (!(0, charactor_2.isBattlingCharactor)(charactor)) {
@@ -31767,7 +31807,7 @@ const toTurn = turnJson => {
         sortedCharactors.push(charactor);
     }
     const field = {
-        climate: turnJsonTyped.field.climate,
+        climate: turnJson.field.climate,
     };
     return {
         datetime,
@@ -31810,12 +31850,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.allSkills = exports.skillNames = exports.getSkill = void 0;
+exports.skillRepository = void 0;
 const skills = __importStar(__webpack_require__(2057));
-const getSkill = name => skills[name];
-exports.getSkill = getSkill;
-exports.skillNames = Object.keys(skills);
-exports.allSkills = Object.values(skills);
+const memory_repository_1 = __webpack_require__(5393);
+exports.skillRepository = (0, memory_repository_1.createMemoryRepository)(skills);
 
 
 /***/ }),
@@ -31849,44 +31887,10 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.getStatus = void 0;
+exports.statusRepository = void 0;
 const statuses = __importStar(__webpack_require__(9538));
-const getStatus = name => statuses[name];
-exports.getStatus = getStatus;
-
-
-/***/ }),
-
-/***/ 9895:
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.DataExistError = exports.DataNotFoundError = exports.JsonSchemaUnmatchError = void 0;
-class JsonSchemaUnmatchError {
-    constructor(error, message) {
-        this.error = error;
-        this.message = message;
-    }
-}
-exports.JsonSchemaUnmatchError = JsonSchemaUnmatchError;
-class DataNotFoundError {
-    constructor(name, type, message) {
-        this.name = name;
-        this.type = type;
-        this.message = message;
-    }
-}
-exports.DataNotFoundError = DataNotFoundError;
-class DataExistError {
-    constructor(name, type, message) {
-        this.name = name;
-        this.type = type;
-        this.message = message;
-    }
-}
-exports.DataExistError = DataExistError;
+const memory_repository_1 = __webpack_require__(5393);
+exports.statusRepository = (0, memory_repository_1.createMemoryRepository)(statuses);
 
 
 /***/ }),
@@ -39907,9 +39911,9 @@ var __webpack_unused_export__;
 __webpack_unused_export__ = ({ value: true });
 const index_1 = __webpack_require__(3889);
 const standard_dialogue_1 = __webpack_require__(3092);
-const file_repository_1 = __webpack_require__(9195);
+const file_database_1 = __webpack_require__(4316);
 const run = async () => {
-    const repository = await (0, file_repository_1.createRepository)(file_repository_1.repositoryDirectory);
+    const repository = await (0, file_database_1.createDatabase)(file_database_1.repositoryDirectory);
     const command = (0, index_1.makeCommand)(standard_dialogue_1.dialogue, repository);
     command.parse(process.argv);
 };

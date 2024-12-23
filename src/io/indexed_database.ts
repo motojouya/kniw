@@ -1,8 +1,7 @@
-import type { Save, List, Get, Remove, ExportJson, Repository } from '@motojouya/kniw/src/io/repository';
+import type { Save, List, Get, Remove, ExportJson, ImportJson, Database } from '@motojouya/kniw/src/io/database';
 
 import Dexie from 'dexie';
 
-import { CopyFailError } from '@motojouya/kniw/src/io/repository';
 import { PartyJson } from '@motojouya/kniw/src/store/schema/party';
 import { BattleJson } from '@motojouya/kniw/src/store/schema/battle';
 
@@ -60,15 +59,8 @@ const createRemove: CreateRemove = db => async (namespace, objctKey) => {
   await table.delete(objctKey);
 };
 
-type CreateExportJson = (db: KniwDB) => ExportJson;
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const createExportJson: CreateExportJson = db => async (namespace, objctKey, fileName) => {
-  const table = getTable(db, namespace);
-  const json = (await table.get(objctKey)) as object | null;
-  if (!json) {
-    return new CopyFailError(objctKey, null, `${objctKey}は存在しません`);
-  }
-
+const exportJson: ExportJson = async (json, fileName) => {
   const newHandle = await window.showSaveFilePicker();
   const writableStream = await newHandle.createWritable();
   await writableStream.write(JSON.stringify(json));
@@ -89,17 +81,17 @@ const pickerOpts = {
   multiple: false,
 };
 
-export type ImportJson = () => Promise<object | null>;
-export const importJson: ImportJson = async () => {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export const importJson: ImportJson = async dammyFileName => {
   const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
   const file = await fileHandle.getFile();
   const text = await file.text();
   return JSON.parse(text) as object;
 };
 
-export type CreateRepository = () => Promise<Repository>;
+export type CreateDatabase = () => Promise<Database>;
 // eslint-disable-next-line @typescript-eslint/require-await
-export const createRepository: CreateRepository = async () => {
+export const createDatabase: CreateDatabase = async () => {
   const db = createDB();
   /* eslint-disable @typescript-eslint/no-unused-vars */
   return {
@@ -108,7 +100,8 @@ export const createRepository: CreateRepository = async () => {
     list: createList(db),
     get: createGet(db),
     remove: createRemove(db),
-    exportJson: createExportJson(db),
+    importJson,
+    exportJson,
   };
   /* eslint-enable @typescript-eslint/no-unused-vars */
 };

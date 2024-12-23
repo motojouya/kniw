@@ -2,30 +2,30 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { Repository } from '@motojouya/kniw/src/io/repository'
+import type { Database } from '@motojouya/kniw/src/io/database'
 import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
-import { createStore } from '@motojouya/kniw/src/store/charactor';
+import { createRepository } from '@motojouya/kniw/src/store/charactor';
 
-
-const storeMock: Repository = {
+const dbMock: Database = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  exportJson: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
+  importJson: (fileName) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
+  exportJson: (obj, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
-describe('Charctor#createStore', function () {
+describe('Charctor#createRepository', function () {
   it('save', async () => {
-    const store = await createStore(storeMock);
+    const repository = await createRepository(dbMock);
     const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
-    await store.save(charactor);
+    await repository.save(charactor);
     assert.strictEqual(true, true);
   });
   it('get', async () => {
-    const store = await createStore(storeMock);
-    const charactor = await store.get('sam');
+    const repository = await createRepository(dbMock);
+    const charactor = await repository.get('sam');
     const typedCharactor = charactor as Charactor;
     if (typedCharactor) {
       assert.strictEqual(typedCharactor.name, 'sam');
@@ -38,13 +38,13 @@ describe('Charctor#createStore', function () {
     }
   });
   it('remove', async () => {
-    const store = await createStore(storeMock);
-    await store.remove('sam');
+    const repository = await createRepository(dbMock);
+    await repository.remove('sam');
     assert.strictEqual(true, true);
   });
   it('list', async () => {
-    const store = await createStore(storeMock);
-    const charactorList = await store.list();
+    const repository = await createRepository(dbMock);
+    const charactorList = await repository.list();
     assert.strictEqual(charactorList.length, 2);
     assert.strictEqual(charactorList[0], 'sam');
     assert.strictEqual(charactorList[1], 'john');

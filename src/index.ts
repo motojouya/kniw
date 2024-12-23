@@ -2,10 +2,10 @@
 
 import { makeCommand } from '@motojouya/kniw/src/command/index';
 import { dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { createRepository, repositoryDirectory } from '@motojouya/kniw/src/io/file_repository';
+import { createDatabase, repositoryDirectory } from '@motojouya/kniw/src/io/file_database';
 
 const run = async () => {
-  const repository = await createRepository(repositoryDirectory);
+  const repository = await createDatabase(repositoryDirectory);
   const command = makeCommand(dialogue, repository);
   command.parse(process.argv);
 };

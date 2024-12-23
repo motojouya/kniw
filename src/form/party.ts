@@ -1,10 +1,10 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { Store } from '@motojouya/kniw/src/store/store';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { z } from 'zod';
 
-import { DataExistError, JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataExistError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { charactorFormSchema, toCharactor, toCharactorForm } from '@motojouya/kniw/src/form/charactor';
 import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
@@ -22,26 +22,15 @@ export const toPartyForm: ToPartyForm = party => ({
 });
 
 export type ToParty = (
-  partyForm: any,
-) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError;
+  partyForm: PartyForm,
+) => Party | NotWearableErorr | DataNotFoundError | CharactorDuplicationError;
 export const toParty: ToParty = partyForm => {
-  const result = partyFormSchema.safeParse(partyForm);
-  if (!result.success) {
-    return new JsonSchemaUnmatchError(result.error, 'partyのformデータではありません');
-  }
-
-  const partyFormTyped = result.data;
-
-  const { name } = partyFormTyped;
+  const { name } = partyForm;
 
   const charactorObjs: Charactor[] = [];
-  for (const charactor of partyFormTyped.charactors) {
+  for (const charactor of partyForm.charactors) {
     const charactorObj = toCharactor(charactor);
-    if (
-      charactorObj instanceof DataNotFoundError ||
-      charactorObj instanceof NotWearableErorr ||
-      charactorObj instanceof JsonSchemaUnmatchError
-    ) {
+    if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {
       return charactorObj;
     }
     charactorObjs.push(charactorObj);
@@ -59,32 +48,29 @@ export const toParty: ToParty = partyForm => {
 };
 
 export type SaveParty = (
-  partyForm: any,
-) => Promise<
-  null | DataNotFoundError | NotWearableErorr | JsonSchemaUnmatchError | CharactorDuplicationError | DataExistError
->;
+  partyForm: PartyForm,
+) => Promise<null | DataNotFoundError | NotWearableErorr | CharactorDuplicationError | DataExistError>;
 export type CreateSaveParty = (
-  store: Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>,
+  repository: Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError>,
   checkExists: boolean,
 ) => SaveParty;
-export const saveParty: CreateSaveParty = (store, checkExists) => async partyForm => {
+export const saveParty: CreateSaveParty = (repository, checkExists) => async partyForm => {
   const party = toParty(partyForm);
   if (
     party instanceof DataNotFoundError ||
     party instanceof NotWearableErorr ||
-    party instanceof JsonSchemaUnmatchError ||
     party instanceof CharactorDuplicationError
   ) {
     return party;
   }
 
   if (checkExists) {
-    const partyNames = await store.list();
+    const partyNames = await repository.list();
     if (partyNames.includes(party.name)) {
       return new DataExistError(party.name, 'party', `${party.name}というpartyは既に存在します`);
     }
   }
 
-  await store.save(party);
+  await repository.save(party);
   return null;
 };

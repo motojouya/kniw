@@ -1,5 +1,5 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
+import type { Database } from '@motojouya/kniw/src/io/database';
 
 // import commander from 'commander';
 import { Command } from '@commander-js/extra-typings';
@@ -14,7 +14,7 @@ import { makeCommand as makeCharactor } from '@motojouya/kniw/src/command/charac
 import { makeCommand as makeParty } from '@motojouya/kniw/src/command/party';
 import { makeCommand as makeBattle } from '@motojouya/kniw/src/command/battle';
 
-export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
+export const makeCommand = (dialogue: Dialogue, database: Database) => {
   const program = new Command();
 
   program.addCommand(makeSkill(dialogue));
@@ -23,9 +23,9 @@ export const makeCommand = (dialogue: Dialogue, repository: Repository) => {
   program.addCommand(makeBlessing(dialogue));
   program.addCommand(makeClothing(dialogue));
   program.addCommand(makeWeapon(dialogue));
-  program.addCommand(makeCharactor(dialogue, repository));
-  program.addCommand(makeParty(dialogue, repository));
-  program.addCommand(makeBattle(dialogue, repository));
+  program.addCommand(makeCharactor(dialogue, database));
+  program.addCommand(makeParty(dialogue, database));
+  program.addCommand(makeBattle(dialogue, database));
 
   return program;
 };

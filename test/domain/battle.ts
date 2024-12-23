@@ -2,6 +2,7 @@ import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { BattleJson } from '@motojouya/kniw/src/store/schema/battle';
 
 import { describe, it } from "node:test";
 import assert from "node:assert";
@@ -31,8 +32,8 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
-} from '@motojouya/kniw/src/store/store';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+} from '@motojouya/kniw/src/store/schema/schema';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 
 const testData = {
   title: 'first-title',
@@ -69,7 +70,7 @@ const testData = {
     }
   ],
   result: GameOngoing,
-};
+} as BattleJson;
 
 type FormatDate = (date: Date) => string;
 const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
@@ -142,7 +143,7 @@ describe('Battle#act', function () {
     const battle = (toBattle(testData) as Battle);
     const actor = (toCharactor(testData.home.charactors[0]) as CharactorBattling);
     const receiver = (toCharactor(testData.visitor.charactors[0]) as CharactorBattling);
-    const skill = (getSkill('chop') as Skill);
+    const skill = (skillRepository.get('chop') as Skill);
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
       times: 0.1,

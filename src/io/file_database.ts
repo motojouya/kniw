@@ -5,11 +5,12 @@ import type {
   Get,
   Remove,
   ExportJson,
-  Repository,
-} from '@motojouya/kniw/src/io/repository';
+  ImportJson,
+  Database,
+} from '@motojouya/kniw/src/io/database';
 import fs from 'fs';
 import path from 'path';
-import { CopyFailError } from '@motojouya/kniw/src/io/repository';
+import { CopyFailError } from '@motojouya/kniw/src/io/database';
 
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = '.json';
@@ -93,21 +94,22 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
 
 // FIXME エラーが粗いので細かくしたい。参照書き込み権限とか、ディレクトリの存在有無とか
 // ただし、fsのエラーメッセージが一緒なら意味がない
-type CreateExportJson = (basePath: string) => ExportJson;
-const createExportJson: CreateExportJson = basePath => async (namespace, objctKey, fileName) => {
+const exportJson: ExportJson = async (json, fileName) => {
+  const text = JSON.stringify(json);
   try {
-    await fs.promises.copyFile(
-      resolvePath(basePath, namespace, objctKey, FILE_EXTENSION),
-      fileName,
-      fs.constants.COPYFILE_EXCL,
-    );
+    await fs.promises.writeFile(fileName, text);
+    // FIXME old copy pattern
+    // await fs.promises.copyFile(
+    //   resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), // storageFileName
+    //   fileName,
+    //   fs.constants.COPYFILE_EXCL,
+    // );
     return null;
   } catch (e) {
-    return new CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
+    return new CopyFailError(fileName, e, `${fileName}へコピーに失敗しました`);
   }
 };
 
-export type ImportJson = (fileName: string) => Promise<object | null>;
 export const importJson: ImportJson = async fileName => {
   try {
     const contents = await fs.promises.readFile(fileName, {
@@ -127,8 +129,8 @@ export const importJson: ImportJson = async fileName => {
   }
 };
 
-export type CreateRepository = (basePath: string) => Promise<Repository>;
-export const createRepository: CreateRepository = async basePath => {
+export type CreateDatabase = (basePath: string) => Promise<Database>;
+export const createDatabase: CreateDatabase = async basePath => {
   await createDirctory(basePath);
   return {
     checkNamespace: createCheckNamespace(basePath),
@@ -136,6 +138,7 @@ export const createRepository: CreateRepository = async basePath => {
     list: createList(basePath),
     get: createGet(basePath),
     remove: createRemove(basePath),
-    exportJson: createExportJson(basePath),
+    importJson,
+    exportJson,
   };
 };
