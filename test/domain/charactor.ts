@@ -2,6 +2,7 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { CharactorJson } from '@motojouya/kniw/src/store/schema/charactor';
 
 import {
   getAbilities,
@@ -17,7 +18,7 @@ import {
 
 describe('Charctor#toCharactor', function () {
   it('DataNotFoundError', function () {
-    const charactor = toCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01', statuses: [], hp: 100, mp: 0, restWt: 120  });
+    const charactor = toCharactor({ name: 'sam', race: 'race01', blessing: 'blessing01', clothing: 'clothing01', weapon: 'weapon01', statuses: [], hp: 100, mp: 0, restWt: 120  } as CharactorJson);
     assert.strictEqual(charactor instanceof DataNotFoundError, true);
     if (charactor instanceof DataNotFoundError) {
       assert.strictEqual(charactor.name, 'race01');
@@ -28,7 +29,7 @@ describe('Charctor#toCharactor', function () {
     }
   });
   it('NotWearableErorr', function () {
-    const charactor = toCharactor({ name: 'sam', race: 'fairy', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 });
+    const charactor = toCharactor({ name: 'sam', race: 'fairy', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 } as CharactorJson);
     assert.strictEqual(charactor instanceof NotWearableErorr, true);
     if (charactor instanceof NotWearableErorr) {
       assert.strictEqual(charactor.acquirement.name, 'earth');
@@ -39,7 +40,7 @@ describe('Charctor#toCharactor', function () {
     }
   });
   it('ok', function () {
-    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 }) as Charactor);
+    const charactor = (toCharactor({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 } as CharactorJson) as Charactor);
     assert.strictEqual(charactor.name, 'sam');
     assert.strictEqual(charactor.race.name, 'human');
     assert.strictEqual(charactor.blessing.name, 'earth');

@@ -1,7 +1,7 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Repository } from '@motojouya/kniw/src/io/repository'
+import type { Database } from '@motojouya/kniw/src/io/database'
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import {
   GameOngoing,
@@ -10,7 +10,7 @@ import {
   GameDraw
 } from '@motojouya/kniw/src/domain/battle';
 import { toBattle } from '@motojouya/kniw/src/store/schema/battle';
-import { createStore } from '@motojouya/kniw/src/store/battle';
+import { createRepository } from '@motojouya/kniw/src/store/battle';
 import { parse, format } from 'date-fns';
 
 const testData = {
@@ -50,29 +50,30 @@ const testData = {
   result: GameOngoing,
 };
 
-const storeMock: Repository = {
+const dbMock: Database = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
   get: (namespace, objctKey) => new Promise((resolve, reject) => resolve(testData)),
   remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
   list: namespace => new Promise((resolve, reject) => resolve(['2023-06-29T12:12:12', '2023-06-29T15:15:15'])),
   checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  exportJson: (namespace, objctKey, fileName) => new Promise((resolve, reject) => resolve(null)),
+  importJson: (fileName) => new Promise((resolve, reject) => resolve(testData)),
+  exportJson: (obj, fileName) => new Promise((resolve, reject) => resolve(null)),
 };
 
 
 type FormatDate = (date: Date) => string;
 const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
 
-describe('Battle#createStore', function () {
+describe('Battle#createRepository', function () {
   it('save', async () => {
-    const store = await createStore(storeMock);
+    const repository = await createRepository(dbMock);
     const battle = (toBattle(testData) as Battle);
-    await store.save(battle);
+    await repository.save(battle);
     assert.strictEqual(true, true);
   });
   it('get', async () => {
-    const store = await createStore(storeMock);
-    const battle = await store.get('2023-06-29T12:12:12');
+    const repository = await createRepository(dbMock);
+    const battle = await repository.get('2023-06-29T12:12:12');
     const typedBattle = battle as Battle;
     if (typedBattle) {
       assert.strictEqual(typedBattle.title, 'first-title');
@@ -113,13 +114,13 @@ describe('Battle#createStore', function () {
     }
   });
   it('remove', async () => {
-    const store = await createStore(storeMock);
-    await store.remove('2023-06-29T12:12:12');
+    const repository = await createRepository(dbMock);
+    await repository.remove('2023-06-29T12:12:12');
     assert.strictEqual(true, true);
   });
   it('list', async () => {
-    const store = await createStore(storeMock);
-    const battleList = await store.list();
+    const repository = await createRepository(dbMock);
+    const battleList = await repository.list();
     assert.strictEqual(battleList.length, 2);
     assert.strictEqual(battleList[0], '2023-06-29T12:12:12');
     assert.strictEqual(battleList[1], '2023-06-29T15:15:15');
