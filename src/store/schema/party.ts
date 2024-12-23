@@ -22,16 +22,17 @@ export const toPartyJson: ToJson<Party, PartyJson> = party => ({
   charactors: party.charactors.map(toCharactorJson),
 });
 
-export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = partyJson => {
+export const toParty: ToModel<
+  Party,
+  PartyJson,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError
+> = partyJson => {
   const { name } = partyJson;
 
   const charactorObjs: Charactor[] = [];
   for (const charactor of partyJson.charactors) {
     const charactorObj = toCharactor(charactor);
-    if (
-      charactorObj instanceof DataNotFoundError ||
-      charactorObj instanceof NotWearableErorr
-    ) {
+    if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {
       return charactorObj;
     }
     charactorObjs.push(charactorObj);

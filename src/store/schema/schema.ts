@@ -29,7 +29,6 @@ export class DataExistError {
 export function parseJson<S extends z.ZodTypeAny>(schema: S): (json: unknown) => z.infer<S> | JsonSchemaUnmatchError {
   // eslint-disable-next-line func-names
   return function (json) {
-
     const result = schema.safeParse(json);
     if (result.success) {
       return result.data;

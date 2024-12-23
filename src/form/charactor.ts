@@ -5,7 +5,12 @@ import { z } from 'zod';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
-import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from '@motojouya/kniw/src/store/acquirement';
+import {
+  raceRepository,
+  weaponRepository,
+  clothingRepository,
+  blessingRepository,
+} from '@motojouya/kniw/src/store/acquirement';
 
 export const charactorFormSchema = z.object({
   name: z.string().min(1),
@@ -25,9 +30,7 @@ export const toCharactorForm: ToCharactorForm = charactor => ({
   weapon: charactor.weapon.name,
 });
 
-export type ToCharactor = (
-  charactorForm: CharactorForm,
-) => Charactor | NotWearableErorr | DataNotFoundError;
+export type ToCharactor = (charactorForm: CharactorForm) => Charactor | NotWearableErorr | DataNotFoundError;
 export const toCharactor: ToCharactor = charactorForm => {
   const { name } = charactorForm;
 
@@ -56,11 +59,7 @@ export const toCharactor: ToCharactor = charactorForm => {
 
   const weapon = weaponRepository.get(charactorForm.weapon);
   if (!weapon) {
-    return new DataNotFoundError(
-      charactorForm.weapon,
-      'weapon',
-      `${charactorForm.weapon}という武器は存在しません`,
-    );
+    return new DataNotFoundError(charactorForm.weapon, 'weapon', `${charactorForm.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

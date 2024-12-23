@@ -13,7 +13,6 @@ export type StatusJson = z.infer<StatusSchema>;
 export const toStatusJson: ToJson<Status, StatusJson> = status => status.name;
 
 export const toStatus: ToModel<Status, StatusJson, DataNotFoundError> = statusJson => {
-
   const status = statusRepository.get(statusJson);
   if (!status) {
     return new DataNotFoundError(statusJson, 'status', `${statusJson}というstatusは存在しません`);

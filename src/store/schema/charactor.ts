@@ -7,7 +7,12 @@ import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { validate } from '@motojouya/kniw/src/domain/charactor';
 import { statusSchema, toStatus, toStatusJson } from '@motojouya/kniw/src/store/schema/status';
-import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from '@motojouya/kniw/src/store/acquirement';
+import {
+  raceRepository,
+  weaponRepository,
+  clothingRepository,
+  blessingRepository,
+} from '@motojouya/kniw/src/store/acquirement';
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,
@@ -84,11 +89,7 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
 
   const weapon = weaponRepository.get(charactorJson.weapon);
   if (!weapon) {
-    return new DataNotFoundError(
-      charactorJson.weapon,
-      'weapon',
-      `${charactorJson.weapon}という武器は存在しません`,
-    );
+    return new DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

@@ -82,7 +82,7 @@ const pickerOpts = {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const importJson: ImportJson = async (dammyFileName) => {
+export const importJson: ImportJson = async dammyFileName => {
   const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
   const file = await fileHandle.getFile();
   const text = await file.text();

@@ -7,7 +7,6 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 
-
 export type ExportJson = (dialogue: Dialogue, database: Database) => (title: string, file: string) => Promise<void>;
 export const exportJson: ExportJson = (dialogue, database) => async (title, file) => {
   const repository = await createRepository(database);

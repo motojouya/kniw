@@ -30,13 +30,11 @@ export const toBattleJson: ToJson<Battle, BattleJson> = battle => ({
   result: battle.result,
 });
 
-export type ToBattle = ToModel<Battle, BattleJson,
-  | NotWearableErorr
-  | DataNotFoundError
-  | CharactorDuplicationError
-  | JsonSchemaUnmatchError
-  | NotBattlingError
->
+export type ToBattle = ToModel<
+  Battle,
+  BattleJson,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError
+>;
 export const toBattle: ToBattle = battleJson => {
   const { title } = battleJson;
 

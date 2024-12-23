@@ -60,7 +60,10 @@ export const hire: Hire = (dialogue, database) => async name => {
     return;
   }
 
-  const weaponOptions: SelectOption[] = weaponRepository.all.map(weapon => ({ value: weapon.name, label: weapon.label }));
+  const weaponOptions: SelectOption[] = weaponRepository.all.map(weapon => ({
+    value: weapon.name,
+    label: weapon.label,
+  }));
   const weaponName = await select('種族を選んでください', weaponOptions);
   if (!weaponName || weaponName instanceof NotApplicable) {
     return;

@@ -30,10 +30,7 @@ export const toParty: ToParty = partyForm => {
   const charactorObjs: Charactor[] = [];
   for (const charactor of partyForm.charactors) {
     const charactorObj = toCharactor(charactor);
-    if (
-      charactorObj instanceof DataNotFoundError ||
-      charactorObj instanceof NotWearableErorr
-    ) {
+    if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {
       return charactorObj;
     }
     charactorObjs.push(charactorObj);
@@ -52,9 +49,7 @@ export const toParty: ToParty = partyForm => {
 
 export type SaveParty = (
   partyForm: PartyForm,
-) => Promise<
-  null | DataNotFoundError | NotWearableErorr | CharactorDuplicationError | DataExistError
->;
+) => Promise<null | DataNotFoundError | NotWearableErorr | CharactorDuplicationError | DataExistError>;
 export type CreateSaveParty = (
   repository: Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError>,
   checkExists: boolean,

@@ -100,13 +100,14 @@ export const toTurnJson: ToJson<Turn, TurnJson> = turn => ({
   field: turn.field,
 });
 
-export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFoundError | NotBattlingError> = actionJson => {
+export const toAction: ToModel<
+  Action,
+  ActionJson,
+  NotWearableErorr | DataNotFoundError | NotBattlingError
+> = actionJson => {
   if (actionJson.type === 'DO_SKILL') {
     const skillActor = toCharactor(actionJson.actor);
-    if (
-      skillActor instanceof NotWearableErorr ||
-      skillActor instanceof DataNotFoundError
-    ) {
+    if (skillActor instanceof NotWearableErorr || skillActor instanceof DataNotFoundError) {
       return skillActor;
     }
 
@@ -117,10 +118,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
     const receivers: CharactorBattling[] = [];
     for (const receiverJson of actionJson.receivers) {
       const receiver = toCharactor(receiverJson);
-      if (
-        receiver instanceof NotWearableErorr ||
-        receiver instanceof DataNotFoundError
-      ) {
+      if (receiver instanceof NotWearableErorr || receiver instanceof DataNotFoundError) {
         return receiver;
       }
       if (!isBattlingCharactor(receiver)) {
@@ -144,10 +142,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
 
   if (actionJson.type === 'SURRENDER') {
     const surrenderActor = toCharactor(actionJson.actor);
-    if (
-      surrenderActor instanceof NotWearableErorr ||
-      surrenderActor instanceof DataNotFoundError
-    ) {
+    if (surrenderActor instanceof NotWearableErorr || surrenderActor instanceof DataNotFoundError) {
       return surrenderActor;
     }
     if (!isBattlingCharactor(surrenderActor)) {
@@ -161,10 +156,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
 
   if (actionJson.type === 'DO_NOTHING') {
     const nothingActor = toCharactor(actionJson.actor);
-    if (
-      nothingActor instanceof NotWearableErorr ||
-      nothingActor instanceof DataNotFoundError
-    ) {
+    if (nothingActor instanceof NotWearableErorr || nothingActor instanceof DataNotFoundError) {
       return nothingActor;
     }
     if (!isBattlingCharactor(nothingActor)) {
@@ -182,7 +174,11 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
   };
 };
 
-export const toTurn: ToModel<Turn, TurnJson, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError> = turnJson => {
+export const toTurn: ToModel<
+  Turn,
+  TurnJson,
+  NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError | NotBattlingError
+> = turnJson => {
   // TODO date parse不要では？JsonSchemaUnmatchErrorも
   let datetime = null;
   try {
@@ -192,21 +188,14 @@ export const toTurn: ToModel<Turn, TurnJson, NotWearableErorr | DataNotFoundErro
   }
 
   const action = toAction(turnJson.action);
-  if (
-    action instanceof NotWearableErorr ||
-    action instanceof DataNotFoundError ||
-    action instanceof NotBattlingError
-  ) {
+  if (action instanceof NotWearableErorr || action instanceof DataNotFoundError || action instanceof NotBattlingError) {
     return action;
   }
 
   const sortedCharactors: CharactorBattling[] = [];
   for (const charactorJson of turnJson.sortedCharactors) {
     const charactor = toCharactor(charactorJson);
-    if (
-      charactor instanceof NotWearableErorr ||
-      charactor instanceof DataNotFoundError
-    ) {
+    if (charactor instanceof NotWearableErorr || charactor instanceof DataNotFoundError) {
       return charactor;
     }
     if (!isBattlingCharactor(charactor)) {
