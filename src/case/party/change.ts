@@ -5,7 +5,7 @@ import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
 import { createRepository as createCharactorRepository } from '@motojouya/kniw/src/store/charactor';
 import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { createParty, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 
 export type Change = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;

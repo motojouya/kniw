@@ -10,7 +10,7 @@ import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { skillRepository } from '@motojouya/kniw/src/store/skill';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 import { isBattlingCharactor } from '@motojouya/kniw/src/domain/charactor';
 import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
@@ -105,7 +105,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
     const skillActor = toCharactor(actionJson.actor);
     if (
       skillActor instanceof NotWearableErorr ||
-      skillActor instanceof DataNotFoundError ||
+      skillActor instanceof DataNotFoundError
     ) {
       return skillActor;
     }
@@ -119,7 +119,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
       const receiver = toCharactor(receiverJson);
       if (
         receiver instanceof NotWearableErorr ||
-        receiver instanceof DataNotFoundError ||
+        receiver instanceof DataNotFoundError
       ) {
         return receiver;
       }
@@ -146,7 +146,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
     const surrenderActor = toCharactor(actionJson.actor);
     if (
       surrenderActor instanceof NotWearableErorr ||
-      surrenderActor instanceof DataNotFoundError ||
+      surrenderActor instanceof DataNotFoundError
     ) {
       return surrenderActor;
     }
@@ -163,7 +163,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
     const nothingActor = toCharactor(actionJson.actor);
     if (
       nothingActor instanceof NotWearableErorr ||
-      nothingActor instanceof DataNotFoundError ||
+      nothingActor instanceof DataNotFoundError
     ) {
       return nothingActor;
     }
@@ -205,7 +205,7 @@ export const toTurn: ToModel<Turn, TurnJson, NotWearableErorr | DataNotFoundErro
     const charactor = toCharactor(charactorJson);
     if (
       charactor instanceof NotWearableErorr ||
-      charactor instanceof DataNotFoundError ||
+      charactor instanceof DataNotFoundError
     ) {
       return charactor;
     }

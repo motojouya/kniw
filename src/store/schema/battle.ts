@@ -8,7 +8,7 @@ import { toTurn, toTurnJson, turnSchema } from '@motojouya/kniw/src/store/schema
 import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDuplicationError, isBattlingParty } from '@motojouya/kniw/src/domain/party';
 
@@ -30,7 +30,7 @@ export const toBattleJson: ToJson<Battle, BattleJson> = battle => ({
   result: battle.result,
 });
 
-export type ToBattle = ToJson<Battle, BattleJson,
+export type ToBattle = ToModel<Battle, BattleJson,
   | NotWearableErorr
   | DataNotFoundError
   | CharactorDuplicationError
@@ -44,7 +44,7 @@ export const toBattle: ToBattle = battleJson => {
   if (
     home instanceof NotWearableErorr ||
     home instanceof DataNotFoundError ||
-    home instanceof CharactorDuplicationError ||
+    home instanceof CharactorDuplicationError
   ) {
     return home;
   }
@@ -56,7 +56,7 @@ export const toBattle: ToBattle = battleJson => {
   if (
     visitor instanceof NotWearableErorr ||
     visitor instanceof DataNotFoundError ||
-    visitor instanceof CharactorDuplicationError ||
+    visitor instanceof CharactorDuplicationError
   ) {
     return visitor;
   }

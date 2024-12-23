@@ -3,13 +3,13 @@ import type { CharactorSchema, CharactorJson } from '@motojouya/kniw/src/store/s
 
 import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { createRepository as createRepositoryBase } from '@motojouya/kniw/src/store/disk_repository';
 
-const NAMESPACE = 'charactor';
-const SCHEMA_KEY = 'name';
+export const NAMESPACE = 'charactor';
+export const SCHEMA_KEY = 'name';
 
-const createRepository = createRepositoryBase<
+export const createRepository = createRepositoryBase<
   CharactorSchema,
   Charactor,
   CharactorJson,

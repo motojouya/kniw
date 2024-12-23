@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { Database } from '@motojouya/kniw/src/io/database';
 import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { useState, useEffect } from 'react';

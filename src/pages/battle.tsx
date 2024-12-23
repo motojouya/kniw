@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
+import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
-import type { Database } from '@motojouya/kniw/src/io/database';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
@@ -11,7 +11,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { createRepository } from '@motojouya/kniw/src/store/battle';
+import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
+import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
 import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
 import {
   BattleList,
@@ -21,34 +22,43 @@ import {
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
+
+type Repositories = {
+  battle: Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>,
+  party: Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>,
+};
 
 const Index: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
-  const [repository, setRepository] = useState<Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null>(null);
+  const [repositories, setRepositories] = useState<Repositories | null>(null);
   useEffect(() => {
     (async () => {
       const indexedDabase = await createDatabase();
-      const battleRepository = await createRepository(indexedDabase);
-      setRepository(battleRepository);
+      const battleRepository = await createBattleRepository(indexedDabase);
+      const partyRepository = await createPartyRepository(indexedDabase);
+      setRepositories({
+        battle: battleRepository,
+        party: partyRepository,
+      });
     })();
   }, []);
 
-  if (!repository) {
+  if (!repositories) {
     return (<Box><Text>loading...</Text></Box>);
   }
 
   if (!title) {
-    return (<BattleList repository={repository} />);
+    return (<BattleList repository={repositories.battle} />);
   }
 
   if (title === '__new') {
-    return <BattleNew repository={repository} />
+    return <BattleNew battleRepository={repositories.battle} partyRepository={repositories.party} />
   }
 
-  return <BattleExsiting battleTitle={title} repository={repository} />
+  return <BattleExsiting battleTitle={title} repository={repositories.battle} />
 };
 
 export default Index;

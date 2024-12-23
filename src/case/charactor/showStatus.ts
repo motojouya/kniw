@@ -3,7 +3,7 @@ import type { Database } from '@motojouya/kniw/src/io/database';
 import { createRepository } from '@motojouya/kniw/src/store/charactor';
 import { getPhysical, getAbilities, getSkills } from '@motojouya/kniw/src/domain/charactor';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 
 export type ShowStatus = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const showStatus: ShowStatus =

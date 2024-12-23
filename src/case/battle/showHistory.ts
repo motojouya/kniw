@@ -2,7 +2,7 @@ import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Database } from '@motojouya/kniw/src/io/database';
 import { createRepository } from '@motojouya/kniw/src/store/battle';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
 

@@ -5,7 +5,7 @@ import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 
@@ -30,7 +30,7 @@ export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundE
     const charactorObj = toCharactor(charactor);
     if (
       charactorObj instanceof DataNotFoundError ||
-      charactorObj instanceof NotWearableErorr ||
+      charactorObj instanceof NotWearableErorr
     ) {
       return charactorObj;
     }

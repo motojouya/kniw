@@ -217,28 +217,28 @@ export const CharactorCard: FC<{
         <SelectAcquirement
           name={'race'}
           keyPrefix={`charactors.${index}.race`}
-          allAcquirements={allRaces}
+          allAcquirements={raceRepository.all}
           error={getCharactorError(errors, index, 'race')}
           selectProps={register(`charactors.${index}.race` as const, { onBlur })}
         />
         <SelectAcquirement
           name={'blessing'}
           keyPrefix={`charactors.${index}.blessing`}
-          allAcquirements={allBlessings}
+          allAcquirements={blessingRepository.all}
           error={getCharactorError(errors, index, 'blessing')}
           selectProps={register(`charactors.${index}.blessing` as const, { onBlur })}
         />
         <SelectAcquirement
           name={'clothing'}
           keyPrefix={`charactors.${index}.clothing`}
-          allAcquirements={allClothings}
+          allAcquirements={clothingRepository.all}
           error={getCharactorError(errors, index, 'clothing')}
           selectProps={register(`charactors.${index}.clothing` as const, { onBlur })}
         />
         <SelectAcquirement
           name={'weapon'}
           keyPrefix={`charactors.${index}.weapon`}
-          allAcquirements={allWeapons}
+          allAcquirements={weaponRepository.all}
           error={getCharactorError(errors, index, 'weapon')}
           selectProps={register(`charactors.${index}.weapon` as const, { onBlur })}
         />

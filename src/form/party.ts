@@ -1,10 +1,10 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { Store } from '@motojouya/kniw/src/store/store';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { z } from 'zod';
 
-import { DataExistError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataExistError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { charactorFormSchema, toCharactor, toCharactorForm } from '@motojouya/kniw/src/form/charactor';
 import { validate, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
@@ -56,10 +56,10 @@ export type SaveParty = (
   null | DataNotFoundError | NotWearableErorr | CharactorDuplicationError | DataExistError
 >;
 export type CreateSaveParty = (
-  store: Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError>,
+  repository: Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError>,
   checkExists: boolean,
 ) => SaveParty;
-export const saveParty: CreateSaveParty = (store, checkExists) => async partyForm => {
+export const saveParty: CreateSaveParty = (repository, checkExists) => async partyForm => {
   const party = toParty(partyForm);
   if (
     party instanceof DataNotFoundError ||
@@ -70,12 +70,12 @@ export const saveParty: CreateSaveParty = (store, checkExists) => async partyFor
   }
 
   if (checkExists) {
-    const partyNames = await store.list();
+    const partyNames = await repository.list();
     if (partyNames.includes(party.name)) {
       return new DataExistError(party.name, 'party', `${party.name}というpartyは既に存在します`);
     }
   }
 
-  await store.save(party);
+  await repository.save(party);
   return null;
 };

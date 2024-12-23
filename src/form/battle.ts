@@ -4,7 +4,7 @@ import type { Skill } from '@motojouya/kniw/src/domain/skill';
 
 import { z } from 'zod';
 
-import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';
 import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';

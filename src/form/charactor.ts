@@ -3,7 +3,7 @@ import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
 import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from '@motojouya/kniw/src/store/acquirement';
 

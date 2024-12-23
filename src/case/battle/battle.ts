@@ -31,11 +31,10 @@ import {
 import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
 import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { toParty } from '@motojouya/kniw/src/store/schema/party';
 import { createAbsolute, createRandoms } from '@motojouya/kniw/src/domain/random';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { underStatus } from '@motojouya/kniw/src/domain/status';
 import { sleep } from '@motojouya/kniw/src/data/status/sleep';
 import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
@@ -65,7 +64,7 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       return null;
     }
 
-    const selectedSkill = getSkill(selectedName);
+    const selectedSkill = skillRepository.get(selectedName);
     if (!selectedSkill) {
       await dialogue.notice(`${selectedName}というskillはありません`);
       return null;
@@ -292,9 +291,13 @@ export type Start = (
   database: Database,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, database) => async (title, home, visitor) => {
-  const partyRepository = createPartyRepository(database);
+  const partyRepository = await createPartyRepository(database);
 
   const homeParty = await partyRepository.importJson(home);
+  if (!homeParty) {
+    await dialogue.notice(`homeのデータがありません`);
+    return;
+  }
   if (
     homeParty instanceof JsonSchemaUnmatchError ||
     homeParty instanceof NotWearableErorr ||
@@ -307,6 +310,10 @@ export const start: Start = (dialogue, database) => async (title, home, visitor)
   }
 
   const visitorParty = await partyRepository.importJson(visitor);
+  if (!visitorParty) {
+    await dialogue.notice(`visitorのデータがありません`);
+    return;
+  }
   if (
     visitorParty instanceof JsonSchemaUnmatchError ||
     visitorParty instanceof NotWearableErorr ||
@@ -321,7 +328,7 @@ export const start: Start = (dialogue, database) => async (title, home, visitor)
   const battle = createBattle(title, homeParty, visitorParty);
   battle.turns.push(startBattle(battle, new Date(), createRandoms()));
 
-  await continueBattle(dialogue, repository)(battle);
+  await continueBattle(dialogue, database)(battle);
 };
 
 export type Resume = (dialogue: Dialogue, database: Database) => (title: string) => Promise<void>;
@@ -343,5 +350,5 @@ export const resume: Resume = (dialogue, database) => async title => {
     return;
   }
 
-  await continueBattle(dialogue, repository)(battle);
+  await continueBattle(dialogue, database)(battle);
 };
