@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
-import type { Store } from '@motojouya/kniw/src/store/store';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
+import type { Database } from '@motojouya/kniw/src/io/database';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
@@ -11,8 +11,8 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { createStore } from '@motojouya/kniw/src/store/battle';
-import { createRepository } from '@motojouya/kniw/src/io/indexed_db_repository';
+import { createRepository } from '@motojouya/kniw/src/store/battle';
+import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
 import {
   BattleList,
   BattleNew,
@@ -27,28 +27,28 @@ const Index: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
-  const [store, setStore] = useState<Store<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null>(null);
+  const [repository, setRepository] = useState<Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError> | null>(null);
   useEffect(() => {
     (async () => {
-      const webRepository = await createRepository();
-      const battleStore = await createStore(webRepository);
-      setStore(battleStore);
+      const indexedDabase = await createDatabase();
+      const battleRepository = await createRepository(indexedDabase);
+      setRepository(battleRepository);
     })();
   }, []);
 
-  if (!store) {
+  if (!repository) {
     return (<Box><Text>loading...</Text></Box>);
   }
 
   if (!title) {
-    return (<BattleList store={store} />);
+    return (<BattleList repository={repository} />);
   }
 
   if (title === '__new') {
-    return <BattleNew store={store} />
+    return <BattleNew repository={repository} />
   }
 
-  return <BattleExsiting battleTitle={title} store={store} />
+  return <BattleExsiting battleTitle={title} repository={repository} />
 };
 
 export default Index;

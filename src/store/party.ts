@@ -6,12 +6,12 @@ import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/sch
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/disk_repository';
-import { createRepository } from '@motojouya/kniw/src/store/disk_repository';
+import { createRepository as createRepositoryBase } from '@motojouya/kniw/src/store/disk_repository';
 
 const NAMESPACE = 'party';
 const SCHEMA_KEY = 'name';
 
-const createPartyRepository = createRepository<
+const createRepository = createRepositoryBase<
   PartySchema,
   Party,
   PartyJson,

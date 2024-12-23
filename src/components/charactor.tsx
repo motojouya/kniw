@@ -41,14 +41,10 @@ import {
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import {
-  getRace,
-  getBlessing,
-  getClothing,
-  getWeapon,
-  allRaces,
-  allWeapons,
-  allClothings,
-  allBlessings,
+  raceRepository,
+  blessingRepository,
+  clothingRepository,
+  weaponRepository,
 } from '@motojouya/kniw/src/store/acquirement';
 import {
   createCharactor,
@@ -188,10 +184,10 @@ export const CharactorCard: FC<{
     const charactorForm = getValues(`charactors.${index}` as const);
 
     const charactorName = charactorForm.name;
-    const race = getRace(charactorForm.race);
-    const blessing = getBlessing(charactorForm.blessing);
-    const clothing = getClothing(charactorForm.clothing);
-    const weapon = getWeapon(charactorForm.weapon);
+    const race = raceRepository.get(charactorForm.race);
+    const blessing = blessingRepository.get(charactorForm.blessing);
+    const clothing = clothingRepository.get(charactorForm.clothing);
+    const weapon = weaponRepository.get(charactorForm.weapon);
 
     if (!charactorName || !race || !blessing || !clothing || !weapon) {
       setCharactor('入力してください');

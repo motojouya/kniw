@@ -1,5 +1,5 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
+import type { Database } from '@motojouya/kniw/src/io/database';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
@@ -28,8 +28,8 @@ import {
   getSelectOption as charactorSelectOption,
   selectCharactor,
 } from '@motojouya/kniw/src/domain/charactor';
-import { createStore as createBattleStore } from '@motojouya/kniw/src/store/battle';
-import { createStore as createPartyStore } from '@motojouya/kniw/src/store/party';
+import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
+import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toParty } from '@motojouya/kniw/src/store/schema/party';
 import { createAbsolute, createRandoms } from '@motojouya/kniw/src/domain/random';
@@ -242,9 +242,9 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
   /* eslint-enable no-await-in-loop */
 };
 
-export type ContinueBattle = (dialogue: Dialogue, repository: Repository) => (battle: Battle) => Promise<void>;
-export const continueBattle: ContinueBattle = (dialogue, repository) => async battle => {
-  const battleStore = await createBattleStore(repository);
+export type ContinueBattle = (dialogue: Dialogue, database: Database) => (battle: Battle) => Promise<void>;
+export const continueBattle: ContinueBattle = (dialogue, database) => async battle => {
+  const battleRepository = await createBattleRepository(database);
   const { turns } = battle;
 
   /* eslint-disable no-await-in-loop */
@@ -256,14 +256,14 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
 
     if (underStatus(sleep, actor)) {
       turns.push(stay(battle, actor, new Date()));
-      await battleStore.save(battle);
+      await battleRepository.save(battle);
     } else {
       const turn = await playerSelect(dialogue)(actor, battle);
       if (!turn) {
         break;
       }
       turns.push(turn);
-      await battleStore.save(battle);
+      await battleRepository.save(battle);
     }
 
     // eslint-disable-next-line no-param-reassign
@@ -274,7 +274,7 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
   }
   /* eslint-enable no-await-in-loop */
 
-  await battleStore.save(battle);
+  await battleRepository.save(battle);
 
   if (battle.result === GameOngoing) {
     await dialogue.notice('勝負を中断しました');
@@ -289,12 +289,12 @@ export const continueBattle: ContinueBattle = (dialogue, repository) => async ba
 
 export type Start = (
   dialogue: Dialogue,
-  repository: Repository,
+  database: Database,
 ) => (title: string, home: string, visitor: string) => Promise<void>;
-export const start: Start = (dialogue, repository) => async (title, home, visitor) => {
-  const partyStore = createPartyStore(repository);
+export const start: Start = (dialogue, database) => async (title, home, visitor) => {
+  const partyRepository = createPartyRepository(database);
 
-  const homeParty = await partyStore.importJson(home);
+  const homeParty = await partyRepository.importJson(home);
   if (
     homeParty instanceof JsonSchemaUnmatchError ||
     homeParty instanceof NotWearableErorr ||
@@ -306,7 +306,7 @@ export const start: Start = (dialogue, repository) => async (title, home, visito
     return;
   }
 
-  const visitorParty = await partyStore.importJson(visitor);
+  const visitorParty = await partyRepository.importJson(visitor);
   if (
     visitorParty instanceof JsonSchemaUnmatchError ||
     visitorParty instanceof NotWearableErorr ||
@@ -324,10 +324,10 @@ export const start: Start = (dialogue, repository) => async (title, home, visito
   await continueBattle(dialogue, repository)(battle);
 };
 
-export type Resume = (dialogue: Dialogue, repository: Repository) => (title: string) => Promise<void>;
-export const resume: Resume = (dialogue, repository) => async title => {
-  const battleStore = await createBattleStore(repository);
-  const battle = await battleStore.get(title);
+export type Resume = (dialogue: Dialogue, database: Database) => (title: string) => Promise<void>;
+export const resume: Resume = (dialogue, database) => async title => {
+  const battleRepository = await createBattleRepository(database);
+  const battle = await battleRepository.get(title);
   if (!battle) {
     await dialogue.notice(`${title}というbattleはありません`);
     return;

@@ -6,12 +6,12 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/disk_repository';
 import { toBattleJson, toBattle, battleSchema } from '@motojouya/kniw/src/store/schema/battle';
-import { createRepository } from '@motojouya/kniw/src/store/disk_repository';
+import { createRepository as createRepositoryBase } from '@motojouya/kniw/src/store/disk_repository';
 
 const NAMESPACE = 'battle';
 const SCHEMA_KEY = 'title';
 
-const createBattleRepository = createRepository<
+const createRepository = createRepositoryBase<
   BattleSchema,
   Battle,
   BattleJson,

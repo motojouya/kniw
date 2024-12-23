@@ -9,7 +9,7 @@ import { parse, format } from 'date-fns';
 import { z } from 'zod';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { toCharactor, toCharactorJson, charactorSchema } from '@motojouya/kniw/src/store/schema/charactor';
 import { isBattlingCharactor } from '@motojouya/kniw/src/domain/charactor';
@@ -129,7 +129,7 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
       receivers.push(receiver);
     }
 
-    const skill = getSkill(actionJson.skill);
+    const skill = skillRepository.get(actionJson.skill);
     if (!skill) {
       return new DataNotFoundError(actionJson.skill, 'skill', `${actionJson.skill}というskillは存在しません`);
     }

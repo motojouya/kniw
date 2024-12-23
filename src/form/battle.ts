@@ -6,7 +6,7 @@ import { z } from 'zod';
 
 import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
 
 export const DO_NOTHING = 'NOTHING';
@@ -68,7 +68,7 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
     return null;
   }
 
-  const skill = getSkill(skillName);
+  const skill = skillRepository.get(skillName);
   if (!skill) {
     return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
   }

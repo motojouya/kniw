@@ -66,7 +66,7 @@ import {
 } from '@motojouya/kniw/src/form/battle';
 import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
 import { getSkills, isVisitorString } from '@motojouya/kniw/src/domain/charactor';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
 
 import { underStatus } from '@motojouya/kniw/src/domain/status';
@@ -187,7 +187,7 @@ const SkillSelect: FC<{
       return;
     }
 
-    const skill = getSkill(skillName);
+    const skill = skillRepository.get(skillName);
     if (!skill || !skill.receiverCount) {
       replace([]);
       return;

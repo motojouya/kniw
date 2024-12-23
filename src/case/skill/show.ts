@@ -1,11 +1,11 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { getSkill } from '@motojouya/kniw/src/store/skill';
+import { skillRepository } from '@motojouya/kniw/src/store/skill';
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =
   ({ notice }) =>
   async name => {
-    const skill = getSkill(name);
+    const skill = skillRepository.get(name);
     if (!skill) {
       await notice(`${name}というskillは存在しません`);
       return;

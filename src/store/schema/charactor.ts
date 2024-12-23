@@ -7,7 +7,7 @@ import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { validate } from '@motojouya/kniw/src/domain/charactor';
 import { statusSchema, toStatus, toStatusJson } from '@motojouya/kniw/src/store/schema/status';
-import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
+import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from '@motojouya/kniw/src/store/acquirement';
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,
@@ -59,12 +59,12 @@ export const toCharactorJson: ToJson<Charactor, CharactorJson> = charactor => {
 export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | DataNotFoundError> = charactorJson => {
   const { name } = charactorJson;
 
-  const race = getRace(charactorJson.race);
+  const race = raceRepository.get(charactorJson.race);
   if (!race) {
     return new DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(charactorJson.blessing);
+  const blessing = blessingRepository.get(charactorJson.blessing);
   if (!blessing) {
     return new DataNotFoundError(
       charactorJson.blessing,
@@ -73,7 +73,7 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
     );
   }
 
-  const clothing = getClothing(charactorJson.clothing);
+  const clothing = clothingRepository.get(charactorJson.clothing);
   if (!clothing) {
     return new DataNotFoundError(
       charactorJson.clothing,
@@ -82,7 +82,7 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
     );
   }
 
-  const weapon = getWeapon(charactorJson.weapon);
+  const weapon = weaponRepository.get(charactorJson.weapon);
   if (!weapon) {
     return new DataNotFoundError(
       charactorJson.weapon,

@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/store';
 import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
-import { getRace, getWeapon, getClothing, getBlessing } from '@motojouya/kniw/src/store/acquirement';
+import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from '@motojouya/kniw/src/store/acquirement';
 
 export const charactorFormSchema = z.object({
   name: z.string().min(1),
@@ -31,12 +31,12 @@ export type ToCharactor = (
 export const toCharactor: ToCharactor = charactorForm => {
   const { name } = charactorForm;
 
-  const race = getRace(charactorForm.race);
+  const race = raceRepository.get(charactorForm.race);
   if (!race) {
     return new DataNotFoundError(charactorForm.race, 'race', `${charactorForm.race}という種族は存在しません`);
   }
 
-  const blessing = getBlessing(charactorForm.blessing);
+  const blessing = blessingRepository.get(charactorForm.blessing);
   if (!blessing) {
     return new DataNotFoundError(
       charactorForm.blessing,
@@ -45,7 +45,7 @@ export const toCharactor: ToCharactor = charactorForm => {
     );
   }
 
-  const clothing = getClothing(charactorForm.clothing);
+  const clothing = clothingRepository.get(charactorForm.clothing);
   if (!clothing) {
     return new DataNotFoundError(
       charactorForm.clothing,
@@ -54,7 +54,7 @@ export const toCharactor: ToCharactor = charactorForm => {
     );
   }
 
-  const weapon = getWeapon(charactorForm.weapon);
+  const weapon = weaponRepository.get(charactorForm.weapon);
   if (!weapon) {
     return new DataNotFoundError(
       charactorForm.weapon,

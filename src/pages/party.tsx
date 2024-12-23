@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
-import type { Store } from '@motojouya/kniw/src/store/store';
+import type { Database } from '@motojouya/kniw/src/io/database';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
@@ -12,42 +12,42 @@ import {
 } from '@chakra-ui/react';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { createStore } from '@motojouya/kniw/src/store/party';
-import { createRepository } from '@motojouya/kniw/src/io/indexed_db_repository';
+import { createRepository } from '@motojouya/kniw/src/store/party';
+import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
 import {
   PartyList,
   PartyNew,
   PartyExsiting,
 } from '@motojouya/kniw/src/components/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/store';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 
 const Index: FC = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
 
-  const [store, setStore] = useState<Store<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null>(null);
+  const [repository, setRepository] = useState<Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError> | null>(null);
   useEffect(() => {
     (async () => {
-      const webRepository = await createRepository();
-      const partyStore = await createStore(webRepository);
-      setStore(partyStore);
+      const indexedDatabase = await createDatabase();
+      const partyRepository = await createRepository(indexedDatabase);
+      setRepository(partyRepository);
     })();
   }, []);
 
-  if (!store) {
+  if (!repository) {
     return (<Box><Text>loading...</Text></Box>);
   }
 
   if (!name) {
-    return (<PartyList store={store} />);
+    return (<PartyList repository={repository} />);
   }
 
   if (name === '__new') {
-    return <PartyNew store={store} />
+    return <PartyNew repository={repository} />
   }
 
-  return <PartyExsiting partyName={name} store={store} />
+  return <PartyExsiting partyName={name} repository={repository} />
 };
 
 export default Index;

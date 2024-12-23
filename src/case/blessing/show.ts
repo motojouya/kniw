@@ -1,11 +1,11 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { getBlessing } from '@motojouya/kniw/src/store/acquirement';
+import { blessingRepository } from '@motojouya/kniw/src/store/acquirement';
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =
   ({ notice }) =>
   async name => {
-    const blessing = getBlessing(name);
+    const blessing = blessingRepository.get(name);
     if (!blessing) {
       await notice(`${name}というblessingは存在しません`);
       return;

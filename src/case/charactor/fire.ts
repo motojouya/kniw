@@ -1,7 +1,7 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Repository } from '@motojouya/kniw/src/io/repository';
+import type { Database } from '@motojouya/kniw/src/io/database';
 import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
-import { createStore } from '@motojouya/kniw/src/store/charactor';
+import { createRepository } from '@motojouya/kniw/src/store/charactor';
 import { createRandoms } from '@motojouya/kniw/src/domain/random';
 
 const byebyeMessages = [
@@ -12,15 +12,15 @@ const byebyeMessages = [
   'あの時に交わした約束は嘘だったのだな',
 ];
 
-export type Fire = (dialogue: Dialogue, repository: Repository) => (name: string) => Promise<void>;
-export const fire: Fire = (dialogue, repository) => async name => {
-  const store = await createStore(repository);
+export type Fire = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
+export const fire: Fire = (dialogue, database) => async name => {
+  const repository = await createRepository(database);
   const confirmAnswer = await dialogue.confirm(`本当に${name}を解雇してもよろしいですか？`);
   if (!confirmAnswer || confirmAnswer instanceof NotApplicable) {
     return;
   }
 
-  await store.remove(name);
+  await repository.remove(name);
 
   await dialogue.notice(`${name}を解雇しました。言伝を預かっております。`);
   const randoms = createRandoms();
