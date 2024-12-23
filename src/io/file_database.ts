@@ -97,7 +97,7 @@ const createRemove: CreateRemove = basePath => async (namespace, objctKey) => {
 const exportJson: ExportJson = async (json, fileName) => {
   const text = JSON.stringify(json);
   try {
-    await fs.promises.writeFile(fileName, text, { signal: true });
+    await fs.promises.writeFile(fileName, text);
     // FIXME old copy pattern
     // await fs.promises.copyFile(
     //   resolvePath(basePath, namespace, objctKey, FILE_EXTENSION), // storageFileName
@@ -106,7 +106,7 @@ const exportJson: ExportJson = async (json, fileName) => {
     // );
     return null;
   } catch (e) {
-    return new CopyFailError(fileName, e, `${objctKey}を${fileName}へコピーに失敗しました`);
+    return new CopyFailError(fileName, e, `${fileName}へコピーに失敗しました`);
   }
 };
 
