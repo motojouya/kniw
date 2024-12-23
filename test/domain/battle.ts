@@ -32,7 +32,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
-} from '@motojouya/kniw/src/store/store';
+} from '@motojouya/kniw/src/store/schema/schema';
 import { skillRepository } from '@motojouya/kniw/src/store/skill';
 
 const testData = {

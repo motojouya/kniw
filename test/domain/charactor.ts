@@ -14,7 +14,7 @@ import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
-} from '@motojouya/kniw/src/store/store';
+} from '@motojouya/kniw/src/store/schema/schema';
 
 describe('Charctor#toCharactor', function () {
   it('DataNotFoundError', function () {
