@@ -2,6 +2,7 @@ import type { FC, ReactNode } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { PartyForm } from '@motojouya/kniw/src/form/party';
 import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
+import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -24,7 +25,10 @@ import {
 } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { partyFormSchema, toPartyForm, saveParty } from '@motojouya/kniw/src/form/party';
+import { partyFormSchema, toPartyForm } from '@motojouya/kniw/src/form/party';
+import { saveParty } from '@motojouya/kniw/src/web/case/party/save';
+import { importParty } from '@motojouya/kniw/src/web/case/party/importJson';
+import { dismissParty } from '@motojouya/kniw/src/web/case/party/dismiss';
 
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
@@ -37,7 +41,8 @@ const PartyEditor: FC<{
   partyForm: PartyForm,
   inoutButton: ReactNode,
   repository: PartyRepository,
-}> = ({ exist, partyForm, inoutButton, repository }) => {
+  dialogue: Dialogue,
+}> = ({ exist, partyForm, inoutButton, repository, dialogue }) => {
 
   const router = useRouter()
   const {
@@ -79,8 +84,8 @@ const PartyEditor: FC<{
   };
 
   const deleteParty = async (partyName: string) => {
-    if (window.confirm('削除してもよいですか？')) {
-      await repository.remove(partyName);
+    const result = await dismissParty(dialogue, repository)(partyName);
+    if (result) {
       await router.push({ pathname: 'party' })
     }
   };
@@ -125,7 +130,7 @@ const PartyEditor: FC<{
   );
 };
 
-export const PartyExsiting: FC<{ repository: PartyRepository, partyName: string }> = ({ repository, partyName }) => {
+export const PartyExsiting: FC<{ repository: PartyRepository, dialogue: Dialogue, partyName: string }> = ({ repository, dialogue, partyName }) => {
   const party = useLiveQuery(() => repository.get(partyName), [partyName]);
 
   if (
@@ -152,40 +157,30 @@ export const PartyExsiting: FC<{ repository: PartyRepository, partyName: string 
   }
 
   return (
-    <PartyEditor exist={true} partyForm={toPartyForm(party)} repository={repository} inoutButton={(
+    <PartyEditor exist={true} partyForm={toPartyForm(party)} repository={repository} dialogue={dialogue} inoutButton={(
       <Button type="button" onClick={() => repository.exportJson(party, '')} >Export</Button>
     )} />
   );
 };
 
-export const PartyNew: FC<{ repository: PartyRepository }> = ({ repository }) => {
+export const PartyNew: FC<{ repository: PartyRepository, dialogue: Dialogue }> = ({ repository, dialogue }) => {
 
   const [party, setParty] = useState<PartyForm>({ name: '', charactors: [] });
-  const importParty = async () => {
-    if (!window.confirm('取り込むと入力したデータが削除されますがよいですか？')) {
-      return;
-    }
 
-    const partyObj = await repository.importJson('');
-    if (!partyObj) {
-      window.alert('partyがありません');
-      return;
-    }
-    if (
+  const importParty = async () => {
+    const partyObj = await importParty(dialogue, repository)();
+    if (!(
       partyObj instanceof JsonSchemaUnmatchError ||
       partyObj instanceof NotWearableErorr ||
       partyObj instanceof DataNotFoundError ||
       partyObj instanceof CharactorDuplicationError
-    ) {
-      window.alert(partyObj.message);
-      return;
+    )) {
+      setParty(partyObj);
     }
-
-    setParty(toPartyForm(partyObj));
   };
 
   return (
-    <PartyEditor exist={false} partyForm={party} repository={repository} inoutButton={(
+    <PartyEditor exist={false} partyForm={party} repository={repository} dialogue={dialogue} inoutButton={(
       <Button type="button" onClick={importParty} >Import</Button>
     )} />
   );
@@ -211,4 +206,3 @@ export const PartyList: FC<{ repository: PartyRepository }> = ({ repository }) =
     </Box>
   );
 };
-

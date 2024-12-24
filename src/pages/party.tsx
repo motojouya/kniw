@@ -13,6 +13,7 @@ import {
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { createRepository } from '@motojouya/kniw/src/store/party';
 import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
+import { dialogue } from '@motojouya/kniw/src/io/window_dialogue';
 import {
   PartyList,
   PartyNew,
@@ -43,11 +44,10 @@ const Index: FC = () => {
   }
 
   if (name === '__new') {
-    return <PartyNew repository={repository} />
+    return <PartyNew repository={repository} dialogue={dialogue} />
   }
 
-  return <PartyExsiting partyName={name} repository={repository} />
+  return <PartyExsiting partyName={name} repository={repository} dialogue={dialogue} />
 };
 
 export default Index;
-
