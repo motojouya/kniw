@@ -22200,8 +22200,7 @@ const playerSelect = dialogue => async (actor, battle) => {
     }
     /* eslint-enable no-await-in-loop */
 };
-const continueBattle = (dialogue, database) => async (battle) => {
-    const battleRepository = await (0, battle_2.createRepository)(database);
+const continueBattle = (dialogue, battleRepository) => async (battle) => {
     const { turns } = battle;
     /* eslint-disable no-await-in-loop */
     for (;;) {
@@ -22241,13 +22240,13 @@ const continueBattle = (dialogue, database) => async (battle) => {
 exports.continueBattle = continueBattle;
 const start = (dialogue, database) => async (title, home, visitor) => {
     const partyRepository = await (0, party_1.createRepository)(database);
+    const battleRepository = await (0, battle_2.createRepository)(database);
     const homeParty = await partyRepository.importJson(home);
     if (!homeParty) {
         await dialogue.notice(`homeのデータがありません`);
         return;
     }
-    if (homeParty instanceof schema_1.JsonSchemaUnmatchError ||
-        homeParty instanceof acquirement_1.NotWearableErorr ||
+    if (homeParty instanceof acquirement_1.NotWearableErorr ||
         homeParty instanceof schema_1.DataNotFoundError ||
         homeParty instanceof party_2.CharactorDuplicationError ||
         homeParty instanceof schema_1.JsonSchemaUnmatchError) {
@@ -22259,8 +22258,7 @@ const start = (dialogue, database) => async (title, home, visitor) => {
         await dialogue.notice(`visitorのデータがありません`);
         return;
     }
-    if (visitorParty instanceof schema_1.JsonSchemaUnmatchError ||
-        visitorParty instanceof acquirement_1.NotWearableErorr ||
+    if (visitorParty instanceof acquirement_1.NotWearableErorr ||
         visitorParty instanceof schema_1.DataNotFoundError ||
         visitorParty instanceof party_2.CharactorDuplicationError ||
         visitorParty instanceof schema_1.JsonSchemaUnmatchError) {
@@ -22269,7 +22267,7 @@ const start = (dialogue, database) => async (title, home, visitor) => {
     }
     const battle = (0, battle_1.createBattle)(title, homeParty, visitorParty);
     battle.turns.push((0, battle_1.start)(battle, new Date(), (0, random_1.createRandoms)()));
-    await (0, exports.continueBattle)(dialogue, database)(battle);
+    await (0, exports.continueBattle)(dialogue, battleRepository)(battle);
 };
 exports.start = start;
 const resume = (dialogue, database) => async (title) => {
@@ -22287,7 +22285,7 @@ const resume = (dialogue, database) => async (title) => {
         await dialogue.notice(`${title}のbattleは不正なデータです`);
         return;
     }
-    await (0, exports.continueBattle)(dialogue, database)(battle);
+    await (0, exports.continueBattle)(dialogue, battleRepository)(battle);
 };
 exports.resume = resume;
 

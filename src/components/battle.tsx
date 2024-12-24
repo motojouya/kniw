@@ -4,7 +4,8 @@ import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
-import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
+import type { PartyRepository } from '@motojouya/kniw/src/store/party';
+import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
 import type { DoSkillForm, DoAction } from '@motojouya/kniw/src/form/battle';
 
 import { useRouter } from 'next/router'
@@ -75,9 +76,6 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { createRandoms, createAbsolute } from '@motojouya/kniw/src/domain/random';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-
-type BattleRepository = Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>;
-type PartyRepository = Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>;
 
 const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
@@ -439,15 +437,12 @@ export const BattleNew: FC<{ battleRepository: BattleRepository, partyRepository
     const { title } = battleTitle;
     if (!title) {
       messages.push('titleを入力してください');
-      return;
     }
     if (!homeParty) {
       messages.push('home partyを入力してください');
-      return;
     }
     if (!visitorParty) {
       messages.push('visitor partyを入力してください');
-      return;
     }
 
     if (messages.length > 0) {
@@ -455,7 +450,7 @@ export const BattleNew: FC<{ battleRepository: BattleRepository, partyRepository
       return;
     }
 
-    const battle = createBattle(title as string, homeParty, visitorParty);
+    const battle = createBattle(title as string, homeParty as Party, visitorParty as Party);
     const turn = start(battle, new Date(), createRandoms());
     battle.turns.push(turn);
 
@@ -505,4 +500,3 @@ export const BattleList: FC<{ repository: BattleRepository }> = ({ repository })
     </Box>
   );
 };
-

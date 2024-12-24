@@ -1,5 +1,6 @@
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { PartyJson, PartySchema } from '@motojouya/kniw/src/store/schema/party';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { toParty, toPartyJson, partySchema } from '@motojouya/kniw/src/store/schema/party';
@@ -10,6 +11,8 @@ import { createRepository as createRepositoryBase } from '@motojouya/kniw/src/st
 
 export const NAMESPACE = 'party';
 export const SCHEMA_KEY = 'name';
+
+export type PartyRepository = Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError>;
 
 export const createRepository = createRepositoryBase<
   PartySchema,

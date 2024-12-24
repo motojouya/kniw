@@ -1,5 +1,6 @@
 import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Database } from '@motojouya/kniw/src/io/database';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
 import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
@@ -241,9 +242,16 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
   /* eslint-enable no-await-in-loop */
 };
 
-export type ContinueBattle = (dialogue: Dialogue, database: Database) => (battle: Battle) => Promise<void>;
-export const continueBattle: ContinueBattle = (dialogue, database) => async battle => {
-  const battleRepository = await createBattleRepository(database);
+type BattleRepository = Repository<
+  Battle,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError
+>;
+
+export type ContinueBattle = (
+  dialogue: Dialogue,
+  battleRepository: BattleRepository,
+) => (battle: Battle) => Promise<void>;
+export const continueBattle: ContinueBattle = (dialogue, battleRepository) => async battle => {
   const { turns } = battle;
 
   /* eslint-disable no-await-in-loop */
@@ -292,6 +300,7 @@ export type Start = (
 ) => (title: string, home: string, visitor: string) => Promise<void>;
 export const start: Start = (dialogue, database) => async (title, home, visitor) => {
   const partyRepository = await createPartyRepository(database);
+  const battleRepository = await createBattleRepository(database);
 
   const homeParty = await partyRepository.importJson(home);
   if (!homeParty) {
@@ -299,7 +308,6 @@ export const start: Start = (dialogue, database) => async (title, home, visitor)
     return;
   }
   if (
-    homeParty instanceof JsonSchemaUnmatchError ||
     homeParty instanceof NotWearableErorr ||
     homeParty instanceof DataNotFoundError ||
     homeParty instanceof CharactorDuplicationError ||
@@ -315,7 +323,6 @@ export const start: Start = (dialogue, database) => async (title, home, visitor)
     return;
   }
   if (
-    visitorParty instanceof JsonSchemaUnmatchError ||
     visitorParty instanceof NotWearableErorr ||
     visitorParty instanceof DataNotFoundError ||
     visitorParty instanceof CharactorDuplicationError ||
@@ -328,7 +335,7 @@ export const start: Start = (dialogue, database) => async (title, home, visitor)
   const battle = createBattle(title, homeParty, visitorParty);
   battle.turns.push(startBattle(battle, new Date(), createRandoms()));
 
-  await continueBattle(dialogue, database)(battle);
+  await continueBattle(dialogue, battleRepository)(battle);
 };
 
 export type Resume = (dialogue: Dialogue, database: Database) => (title: string) => Promise<void>;
@@ -350,5 +357,5 @@ export const resume: Resume = (dialogue, database) => async title => {
     return;
   }
 
-  await continueBattle(dialogue, database)(battle);
+  await continueBattle(dialogue, battleRepository)(battle);
 };

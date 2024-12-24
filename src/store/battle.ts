@@ -11,6 +11,8 @@ import { createRepository as createRepositoryBase } from '@motojouya/kniw/src/st
 export const NAMESPACE = 'battle';
 export const SCHEMA_KEY = 'title';
 
+export type BattleRepository = Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | NotBattlingError | JsonSchemaUnmatchError>;
+
 export const createRepository = createRepositoryBase<
   BattleSchema,
   Battle,
