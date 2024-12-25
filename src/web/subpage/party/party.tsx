@@ -40,7 +40,7 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   }
 
   return (
-    <PartyEditor exist={true} partyForm={toPartyForm(party)} inoutButton={(
+    <PartyEditor exist={true} party={party} inoutButton={(
       <Button type="button" onClick={() => partyRepository.exportJson(party, '')} >Export</Button>
     )} />
   );

@@ -1,4 +1,5 @@
 import type { FC, ReactNode } from 'react';
+import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { PartyForm } from '@motojouya/kniw/src/form/party';
 import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
 import type { PartyRepository } from '@motojouya/kniw/src/store/party';
@@ -22,22 +23,54 @@ import {
 } from '@chakra-ui/react';
 
 import { CharactorCard } from '@motojouya/kniw/src/components/charactor';
-import { partyFormSchema } from '@motojouya/kniw/src/form/party';
+import { partyFormSchema, toPartyForm } from '@motojouya/kniw/src/form/party';
 import { saveParty } from '@motojouya/kniw/src/web/case/party/save';
 import { dismissParty } from '@motojouya/kniw/src/web/case/party/dismiss';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/schema/schema';
 import { useIO } from '@motojouya/kniw/src/components/context';
+import { importParty } from '@motojouya/kniw/src/web/case/party/importJson';
+import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
+
+// FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
+export const ImportParty: FC<{
+  type: string,
+  party: Party | null,
+  setParty: (party: Party | null) => void,
+}> = ({ type, party, setParty }) => {
+
+  const { partyRepository, dialogue } = useIO();
+  const importJson = async () => {
+    const partyObj = await importParty(dialogue, partyRepository)();
+    if (!(
+      partyObj instanceof EmptyParameter ||
+      partyObj instanceof JsonSchemaUnmatchError ||
+      partyObj instanceof NotWearableErorr ||
+      partyObj instanceof DataNotFoundError ||
+      partyObj instanceof CharactorDuplicationError
+    )) {
+      setParty(partyObj);
+    }
+  };
+
+  return (
+    <Box>
+      {party && <Text>{`${type} Party: ${party.name}`}</Text>}
+      <Button type="button" onClick={importJson} >{`Select ${type} Party`}</Button>
+    </Box>
+  );
+};
 
 const PartyEditor: FC<{
   exist: boolean,
-  partyForm: PartyForm,
+  party: Party,
   inoutButton: ReactNode,
-}> = ({ exist, partyForm, inoutButton }) => {
+}> = ({ exist, party, inoutButton }) => {
 
   const router = useRouter()
   const { partyRepository, dialogue } = useIO();
+  const partyForm = toPartyForm(party);
   const {
     handleSubmit,
     register,
@@ -51,8 +84,8 @@ const PartyEditor: FC<{
   const { fields, append, remove } = useFieldArray({ control, name: "charactors" });
   const [saveMessage, setSaveMessage] = useState<{ error: boolean, message: string }>({ error: false, message: '' });
 
-  const save = async (party: PartyForm) => {
-    const error = await saveParty(partyRepository, !exist)(party);
+  const save = async (partyInput: PartyForm) => {
+    const error = await saveParty(partyRepository, !exist)(partyInput);
     if (
       error instanceof DataNotFoundError ||
       error instanceof NotWearableErorr ||
@@ -71,7 +104,7 @@ const PartyEditor: FC<{
           message: '保存しました',
         });
       } else {
-        await router.push({ pathname: 'party', query: { name: party.name } })
+        await router.push({ pathname: 'party', query: { name: partyInput.name } })
       }
     }
   };

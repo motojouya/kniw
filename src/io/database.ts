@@ -8,7 +8,6 @@ export class CopyFailError {
 
 export type KeyValue = { [name: string]: any };
 
-// FIXME データ保存の選択肢が増えたら、型だけ別ファイルに移動
 export type CheckNamespace = (namespace: string) => Promise<void>;
 export type Save = (namespace: string, objctKey: string, data: KeyValue) => Promise<void>;
 export type List = (namespace: string) => Promise<string[]>;

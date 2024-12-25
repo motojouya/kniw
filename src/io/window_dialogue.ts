@@ -12,3 +12,11 @@ export const dialogue: Dialogue = {
   confirm,
   notice,
 };
+
+export class UserCancel {
+  constructor(readonly message: string) {}
+}
+
+export class EmptyParameter {
+  constructor(readonly name: string, readonly message: string) {}
+}

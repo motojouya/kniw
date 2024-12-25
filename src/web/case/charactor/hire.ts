@@ -11,14 +11,14 @@ import {
   weaponRepository,
 } from '@motojouya/kniw/src/store/acquirement';
 import { createCharactor } from '@motojouya/kniw/src/domain/charactor';
+import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
 
-export type HireCharactor = (charactorForm: CharactorForm) => Charactor | DataNotFoundError | NotWearableErorr;
+export type HireCharactor = (charactorForm: CharactorForm) => Charactor | DataNotFoundError | NotWearableErorr | EmptyParameter;
 export const hireCharactor: HireCharactor = (charactorForm) => {
 
   const charactorName = charactorForm.name;
   if (!charactorName) {
-    // FIXME 入力値がないということなのでDataNotFoundErrorは妥当ではない
-    return new DataNotFoundError(charactorName, 'name', `nameがありません`);
+    return new EmptyParameter('name', `nameがありません`);
   }
 
   const race = raceRepository.get(charactorForm.race);

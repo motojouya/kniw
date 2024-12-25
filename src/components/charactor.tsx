@@ -53,6 +53,7 @@ import {
   getSkills,
 } from '@motojouya/kniw/src/domain/charactor';
 import { hireCharactor } from '@motojouya/kniw/src/web/case/charactor/hire';
+import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
 const getCharactorError: GetCharactorError = (errors, i, property) => {
@@ -183,7 +184,8 @@ export const CharactorCard: FC<{
 
   const onBlur = () => {
     const charactor = hireCharactor(getValues(`charactors.${index}` as const));
-    if (charactor instanceof DataNotFoundError) {
+
+    if (charactor instanceof DataNotFoundError || charactor instanceof EmptyParameter) {
       setCharactor('入力してください');
       return;
     }
