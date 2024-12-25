@@ -40,6 +40,7 @@ import {
 } from '@chakra-ui/react';
 
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import {
   raceRepository,
   blessingRepository,
@@ -47,11 +48,12 @@ import {
   weaponRepository,
 } from '@motojouya/kniw/src/store/acquirement';
 import {
-  createCharactor,
   getPhysical,
   getAbilities,
   getSkills,
 } from '@motojouya/kniw/src/domain/charactor';
+import { hireCharactor } from '@motojouya/kniw/src/web/case/charactor/hire';
+import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
 const getCharactorError: GetCharactorError = (errors, i, property) => {
@@ -181,26 +183,17 @@ export const CharactorCard: FC<{
   const [charactor, setCharactor] = useState<Charactor | string>('入力してください');
 
   const onBlur = () => {
-    const charactorForm = getValues(`charactors.${index}` as const);
+    const hiredCharactor = hireCharactor(getValues(`charactors.${index}` as const));
 
-    const charactorName = charactorForm.name;
-    const race = raceRepository.get(charactorForm.race);
-    const blessing = blessingRepository.get(charactorForm.blessing);
-    const clothing = clothingRepository.get(charactorForm.clothing);
-    const weapon = weaponRepository.get(charactorForm.weapon);
-
-    if (!charactorName || !race || !blessing || !clothing || !weapon) {
+    if (hiredCharactor instanceof DataNotFoundError || hiredCharactor instanceof EmptyParameter) {
       setCharactor('入力してください');
       return;
     }
-
-    const charactorObj = createCharactor(charactorName, race, blessing, clothing, weapon);
-    if (charactorObj instanceof NotWearableErorr) {
+    if (hiredCharactor instanceof NotWearableErorr) {
       setCharactor('選択できない組み合わせです');
       return;
     }
-
-    setCharactor(charactorObj);
+    setCharactor(hiredCharactor);
   };
 
   return (
@@ -249,4 +242,3 @@ export const CharactorCard: FC<{
     </Card>
   );
 };
-

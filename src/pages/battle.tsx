@@ -1,65 +1,57 @@
 import type { FC } from 'react';
-import type { Battle } from '@motojouya/kniw/src/domain/battle';
-import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
+import type { PartyRepository } from '@motojouya/kniw/src/store/party';
+import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
 
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'next/navigation'
-import {
-  Box,
-//  Heading,
-  Text,
-} from '@chakra-ui/react';
+import { Box, Text } from '@chakra-ui/react';
 
 import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
 import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
 import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
-import {
-  BattleList,
-  BattleNew,
-  BattleExsiting,
-} from '@motojouya/kniw/src/components/battle';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-
-type Repositories = {
-  battle: Repository<Battle, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError>,
-  party: Repository<Party, NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError>,
-};
+import { dialogue } from '@motojouya/kniw/src/io/window_dialogue';
+import { BattleList } from '@motojouya/kniw/src/web/subpage/battle/list';
+import { BattleNew } from '@motojouya/kniw/src/web/subpage/battle/new';
+import { BattleExsiting } from '@motojouya/kniw/src/web/subpage/battle/battle';
+import { IOProvider } from '@motojouya/kniw/src/components/context';
 
 const Index: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
-  const [repositories, setRepositories] = useState<Repositories | null>(null);
+  const [repositories, setRepositories] = useState<{ partyRepository: PartyRepository, battleRepository: BattleRepository } | null>(null);
   useEffect(() => {
     (async () => {
-      const indexedDabase = await createDatabase();
-      const battleRepository = await createBattleRepository(indexedDabase);
-      const partyRepository = await createPartyRepository(indexedDabase);
-      setRepositories({
-        battle: battleRepository,
-        party: partyRepository,
-      });
+      const indexedDatabase = await createDatabase();
+      const partyRepository = await createPartyRepository(indexedDatabase);
+      const battleRepository = await createBattleRepository(indexedDatabase);
+      setRepositories({ partyRepository, battleRepository });
     })();
   }, []);
+
 
   if (!repositories) {
     return (<Box><Text>loading...</Text></Box>);
   }
 
+  const io = {
+    ...repositories,
+    dialogue,
+  };
+
   if (!title) {
-    return (<BattleList repository={repositories.battle} />);
+    return (<IOProvider io={io}><BattleList/></IOProvider>);
   }
 
   if (title === '__new') {
-    return <BattleNew battleRepository={repositories.battle} partyRepository={repositories.party} />
+    return (<IOProvider io={io}><BattleNew/></IOProvider>);
   }
 
-  return <BattleExsiting battleTitle={title} repository={repositories.battle} />
+  return (
+    <IOProvider io={io}>
+      <BattleExsiting battleTitle={title}/>
+    </IOProvider>
+  );
 };
 
 export default Index;
-

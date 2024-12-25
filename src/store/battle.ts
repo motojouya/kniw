@@ -1,5 +1,6 @@
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { BattleJson, BattleSchema } from '@motojouya/kniw/src/store/schema/battle';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
@@ -10,6 +11,11 @@ import { createRepository as createRepositoryBase } from '@motojouya/kniw/src/st
 
 export const NAMESPACE = 'battle';
 export const SCHEMA_KEY = 'title';
+
+export type BattleRepository = Repository<
+  Battle,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | NotBattlingError | JsonSchemaUnmatchError
+>;
 
 export const createRepository = createRepositoryBase<
   BattleSchema,
