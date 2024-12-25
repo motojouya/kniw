@@ -183,17 +183,17 @@ export const CharactorCard: FC<{
   const [charactor, setCharactor] = useState<Charactor | string>('入力してください');
 
   const onBlur = () => {
-    const charactor = hireCharactor(getValues(`charactors.${index}` as const));
+    const hiredCharactor = hireCharactor(getValues(`charactors.${index}` as const));
 
-    if (charactor instanceof DataNotFoundError || charactor instanceof EmptyParameter) {
+    if (hiredCharactor instanceof DataNotFoundError || hiredCharactor instanceof EmptyParameter) {
       setCharactor('入力してください');
       return;
     }
-    if (charactor instanceof NotWearableErorr) {
+    if (hiredCharactor instanceof NotWearableErorr) {
       setCharactor('選択できない組み合わせです');
       return;
     }
-    setCharactor(charactor);
+    setCharactor(hiredCharactor);
   };
 
   return (

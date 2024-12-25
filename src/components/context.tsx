@@ -27,6 +27,4 @@ export const useIO: UseIO = () => {
 export const IOProvider: React.FC<{
   children: ReactNode;
   io: IO;
-}> = ({ children, io }) => {
-  return <ContextIO.Provider value={io}>{children}</ContextIO.Provider>;
-};
+}> = ({ children, io }) => (<ContextIO.Provider value={io}>{children}</ContextIO.Provider>);
