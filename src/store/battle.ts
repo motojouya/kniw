@@ -1,5 +1,6 @@
 import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { BattleJson, BattleSchema } from '@motojouya/kniw/src/store/schema/battle';
+import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
 
 import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';

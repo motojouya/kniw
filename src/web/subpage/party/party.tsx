@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
-import type { PartyRepository } from '@motojouya/kniw/src/store/party';
 
 import Link from 'next/link'
 import { Button, Box, Text } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
+import { PartyEditor } from '@motojouya/kniw/src/components/party';
 import { toPartyForm } from '@motojouya/kniw/src/form/party';
 import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { useIO } from '@motojouya/kniw/src/components/context';

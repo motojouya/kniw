@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import type { PartyRepository } from '@motojouya/kniw/src/store/party';
 
 import Link from 'next/link'
 import { Box, List, ListItem } from '@chakra-ui/react';
