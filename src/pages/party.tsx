@@ -33,21 +33,21 @@ const Index: FC = () => {
     return (<Box><Text>loading...</Text></Box>);
   }
 
-  const context = {
+  const io = {
     ...repositories,
     dialogue,
   };
 
   if (!name) {
-    return (<IOProvider context={context}><PartyList/></IOProvider>);
+    return (<IOProvider io={io}><PartyList/></IOProvider>);
   }
 
   if (name === '__new') {
-    return (<IOProvider context={context}><PartyNew/></IOProvider>);
+    return (<IOProvider io={io}><PartyNew/></IOProvider>);
   }
 
   return (
-    <IOProvider context={context}>
+    <IOProvider io={io}>
       <PartyExsiting partyName={name}/>
     </IOProvider>
   );

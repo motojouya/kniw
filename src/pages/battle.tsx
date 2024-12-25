@@ -34,21 +34,21 @@ const Index: FC = () => {
     return (<Box><Text>loading...</Text></Box>);
   }
 
-  const context = {
+  const io = {
     ...repositories,
     dialogue,
   };
 
   if (!title) {
-    return (<IOProvider context={context}><BattleList/></IOProvider>);
+    return (<IOProvider io={io}><BattleList/></IOProvider>);
   }
 
   if (title === '__new') {
-    return (<IOProvider context={context}><BattleNew/></IOProvider>);
+    return (<IOProvider io={io}><BattleNew/></IOProvider>);
   }
 
   return (
-    <IOProvider context={context}>
+    <IOProvider io={io}>
       <BattleExsiting battleTitle={title}/>
     </IOProvider>
   );
