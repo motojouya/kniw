@@ -22,14 +22,18 @@ import { createRandoms } from '@motojouya/kniw/src/domain/random';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { UserCancel } from '@motojouya/kniw/src/io/window_dialogue';
 
-export type Act = (dialogue: Dialogue, repository: BattleRepository) => (battle: Battle, actor: CharactorBattling, doSkillForm: DoSkillForm, lastTurn: Turn) => Promise<null | DataNotFoundError | ReceiverDuplicationError | UserCancel>;
+export type Act = (
+  dialogue: Dialogue,
+  repository: BattleRepository,
+) => (
+  battle: Battle,
+  actor: CharactorBattling,
+  doSkillForm: DoSkillForm,
+  lastTurn: Turn,
+) => Promise<null | DataNotFoundError | ReceiverDuplicationError | UserCancel>;
 export const act: Act = (dialogue, repository) => async (battle, actor, doSkillForm, lastTurn) => {
-
   const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
-  if (
-    doAction instanceof DataNotFoundError ||
-    doAction instanceof ReceiverDuplicationError
-  ) {
+  if (doAction instanceof DataNotFoundError || doAction instanceof ReceiverDuplicationError) {
     return doAction;
   }
 
@@ -41,9 +45,10 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     battle.turns.push(stay(battle, actor, new Date()));
   } else {
     const selectedSkill = doAction.skill;
-    const newTurn = selectedSkill.type === 'SKILL_TO_FIELD'
-      ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
-      : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
+    const newTurn =
+      selectedSkill.type === 'SKILL_TO_FIELD'
+        ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
+        : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
     battle.turns.push(newTurn);
   }
 

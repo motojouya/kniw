@@ -9,7 +9,9 @@ import { toParty } from '@motojouya/kniw/src/form/party';
 export type SaveParty = (
   repository: PartyRepository,
   checkExists: boolean,
-) => (partyForm: PartyForm) => Promise<null | DataNotFoundError | NotWearableErorr | CharactorDuplicationError | DataExistError>;
+) => (
+  partyForm: PartyForm,
+) => Promise<null | DataNotFoundError | NotWearableErorr | CharactorDuplicationError | DataExistError>;
 export const saveParty: SaveParty = (repository, checkExists) => async partyForm => {
   const party = toParty(partyForm);
   if (

@@ -13,9 +13,10 @@ import {
 import { createCharactor } from '@motojouya/kniw/src/domain/charactor';
 import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
 
-export type HireCharactor = (charactorForm: CharactorForm) => Charactor | DataNotFoundError | NotWearableErorr | EmptyParameter;
-export const hireCharactor: HireCharactor = (charactorForm) => {
-
+export type HireCharactor = (
+  charactorForm: CharactorForm,
+) => Charactor | DataNotFoundError | NotWearableErorr | EmptyParameter;
+export const hireCharactor: HireCharactor = charactorForm => {
   const charactorName = charactorForm.name;
   if (!charactorName) {
     return new EmptyParameter('name', `nameがありません`);

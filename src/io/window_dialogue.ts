@@ -18,5 +18,8 @@ export class UserCancel {
 }
 
 export class EmptyParameter {
-  constructor(readonly name: string, readonly message: string) {}
+  constructor(
+    readonly name: string,
+    readonly message: string,
+  ) {}
 }
