@@ -85,16 +85,16 @@ const ReceiverSelect: FC<{
   const onBlur = () => {
 
     const receiverWithIsVisitor = getValues(formItemName);
-    const result = selectReceiver(receiverWithIsVisitor, lastTurn, new Date());
+    const result = selectReceiver(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
     if (result instanceof DataNotFoundError) {
       setReceiverResult(null);
       return;
     }
 
-    const { survice, receiver } = result;
+    const { survive, receiver } = result;
 
-    if (!survice) {
+    if (!survive) {
       setReceiverResult(`${receiver.name} will dead`);
       return;
     }

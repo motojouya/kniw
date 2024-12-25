@@ -1,8 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { PartyForm } from '@motojouya/kniw/src/form/party';
-import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
-import type { PartyRepository } from '@motojouya/kniw/src/store/party';
 
 import { useRouter } from 'next/router'
 import Link from 'next/link'
@@ -31,7 +29,7 @@ import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/schema/schema';
 import { useIO } from '@motojouya/kniw/src/components/context';
 import { importParty } from '@motojouya/kniw/src/web/case/party/importJson';
-import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
+import { UserCancel, EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
 
 // FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
 export const ImportParty: FC<{
@@ -42,8 +40,9 @@ export const ImportParty: FC<{
 
   const { partyRepository, dialogue } = useIO();
   const importJson = async () => {
-    const partyObj = await importParty(dialogue, partyRepository)();
+    const partyObj = await importParty(dialogue, partyRepository)(undefined);
     if (!(
+      partyObj instanceof UserCancel ||
       partyObj instanceof EmptyParameter ||
       partyObj instanceof JsonSchemaUnmatchError ||
       partyObj instanceof NotWearableErorr ||
@@ -62,7 +61,7 @@ export const ImportParty: FC<{
   );
 };
 
-const PartyEditor: FC<{
+export const PartyEditor: FC<{
   exist: boolean,
   party: Party,
   inoutButton: ReactNode,

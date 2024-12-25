@@ -1,15 +1,17 @@
 import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { Battle } from '@motojouya/kniw/src/domain/battle';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
+import type { Skill } from '@motojouya/kniw/src/domain/skill';
 
 import { actToCharactor } from '@motojouya/kniw/src/domain/battle';
 import { toReceiver } from '@motojouya/kniw/src/form/battle';
 import { createAbsolute } from '@motojouya/kniw/src/domain/random';
 import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 
-export type WillReceiver = { suvive: boolean, receiver: CharactorBattling };
+export type WillReceiver = { survive: boolean, receiver: CharactorBattling };
 
-export type SelectReceiver = (receiverWithIsVisitor: string, lastTurn: Turn, actionDate: Date) => WillReceiver | DataNotFoundError;
-export const selectReceiver: SelectReceiver = (receiverWithIsVisitor, lastTurn, actionDate) => {
+export type SelectReceiver = (battle: Battle, actor: CharactorBattling, skill: Skill, receiverWithIsVisitor: string, lastTurn: Turn, actionDate: Date) => WillReceiver | DataNotFoundError;
+export const selectReceiver: SelectReceiver = (battle, actor, skill, receiverWithIsVisitor, lastTurn, actionDate) => {
 
   const receiver = toReceiver(receiverWithIsVisitor, lastTurn.sortedCharactors);
   if (receiver instanceof DataNotFoundError) {
@@ -23,6 +25,6 @@ export const selectReceiver: SelectReceiver = (receiverWithIsVisitor, lastTurn, 
 
   return {
     receiver,
-    suvive: !!survivedReceiver,
+    survive: !!survivedReceiver,
   };
 };

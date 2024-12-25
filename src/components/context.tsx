@@ -12,7 +12,8 @@ export type IO = {
   battleRepository: BattleRepository;
 };
 
-const ContextIO = createContext<IO>(null);
+// @ts-ignore
+const ContextIO = createContext<IO>();
 
 export type UseIO = () => IO;
 export const useIO: UseIO = () => {
@@ -26,6 +27,6 @@ export const useIO: UseIO = () => {
 export const IOProvider: React.FC<{
   children: ReactNode;
   io: IO;
-}> = ({ children, master }) => {
+}> = ({ children, io }) => {
   return <ContextIO.Provider value={io}>{children}</ContextIO.Provider>;
 };

@@ -1,8 +1,8 @@
 import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
 import { skillRepository } from '@motojouya/kniw/src/store/skill';
 
-type SkillReceiverCount = (skillName: string) => number;
-const skillReceiverCount: SkillReceiverCount = (skillName) => {
+export type SkillReceiverCount = (skillName: string) => number;
+export const skillReceiverCount: SkillReceiverCount = (skillName) => {
 
   if (skillName === ACTION_DO_NOTHING) {
     return 0;

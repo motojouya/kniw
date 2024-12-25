@@ -52,7 +52,7 @@ export const BattleNew: FC<{}> = () => {
       return;
     }
 
-    const battle = startBattle(battleRepository)(title as string, homeParty as Party, visitorParty as Party, new Date());
+    const battle = await startBattle(battleRepository)(title as string, homeParty as Party, visitorParty as Party, new Date());
     await router.push({ pathname: 'battle', query: { title: battle.title } })
   };
 

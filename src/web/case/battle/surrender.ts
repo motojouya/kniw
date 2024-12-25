@@ -6,8 +6,8 @@ import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
 import { GameHome, GameVisitor, surrender as domainSurrender } from '@motojouya/kniw/src/domain/battle';
 import { UserCancel } from '@motojouya/kniw/src/io/window_dialogue';
 
-type Surrender = (battleRepository: BattleRepository, dialogue: Dialogue) => (battle: Battle, actor: CharactorBattling, actionDate: Date) => Promise<null | UserCancel>;
-const surrender: Surrender = (battleRepository, dialogue) => async (battle, actor, actionDate) => {
+export type Surrender = (battleRepository: BattleRepository, dialogue: Dialogue) => (battle: Battle, actor: CharactorBattling, actionDate: Date) => Promise<null | UserCancel>;
+export const surrender: Surrender = (battleRepository, dialogue) => async (battle, actor, actionDate) => {
   if (!dialogue.confirm('降参してもよいですか？')) {
     return new UserCancel('降参していません');
   }
