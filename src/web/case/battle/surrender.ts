@@ -23,3 +23,50 @@ export const surrender: Surrender = (battleRepository, dialogue) => async (battl
   });
   return null;
 };
+
+// // test
+// describe('surrender', () => {
+//   it('should surrender', async () => {
+//     const battleRepository: BattleRepository = {
+//       async save(battle) {
+//         expect(battle.result).toBe(GameHome);
+//       },
+//     };
+//     const dialogue: Dialogue = {
+//       confirm: () => true,
+//     };
+//     const battle: Battle = {
+//       turns: [],
+//       result: null,
+//     };
+//     const actor: CharactorBattling = {
+//       isVisitor: true,
+//     };
+//     const actionDate = new Date();
+// 
+//     const result = await surrender(battleRepository, dialogue)(battle, actor, actionDate);
+//     expect(result).toBeNull();
+//   });
+// 
+//   it('should not surrender', async () => {
+//     const battleRepository: BattleRepository = {
+//       async save() {
+//         throw new Error('should not save');
+//       },
+//     };
+//     const dialogue: Dialogue = {
+//       confirm: () => false,
+//     };
+//     const battle: Battle = {
+//       turns: [],
+//       result: null,
+//     };
+//     const actor: CharactorBattling = {
+//       isVisitor: true,
+//     };
+//     const actionDate = new Date();
+// 
+//     const result = await surrender(battleRepository, dialogue)(battle, actor, actionDate);
+//     expect(result).toBeInstanceOf(UserCancel);
+//   });
+// }
