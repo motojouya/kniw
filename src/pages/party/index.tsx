@@ -7,7 +7,7 @@ import { Provider } from "@/components/ui/provider"
 // 普通にimportすると以下でやる感じだと思う
 // import { ChakraProvider } from '@chakra-ui/react'
 
-import { App } from "@motojouya/kniw/src/pages/app"
+import { App } from "@motojouya/kniw/src/pages/party/app"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
