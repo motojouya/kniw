@@ -20,8 +20,6 @@
     "preview": "vite preview",
     "devweb": "vite",
     "buildweb": "tsc -b && vite build",
-    "start": "npx next start",
-    "export": "npx next export",
     "serve": "sudo npx serve out -l 80"
   },
   "private": true,

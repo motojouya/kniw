@@ -28,5 +28,8 @@ export default defineConfig({
         chunkFileNames: `assets/[name].js`,
       }
     }
-  }
+  },
+  server: {
+    port: 3000,
+  },
 })

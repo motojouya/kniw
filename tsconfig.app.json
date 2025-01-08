@@ -23,7 +23,7 @@
     "noUncheckedSideEffectImports": true,
 
     "paths": {
-      "@motojouya/kniw/*": ["./src/*"]
+      "@motojouya/kniw/*": ["*"]
     }
   },
   "include": ["src"]

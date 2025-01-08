@@ -15,7 +15,7 @@ import { PartyNew } from '@motojouya/kniw/src/web/subpage/party/new';
 import { PartyExsiting } from '@motojouya/kniw/src/web/subpage/party/party';
 import { IOProvider } from '@motojouya/kniw/src/components/context';
 
-const Index: FC = () => {
+export const App: FC = () => {
   const searchParams = useSearchParams();
   const name = searchParams.get('name');
 
@@ -52,5 +52,3 @@ const Index: FC = () => {
     </IOProvider>
   );
 };
-
-export default Index;

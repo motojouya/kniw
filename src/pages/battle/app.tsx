@@ -15,7 +15,7 @@ import { BattleNew } from '@motojouya/kniw/src/web/subpage/battle/new';
 import { BattleExsiting } from '@motojouya/kniw/src/web/subpage/battle/battle';
 import { IOProvider } from '@motojouya/kniw/src/components/context';
 
-const Index: FC = () => {
+export const App: FC = () => {
   const searchParams = useSearchParams();
   const title = searchParams.get('title');
 
@@ -53,5 +53,3 @@ const Index: FC = () => {
     </IOProvider>
   );
 };
-
-export default Index;

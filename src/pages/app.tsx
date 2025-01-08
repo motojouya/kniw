@@ -8,7 +8,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-const Index: FC = () => (
+export const App: FC = () => (
   <Box p='10'>
     <Heading>KNIW</Heading>
     <Box>
@@ -32,5 +32,3 @@ const Index: FC = () => (
     </Box>
   </Box>
 );
-
-export default Index;
