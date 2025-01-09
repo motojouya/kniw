@@ -3,7 +3,6 @@ import type { PartyRepository } from '@motojouya/kniw/src/store/party';
 import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation'
 import { Box, Text } from '@chakra-ui/react';
 
 import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
@@ -16,7 +15,7 @@ import { PartyExsiting } from '@motojouya/kniw/src/web/subpage/party/party';
 import { IOProvider } from '@motojouya/kniw/src/components/context';
 
 export const App: FC = () => {
-  const searchParams = useSearchParams();
+  const searchParams = new URLSearchParams(window.location.search);
   const name = searchParams.get('name');
 
   const [repositories, setRepositories] = useState<{ partyRepository: PartyRepository, battleRepository: BattleRepository } | null>(null);

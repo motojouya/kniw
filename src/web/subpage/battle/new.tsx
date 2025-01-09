@@ -1,8 +1,6 @@
 import type { FC } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -22,7 +20,6 @@ import { useIO } from '@motojouya/kniw/src/components/context';
 export const BattleNew: FC<{}> = () => {
 
   const { battleRepository } = useIO();
-  const router = useRouter()
 
   const [message, setMessage] = useState<string>('');
   const {
@@ -53,12 +50,13 @@ export const BattleNew: FC<{}> = () => {
     }
 
     const battle = await startBattle(battleRepository)(title as string, homeParty as Party, visitorParty as Party, new Date());
-    await router.push({ pathname: 'battle', query: { title: battle.title } })
+    // FIXME window変数はwrapしておきたい
+    window.location.assign(`/battle/?title=${battle.title}`);
   };
 
   return (
     <Box p={4}>
-      <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
+      <a href='/battle/'>戻る</a>
       <Text>This is the battle page</Text>
       <form onSubmit={handleSubmit(start)}>
         {message && (<FormErrorMessage>{message}</FormErrorMessage>)}

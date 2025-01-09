@@ -1,5 +1,4 @@
 import type { FC } from 'react';
-import Link from 'next/link';
 import {
   Box,
   UnorderedList,
@@ -17,18 +16,18 @@ export const App: FC = () => (
       <UnorderedList>
         <ListItem>
           <Text>ゲームの準備</Text>
-          <Link href="/party">
+          <a href="/party/">
             <Text>Partyの作成</Text>
-          </Link>
+          </a>
         </ListItem>
         <ListItem>
           <Text>ゲームの進行</Text>
-          <Link href="/battle">
+          <a href="/battle/">
             <Text>Battleの管理</Text>
-          </Link>
+          </a>
         </ListItem>
       </UnorderedList>
-      <Text>更に詳しい説明は<Link href="https://github.com/motojouya/kniw">こちらのページ</Link>を参照してください。</Text>
+      <Text>更に詳しい説明は<a href="https://github.com/motojouya/kniw">こちらのページ</a>を参照してください。</Text>
     </Box>
   </Box>
 );

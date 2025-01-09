@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 
-import Link from 'next/link'
 import { Box, Text } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
@@ -25,7 +24,7 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
     return (
       <Box>
         <Text>{battle.message}</Text>
-        <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
+        <a href='/battle/'>戻る</a>
       </Box>
     );
   }
@@ -33,7 +32,7 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
   if (!battle) {
     return (
       <Box>
-        <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
+        <a href='/battle/'>戻る</a>
         <Text>{`${battleTitle}というbattleは見つかりません`}</Text>
       </Box>
     );
