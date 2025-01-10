@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const merman: Race = {
-  name: 'merman',
-  label: 'マーマン',
+  name: "merman",
+  label: "マーマン",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const merman: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'マーマン。魔法防御力が高い。',
+  description: "マーマン。魔法防御力が高い。",
 };

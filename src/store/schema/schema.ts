@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export type ToModel<M, J, E> = (json: J) => M | E;
 export type ToJson<M, J> = (model: M) => J;
@@ -28,13 +28,12 @@ export class DataExistError {
 }
 
 export function parseJson<S extends z.ZodTypeAny>(schema: S): (json: unknown) => z.infer<S> | JsonSchemaUnmatchError {
-   
   return function (json) {
     const result = schema.safeParse(json);
     if (result.success) {
       return result.data;
     } else {
-      return new JsonSchemaUnmatchError(result.error, '想定されたjson schemaのデータではありません');
+      return new JsonSchemaUnmatchError(result.error, "想定されたjson schemaのデータではありません");
     }
   };
 }

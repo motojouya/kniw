@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryMagicalDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const thunder: Skill = {
-  name: 'thunder',
-  label: '神の鳴り物',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "thunder",
+  label: "神の鳴り物",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryMagicalDamage,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_THUNDER,
@@ -19,5 +19,5 @@ export const thunder: Skill = {
   additionalWt: 150,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '雷の強魔法',
+  description: "雷の強魔法",
 };

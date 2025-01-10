@@ -1,9 +1,9 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const silkSuit: Clothing = {
-  name: 'silkSuit',
-  label: 'シルクの衣',
+  name: "silkSuit",
+  label: "シルクの衣",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const silkSuit: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'シルクの衣',
+  description: "シルクの衣",
 };

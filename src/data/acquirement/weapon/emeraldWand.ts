@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
-import { heavyWind } from '@motojouya/kniw/src/data/skill/heavyWind';
-import { danceLeaves } from '@motojouya/kniw/src/data/skill/danceLeaves';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { windEdge } from "@motojouya/kniw/src/data/skill/windEdge";
+import { heavyWind } from "@motojouya/kniw/src/data/skill/heavyWind";
+import { danceLeaves } from "@motojouya/kniw/src/data/skill/danceLeaves";
 
 export const emeraldWand: Weapon = {
-  name: 'emeraldWand',
-  label: 'エメラルドワンド',
+  name: "emeraldWand",
+  label: "エメラルドワンド",
   skills: [windEdge, heavyWind, danceLeaves],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const emeraldWand: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'エメラルドワンド。風属性',
+  description: "エメラルドワンド。風属性",
 };

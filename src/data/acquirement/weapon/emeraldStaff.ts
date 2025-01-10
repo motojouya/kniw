@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
-import { clearCloud } from '@motojouya/kniw/src/data/skill/clearCloud';
-import { tornade } from '@motojouya/kniw/src/data/skill/tornade';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { windEdge } from "@motojouya/kniw/src/data/skill/windEdge";
+import { clearCloud } from "@motojouya/kniw/src/data/skill/clearCloud";
+import { tornade } from "@motojouya/kniw/src/data/skill/tornade";
 
 export const emeraldStaff: Weapon = {
-  name: 'emeraldStaff',
-  label: 'エメラルドスタッフ',
+  name: "emeraldStaff",
+  label: "エメラルドスタッフ",
   skills: [windEdge, clearCloud, tornade],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const emeraldStaff: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'エメラルドスタッフ。風属性',
+  description: "エメラルドスタッフ。風属性",
 };

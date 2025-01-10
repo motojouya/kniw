@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
-import { thunder } from '@motojouya/kniw/src/data/skill/thunder';
-import { eleciWave } from '@motojouya/kniw/src/data/skill/eleciWave';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { higherBolt } from "@motojouya/kniw/src/data/skill/higherBolt";
+import { thunder } from "@motojouya/kniw/src/data/skill/thunder";
+import { eleciWave } from "@motojouya/kniw/src/data/skill/eleciWave";
 
 export const amethystRod: Weapon = {
-  name: 'amethystRod',
-  label: 'アメジストロッド',
+  name: "amethystRod",
+  label: "アメジストロッド",
   skills: [higherBolt, thunder, eleciWave],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const amethystRod: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'アメジストロッド。雷属性',
+  description: "アメジストロッド。雷属性",
 };

@@ -1,9 +1,9 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const lionCollar: Clothing = {
-  name: 'lionCollar',
-  label: '獅子の襟飾り',
+  name: "lionCollar",
+  label: "獅子の襟飾り",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const lionCollar: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '獅子の襟飾り',
+  description: "獅子の襟飾り",
 };

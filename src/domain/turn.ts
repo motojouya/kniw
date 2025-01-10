@@ -1,28 +1,28 @@
-import type { Field } from '@motojouya/kniw/src/domain/field';
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Field } from "@motojouya/kniw/src/domain/field";
+import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 
-export const ACTION_DO_NOTHING = 'DO_NOTHING';
+export const ACTION_DO_NOTHING = "DO_NOTHING";
 
 export type DoSkill = {
-  type: 'DO_SKILL';
+  type: "DO_SKILL";
   actor: CharactorBattling;
   skill: Skill;
   receivers: CharactorBattling[];
 };
 
 export type DoNothing = {
-  type: 'DO_NOTHING';
+  type: "DO_NOTHING";
   actor: CharactorBattling;
 };
 
 export type Surrender = {
-  type: 'SURRENDER';
+  type: "SURRENDER";
   actor: CharactorBattling;
 };
 
 export type TimePassing = {
-  type: 'TIME_PASSING';
+  type: "TIME_PASSING";
   wt: number;
 };
 

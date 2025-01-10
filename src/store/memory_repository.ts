@@ -6,7 +6,7 @@ export type MemoryRepository<T> = {
 
 export type CreateMemoryRepository<T> = (items: Record<string, T>) => MemoryRepository<T>;
 export const createMemoryRepository = <T>(items: Record<string, T>): MemoryRepository<T> => ({
-  get: name => items[name],
+  get: (name) => items[name],
   list: Object.keys(items),
   all: Object.values(items),
 });

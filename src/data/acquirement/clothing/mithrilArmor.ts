@@ -1,10 +1,10 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { concentration } from '@motojouya/kniw/src/data/skill/concentration';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { concentration } from "@motojouya/kniw/src/data/skill/concentration";
 
 export const mithrilArmor: Clothing = {
-  name: 'mithrilArmor',
-  label: 'ミスリルの鎧',
+  name: "mithrilArmor",
+  label: "ミスリルの鎧",
   skills: [concentration],
   abilities: [],
   additionalPhysical: {
@@ -40,5 +40,5 @@ export const mithrilArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ミスリルの鎧。魔法属性が高い',
+  description: "ミスリルの鎧。魔法属性が高い",
 };

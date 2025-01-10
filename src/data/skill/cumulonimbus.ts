@@ -1,15 +1,15 @@
-import type { Skill, ActionToField } from '@motojouya/kniw/src/domain/skill';
-import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from '@motojouya/kniw/src/domain/skill';
+import type { Skill, ActionToField } from "@motojouya/kniw/src/domain/skill";
+import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "@motojouya/kniw/src/domain/skill";
 
 const changeClimate: ActionToField = (self, actor, randoms, field) => ({
   ...field,
-  climate: 'RAIN',
+  climate: "RAIN",
 });
 
 export const cumulonimbus: Skill = {
-  name: 'cumulonimbus',
-  label: '雨乞い',
-  type: 'SKILL_TO_FIELD',
+  name: "cumulonimbus",
+  label: "雨乞い",
+  type: "SKILL_TO_FIELD",
   action: changeClimate,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ICE,
@@ -18,5 +18,5 @@ export const cumulonimbus: Skill = {
   additionalWt: 100,
   effectLength: 0,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '天候を雨に',
+  description: "天候を雨に",
 };

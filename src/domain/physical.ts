@@ -75,5 +75,5 @@ const addPhysical: AddPhysical = (left, right) => ({
 });
 
 export type AddPhysicals = (physicals: Physical[]) => Physical;
-export const addPhysicals: AddPhysicals = physicals =>
+export const addPhysicals: AddPhysicals = (physicals) =>
   physicals.reduce((acc, item) => addPhysical(acc, item), zeroPhysical);

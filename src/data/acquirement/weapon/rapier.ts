@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { stab } from '@motojouya/kniw/src/data/skill/stab';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { saturnRing } from '@motojouya/kniw/src/data/skill/saturnRing';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { stab } from "@motojouya/kniw/src/data/skill/stab";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { saturnRing } from "@motojouya/kniw/src/data/skill/saturnRing";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const rapier: Weapon = {
-  name: 'rapier',
-  label: 'レイピア',
+  name: "rapier",
+  label: "レイピア",
   skills: [stab, saturnRing, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const rapier: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'レイピア。刺突武器',
+  description: "レイピア。刺突武器",
 };

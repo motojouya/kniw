@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const lizardman: Race = {
-  name: 'lizardman',
-  label: 'リザードマン',
+  name: "lizardman",
+  label: "リザードマン",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const lizardman: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'リザードマン。物理防御力が高い。',
+  description: "リザードマン。物理防御力が高い。",
 };

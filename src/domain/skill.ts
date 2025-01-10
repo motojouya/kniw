@@ -1,10 +1,10 @@
-import type { Field } from '@motojouya/kniw/src/domain/field';
-import type { Randoms } from '@motojouya/kniw/src/domain/random';
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import type { Status } from '@motojouya/kniw/src/domain/status';
+import type { Field } from "@motojouya/kniw/src/domain/field";
+import type { Randoms } from "@motojouya/kniw/src/domain/random";
+import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
+import type { Status } from "@motojouya/kniw/src/domain/status";
 
-import { underStatus } from '@motojouya/kniw/src/domain/status';
-import { getPhysical } from '@motojouya/kniw/src/domain/charactor';
+import { underStatus } from "@motojouya/kniw/src/domain/status";
+import { getPhysical } from "@motojouya/kniw/src/domain/charactor";
 import {
   directAttackUp,
   directAttackDown,
@@ -15,22 +15,22 @@ import {
   magicDiffenceUp,
   magicDiffenceDown,
   fear,
-} from '@motojouya/kniw/src/data/status/index';
+} from "@motojouya/kniw/src/data/status/index";
 
-export type DirectType = 'SLASH' | 'STAB' | 'BLOW' | 'NONE';
-export const DIRECT_TYPE_SLASH: DirectType = 'SLASH';
-export const DIRECT_TYPE_STAB: DirectType = 'STAB';
-export const DIRECT_TYPE_BLOW: DirectType = 'BLOW';
-export const DIRECT_TYPE_NONE: DirectType = 'NONE';
+export type DirectType = "SLASH" | "STAB" | "BLOW" | "NONE";
+export const DIRECT_TYPE_SLASH: DirectType = "SLASH";
+export const DIRECT_TYPE_STAB: DirectType = "STAB";
+export const DIRECT_TYPE_BLOW: DirectType = "BLOW";
+export const DIRECT_TYPE_NONE: DirectType = "NONE";
 
-export type MagicType = 'FIRE' | 'ROCK' | 'WATER' | 'ICE' | 'WIND' | 'THUNDER' | 'NONE';
-export const MAGIC_TYPE_FIRE: MagicType = 'FIRE';
-export const MAGIC_TYPE_ROCK: MagicType = 'ROCK';
-export const MAGIC_TYPE_WATER: MagicType = 'WATER';
-export const MAGIC_TYPE_ICE: MagicType = 'ICE';
-export const MAGIC_TYPE_WIND: MagicType = 'WIND';
-export const MAGIC_TYPE_THUNDER: MagicType = 'THUNDER';
-export const MAGIC_TYPE_NONE: MagicType = 'NONE';
+export type MagicType = "FIRE" | "ROCK" | "WATER" | "ICE" | "WIND" | "THUNDER" | "NONE";
+export const MAGIC_TYPE_FIRE: MagicType = "FIRE";
+export const MAGIC_TYPE_ROCK: MagicType = "ROCK";
+export const MAGIC_TYPE_WATER: MagicType = "WATER";
+export const MAGIC_TYPE_ICE: MagicType = "ICE";
+export const MAGIC_TYPE_WIND: MagicType = "WIND";
+export const MAGIC_TYPE_THUNDER: MagicType = "THUNDER";
+export const MAGIC_TYPE_NONE: MagicType = "NONE";
 
 export type ActionToCharactor = (
   self: Skill,
@@ -46,7 +46,7 @@ export type GetAccuracy = (self: Skill, actor: CharactorBattling, field: Field, 
 export type SkillToCharactor = {
   name: string;
   label: string;
-  type: 'SKILL_TO_CHARACTOR';
+  type: "SKILL_TO_CHARACTOR";
   action: ActionToCharactor;
   directType: DirectType;
   magicType: MagicType;
@@ -62,7 +62,7 @@ export type SkillToCharactor = {
 export type SkillToField = {
   name: string;
   label: string;
-  type: 'SKILL_TO_FIELD';
+  type: "SKILL_TO_FIELD";
   action: ActionToField;
   directType: DirectType;
   magicType: MagicType;
@@ -158,10 +158,10 @@ const calcDirectDefence: CalcDirectDefence = (skill, defencer) => {
 };
 
 export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-  if (self.type === 'SKILL_TO_FIELD') {
+  if (self.type === "SKILL_TO_FIELD") {
     return {
       ...receiver,
-      statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+      statuses: [...receiver.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
     };
   }
 
@@ -179,7 +179,7 @@ export const calcOrdinaryDirectDamage: ActionToCharactor = (self, actor, randoms
   return {
     ...receiver,
     hp: restHp,
-    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+    statuses: [...receiver.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
   };
 };
 
@@ -207,10 +207,10 @@ const calcMagicalDefence: CalcMagicalDefence = (skill, defencer) => {
 };
 
 export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, randoms, field, receiver) => {
-  if (self.type === 'SKILL_TO_FIELD') {
+  if (self.type === "SKILL_TO_FIELD") {
     return {
       ...receiver,
-      statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+      statuses: [...receiver.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
     };
   }
 
@@ -228,15 +228,15 @@ export const calcOrdinaryMagicalDamage: ActionToCharactor = (self, actor, random
   return {
     ...receiver,
     hp: restHp,
-    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+    statuses: [...receiver.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
   };
 };
 
 export type AddStatus = (status: Status) => ActionToCharactor;
-export const addStatus: AddStatus = status => (self, actor, randoms, field, receiver) => {
+export const addStatus: AddStatus = (status) => (self, actor, randoms, field, receiver) => {
   const newReceiver = {
     ...receiver,
-    statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+    statuses: [...receiver.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
   };
   if (!underStatus(status, newReceiver)) {
     newReceiver.statuses.push({

@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_BLOW,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const pitch: Skill = {
-  name: 'pitch',
-  label: '投げる',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "pitch",
+  label: "投げる",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_BLOW,
   magicType: MAGIC_TYPE_NONE,
@@ -19,5 +19,5 @@ export const pitch: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '投げる',
+  description: "投げる",
 };

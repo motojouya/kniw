@@ -1,12 +1,12 @@
-import type { Skill, ActionToCharactor } from '@motojouya/kniw/src/domain/skill';
+import type { Skill, ActionToCharactor } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
-import { silent } from '@motojouya/kniw/src/data/status/silent';
+} from "@motojouya/kniw/src/domain/skill";
+import { silent } from "@motojouya/kniw/src/data/status/silent";
 
 export const silentAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
@@ -14,9 +14,9 @@ export const silentAction: ActionToCharactor = (self, actor, randoms, field, rec
 };
 
 export const silentShot: Skill = {
-  name: 'silentShot',
-  label: '沈黙の矢',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "silentShot",
+  label: "沈黙の矢",
+  type: "SKILL_TO_CHARACTOR",
   action: silentAction,
   directType: DIRECT_TYPE_STAB,
   magicType: MAGIC_TYPE_NONE,
@@ -26,5 +26,5 @@ export const silentShot: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '攻撃しつつ相手を沈黙にする',
+  description: "攻撃しつつ相手を沈黙にする",
 };

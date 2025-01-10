@@ -1,14 +1,14 @@
-import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Database } from '@motojouya/kniw/src/io/database';
-import { createRepository } from '@motojouya/kniw/src/store/charactor';
-import { getPhysical, getAbilities, getSkills } from '@motojouya/kniw/src/domain/charactor';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
+import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Database } from "@motojouya/kniw/src/io/database";
+import { createRepository } from "@motojouya/kniw/src/store/charactor";
+import { getPhysical, getAbilities, getSkills } from "@motojouya/kniw/src/domain/charactor";
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
 
 export type ShowStatus = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const showStatus: ShowStatus =
   ({ notice }, database) =>
-  async name => {
+  async (name) => {
     const repository = await createRepository(database);
     const characor = await repository.get(name);
     if (!characor) {
@@ -31,7 +31,7 @@ export const showStatus: ShowStatus =
     await notice(`武器: ${characor.weapon.label}`);
 
     const physical = getPhysical(characor);
-    await notice('能力:');
+    await notice("能力:");
     await notice(`  MaxHP: ${physical.MaxHP}`);
     await notice(`  MaxMP: ${physical.MaxMP}`);
     await notice(`  STR: ${physical.STR}`);
@@ -56,10 +56,10 @@ export const showStatus: ShowStatus =
     await notice(`  移動高さ: ${physical.jump}`);
 
     const abilities = getAbilities(characor);
-    await notice('アビリティ:');
+    await notice("アビリティ:");
     await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
     const skills = getSkills(characor);
-    await notice('スキル:');
+    await notice("スキル:");
     await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
   };

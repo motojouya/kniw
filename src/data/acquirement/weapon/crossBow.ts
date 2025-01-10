@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { shot } from '@motojouya/kniw/src/data/skill/shot';
-import { multiShot } from '@motojouya/kniw/src/data/skill/multiShot';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { shot } from "@motojouya/kniw/src/data/skill/shot";
+import { multiShot } from "@motojouya/kniw/src/data/skill/multiShot";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
 
 export const crossBow: Weapon = {
-  name: 'crossBow',
-  label: 'クロスボウ',
+  name: "crossBow",
+  label: "クロスボウ",
   skills: [shot, multiShot, dazzle],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const crossBow: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'クロスボウ',
+  description: "クロスボウ",
 };

@@ -1,11 +1,11 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
-import { slow } from '@motojouya/kniw/src/data/skill/slow';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
+import { slow } from "@motojouya/kniw/src/data/skill/slow";
 
 export const magentaRobe: Clothing = {
-  name: 'magentaRobe',
-  label: '桃色の衣',
+  name: "magentaRobe",
+  label: "桃色の衣",
   skills: [slow],
   abilities: [mpGainPlus],
   additionalPhysical: {
@@ -41,5 +41,5 @@ export const magentaRobe: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '桃色の衣。氷属性',
+  description: "桃色の衣。氷属性",
 };

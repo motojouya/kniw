@@ -1,9 +1,9 @@
-import type { Battle } from '@motojouya/kniw/src/domain/battle';
-import type { Turn } from '@motojouya/kniw/src/domain/turn';
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
-import type { DoSkillForm } from '@motojouya/kniw/src/form/battle';
-import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
+import type { Battle } from "@motojouya/kniw/src/domain/battle";
+import type { Turn } from "@motojouya/kniw/src/domain/turn";
+import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
+import type { BattleRepository } from "@motojouya/kniw/src/store/battle";
+import type { DoSkillForm } from "@motojouya/kniw/src/form/battle";
+import type { Dialogue } from "@motojouya/kniw/src/io/window_dialogue";
 
 import {
   GameOngoing,
@@ -13,14 +13,14 @@ import {
   isSettlement,
   actToField,
   actToCharactor,
-} from '@motojouya/kniw/src/domain/battle';
+} from "@motojouya/kniw/src/domain/battle";
 
-import { toAction, ReceiverDuplicationError } from '@motojouya/kniw/src/form/battle';
-import { underStatus } from '@motojouya/kniw/src/domain/status';
-import { sleep } from '@motojouya/kniw/src/data/status';
-import { createRandoms } from '@motojouya/kniw/src/domain/random';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { UserCancel } from '@motojouya/kniw/src/io/window_dialogue';
+import { toAction, ReceiverDuplicationError } from "@motojouya/kniw/src/form/battle";
+import { underStatus } from "@motojouya/kniw/src/domain/status";
+import { sleep } from "@motojouya/kniw/src/data/status";
+import { createRandoms } from "@motojouya/kniw/src/domain/random";
+import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { UserCancel } from "@motojouya/kniw/src/io/window_dialogue";
 
 export type Act = (
   dialogue: Dialogue,
@@ -37,8 +37,8 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     return doAction;
   }
 
-  if (!dialogue.confirm('実行していいですか？')) {
-    return new UserCancel('Cancelされました');
+  if (!dialogue.confirm("実行していいですか？")) {
+    return new UserCancel("Cancelされました");
   }
 
   if (doAction === null) {
@@ -46,13 +46,12 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
   } else {
     const selectedSkill = doAction.skill;
     const newTurn =
-      selectedSkill.type === 'SKILL_TO_FIELD'
+      selectedSkill.type === "SKILL_TO_FIELD"
         ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
         : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
     battle.turns.push(newTurn);
   }
 
-   
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
     await repository.save(battle);
@@ -72,7 +71,6 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     battle.turns.push(stay(battle, firstWaiting, new Date()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
-       
       await repository.save(battle);
       return null;
     }
@@ -81,12 +79,10 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
-       
       await repository.save(battle);
       return null;
     }
   }
-   
 
   await repository.save(battle);
   return null;

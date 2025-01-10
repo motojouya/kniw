@@ -1,10 +1,10 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { concentration } from '@motojouya/kniw/src/data/skill/concentration';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { concentration } from "@motojouya/kniw/src/data/skill/concentration";
 
 export const furAironArmor: Clothing = {
-  name: 'furAironArmor',
-  label: '革と鉄の鎧',
+  name: "furAironArmor",
+  label: "革と鉄の鎧",
   skills: [concentration],
   abilities: [],
   additionalPhysical: {
@@ -40,5 +40,5 @@ export const furAironArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '革と鉄の鎧。斬撃耐性がある',
+  description: "革と鉄の鎧。斬撃耐性がある",
 };

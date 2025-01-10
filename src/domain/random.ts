@@ -15,13 +15,13 @@ export class RandomRangeError {
 export type ValidateRandoms = (randoms: Randoms) => null | RandomRangeError;
 export const validateRandoms: ValidateRandoms = ({ times, damage, accuracy }) => {
   if (times > 1 || times < 0) {
-    return new RandomRangeError('times', times, 'timesの値は0から1です');
+    return new RandomRangeError("times", times, "timesの値は0から1です");
   }
   if (damage > 1 || damage < 0) {
-    return new RandomRangeError('damage', damage, 'damageの値は0から1です');
+    return new RandomRangeError("damage", damage, "damageの値は0から1です");
   }
   if (accuracy > 1 || accuracy < 0) {
-    return new RandomRangeError('accuracy', accuracy, 'accuracyの値は0から1です');
+    return new RandomRangeError("accuracy", accuracy, "accuracyの値は0から1です");
   }
   return null;
 };

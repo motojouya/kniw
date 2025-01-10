@@ -1,11 +1,11 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
-import { stoneShell } from '@motojouya/kniw/src/data/skill/stoneShell';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
+import { stoneShell } from "@motojouya/kniw/src/data/skill/stoneShell";
 
 export const cyanRobe: Clothing = {
-  name: 'cyanRobe',
-  label: '水色の衣',
+  name: "cyanRobe",
+  label: "水色の衣",
   skills: [stoneShell],
   abilities: [mpGainPlus],
   additionalPhysical: {
@@ -41,5 +41,5 @@ export const cyanRobe: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '水色の衣。岩属性',
+  description: "水色の衣。岩属性",
 };

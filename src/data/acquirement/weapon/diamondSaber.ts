@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { gunStone } from "@motojouya/kniw/src/data/skill/gunStone";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const diamondSaber: Weapon = {
-  name: 'diamondSaber',
-  label: 'ダイヤモンドサーベル',
+  name: "diamondSaber",
+  label: "ダイヤモンドサーベル",
   skills: [chop, gunStone, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const diamondSaber: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ダイヤモンドサーベル。岩属性',
+  description: "ダイヤモンドサーベル。岩属性",
 };

@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { gunWater } from '@motojouya/kniw/src/data/skill/gunWater';
-import { quench } from '@motojouya/kniw/src/data/skill/quench';
-import { downRushing } from '@motojouya/kniw/src/data/skill/downRushing';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
+import { quench } from "@motojouya/kniw/src/data/skill/quench";
+import { downRushing } from "@motojouya/kniw/src/data/skill/downRushing";
 
 export const sapphireRod: Weapon = {
-  name: 'sapphireRod',
-  label: 'サファイアロッド',
+  name: "sapphireRod",
+  label: "サファイアロッド",
   skills: [gunWater, downRushing, quench],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const sapphireRod: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'サファイアロッド。水属性',
+  description: "サファイアロッド。水属性",
 };

@@ -1,9 +1,9 @@
-import type { Blessing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Blessing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const sky: Blessing = {
-  name: 'sky',
-  label: '空',
+  name: "sky",
+  label: "空",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -32,12 +32,12 @@ export const sky: Blessing = {
   },
   validateWearable: (race, blessing, clothing, weapon) => {
     const validate = createValidateWearable(sky, {
-      wearableRaces: ['human', 'fairy', 'werewolf', 'hawkman'],
+      wearableRaces: ["human", "fairy", "werewolf", "hawkman"],
       wearableBlessings: [],
       wearableClothings: [],
       wearableWeapons: [],
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '空の祝福',
+  description: "空の祝福",
 };

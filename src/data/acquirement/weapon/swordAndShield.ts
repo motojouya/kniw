@@ -1,14 +1,14 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { push } from '@motojouya/kniw/src/data/skill/push';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { shootingGuard } from '@motojouya/kniw/src/data/ability/shootingGuard';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { push } from "@motojouya/kniw/src/data/skill/push";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { shootingGuard } from "@motojouya/kniw/src/data/ability/shootingGuard";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const swordAndShield: Weapon = {
-  name: 'swordAndShield',
-  label: '剣と盾',
+  name: "swordAndShield",
+  label: "剣と盾",
   skills: [chop, push, dazzle],
   abilities: [rampartForce, shootingGuard],
   additionalPhysical: {
@@ -44,5 +44,5 @@ export const swordAndShield: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '剣と盾のセット',
+  description: "剣と盾のセット",
 };

@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_SLASH,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const guillotineOfGiant: Skill = {
-  name: 'guillotineOfGiant',
-  label: '巨人の首絶ち',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "guillotineOfGiant",
+  label: "巨人の首絶ち",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_SLASH,
   magicType: MAGIC_TYPE_NONE,
@@ -19,5 +19,5 @@ export const guillotineOfGiant: Skill = {
   additionalWt: 150,
   effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '斬撃の強攻撃',
+  description: "斬撃の強攻撃",
 };

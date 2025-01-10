@@ -1,11 +1,11 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from '@motojouya/kniw/src/domain/skill';
-import { magicDiffenceUp } from '@motojouya/kniw/src/data/status/magicDiffenceUp';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from "@motojouya/kniw/src/domain/skill";
+import { magicDiffenceUp } from "@motojouya/kniw/src/data/status/magicDiffenceUp";
 
 export const fireWall: Skill = {
-  name: 'fireWall',
-  label: '炎の壁',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "fireWall",
+  label: "炎の壁",
+  type: "SKILL_TO_CHARACTOR",
   action: (skill, actor, randoms, field, receiver) =>
     addStatus(magicDiffenceUp)(skill, actor, randoms, field, receiver),
   directType: DIRECT_TYPE_NONE,
@@ -16,5 +16,5 @@ export const fireWall: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '魔法防御up',
+  description: "魔法防御up",
 };

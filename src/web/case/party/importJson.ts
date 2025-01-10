@@ -1,11 +1,11 @@
-import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
-import type { PartyRepository } from '@motojouya/kniw/src/store/party';
+import type { Party } from "@motojouya/kniw/src/domain/party";
+import type { Dialogue } from "@motojouya/kniw/src/io/window_dialogue";
+import type { PartyRepository } from "@motojouya/kniw/src/store/party";
 
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { UserCancel, EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
+import { CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { UserCancel, EmptyParameter } from "@motojouya/kniw/src/io/window_dialogue";
 
 export type ImportParty = (
   dialogue: Dialogue,
@@ -21,15 +21,15 @@ export type ImportParty = (
   | EmptyParameter
   | UserCancel
 >;
-export const importParty: ImportParty = (dialogue, repository) => async comfirmMessage => {
+export const importParty: ImportParty = (dialogue, repository) => async (comfirmMessage) => {
   if (comfirmMessage && !dialogue.confirm(comfirmMessage)) {
-    return new UserCancel('importしていません');
+    return new UserCancel("importしていません");
   }
 
-  const party = await repository.importJson('');
+  const party = await repository.importJson("");
   if (!party) {
-    dialogue.notice('partyがありません');
-    return new EmptyParameter('party', 'partyがありません');
+    dialogue.notice("partyがありません");
+    return new EmptyParameter("party", "partyがありません");
   }
 
   if (

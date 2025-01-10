@@ -1,15 +1,15 @@
-import type { Status } from '@motojouya/kniw/src/domain/status';
-import type { SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Physical } from '@motojouya/kniw/src/domain/physical';
-import type { Race, Weapon, Clothing, Blessing } from '@motojouya/kniw/src/domain/acquirement';
-import type { Ability } from '@motojouya/kniw/src/domain/ability';
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Status } from "@motojouya/kniw/src/domain/status";
+import type { SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Physical } from "@motojouya/kniw/src/domain/physical";
+import type { Race, Weapon, Clothing, Blessing } from "@motojouya/kniw/src/domain/acquirement";
+import type { Ability } from "@motojouya/kniw/src/domain/ability";
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 
-import { addPhysicals } from '@motojouya/kniw/src/domain/physical';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+import { addPhysicals } from "@motojouya/kniw/src/domain/physical";
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
 
 export function isBattlingCharactor(charactor: Charactor): charactor is CharactorBattling {
-  return Object.prototype.hasOwnProperty.call(charactor, 'isVisitor') && typeof charactor.isVisitor === 'boolean';
+  return Object.prototype.hasOwnProperty.call(charactor, "isVisitor") && typeof charactor.isVisitor === "boolean";
 }
 
 const basePhysical: Physical = {
@@ -58,17 +58,17 @@ export type Charactor = {
 export type CharactorBattling = Required<Charactor>;
 
 export type GetSelectOption = (charactor: Charactor) => SelectOption;
-export const getSelectOption: GetSelectOption = charactor => ({
-  label: `${charactor.isVisitor ? 'V' : 'H'}:${charactor.name}`,
-  value: `${charactor.isVisitor ? 'V' : 'H'}:${charactor.name}`,
+export const getSelectOption: GetSelectOption = (charactor) => ({
+  label: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,
+  value: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,
 });
 
 export type SelectCharactor = (candidates: CharactorBattling[], values: string[]) => CharactorBattling[];
 export const selectCharactor: SelectCharactor = (candidates, values) =>
-  candidates.filter(candidate => values.includes(`${candidate.isVisitor ? 'V' : 'H'}:${candidate.name}`));
+  candidates.filter((candidate) => values.includes(`${candidate.isVisitor ? "V" : "H"}:${candidate.name}`));
 
 export type GetAbilities = (charactor: Charactor) => Ability[];
-export const getAbilities: GetAbilities = charactor => [
+export const getAbilities: GetAbilities = (charactor) => [
   ...charactor.race.abilities,
   ...charactor.blessing.abilities,
   ...charactor.clothing.abilities,
@@ -76,7 +76,7 @@ export const getAbilities: GetAbilities = charactor => [
 ];
 
 export type GetSkills = (charactor: Charactor) => Skill[];
-export const getSkills: GetSkills = charactor => [
+export const getSkills: GetSkills = (charactor) => [
   ...charactor.race.skills,
   ...charactor.blessing.skills,
   ...charactor.clothing.skills,
@@ -84,7 +84,7 @@ export const getSkills: GetSkills = charactor => [
 ];
 
 export type GetPhysical = (charactor: Charactor) => Physical;
-export const getPhysical: GetPhysical = charactor =>
+export const getPhysical: GetPhysical = (charactor) =>
   addPhysicals([
     basePhysical,
     charactor.race.additionalPhysical,
@@ -157,4 +157,4 @@ export const createCharactor: CreateCharactor = (name, race, blessing, clothing,
 };
 
 export type IsVisitorString = (isVisitor: boolean) => string;
-export const isVisitorString: IsVisitorString = isVisitor => (isVisitor ? 'VISITOR' : 'HOME');
+export const isVisitorString: IsVisitorString = (isVisitor) => (isVisitor ? "VISITOR" : "HOME");

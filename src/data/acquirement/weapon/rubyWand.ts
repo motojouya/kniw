@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
-import { crossFire } from '@motojouya/kniw/src/data/skill/crossFire';
-import { ghostFire } from '@motojouya/kniw/src/data/skill/ghostFire';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
+import { crossFire } from "@motojouya/kniw/src/data/skill/crossFire";
+import { ghostFire } from "@motojouya/kniw/src/data/skill/ghostFire";
 
 export const rubyWand: Weapon = {
-  name: 'rubyWand',
-  label: 'ルビーワンド',
+  name: "rubyWand",
+  label: "ルビーワンド",
   skills: [flameFall, crossFire, ghostFire],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const rubyWand: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ルビーワンド。火属性',
+  description: "ルビーワンド。火属性",
 };

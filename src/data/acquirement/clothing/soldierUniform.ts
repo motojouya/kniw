@@ -1,9 +1,9 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const soldierUniform: Clothing = {
-  name: 'soldierUniform',
-  label: '軍人の制服',
+  name: "soldierUniform",
+  label: "軍人の制服",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const soldierUniform: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '軍人の制服。動きやすい',
+  description: "軍人の制服。動きやすい",
 };

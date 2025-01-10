@@ -1,9 +1,9 @@
-import type { Database } from '@motojouya/kniw/src/io/database';
-import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
+import type { Database } from "@motojouya/kniw/src/io/database";
+import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
 
-import { z } from 'zod';
-import { CopyFailError } from '@motojouya/kniw/src/io/database';
-import { parseJson, JsonSchemaUnmatchError } from '@motojouya/kniw/src/store/schema/schema';
+import { z } from "zod";
+import { CopyFailError } from "@motojouya/kniw/src/io/database";
+import { parseJson, JsonSchemaUnmatchError } from "@motojouya/kniw/src/store/schema/schema";
 
 export type Save<M extends Record<string, unknown>> = (obj: M) => Promise<void>;
 export type Get<M extends Record<string, unknown>, E> = (
@@ -32,11 +32,11 @@ const createSave =
     toJson: ToJson<M, J>,
   ) =>
   (database: Database): Save<M> =>
-  async obj =>
+  async (obj) =>
     database.save(namespace, obj[key] as string, toJson(obj));
 
 type CreateList = (namespace: string) => (database: Database) => List;
-const createList: CreateList = namespace => database => async () => database.list(namespace);
+const createList: CreateList = (namespace) => (database) => async () => database.list(namespace);
 
 const createGet =
   <S extends z.ZodTypeAny, M extends Record<string, unknown>, J extends Record<string, unknown>, E>(
@@ -45,7 +45,7 @@ const createGet =
     toModel: ToModel<M, J, E>,
   ) =>
   (database: Database): Get<M, E | JsonSchemaUnmatchError> =>
-  async name => {
+  async (name) => {
     const result = await database.get(namespace, name);
     if (!result) {
       return null;
@@ -60,7 +60,8 @@ const createGet =
   };
 
 type CreateRemove = (namespace: string) => (database: Database) => Remove;
-const createRemove: CreateRemove = (namespace: string) => database => async name => database.remove(namespace, name);
+const createRemove: CreateRemove = (namespace: string) => (database) => async (name) =>
+  database.remove(namespace, name);
 
 const createImportJson =
   <S extends z.ZodTypeAny, M extends Record<string, unknown>, J extends Record<string, unknown>, E>(
@@ -68,7 +69,7 @@ const createImportJson =
     toModel: ToModel<M, J, E>,
   ) =>
   (database: Database): ImportJson<M, E | JsonSchemaUnmatchError> =>
-  async fileName => {
+  async (fileName) => {
     const result = await database.importJson(fileName);
     if (!result) {
       return null;

@@ -1,17 +1,17 @@
-import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { skillRepository } from '@motojouya/kniw/src/store/skill';
+import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
+import { skillRepository } from "@motojouya/kniw/src/store/skill";
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =
   ({ notice }) =>
-  async name => {
+  async (name) => {
     const skill = skillRepository.get(name);
     if (!skill) {
       await notice(`${name}というskillは存在しません`);
       return;
     }
     await notice(`スキル名: ${skill.label}`);
-    if (skill.type === 'SKILL_TO_FIELD') {
+    if (skill.type === "SKILL_TO_FIELD") {
       await notice(`効果対象: フィールド`);
     } else {
       await notice(`効果対象: キャラクター(最大${skill.receiverCount}体)`);

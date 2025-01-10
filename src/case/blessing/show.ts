@@ -1,10 +1,10 @@
-import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { blessingRepository } from '@motojouya/kniw/src/store/acquirement';
+import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
+import { blessingRepository } from "@motojouya/kniw/src/store/acquirement";
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =
   ({ notice }) =>
-  async name => {
+  async (name) => {
     const blessing = blessingRepository.get(name);
     if (!blessing) {
       await notice(`${name}というblessingは存在しません`);
@@ -13,7 +13,7 @@ export const show: Show =
     await notice(`祝福: ${blessing.label}`);
 
     const physical = blessing.additionalPhysical;
-    await notice('能力:');
+    await notice("能力:");
     await notice(`  MaxHP: ${physical.MaxHP}`);
     await notice(`  MaxMP: ${physical.MaxMP}`);
     await notice(`  STR: ${physical.STR}`);
@@ -37,10 +37,10 @@ export const show: Show =
     await notice(`  移動距離: ${physical.move}`);
     await notice(`  移動高さ: ${physical.jump}`);
 
-    await notice('アビリティ:');
+    await notice("アビリティ:");
     await blessing.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
-    await notice('スキル:');
+    await notice("スキル:");
     await blessing.skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
 
     await notice(`説明: ${blessing.description}`);

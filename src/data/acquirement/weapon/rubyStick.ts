@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
-import { crossFire } from '@motojouya/kniw/src/data/skill/crossFire';
-import { flameDigger } from '@motojouya/kniw/src/data/skill/flameDigger';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
+import { crossFire } from "@motojouya/kniw/src/data/skill/crossFire";
+import { flameDigger } from "@motojouya/kniw/src/data/skill/flameDigger";
 
 export const rubyStick: Weapon = {
-  name: 'rubyStick',
-  label: 'ルビーステッキ',
+  name: "rubyStick",
+  label: "ルビーステッキ",
   skills: [flameFall, crossFire, flameDigger],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const rubyStick: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ルビーステッキ。火属性',
+  description: "ルビーステッキ。火属性",
 };

@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { blow } from '@motojouya/kniw/src/data/skill/blow';
-import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { blow } from "@motojouya/kniw/src/data/skill/blow";
+import { gunStone } from "@motojouya/kniw/src/data/skill/gunStone";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const diamondFlail: Weapon = {
-  name: 'diamondFlail',
-  label: 'ダイヤモンドフレイル',
+  name: "diamondFlail",
+  label: "ダイヤモンドフレイル",
   skills: [blow, gunStone, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const diamondFlail: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ダイヤモンドフレイル。岩属性',
+  description: "ダイヤモンドフレイル。岩属性",
 };

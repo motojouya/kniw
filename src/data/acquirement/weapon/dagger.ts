@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { toxicScratch } from '@motojouya/kniw/src/data/skill/toxicScratch';
-import { paralysisScratch } from '@motojouya/kniw/src/data/skill/paralysisScratch';
-import { silentScratch } from '@motojouya/kniw/src/data/skill/silentScratch';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { toxicScratch } from "@motojouya/kniw/src/data/skill/toxicScratch";
+import { paralysisScratch } from "@motojouya/kniw/src/data/skill/paralysisScratch";
+import { silentScratch } from "@motojouya/kniw/src/data/skill/silentScratch";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const dagger: Weapon = {
-  name: 'dagger',
-  label: 'ダガー',
+  name: "dagger",
+  label: "ダガー",
   skills: [toxicScratch, paralysisScratch, silentScratch],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const dagger: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ダガー',
+  description: "ダガー",
 };

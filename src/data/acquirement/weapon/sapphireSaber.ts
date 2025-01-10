@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { gunWater } from '@motojouya/kniw/src/data/skill/gunWater';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const sapphireSaber: Weapon = {
-  name: 'sapphireSaber',
-  label: 'サファイアサーベル',
+  name: "sapphireSaber",
+  label: "サファイアサーベル",
   skills: [chop, gunWater, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const sapphireSaber: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'サファイアサーベル。水属性',
+  description: "サファイアサーベル。水属性",
 };

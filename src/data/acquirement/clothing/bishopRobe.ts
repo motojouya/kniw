@@ -1,10 +1,10 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
 
 export const bishopRobe: Clothing = {
-  name: 'bishopRobe',
-  label: '司教の服',
+  name: "bishopRobe",
+  label: "司教の服",
   skills: [],
   abilities: [mpGainPlus],
   additionalPhysical: {
@@ -40,5 +40,5 @@ export const bishopRobe: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'スキルがないが性能が高い',
+  description: "スキルがないが性能が高い",
 };

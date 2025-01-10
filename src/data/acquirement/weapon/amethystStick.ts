@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
-import { electricShock } from '@motojouya/kniw/src/data/skill/electricShock';
-import { jammer } from '@motojouya/kniw/src/data/skill/jammer';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { higherBolt } from "@motojouya/kniw/src/data/skill/higherBolt";
+import { electricShock } from "@motojouya/kniw/src/data/skill/electricShock";
+import { jammer } from "@motojouya/kniw/src/data/skill/jammer";
 
 export const amethystStick: Weapon = {
-  name: 'amethystStick',
-  label: 'アメジストステッキ',
+  name: "amethystStick",
+  label: "アメジストステッキ",
   skills: [higherBolt, electricShock, jammer],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const amethystStick: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'アメジストステッキ。雷属性',
+  description: "アメジストステッキ。雷属性",
 };

@@ -1,7 +1,6 @@
-import type { Ability, Wait } from '@motojouya/kniw/src/domain/ability';
-import { getPhysical } from '@motojouya/kniw/src/domain/charactor';
+import type { Ability, Wait } from "@motojouya/kniw/src/domain/ability";
+import { getPhysical } from "@motojouya/kniw/src/domain/charactor";
 
- 
 const wait: Wait = (wt, charactor, randoms) => {
   const turnAdd = Math.floor(wt / 20);
   let randomAdd = Math.ceil(randoms.damage * 5);
@@ -18,14 +17,13 @@ const wait: Wait = (wt, charactor, randoms) => {
   return {
     ...charactor,
     mp,
-    statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+    statuses: [...charactor.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
   };
 };
- 
 
 export const mpGainPlus: Ability = {
-  name: 'mpGainPlus',
-  label: 'MP回復強化',
+  name: "mpGainPlus",
+  label: "MP回復強化",
   wait,
-  description: 'MPの回復速度が早くなる',
+  description: "MPの回復速度が早くなる",
 };

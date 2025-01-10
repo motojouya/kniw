@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { gunWater } from '@motojouya/kniw/src/data/skill/gunWater';
-import { quench } from '@motojouya/kniw/src/data/skill/quench';
-import { flashFlood } from '@motojouya/kniw/src/data/skill/flashFlood';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
+import { quench } from "@motojouya/kniw/src/data/skill/quench";
+import { flashFlood } from "@motojouya/kniw/src/data/skill/flashFlood";
 
 export const sapphireWand: Weapon = {
-  name: 'sapphireWand',
-  label: 'サファイアワンド',
+  name: "sapphireWand",
+  label: "サファイアワンド",
   skills: [gunWater, flashFlood, quench],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const sapphireWand: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'サファイアワンド。水属性',
+  description: "サファイアワンド。水属性",
 };

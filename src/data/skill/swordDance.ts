@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_SLASH,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const swordDance: Skill = {
-  name: 'swordDance',
-  label: '剣の舞',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "swordDance",
+  label: "剣の舞",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_SLASH,
   magicType: MAGIC_TYPE_NONE,
@@ -19,5 +19,5 @@ export const swordDance: Skill = {
   additionalWt: 150,
   effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '斬撃の範囲攻撃',
+  description: "斬撃の範囲攻撃",
 };

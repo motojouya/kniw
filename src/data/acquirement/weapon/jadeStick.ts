@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { hailstone } from '@motojouya/kniw/src/data/skill/hailstone';
-import { iceSandwich } from '@motojouya/kniw/src/data/skill/iceSandwich';
-import { cumulonimbus } from '@motojouya/kniw/src/data/skill/cumulonimbus';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { hailstone } from "@motojouya/kniw/src/data/skill/hailstone";
+import { iceSandwich } from "@motojouya/kniw/src/data/skill/iceSandwich";
+import { cumulonimbus } from "@motojouya/kniw/src/data/skill/cumulonimbus";
 
 export const jadeStick: Weapon = {
-  name: 'jadeStick',
-  label: 'ヒスイステッキ',
+  name: "jadeStick",
+  label: "ヒスイステッキ",
   skills: [hailstone, iceSandwich, cumulonimbus],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const jadeStick: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ヒスイステッキ。氷属性',
+  description: "ヒスイステッキ。氷属性",
 };

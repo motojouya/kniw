@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryMagicalDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_ICE,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const hailstone: Skill = {
-  name: 'hailstone',
-  label: '雹弾',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "hailstone",
+  label: "雹弾",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryMagicalDamage,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ICE,
@@ -19,5 +19,5 @@ export const hailstone: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '氷の基本魔法',
+  description: "氷の基本魔法",
 };

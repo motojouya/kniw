@@ -1,15 +1,15 @@
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import type { SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
+import type { SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 
-import { z } from 'zod';
+import { z } from "zod";
 
-import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { isVisitorString } from '@motojouya/kniw/src/domain/charactor';
-import { skillRepository } from '@motojouya/kniw/src/store/skill';
-import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
+import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { isVisitorString } from "@motojouya/kniw/src/domain/charactor";
+import { skillRepository } from "@motojouya/kniw/src/store/skill";
+import { ACTION_DO_NOTHING } from "@motojouya/kniw/src/domain/turn";
 
-export const DO_NOTHING = 'NOTHING';
+export const DO_NOTHING = "NOTHING";
 
 export class ReceiverDuplicationError {
   constructor(readonly message: string) {}
@@ -22,7 +22,7 @@ export const doSkillFormSchema = z.object({
 export type DoSkillForm = z.infer<typeof doSkillFormSchema>;
 
 export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
-export const receiverSelectOption: ReceiverSelectOption = receiver => ({
+export const receiverSelectOption: ReceiverSelectOption = (receiver) => ({
   value: `${receiver.name}__${isVisitorString(receiver.isVisitor)}`,
   label: `${receiver.name}(${isVisitorString(receiver.isVisitor)})`,
 });
@@ -41,14 +41,14 @@ export const toReceiver: ToReceiver = (receiver, candidates) => {
   }
 
   const isVisitorStr = matches[2];
-  if (isVisitorStr !== 'HOME' && isVisitorStr !== 'VISITOR') {
+  if (isVisitorStr !== "HOME" && isVisitorStr !== "VISITOR") {
     throw new Error(`isVisitorStr must be HOME or VISITOR. (${isVisitorStr})`);
   }
-  const isVisitor = isVisitorStr === 'VISITOR';
+  const isVisitor = isVisitorStr === "VISITOR";
 
-  const willReceiver = candidates.find(candidate => candidate.name === name && candidate.isVisitor === isVisitor);
+  const willReceiver = candidates.find((candidate) => candidate.name === name && candidate.isVisitor === isVisitor);
   if (!willReceiver) {
-    return new DataNotFoundError(name, 'charactor', `${name}というcharactorは存在しません`);
+    return new DataNotFoundError(name, "charactor", `${name}というcharactorは存在しません`);
   }
   return willReceiver;
 };
@@ -70,12 +70,12 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
 
   const skill = skillRepository.get(skillName);
   if (!skill) {
-    return new DataNotFoundError(skillName, 'skill', `${skillName}というskillは存在しません`);
+    return new DataNotFoundError(skillName, "skill", `${skillName}というskillは存在しません`);
   }
 
-  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor.map(obj => obj.value));
+  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor.map((obj) => obj.value));
   if (receiverSet.size !== doSkillForm.receiversWithIsVisitor.length) {
-    return new ReceiverDuplicationError('同じキャラクターを複数回えらべません');
+    return new ReceiverDuplicationError("同じキャラクターを複数回えらべません");
   }
 
   const receivers: CharactorBattling[] = [];

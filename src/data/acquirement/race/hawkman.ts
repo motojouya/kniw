@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const hawkman: Race = {
-  name: 'hawkman',
-  label: 'ホークマン',
+  name: "hawkman",
+  label: "ホークマン",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const hawkman: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ホークマン。飛行移動ができる。',
+  description: "ホークマン。飛行移動ができる。",
 };
