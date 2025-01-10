@@ -1,3 +1,4 @@
+/* eslint react-refresh/only-export-components: 0 */
 import type { ReactNode } from "react";
 
 import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
@@ -12,7 +13,7 @@ export type IO = {
   battleRepository: BattleRepository;
 };
 
-// @ts-ignore
+// @ts-expect-error null許可したくないのでIO形にしてる
 const ContextIO = createContext<IO>();
 
 export type UseIO = () => IO;

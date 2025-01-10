@@ -17,7 +17,7 @@ import { ImportParty } from '@motojouya/kniw/src/components/party';
 import { startBattle } from '@motojouya/kniw/src/web/case/battle/start';
 import { useIO } from '@motojouya/kniw/src/components/context';
 
-export const BattleNew: FC<{}> = () => {
+export const BattleNew: FC = () => {
 
   const { battleRepository } = useIO();
 
@@ -30,6 +30,8 @@ export const BattleNew: FC<{}> = () => {
   const [homeParty, setHomeParty] = useState<Party | null>(null);
   const [visitorParty, setVisitorParty] = useState<Party | null>(null);
 
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const start = async (battleTitle: any) => {
     const messages: string[] = [];
 

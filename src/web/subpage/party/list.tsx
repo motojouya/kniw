@@ -4,7 +4,7 @@ import { Box, List, ListItem } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 import { useIO } from '@motojouya/kniw/src/components/context';
 
-export const PartyList: FC<{}> = () => {
+export const PartyList: FC = () => {
   const { partyRepository } = useIO();
   const partyNames = useLiveQuery(() => partyRepository.list(), []);
 

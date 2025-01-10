@@ -61,10 +61,14 @@ const getCharactorError: GetCharactorError = (errors, i, property) => {
   if (!errorsCharactors) {
     return errorsCharactors;
   }
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorsCharactorIndexed = (errorsCharactors as Merge<FieldError, FieldErrorsImpl<any>>)[i];
   if (!errorsCharactorIndexed) {
     return errorsCharactorIndexed;
   }
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error = (errorsCharactorIndexed as Merge<FieldError, FieldErrorsImpl<any>>)[property];
   if (!error) {
     return error;

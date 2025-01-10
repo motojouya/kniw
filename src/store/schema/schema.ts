@@ -5,6 +5,7 @@ export type ToJson<M, J> = (model: M) => J;
 
 export class JsonSchemaUnmatchError {
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly error: any,
     readonly message: string,
   ) {}

@@ -5,7 +5,7 @@ import { useLiveQuery } from "dexie-react-hooks";
 
 import { useIO } from '@motojouya/kniw/src/components/context';
 
-export const BattleList: FC<{}> = () => {
+export const BattleList: FC = () => {
   const { battleRepository } = useIO();
   const battleNames = useLiveQuery(() => battleRepository.list(), []);
   return (
