@@ -107,3 +107,5 @@ out
 dist
 dist-ssr
 *.local
+
+dist_react
