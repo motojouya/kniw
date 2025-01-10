@@ -90,7 +90,7 @@ export const importJson: ImportJson = async dammyFileName => {
 };
 
 export type CreateDatabase = () => Promise<Database>;
-// eslint-disable-next-line @typescript-eslint/require-await
+ 
 export const createDatabase: CreateDatabase = async () => {
   const db = createDB();
   /* eslint-disable @typescript-eslint/no-unused-vars */

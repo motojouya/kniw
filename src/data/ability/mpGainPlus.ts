@@ -1,7 +1,7 @@
 import type { Ability, Wait } from '@motojouya/kniw/src/domain/ability';
 import { getPhysical } from '@motojouya/kniw/src/domain/charactor';
 
-/* eslint-disable */
+ 
 const wait: Wait = (wt, charactor, randoms) => {
   const turnAdd = Math.floor(wt / 20);
   let randomAdd = Math.ceil(randoms.damage * 5);
@@ -21,7 +21,7 @@ const wait: Wait = (wt, charactor, randoms) => {
     statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   };
 };
-/* eslint-enable */
+ 
 
 export const mpGainPlus: Ability = {
   name: 'mpGainPlus',

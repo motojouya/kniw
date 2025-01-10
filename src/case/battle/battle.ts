@@ -52,7 +52,7 @@ const BACK = 'BACK';
 type ActSkill = (dialogue: Dialogue) => (actor: CharactorBattling, battle: Battle) => Promise<Turn | null>;
 const actSkill: ActSkill = dialogue => async (actor, battle) => {
   const lastTurn = getLastTurn(battle);
-  /* eslint-disable no-await-in-loop */
+   
   for (;;) {
     const skills = getSkills(actor);
     const skillOptions = skills
@@ -91,7 +91,7 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       );
 
       if (selectedReceiverNames instanceof NotApplicable || selectedReceiverNames.length === 0) {
-        // eslint-disable-next-line no-continue
+         
         continue;
       }
 
@@ -122,7 +122,7 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       }
     }
   }
-  /* eslint-enable no-await-in-loop */
+   
 };
 
 type ShowSortedCharactors = (dialogue: Dialogue) => (battle: Battle) => Promise<void>;
@@ -198,7 +198,7 @@ const showCharactorStatus: ShowCharactorStatus =
 
 type PlayerSelect = (dialogue: Dialogue) => (actor: CharactorBattling, battle: Battle) => Promise<Turn | null>;
 const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
-  /* eslint-disable no-await-in-loop */
+   
   for (;;) {
     const select = await dialogue.select('どうしますか？', [
       { value: SKILL, label: 'Skillを選ぶ' },
@@ -239,7 +239,7 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
       // do nothing
     }
   }
-  /* eslint-enable no-await-in-loop */
+   
 };
 
 type BattleRepository = Repository<
@@ -254,7 +254,7 @@ export type ContinueBattle = (
 export const continueBattle: ContinueBattle = (dialogue, battleRepository) => async battle => {
   const { turns } = battle;
 
-  /* eslint-disable no-await-in-loop */
+   
   for (;;) {
     const firstWaiting = nextActor(battle);
     turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
@@ -273,13 +273,13 @@ export const continueBattle: ContinueBattle = (dialogue, battleRepository) => as
       await battleRepository.save(battle);
     }
 
-    // eslint-disable-next-line no-param-reassign
+     
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
       break;
     }
   }
-  /* eslint-enable no-await-in-loop */
+   
 
   await battleRepository.save(battle);
 

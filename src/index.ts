@@ -10,5 +10,5 @@ const run = async () => {
   command.parse(process.argv);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-floating-promises
+ 
 run();

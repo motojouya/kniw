@@ -284,19 +284,19 @@ export const surrender: Surrender = (battle, actor, datetime) => {
 type WaitCharactor = (charactor: CharactorBattling, wt: number, randoms: Randoms) => CharactorBattling;
 const waitCharactor: WaitCharactor = (charactor, wt, randoms) => {
   const abilities = getAbilities(charactor);
-  /* eslint-disable @typescript-eslint/no-unsafe-return */
+   
   const newCharactor = abilities.reduce((charactorAc, ability) => ability.wait(wt, charactorAc, randoms), {
     ...charactor,
     statuses: [...charactor.statuses.map(attachedStatus => ({ ...attachedStatus }))],
   } as CharactorBattling);
-  /* eslint-enable @typescript-eslint/no-unsafe-return */
+   
 
-  /* eslint-disable no-nested-ternary */
+   
   // prettier-ignore
   const wtRate = underStatus(quick, newCharactor) ? 1.5
     : underStatus(slow, newCharactor) ? 0.75
     : 1;
-  /* eslint-enable no-nested-ternary */
+   
   newCharactor.restWt = Math.max(newCharactor.restWt - wt * wtRate, 0);
 
   if (underStatus(acid, newCharactor)) {

@@ -56,10 +56,10 @@ export const change: Change = (dialogue, database) => async name => {
 
   const charactors: Charactor[] = [];
   for (const newName of newCharactors) {
-    // eslint-disable-next-line no-await-in-loop
+     
     const charactor = await charactorRepository.get(newName);
     if (!charactor) {
-      // eslint-disable-next-line no-await-in-loop
+       
       await notice(`${newName}というキャラクターはいません`);
       return;
     }
@@ -68,7 +68,7 @@ export const change: Change = (dialogue, database) => async name => {
       charactor instanceof DataNotFoundError ||
       charactor instanceof JsonSchemaUnmatchError
     ) {
-      // eslint-disable-next-line no-await-in-loop
+       
       await notice(charactor.message);
       return;
     }

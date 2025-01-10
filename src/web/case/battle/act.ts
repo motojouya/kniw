@@ -52,7 +52,7 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     battle.turns.push(newTurn);
   }
 
-  /* eslint-disable no-param-reassign */
+   
   battle.result = isSettlement(battle);
   if (battle.result !== GameOngoing) {
     await repository.save(battle);
@@ -72,7 +72,7 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     battle.turns.push(stay(battle, firstWaiting, new Date()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
-      // eslint-disable-next-line no-await-in-loop
+       
       await repository.save(battle);
       return null;
     }
@@ -81,12 +81,12 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
-      // eslint-disable-next-line no-await-in-loop
+       
       await repository.save(battle);
       return null;
     }
   }
-  /* eslint-disable no-param-reassign */
+   
 
   await repository.save(battle);
   return null;
