@@ -4,6 +4,7 @@
   "description": "Node.js on Docker",
   "author": "Motojouya (Takuya Sugiyama)",
   "main": "index.js",
+  "type": "module",
   "exports": {
     "./src/*": "./src/*.ts"
   },
