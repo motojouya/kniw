@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
-import { mountFall } from '@motojouya/kniw/src/data/skill/mountFall';
-import { copperBlue } from '@motojouya/kniw/src/data/skill/copperBlue';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { gunStone } from "@motojouya/kniw/src/data/skill/gunStone";
+import { mountFall } from "@motojouya/kniw/src/data/skill/mountFall";
+import { copperBlue } from "@motojouya/kniw/src/data/skill/copperBlue";
 
 export const diamondRod: Weapon = {
-  name: 'diamondRod',
-  label: 'ダイヤモンドロッド',
+  name: "diamondRod",
+  label: "ダイヤモンドロッド",
   skills: [gunStone, mountFall, copperBlue],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const diamondRod: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ダイヤモンドロッド。岩属性',
+  description: "ダイヤモンドロッド。岩属性",
 };

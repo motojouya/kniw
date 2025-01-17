@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
-import { smallHeat } from '@motojouya/kniw/src/data/skill/smallHeat';
-import { ghostFire } from '@motojouya/kniw/src/data/skill/ghostFire';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
+import { smallHeat } from "@motojouya/kniw/src/data/skill/smallHeat";
+import { ghostFire } from "@motojouya/kniw/src/data/skill/ghostFire";
 
 export const rubyRod: Weapon = {
-  name: 'rubyRod',
-  label: 'ルビーロッド',
+  name: "rubyRod",
+  label: "ルビーロッド",
   skills: [flameFall, smallHeat, ghostFire],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const rubyRod: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ルビーロッド。火属性',
+  description: "ルビーロッド。火属性",
 };

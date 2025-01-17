@@ -17,7 +17,7 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
       - run: npm ci
-      - run: npm run prettier_check
+      - run: npm run format_check
 
   eslint:
     runs-on: ubuntu-latest
@@ -28,7 +28,7 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
       - run: npm ci
-      - run: npm run eslint_check
+      - run: npm run lint_check
 
   test:
     runs-on: ubuntu-latest
@@ -57,4 +57,3 @@ jobs:
           if [ "$build_diff" -ne 0 ]; then
             exit 1
           fi
-

@@ -1,11 +1,11 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
-import { waterCutter } from '@motojouya/kniw/src/data/skill/waterCutter';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
+import { waterCutter } from "@motojouya/kniw/src/data/skill/waterCutter";
 
 export const blueRobe: Clothing = {
-  name: 'blueRobe',
-  label: '青の衣',
+  name: "blueRobe",
+  label: "青の衣",
   skills: [waterCutter],
   abilities: [mpGainPlus],
   additionalPhysical: {
@@ -41,5 +41,5 @@ export const blueRobe: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '青の衣。水属性',
+  description: "青の衣。水属性",
 };

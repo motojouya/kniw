@@ -1,9 +1,9 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const crocodileSkin: Clothing = {
-  name: 'crocodileSkin',
-  label: 'ワニ革の服',
+  name: "crocodileSkin",
+  label: "ワニ革の服",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const crocodileSkin: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ワニ革の服',
+  description: "ワニ革の服",
 };

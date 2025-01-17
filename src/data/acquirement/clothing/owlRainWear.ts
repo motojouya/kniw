@@ -1,9 +1,9 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const owlRainWear: Clothing = {
-  name: 'owlRainWear',
-  label: 'フクロウの蓑笠',
+  name: "owlRainWear",
+  label: "フクロウの蓑笠",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const owlRainWear: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'フクロウの蓑笠',
+  description: "フクロウの蓑笠",
 };

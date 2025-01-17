@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const fairy: Race = {
-  name: 'fairy',
-  label: 'フェアリー',
+  name: "fairy",
+  label: "フェアリー",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const fairy: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'フェアリー。魔法攻撃力が高い。',
+  description: "フェアリー。魔法攻撃力が高い。",
 };

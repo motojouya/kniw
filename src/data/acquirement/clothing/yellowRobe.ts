@@ -1,11 +1,11 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
-import { electoricBrain } from '@motojouya/kniw/src/data/skill/electoricBrain';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
+import { electoricBrain } from "@motojouya/kniw/src/data/skill/electoricBrain";
 
 export const yellowRobe: Clothing = {
-  name: 'yellowRobe',
-  label: '黄色の衣',
+  name: "yellowRobe",
+  label: "黄色の衣",
   skills: [electoricBrain],
   abilities: [mpGainPlus],
   additionalPhysical: {
@@ -41,5 +41,5 @@ export const yellowRobe: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '黄色の衣。雷属性',
+  description: "黄色の衣。雷属性",
 };

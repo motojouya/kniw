@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { blow } from '@motojouya/kniw/src/data/skill/blow';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { blow } from "@motojouya/kniw/src/data/skill/blow";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { higherBolt } from "@motojouya/kniw/src/data/skill/higherBolt";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const amethystFlail: Weapon = {
-  name: 'amethystFlail',
-  label: 'アメジストフレイル',
+  name: "amethystFlail",
+  label: "アメジストフレイル",
   skills: [blow, higherBolt, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const amethystFlail: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'アメジストフレイル。雷属性',
+  description: "アメジストフレイル。雷属性",
 };

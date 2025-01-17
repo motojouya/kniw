@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const werewolf: Race = {
-  name: 'werewolf',
-  label: 'ワーウルフ',
+  name: "werewolf",
+  label: "ワーウルフ",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const werewolf: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ワーウルフ。物理攻撃力が高い。',
+  description: "ワーウルフ。物理攻撃力が高い。",
 };

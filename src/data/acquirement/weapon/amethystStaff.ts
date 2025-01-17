@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
-import { thunder } from '@motojouya/kniw/src/data/skill/thunder';
-import { jammer } from '@motojouya/kniw/src/data/skill/jammer';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { higherBolt } from "@motojouya/kniw/src/data/skill/higherBolt";
+import { thunder } from "@motojouya/kniw/src/data/skill/thunder";
+import { jammer } from "@motojouya/kniw/src/data/skill/jammer";
 
 export const amethystStaff: Weapon = {
-  name: 'amethystStaff',
-  label: 'アメジストスタッフ',
+  name: "amethystStaff",
+  label: "アメジストスタッフ",
   skills: [higherBolt, thunder, jammer],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const amethystStaff: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'アメジストスタッフ。雷属性',
+  description: "アメジストスタッフ。雷属性",
 };

@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { higherBolt } from '@motojouya/kniw/src/data/skill/higherBolt';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { higherBolt } from "@motojouya/kniw/src/data/skill/higherBolt";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const amethystSaber: Weapon = {
-  name: 'amethystSaber',
-  label: 'アメジストサーベル',
+  name: "amethystSaber",
+  label: "アメジストサーベル",
   skills: [chop, higherBolt, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const amethystSaber: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'アメジストサーベル。雷属性',
+  description: "アメジストサーベル。雷属性",
 };

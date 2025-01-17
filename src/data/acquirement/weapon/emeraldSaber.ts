@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { windEdge } from "@motojouya/kniw/src/data/skill/windEdge";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const emeraldSaber: Weapon = {
-  name: 'emeraldSaber',
-  label: 'エメラルドサーベル',
+  name: "emeraldSaber",
+  label: "エメラルドサーベル",
   skills: [chop, windEdge, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const emeraldSaber: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'エメラルドサーベル。風属性',
+  description: "エメラルドサーベル。風属性",
 };

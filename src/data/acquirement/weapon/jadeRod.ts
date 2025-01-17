@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { hailstone } from '@motojouya/kniw/src/data/skill/hailstone';
-import { frostbite } from '@motojouya/kniw/src/data/skill/frostbite';
-import { silent } from '@motojouya/kniw/src/data/skill/silent';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { hailstone } from "@motojouya/kniw/src/data/skill/hailstone";
+import { frostbite } from "@motojouya/kniw/src/data/skill/frostbite";
+import { silent } from "@motojouya/kniw/src/data/skill/silent";
 
 export const jadeRod: Weapon = {
-  name: 'jadeRod',
-  label: 'ヒスイロッド',
+  name: "jadeRod",
+  label: "ヒスイロッド",
   skills: [hailstone, frostbite, silent],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const jadeRod: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ヒスイロッド。氷属性',
+  description: "ヒスイロッド。氷属性",
 };

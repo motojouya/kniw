@@ -1,4 +1,4 @@
-import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
 
 export type Status = {
   name: string;
@@ -9,4 +9,4 @@ export type Status = {
 
 export type UnderStatus = (status: Status, charactor: Charactor) => boolean;
 export const underStatus: UnderStatus = (status, charactor) =>
-  !!charactor.statuses.find(s => s.status.name === status.name);
+  !!charactor.statuses.find((s) => s.status.name === status.name);

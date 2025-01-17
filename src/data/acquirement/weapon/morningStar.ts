@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { blow } from '@motojouya/kniw/src/data/skill/blow';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { gravelWall } from '@motojouya/kniw/src/data/skill/gravelWall';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { blow } from "@motojouya/kniw/src/data/skill/blow";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { gravelWall } from "@motojouya/kniw/src/data/skill/gravelWall";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const morningStar: Weapon = {
-  name: 'morningStar',
-  label: 'モーニングスター',
+  name: "morningStar",
+  label: "モーニングスター",
   skills: [blow, gravelWall, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const morningStar: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'モーニングスター。打撃武器',
+  description: "モーニングスター。打撃武器",
 };

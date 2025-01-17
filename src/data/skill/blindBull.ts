@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const blindBull: Skill = {
-  name: 'blindBull',
-  label: '盲牛の突き',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "blindBull",
+  label: "盲牛の突き",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryDirectDamage,
   directType: DIRECT_TYPE_STAB,
   magicType: MAGIC_TYPE_NONE,
@@ -19,5 +19,5 @@ export const blindBull: Skill = {
   additionalWt: 150,
   effectLength: 1,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '刺突の強攻撃',
+  description: "刺突の強攻撃",
 };

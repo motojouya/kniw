@@ -1,10 +1,11 @@
-import { z } from 'zod';
+import { z } from "zod";
 
 export type ToModel<M, J, E> = (json: J) => M | E;
 export type ToJson<M, J> = (model: M) => J;
 
 export class JsonSchemaUnmatchError {
   constructor(
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly error: any,
     readonly message: string,
   ) {}
@@ -27,13 +28,12 @@ export class DataExistError {
 }
 
 export function parseJson<S extends z.ZodTypeAny>(schema: S): (json: unknown) => z.infer<S> | JsonSchemaUnmatchError {
-  // eslint-disable-next-line func-names
   return function (json) {
     const result = schema.safeParse(json);
     if (result.success) {
       return result.data;
     } else {
-      return new JsonSchemaUnmatchError(result.error, '想定されたjson schemaのデータではありません');
+      return new JsonSchemaUnmatchError(result.error, "想定されたjson schemaのデータではありません");
     }
   };
 }

@@ -1,8 +1,8 @@
-import type { Status } from '@motojouya/kniw/src/domain/status';
+import type { Status } from "@motojouya/kniw/src/domain/status";
 
 export const paralysis: Status = {
-  name: 'paralysis',
-  label: '麻痺',
+  name: "paralysis",
+  label: "麻痺",
   wt: 500,
-  description: '確率で行動できない',
+  description: "確率で行動できない",
 };

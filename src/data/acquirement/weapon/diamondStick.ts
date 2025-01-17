@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { gunStone } from '@motojouya/kniw/src/data/skill/gunStone';
-import { rockWave } from '@motojouya/kniw/src/data/skill/rockWave';
-import { stoneWeather } from '@motojouya/kniw/src/data/skill/stoneWeather';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { gunStone } from "@motojouya/kniw/src/data/skill/gunStone";
+import { rockWave } from "@motojouya/kniw/src/data/skill/rockWave";
+import { stoneWeather } from "@motojouya/kniw/src/data/skill/stoneWeather";
 
 export const diamondStick: Weapon = {
-  name: 'diamondStick',
-  label: 'ダイヤモンドステッキ',
+  name: "diamondStick",
+  label: "ダイヤモンドステッキ",
   skills: [gunStone, rockWave, stoneWeather],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const diamondStick: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ダイヤモンドステッキ。岩属性',
+  description: "ダイヤモンドステッキ。岩属性",
 };

@@ -1,15 +1,15 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryMagicalDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_ROCK,
-} from '@motojouya/kniw/src/domain/skill';
+} from "@motojouya/kniw/src/domain/skill";
 
 export const rockWave: Skill = {
-  name: 'rockWave',
-  label: '岩波',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "rockWave",
+  label: "岩波",
+  type: "SKILL_TO_CHARACTOR",
   action: calcOrdinaryMagicalDamage,
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_ROCK,
@@ -19,5 +19,5 @@ export const rockWave: Skill = {
   additionalWt: 150,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '岩の範囲魔法',
+  description: "岩の範囲魔法",
 };

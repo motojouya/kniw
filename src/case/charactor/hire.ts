@@ -1,18 +1,18 @@
-import type { Dialogue, SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Database } from '@motojouya/kniw/src/io/database';
-import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
-import { createRepository } from '@motojouya/kniw/src/store/charactor';
+import type { Dialogue, SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Database } from "@motojouya/kniw/src/io/database";
+import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
+import { createRepository } from "@motojouya/kniw/src/store/charactor";
 import {
   raceRepository,
   blessingRepository,
   clothingRepository,
   weaponRepository,
-} from '@motojouya/kniw/src/store/acquirement';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { createCharactor } from '@motojouya/kniw/src/domain/charactor';
+} from "@motojouya/kniw/src/store/acquirement";
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { createCharactor } from "@motojouya/kniw/src/domain/charactor";
 
 export type Hire = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
-export const hire: Hire = (dialogue, database) => async name => {
+export const hire: Hire = (dialogue, database) => async (name) => {
   const { notice, select } = dialogue;
   const repository = await createRepository(database);
 
@@ -21,8 +21,8 @@ export const hire: Hire = (dialogue, database) => async name => {
     await notice(`${name}は既に雇っています`);
   }
 
-  const raceOptions: SelectOption[] = raceRepository.all.map(race => ({ value: race.name, label: race.label }));
-  const raceName = await select('種族を選んでください', raceOptions);
+  const raceOptions: SelectOption[] = raceRepository.all.map((race) => ({ value: race.name, label: race.label }));
+  const raceName = await select("種族を選んでください", raceOptions);
   if (!raceName || raceName instanceof NotApplicable) {
     return;
   }
@@ -32,11 +32,11 @@ export const hire: Hire = (dialogue, database) => async name => {
     return;
   }
 
-  const blessingOptions: SelectOption[] = blessingRepository.all.map(blessing => ({
+  const blessingOptions: SelectOption[] = blessingRepository.all.map((blessing) => ({
     value: blessing.name,
     label: blessing.label,
   }));
-  const blessingName = await select('種族を選んでください', blessingOptions);
+  const blessingName = await select("種族を選んでください", blessingOptions);
   if (!blessingName || blessingName instanceof NotApplicable) {
     return;
   }
@@ -46,11 +46,11 @@ export const hire: Hire = (dialogue, database) => async name => {
     return;
   }
 
-  const clothingOptions: SelectOption[] = clothingRepository.all.map(clothing => ({
+  const clothingOptions: SelectOption[] = clothingRepository.all.map((clothing) => ({
     value: clothing.name,
     label: clothing.label,
   }));
-  const clothingName = await select('種族を選んでください', clothingOptions);
+  const clothingName = await select("種族を選んでください", clothingOptions);
   if (!clothingName || clothingName instanceof NotApplicable) {
     return;
   }
@@ -60,11 +60,11 @@ export const hire: Hire = (dialogue, database) => async name => {
     return;
   }
 
-  const weaponOptions: SelectOption[] = weaponRepository.all.map(weapon => ({
+  const weaponOptions: SelectOption[] = weaponRepository.all.map((weapon) => ({
     value: weapon.name,
     label: weapon.label,
   }));
-  const weaponName = await select('種族を選んでください', weaponOptions);
+  const weaponName = await select("種族を選んでください", weaponOptions);
   if (!weaponName || weaponName instanceof NotApplicable) {
     return;
   }

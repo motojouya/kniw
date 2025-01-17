@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const rubySaber: Weapon = {
-  name: 'rubySaber',
-  label: 'ルビーサーベル',
+  name: "rubySaber",
+  label: "ルビーサーベル",
   skills: [chop, flameFall, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const rubySaber: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ルビーサーベル。火属性',
+  description: "ルビーサーベル。火属性",
 };

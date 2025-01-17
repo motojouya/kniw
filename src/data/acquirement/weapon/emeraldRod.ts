@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { windEdge } from '@motojouya/kniw/src/data/skill/windEdge';
-import { heavyWind } from '@motojouya/kniw/src/data/skill/heavyWind';
-import { tornade } from '@motojouya/kniw/src/data/skill/tornade';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { windEdge } from "@motojouya/kniw/src/data/skill/windEdge";
+import { heavyWind } from "@motojouya/kniw/src/data/skill/heavyWind";
+import { tornade } from "@motojouya/kniw/src/data/skill/tornade";
 
 export const emeraldRod: Weapon = {
-  name: 'emeraldRod',
-  label: 'エメラルドロッド',
+  name: "emeraldRod",
+  label: "エメラルドロッド",
   skills: [windEdge, heavyWind, tornade],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const emeraldRod: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'エメラルドロッド。風属性',
+  description: "エメラルドロッド。風属性",
 };

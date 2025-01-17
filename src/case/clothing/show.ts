@@ -1,10 +1,10 @@
-import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import { clothingRepository } from '@motojouya/kniw/src/store/acquirement';
+import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
+import { clothingRepository } from "@motojouya/kniw/src/store/acquirement";
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =
   ({ notice }) =>
-  async name => {
+  async (name) => {
     const clothing = clothingRepository.get(name);
     if (!clothing) {
       await notice(`${name}というclothingは存在しません`);
@@ -13,7 +13,7 @@ export const show: Show =
     await notice(`装備: ${clothing.label}`);
 
     const physical = clothing.additionalPhysical;
-    await notice('能力:');
+    await notice("能力:");
     await notice(`  MaxHP: ${physical.MaxHP}`);
     await notice(`  MaxMP: ${physical.MaxMP}`);
     await notice(`  STR: ${physical.STR}`);
@@ -37,10 +37,10 @@ export const show: Show =
     await notice(`  移動距離: ${physical.move}`);
     await notice(`  移動高さ: ${physical.jump}`);
 
-    await notice('アビリティ:');
+    await notice("アビリティ:");
     await clothing.abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
-    await notice('スキル:');
+    await notice("スキル:");
     await clothing.skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
 
     await notice(`説明: ${clothing.description}`);

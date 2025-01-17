@@ -1,8 +1,8 @@
-import type { Status } from '@motojouya/kniw/src/domain/status';
+import type { Status } from "@motojouya/kniw/src/domain/status";
 
 export const avoidUp: Status = {
-  name: 'avoidUp',
-  label: '回避up',
+  name: "avoidUp",
+  label: "回避up",
   wt: 500,
-  description: 'desc',
+  description: "desc",
 };

@@ -5,7 +5,6 @@ import type { Skill } from '@motojouya/kniw/src/domain/skill';
 import type { Turn } from '@motojouya/kniw/src/domain/turn';
 import type { DoSkillForm } from '@motojouya/kniw/src/form/battle';
 
-import Link from 'next/link'
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
@@ -211,7 +210,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
   return (
     <Box p={4}>
-      <Link href={{ pathname: 'battle' }}><a>戻る</a></Link>
+      <a href='/battle/'>戻る</a>
       <Text>This is the battle page</Text>
       {battle.result !== GameOngoing && <Button type="button" onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}
       <GameResultView battle={battle} />

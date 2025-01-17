@@ -2,8 +2,6 @@ import type { FC, ReactNode } from 'react';
 import type { Party } from '@motojouya/kniw/src/domain/party';
 import type { PartyForm } from '@motojouya/kniw/src/form/party';
 
-import { useRouter } from 'next/router'
-import Link from 'next/link'
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
@@ -67,7 +65,6 @@ export const PartyEditor: FC<{
   inoutButton: ReactNode,
 }> = ({ exist, party, inoutButton }) => {
 
-  const router = useRouter()
   const { partyRepository, dialogue } = useIO();
   const partyForm = toPartyForm(party);
   const {
@@ -103,7 +100,8 @@ export const PartyEditor: FC<{
           message: '保存しました',
         });
       } else {
-        await router.push({ pathname: 'party', query: { name: partyInput.name } })
+        // FIXME window変数はwrapしておきたい
+        window.location.assign(`/party/?name=${partyInput.name}`);
       }
     }
   };
@@ -111,13 +109,14 @@ export const PartyEditor: FC<{
   const deleteParty = async (partyName: string) => {
     const result = await dismissParty(dialogue, partyRepository)(partyName);
     if (result) {
-      await router.push({ pathname: 'party' })
+      // FIXME window変数はwrapしておきたい
+      window.location.assign('/party/');
     }
   };
 
   return (
     <Box p={4}>
-      <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
+      <a href='/party/'>戻る</a>
       <Text>This is the party page</Text>
       {inoutButton}
       <form onSubmit={handleSubmit(save)}>

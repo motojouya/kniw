@@ -1,10 +1,10 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { coldFeet } from '@motojouya/kniw/src/data/skill/coldFeet';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { coldFeet } from "@motojouya/kniw/src/data/skill/coldFeet";
 
 export const steelArmor: Clothing = {
-  name: 'steelArmor',
-  label: '鋼鉄の鎧',
+  name: "steelArmor",
+  label: "鋼鉄の鎧",
   skills: [coldFeet],
   abilities: [],
   additionalPhysical: {
@@ -40,5 +40,5 @@ export const steelArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鋼鉄の鎧。刺突耐性がある',
+  description: "鋼鉄の鎧。刺突耐性がある",
 };

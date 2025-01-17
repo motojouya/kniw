@@ -1,11 +1,13 @@
 export class CopyFailError {
   constructor(
     readonly fileName: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     readonly exception: any,
     readonly message: string,
   ) {}
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type KeyValue = { [name: string]: any };
 
 export type CheckNamespace = (namespace: string) => Promise<void>;

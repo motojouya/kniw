@@ -1,12 +1,12 @@
-import type { Skill, ActionToCharactor } from '@motojouya/kniw/src/domain/skill';
+import type { Skill, ActionToCharactor } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
-import { acid } from '@motojouya/kniw/src/data/status/acid';
+} from "@motojouya/kniw/src/domain/skill";
+import { acid } from "@motojouya/kniw/src/data/status/acid";
 
 export const toxicAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);
@@ -14,9 +14,9 @@ export const toxicAction: ActionToCharactor = (self, actor, randoms, field, rece
 };
 
 export const toxicShot: Skill = {
-  name: 'toxicShot',
-  label: '毒の矢',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "toxicShot",
+  label: "毒の矢",
+  type: "SKILL_TO_CHARACTOR",
   action: toxicAction,
   directType: DIRECT_TYPE_STAB,
   magicType: MAGIC_TYPE_NONE,
@@ -26,5 +26,5 @@ export const toxicShot: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '攻撃しつつ相手を毒にする',
+  description: "攻撃しつつ相手を毒にする",
 };

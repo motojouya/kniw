@@ -1,10 +1,10 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { coldFeet } from '@motojouya/kniw/src/data/skill/coldFeet';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { coldFeet } from "@motojouya/kniw/src/data/skill/coldFeet";
 
 export const furArmor: Clothing = {
-  name: 'furArmor',
-  label: '毛皮の鎧',
+  name: "furArmor",
+  label: "毛皮の鎧",
   skills: [coldFeet],
   abilities: [],
   additionalPhysical: {
@@ -40,5 +40,5 @@ export const furArmor: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '毛皮の鎧。打撃耐性がある',
+  description: "毛皮の鎧。打撃耐性がある",
 };

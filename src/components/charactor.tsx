@@ -61,10 +61,14 @@ const getCharactorError: GetCharactorError = (errors, i, property) => {
   if (!errorsCharactors) {
     return errorsCharactors;
   }
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const errorsCharactorIndexed = (errorsCharactors as Merge<FieldError, FieldErrorsImpl<any>>)[i];
   if (!errorsCharactorIndexed) {
     return errorsCharactorIndexed;
   }
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const error = (errorsCharactorIndexed as Merge<FieldError, FieldErrorsImpl<any>>)[property];
   if (!error) {
     return error;
@@ -104,7 +108,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
 
   const statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
 
-  // eslint-disable-next-line no-nested-ternary
+   
   const isVisitorTag = charactor.isVisitor === undefined ? null
     : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
     : (<Tag>{'HOME'}</Tag>);

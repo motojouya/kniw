@@ -1,19 +1,19 @@
-import { getAbilities } from '@motojouya/kniw/src/domain/charactor';
-import type { Skill, ActionToCharactor } from '@motojouya/kniw/src/domain/skill';
+import { getAbilities } from "@motojouya/kniw/src/domain/charactor";
+import type { Skill, ActionToCharactor } from "@motojouya/kniw/src/domain/skill";
 import {
   calcOrdinaryDirectDamage,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
-} from '@motojouya/kniw/src/domain/skill';
-import { shootingGuard } from '@motojouya/kniw/src/data/ability/shootingGuard';
+} from "@motojouya/kniw/src/domain/skill";
+import { shootingGuard } from "@motojouya/kniw/src/data/ability/shootingGuard";
 
 export const shotAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const abilities = getAbilities(receiver);
-  if (abilities.find(ability => ability.name === shootingGuard.name)) {
+  if (abilities.find((ability) => ability.name === shootingGuard.name)) {
     return {
       ...receiver,
-      statuses: [...receiver.statuses.map(attachedStatus => ({ ...attachedStatus }))],
+      statuses: [...receiver.statuses.map((attachedStatus) => ({ ...attachedStatus }))],
     };
   }
 
@@ -21,9 +21,9 @@ export const shotAction: ActionToCharactor = (self, actor, randoms, field, recei
 };
 
 export const shot: Skill = {
-  name: 'shot',
-  label: '射る',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "shot",
+  label: "射る",
+  type: "SKILL_TO_CHARACTOR",
   action: shotAction,
   directType: DIRECT_TYPE_STAB,
   magicType: MAGIC_TYPE_NONE,
@@ -33,5 +33,5 @@ export const shot: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '弓矢の基本攻撃',
+  description: "弓矢の基本攻撃",
 };

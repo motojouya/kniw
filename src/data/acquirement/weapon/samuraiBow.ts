@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { shot } from '@motojouya/kniw/src/data/skill/shot';
-import { hardRain } from '@motojouya/kniw/src/data/skill/hardRain';
-import { overbear } from '@motojouya/kniw/src/data/skill/overbear';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { shot } from "@motojouya/kniw/src/data/skill/shot";
+import { hardRain } from "@motojouya/kniw/src/data/skill/hardRain";
+import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
 
 export const samuraiBow: Weapon = {
-  name: 'samuraiBow',
-  label: '和弓',
+  name: "samuraiBow",
+  label: "和弓",
   skills: [shot, hardRain, overbear],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const samuraiBow: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '和弓。威力が高い',
+  description: "和弓。威力が高い",
 };

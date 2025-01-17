@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { blow } from '@motojouya/kniw/src/data/skill/blow';
-import { overbear } from '@motojouya/kniw/src/data/skill/overbear';
-import { lightMeteor } from '@motojouya/kniw/src/data/skill/lightMeteor';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { blow } from "@motojouya/kniw/src/data/skill/blow";
+import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
+import { lightMeteor } from "@motojouya/kniw/src/data/skill/lightMeteor";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const aironHammer: Weapon = {
-  name: 'aironHammer',
-  label: '鉄のハンマー',
+  name: "aironHammer",
+  label: "鉄のハンマー",
   skills: [blow, lightMeteor, overbear],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const aironHammer: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鉄のハンマー。打撃武器',
+  description: "鉄のハンマー。打撃武器",
 };

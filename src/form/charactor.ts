@@ -1,16 +1,16 @@
-import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
+import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
 
-import { z } from 'zod';
+import { z } from "zod";
 
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { getPhysical, validate } from '@motojouya/kniw/src/domain/charactor';
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { getPhysical, validate } from "@motojouya/kniw/src/domain/charactor";
 import {
   raceRepository,
   weaponRepository,
   clothingRepository,
   blessingRepository,
-} from '@motojouya/kniw/src/store/acquirement';
+} from "@motojouya/kniw/src/store/acquirement";
 
 export const charactorFormSchema = z.object({
   name: z.string().min(1),
@@ -22,7 +22,7 @@ export const charactorFormSchema = z.object({
 export type CharactorForm = z.infer<typeof charactorFormSchema>;
 
 export type ToCharactorForm = (charactor: Charactor) => CharactorForm;
-export const toCharactorForm: ToCharactorForm = charactor => ({
+export const toCharactorForm: ToCharactorForm = (charactor) => ({
   name: charactor.name,
   race: charactor.race.name,
   blessing: charactor.blessing.name,
@@ -31,19 +31,19 @@ export const toCharactorForm: ToCharactorForm = charactor => ({
 });
 
 export type ToCharactor = (charactorForm: CharactorForm) => Charactor | NotWearableErorr | DataNotFoundError;
-export const toCharactor: ToCharactor = charactorForm => {
+export const toCharactor: ToCharactor = (charactorForm) => {
   const { name } = charactorForm;
 
   const race = raceRepository.get(charactorForm.race);
   if (!race) {
-    return new DataNotFoundError(charactorForm.race, 'race', `${charactorForm.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorForm.race, "race", `${charactorForm.race}という種族は存在しません`);
   }
 
   const blessing = blessingRepository.get(charactorForm.blessing);
   if (!blessing) {
     return new DataNotFoundError(
       charactorForm.blessing,
-      'blessing',
+      "blessing",
       `${charactorForm.blessing}という祝福は存在しません`,
     );
   }
@@ -52,14 +52,14 @@ export const toCharactor: ToCharactor = charactorForm => {
   if (!clothing) {
     return new DataNotFoundError(
       charactorForm.clothing,
-      'clothing',
+      "clothing",
       `${charactorForm.clothing}という装備は存在しません`,
     );
   }
 
   const weapon = weaponRepository.get(charactorForm.weapon);
   if (!weapon) {
-    return new DataNotFoundError(charactorForm.weapon, 'weapon', `${charactorForm.weapon}という武器は存在しません`);
+    return new DataNotFoundError(charactorForm.weapon, "weapon", `${charactorForm.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);

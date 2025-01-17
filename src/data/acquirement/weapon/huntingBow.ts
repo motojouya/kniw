@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { toxicShot } from '@motojouya/kniw/src/data/skill/toxicShot';
-import { paralysisShot } from '@motojouya/kniw/src/data/skill/paralysisShot';
-import { silentShot } from '@motojouya/kniw/src/data/skill/silentShot';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { toxicShot } from "@motojouya/kniw/src/data/skill/toxicShot";
+import { paralysisShot } from "@motojouya/kniw/src/data/skill/paralysisShot";
+import { silentShot } from "@motojouya/kniw/src/data/skill/silentShot";
 
 export const huntingBow: Weapon = {
-  name: 'huntingBow',
-  label: '狩人の弓',
+  name: "huntingBow",
+  label: "狩人の弓",
   skills: [toxicShot, paralysisShot, silentShot],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const huntingBow: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '狩人の弓',
+  description: "狩人の弓",
 };

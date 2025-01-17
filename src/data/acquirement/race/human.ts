@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const human: Race = {
-  name: 'human',
-  label: 'ヒト',
+  name: "human",
+  label: "ヒト",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const human: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ヒト。装備の制約が少なく、できることも多いが逆に言えば器用貧乏',
+  description: "ヒト。装備の制約が少なく、できることも多いが逆に言えば器用貧乏",
 };

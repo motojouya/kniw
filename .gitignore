@@ -102,3 +102,10 @@ out
 
 # TernJS port file
 .tern-port
+
+# vite
+dist
+dist-ssr
+*.local
+
+dist_react

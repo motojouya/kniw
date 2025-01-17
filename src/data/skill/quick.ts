@@ -1,11 +1,11 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from '@motojouya/kniw/src/domain/skill';
-import { quick as quickStatus } from '@motojouya/kniw/src/data/status/quick';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from "@motojouya/kniw/src/domain/skill";
+import { quick as quickStatus } from "@motojouya/kniw/src/data/status/quick";
 
 export const quick: Skill = {
-  name: 'quick',
-  label: 'クイック',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "quick",
+  label: "クイック",
+  type: "SKILL_TO_CHARACTOR",
   action: (skill, actor, randoms, field, receiver) => addStatus(quickStatus)(skill, actor, randoms, field, receiver),
   directType: DIRECT_TYPE_NONE,
   magicType: MAGIC_TYPE_WIND,
@@ -15,5 +15,5 @@ export const quick: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: 'クイック状態の付与',
+  description: "クイック状態の付与",
 };

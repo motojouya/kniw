@@ -1,6 +1,5 @@
 import type { FC } from 'react';
 
-import Link from 'next/link'
 import { Button, Box, Text } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
@@ -23,7 +22,7 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
     return (
       <Box>
         <Text>{party.message}</Text>
-        <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
+        <a href='/party/'>戻る</a>
       </Box>
     );
   }
@@ -32,7 +31,7 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
     return (
       <Box>
         <Text>{`${partyName}というpartyは見つかりません`}</Text>
-        <Link href={{ pathname: 'party' }}><a>戻る</a></Link>
+        <a href='/party/'>戻る</a>
       </Box>
     );
   }

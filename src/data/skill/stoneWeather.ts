@@ -1,11 +1,11 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from '@motojouya/kniw/src/domain/skill';
-import { directDiffenceDown } from '@motojouya/kniw/src/data/status/directDiffenceDown';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from "@motojouya/kniw/src/domain/skill";
+import { directDiffenceDown } from "@motojouya/kniw/src/data/status/directDiffenceDown";
 
 export const stoneWeather: Skill = {
-  name: 'stoneWeather',
-  label: '風化',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "stoneWeather",
+  label: "風化",
+  type: "SKILL_TO_CHARACTOR",
   action: (skill, actor, randoms, field, receiver) =>
     addStatus(directDiffenceDown)(skill, actor, randoms, field, receiver),
   directType: DIRECT_TYPE_NONE,
@@ -16,5 +16,5 @@ export const stoneWeather: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '物理防御down',
+  description: "物理防御down",
 };

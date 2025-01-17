@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { hailstone } from '@motojouya/kniw/src/data/skill/hailstone';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { hailstone } from "@motojouya/kniw/src/data/skill/hailstone";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const jadeSaber: Weapon = {
-  name: 'jadeSaber',
-  label: 'ヒスイサーベル',
+  name: "jadeSaber",
+  label: "ヒスイサーベル",
   skills: [chop, hailstone, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const jadeSaber: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ヒスイサーベル。氷属性',
+  description: "ヒスイサーベル。氷属性",
 };

@@ -1,9 +1,9 @@
-import type { Race } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Race } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const golem: Race = {
-  name: 'golem',
-  label: 'ゴーレム',
+  name: "golem",
+  label: "ゴーレム",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const golem: Race = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ゴーレム。とにかく堅い。',
+  description: "ゴーレム。とにかく堅い。",
 };

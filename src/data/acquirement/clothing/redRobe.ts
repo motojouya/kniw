@@ -1,11 +1,11 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
-import { fireWall } from '@motojouya/kniw/src/data/skill/fireWall';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
+import { fireWall } from "@motojouya/kniw/src/data/skill/fireWall";
 
 export const redRobe: Clothing = {
-  name: 'redRobe',
-  label: '赤の衣',
+  name: "redRobe",
+  label: "赤の衣",
   skills: [fireWall],
   abilities: [mpGainPlus],
   additionalPhysical: {
@@ -41,5 +41,5 @@ export const redRobe: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '赤の衣。火属性',
+  description: "赤の衣。火属性",
 };

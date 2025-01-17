@@ -1,36 +1,15 @@
-import type { FC } from 'react';
-import Link from 'next/link';
-import {
-  Box,
-  UnorderedList,
-  ListItem,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
+import { StrictMode } from 'react'
+import { createRoot } from 'react-dom/client'
+import { ChakraProvider } from '@chakra-ui/react'
+// FIXME v3だと以下のようにする
+// npx @chakra-ui/cli snippet add
+// import { Provider } from "@/components/ui/provider"
+import { App } from "@motojouya/kniw/src/pages/app"
 
-const Index: FC = () => (
-  <Box p='10'>
-    <Heading>KNIW</Heading>
-    <Box>
-      <Text>kniwは、Tactics Ogreを参考に作ったボードゲームです。</Text>
-      <Text>このアプリケーションでは以下のことを行うことができます。</Text>
-      <UnorderedList>
-        <ListItem>
-          <Text>ゲームの準備</Text>
-          <Link href="/party">
-            <Text>Partyの作成</Text>
-          </Link>
-        </ListItem>
-        <ListItem>
-          <Text>ゲームの進行</Text>
-          <Link href="/battle">
-            <Text>Battleの管理</Text>
-          </Link>
-        </ListItem>
-      </UnorderedList>
-      <Text>更に詳しい説明は<Link href="https://github.com/motojouya/kniw">こちらのページ</Link>を参照してください。</Text>
-    </Box>
-  </Box>
-);
-
-export default Index;
+createRoot(document.getElementById('root')!).render(
+  <StrictMode>
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
+  </StrictMode>,
+)

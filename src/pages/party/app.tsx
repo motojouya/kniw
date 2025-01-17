@@ -3,21 +3,20 @@ import type { PartyRepository } from '@motojouya/kniw/src/store/party';
 import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
 
 import { useState, useEffect } from 'react';
-import { useSearchParams } from 'next/navigation'
 import { Box, Text } from '@chakra-ui/react';
 
-import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
 import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
+import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
 import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
 import { dialogue } from '@motojouya/kniw/src/io/window_dialogue';
-import { BattleList } from '@motojouya/kniw/src/web/subpage/battle/list';
-import { BattleNew } from '@motojouya/kniw/src/web/subpage/battle/new';
-import { BattleExsiting } from '@motojouya/kniw/src/web/subpage/battle/battle';
+import { PartyList } from '@motojouya/kniw/src/web/subpage/party/list';
+import { PartyNew } from '@motojouya/kniw/src/web/subpage/party/new';
+import { PartyExsiting } from '@motojouya/kniw/src/web/subpage/party/party';
 import { IOProvider } from '@motojouya/kniw/src/components/context';
 
-const Index: FC = () => {
-  const searchParams = useSearchParams();
-  const title = searchParams.get('title');
+export const App: FC = () => {
+  const searchParams = new URLSearchParams(window.location.search);
+  const name = searchParams.get('name');
 
   const [repositories, setRepositories] = useState<{ partyRepository: PartyRepository, battleRepository: BattleRepository } | null>(null);
   useEffect(() => {
@@ -29,7 +28,6 @@ const Index: FC = () => {
     })();
   }, []);
 
-
   if (!repositories) {
     return (<Box><Text>loading...</Text></Box>);
   }
@@ -39,19 +37,17 @@ const Index: FC = () => {
     dialogue,
   };
 
-  if (!title) {
-    return (<IOProvider io={io}><BattleList/></IOProvider>);
+  if (!name) {
+    return (<IOProvider io={io}><PartyList/></IOProvider>);
   }
 
-  if (title === '__new') {
-    return (<IOProvider io={io}><BattleNew/></IOProvider>);
+  if (name === '__new') {
+    return (<IOProvider io={io}><PartyNew/></IOProvider>);
   }
 
   return (
     <IOProvider io={io}>
-      <BattleExsiting battleTitle={title}/>
+      <PartyExsiting partyName={name}/>
     </IOProvider>
   );
 };
-
-export default Index;

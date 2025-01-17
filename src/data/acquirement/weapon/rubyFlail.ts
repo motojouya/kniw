@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { blow } from '@motojouya/kniw/src/data/skill/blow';
-import { dazzle } from '@motojouya/kniw/src/data/skill/dazzle';
-import { flameFall } from '@motojouya/kniw/src/data/skill/flameFall';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { blow } from "@motojouya/kniw/src/data/skill/blow";
+import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const rubyFlail: Weapon = {
-  name: 'rubyFlail',
-  label: 'ルビーフレイル',
+  name: "rubyFlail",
+  label: "ルビーフレイル",
   skills: [blow, flameFall, dazzle],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const rubyFlail: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ルビーフレイル。火属性',
+  description: "ルビーフレイル。火属性",
 };

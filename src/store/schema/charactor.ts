@@ -1,18 +1,18 @@
-import type { Charactor, AttachedStatus } from '@motojouya/kniw/src/domain/charactor';
-import type { ToModel, ToJson } from '@motojouya/kniw/src/store/schema/schema';
+import type { Charactor, AttachedStatus } from "@motojouya/kniw/src/domain/charactor";
+import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
 
-import { z } from 'zod';
+import { z } from "zod";
 
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { validate } from '@motojouya/kniw/src/domain/charactor';
-import { statusSchema, toStatus, toStatusJson } from '@motojouya/kniw/src/store/schema/status';
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { validate } from "@motojouya/kniw/src/domain/charactor";
+import { statusSchema, toStatus, toStatusJson } from "@motojouya/kniw/src/store/schema/status";
 import {
   raceRepository,
   weaponRepository,
   clothingRepository,
   blessingRepository,
-} from '@motojouya/kniw/src/store/acquirement';
+} from "@motojouya/kniw/src/store/acquirement";
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,
@@ -36,12 +36,12 @@ export const charactorSchema = z.object({
 export type CharactorSchema = typeof charactorSchema;
 export type CharactorJson = z.infer<CharactorSchema>;
 
-export const toAttachedStatusJson: ToJson<AttachedStatus, AttachedStatusJson> = attached => ({
+export const toAttachedStatusJson: ToJson<AttachedStatus, AttachedStatusJson> = (attached) => ({
   status: toStatusJson(attached.status),
   restWt: attached.restWt,
 });
 
-export const toCharactorJson: ToJson<Charactor, CharactorJson> = charactor => {
+export const toCharactorJson: ToJson<Charactor, CharactorJson> = (charactor) => {
   const json: CharactorJson = {
     name: charactor.name,
     race: charactor.race.name,
@@ -54,26 +54,26 @@ export const toCharactorJson: ToJson<Charactor, CharactorJson> = charactor => {
     restWt: charactor.restWt,
   };
 
-  if (Object.prototype.hasOwnProperty.call(charactor, 'isVisitor')) {
+  if (Object.prototype.hasOwnProperty.call(charactor, "isVisitor")) {
     json.isVisitor = charactor.isVisitor;
   }
 
   return json;
 };
 
-export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | DataNotFoundError> = charactorJson => {
+export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | DataNotFoundError> = (charactorJson) => {
   const { name } = charactorJson;
 
   const race = raceRepository.get(charactorJson.race);
   if (!race) {
-    return new DataNotFoundError(charactorJson.race, 'race', `${charactorJson.race}という種族は存在しません`);
+    return new DataNotFoundError(charactorJson.race, "race", `${charactorJson.race}という種族は存在しません`);
   }
 
   const blessing = blessingRepository.get(charactorJson.blessing);
   if (!blessing) {
     return new DataNotFoundError(
       charactorJson.blessing,
-      'blessing',
+      "blessing",
       `${charactorJson.blessing}という祝福は存在しません`,
     );
   }
@@ -82,14 +82,14 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
   if (!clothing) {
     return new DataNotFoundError(
       charactorJson.clothing,
-      'clothing',
+      "clothing",
       `${charactorJson.clothing}という装備は存在しません`,
     );
   }
 
   const weapon = weaponRepository.get(charactorJson.weapon);
   if (!weapon) {
-    return new DataNotFoundError(charactorJson.weapon, 'weapon', `${charactorJson.weapon}という武器は存在しません`);
+    return new DataNotFoundError(charactorJson.weapon, "weapon", `${charactorJson.weapon}という武器は存在しません`);
   }
 
   const validateResult = validate(name, race, blessing, clothing, weapon);
@@ -123,7 +123,7 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
     restWt: 0 + charactorJson.restWt,
   };
 
-  if (Object.prototype.hasOwnProperty.call(charactorJson, 'isVisitor')) {
+  if (Object.prototype.hasOwnProperty.call(charactorJson, "isVisitor")) {
     someone.isVisitor = charactorJson.isVisitor;
   }
 

@@ -1,9 +1,9 @@
-import type { Clothing } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
+import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
 
 export const chainMail: Clothing = {
-  name: 'chainMail',
-  label: '鎖帷子',
+  name: "chainMail",
+  label: "鎖帷子",
   skills: [],
   abilities: [],
   additionalPhysical: {
@@ -39,5 +39,5 @@ export const chainMail: Clothing = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '鎖帷子。何の耐性もないがWTが低い',
+  description: "鎖帷子。何の耐性もないがWTが低い",
 };

@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { chop } from '@motojouya/kniw/src/data/skill/chop';
-import { guillotineOfGiant } from '@motojouya/kniw/src/data/skill/guillotineOfGiant';
-import { overbear } from '@motojouya/kniw/src/data/skill/overbear';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { chop } from "@motojouya/kniw/src/data/skill/chop";
+import { guillotineOfGiant } from "@motojouya/kniw/src/data/skill/guillotineOfGiant";
+import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const samuraiSword: Weapon = {
-  name: 'samuraiSword',
-  label: '刀',
+  name: "samuraiSword",
+  label: "刀",
   skills: [chop, guillotineOfGiant, overbear],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const samuraiSword: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: '刀。重くて強い',
+  description: "刀。重くて強い",
 };

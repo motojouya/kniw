@@ -1,13 +1,13 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { stab } from '@motojouya/kniw/src/data/skill/stab';
-import { overbear } from '@motojouya/kniw/src/data/skill/overbear';
-import { blindBull } from '@motojouya/kniw/src/data/skill/blindBull';
-import { rampartForce } from '@motojouya/kniw/src/data/ability/rampartForce';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { stab } from "@motojouya/kniw/src/data/skill/stab";
+import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
+import { blindBull } from "@motojouya/kniw/src/data/skill/blindBull";
+import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
 
 export const javelin: Weapon = {
-  name: 'javelin',
-  label: 'ジャベリン',
+  name: "javelin",
+  label: "ジャベリン",
   skills: [stab, blindBull, overbear],
   abilities: [rampartForce],
   additionalPhysical: {
@@ -43,5 +43,5 @@ export const javelin: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'ジャベリン。刺突武器',
+  description: "ジャベリン。刺突武器",
 };

@@ -1,16 +1,16 @@
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
+import type { Skill } from "@motojouya/kniw/src/domain/skill";
 import {
   addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
-} from '@motojouya/kniw/src/domain/skill';
-import { magicAttackDown } from '@motojouya/kniw/src/data/status/magicAttackDown';
+} from "@motojouya/kniw/src/domain/skill";
+import { magicAttackDown } from "@motojouya/kniw/src/data/status/magicAttackDown";
 
 export const jammer: Skill = {
-  name: 'jammer',
-  label: '妨害魔法',
-  type: 'SKILL_TO_CHARACTOR',
+  name: "jammer",
+  label: "妨害魔法",
+  type: "SKILL_TO_CHARACTOR",
   action: (skill, actor, randoms, field, receiver) =>
     addStatus(magicAttackDown)(skill, actor, randoms, field, receiver),
   directType: DIRECT_TYPE_NONE,
@@ -21,5 +21,5 @@ export const jammer: Skill = {
   additionalWt: 100,
   effectLength: 5,
   getAccuracy: calcOrdinaryAccuracy,
-  description: '魔法攻撃down',
+  description: "魔法攻撃down",
 };

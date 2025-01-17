@@ -1,5 +1,5 @@
-import type { Charactor, CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import { isBattlingCharactor } from '@motojouya/kniw/src/domain/charactor';
+import type { Charactor, CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
+import { isBattlingCharactor } from "@motojouya/kniw/src/domain/charactor";
 
 export type Party = {
   name: string;
@@ -12,7 +12,7 @@ export type PartyBattling = {
 };
 
 export function isBattlingParty(party: Party): party is PartyBattling {
-  return party.charactors.every(charactor => isBattlingCharactor(charactor));
+  return party.charactors.every((charactor) => isBattlingCharactor(charactor));
 }
 
 export class CharactorDuplicationError {
@@ -39,7 +39,7 @@ export const validate: Validate = (name, charactors) => {
 
   for (const nameKey in nameCountMap) {
     if (nameCountMap[nameKey] > 1) {
-      return new CharactorDuplicationError(nameKey, 'Partyに同じ名前のキャラクターが存在します');
+      return new CharactorDuplicationError(nameKey, "Partyに同じ名前のキャラクターが存在します");
     }
   }
 

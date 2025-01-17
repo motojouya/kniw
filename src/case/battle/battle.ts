@@ -1,10 +1,10 @@
-import type { Dialogue } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Database } from '@motojouya/kniw/src/io/database';
-import type { Repository } from '@motojouya/kniw/src/store/disk_repository';
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Battle } from '@motojouya/kniw/src/domain/battle';
-import type { Turn } from '@motojouya/kniw/src/domain/turn';
+import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Database } from "@motojouya/kniw/src/io/database";
+import type { Repository } from "@motojouya/kniw/src/store/disk_repository";
+import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
+import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Battle } from "@motojouya/kniw/src/domain/battle";
+import type { Turn } from "@motojouya/kniw/src/domain/turn";
 import {
   createBattle,
   actToField,
@@ -21,46 +21,46 @@ import {
   GameOngoing,
   getLastTurn,
   NotBattlingError,
-} from '@motojouya/kniw/src/domain/battle';
+} from "@motojouya/kniw/src/domain/battle";
 import {
   getSkills,
   getPhysical,
   getAbilities,
   getSelectOption as charactorSelectOption,
   selectCharactor,
-} from '@motojouya/kniw/src/domain/charactor';
-import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
-import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { createAbsolute, createRandoms } from '@motojouya/kniw/src/domain/random';
-import { skillRepository } from '@motojouya/kniw/src/store/skill';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { underStatus } from '@motojouya/kniw/src/domain/status';
-import { sleep } from '@motojouya/kniw/src/data/status/sleep';
-import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
-import { silent } from '@motojouya/kniw/src/data/status';
+} from "@motojouya/kniw/src/domain/charactor";
+import { createRepository as createBattleRepository } from "@motojouya/kniw/src/store/battle";
+import { createRepository as createPartyRepository } from "@motojouya/kniw/src/store/party";
+import { CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
+import { createAbsolute, createRandoms } from "@motojouya/kniw/src/domain/random";
+import { skillRepository } from "@motojouya/kniw/src/store/skill";
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { underStatus } from "@motojouya/kniw/src/domain/status";
+import { sleep } from "@motojouya/kniw/src/data/status/sleep";
+import { MAGIC_TYPE_NONE } from "@motojouya/kniw/src/domain/skill";
+import { silent } from "@motojouya/kniw/src/data/status";
 
-const SKILL = 'SKILL';
-const LIST = 'LIST';
-const CHARACTOR = 'CHARACTOR';
-const NOTHING = 'NOTHING';
-const INTERRUPTION = 'INTERRUPTION';
-const SURRENDER = 'SURRENDER';
-const BACK = 'BACK';
+const SKILL = "SKILL";
+const LIST = "LIST";
+const CHARACTOR = "CHARACTOR";
+const NOTHING = "NOTHING";
+const INTERRUPTION = "INTERRUPTION";
+const SURRENDER = "SURRENDER";
+const BACK = "BACK";
 
 type ActSkill = (dialogue: Dialogue) => (actor: CharactorBattling, battle: Battle) => Promise<Turn | null>;
-const actSkill: ActSkill = dialogue => async (actor, battle) => {
+const actSkill: ActSkill = (dialogue) => async (actor, battle) => {
   const lastTurn = getLastTurn(battle);
-  /* eslint-disable no-await-in-loop */
+
   for (;;) {
     const skills = getSkills(actor);
     const skillOptions = skills
-      .filter(skill => skill.mpConsumption <= actor.mp)
-      .filter(skill => !underStatus(silent, actor) || skill.magicType === MAGIC_TYPE_NONE)
-      .map(skill => ({ value: skill.name, label: skill.name }));
-    skillOptions.push({ value: BACK, label: '戻る' });
-    const selectedName = await dialogue.select('Skillを選んでください', skillOptions);
+      .filter((skill) => skill.mpConsumption <= actor.mp)
+      .filter((skill) => !underStatus(silent, actor) || skill.magicType === MAGIC_TYPE_NONE)
+      .map((skill) => ({ value: skill.name, label: skill.name }));
+    skillOptions.push({ value: BACK, label: "戻る" });
+    const selectedName = await dialogue.select("Skillを選んでください", skillOptions);
     if (selectedName instanceof NotApplicable || selectedName === BACK) {
       return null;
     }
@@ -71,19 +71,19 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       return null;
     }
 
-    if (selectedSkill.type === 'SKILL_TO_FIELD') {
+    if (selectedSkill.type === "SKILL_TO_FIELD") {
       const newTurn = actToField(battle, actor, selectedSkill, new Date(), createAbsolute());
 
-      await dialogue.notice('効果');
+      await dialogue.notice("効果");
       await dialogue.notice(`天候: ${newTurn.field.climate}`);
 
-      const isExec = await dialogue.confirm('実行しますか？');
+      const isExec = await dialogue.confirm("実行しますか？");
       if (!(isExec instanceof NotApplicable) && isExec) {
         return actToField(battle, actor, selectedSkill, new Date(), createRandoms());
       }
     } else {
       const { receiverCount } = selectedSkill;
-      const receiverOptions = lastTurn.sortedCharactors.map(receiver => charactorSelectOption(receiver));
+      const receiverOptions = lastTurn.sortedCharactors.map((receiver) => charactorSelectOption(receiver));
       const selectedReceiverNames = await dialogue.multiSelect(
         `対象を${receiverCount}体まで選んでください。未選択でSkillを選び直せます`,
         receiverCount,
@@ -91,23 +91,22 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
       );
 
       if (selectedReceiverNames instanceof NotApplicable || selectedReceiverNames.length === 0) {
-        // eslint-disable-next-line no-continue
         continue;
       }
 
       const selectedReceivers = selectCharactor(lastTurn.sortedCharactors, selectedReceiverNames);
       if (selectedReceivers.length !== selectedReceiverNames.length) {
-        throw new Error('選択したキャラクターが存在しません');
+        throw new Error("選択したキャラクターが存在しません");
       }
 
       const newTurn = actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createAbsolute());
 
-      await dialogue.notice('効果');
+      await dialogue.notice("効果");
       await selectedReceivers.reduce(
         (p, receiver) =>
           p.then(async () => {
             const selectedReceiver = newTurn.sortedCharactors.find(
-              charactor => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
+              (charactor) => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
             );
             if (selectedReceiver) {
               await dialogue.notice(`${selectedReceiver.name}: hp: ${selectedReceiver.hp}`);
@@ -116,23 +115,22 @@ const actSkill: ActSkill = dialogue => async (actor, battle) => {
         Promise.resolve(),
       );
 
-      const isExec = await dialogue.confirm('実行しますか？');
+      const isExec = await dialogue.confirm("実行しますか？");
       if (!(isExec instanceof NotApplicable) && isExec) {
         return actToCharactor(battle, actor, selectedSkill, selectedReceivers, new Date(), createRandoms());
       }
     }
   }
-  /* eslint-enable no-await-in-loop */
 };
 
 type ShowSortedCharactors = (dialogue: Dialogue) => (battle: Battle) => Promise<void>;
-const showSortedCharactors: ShowSortedCharactors = dialogue => async battle => {
+const showSortedCharactors: ShowSortedCharactors = (dialogue) => async (battle) => {
   const lastTurn = getLastTurn(battle);
-  await dialogue.notice('以下の順番でターンが進みます');
+  await dialogue.notice("以下の順番でターンが進みます");
   await lastTurn.sortedCharactors.reduce(
     (p, charactor, index) =>
       p.then(async () => {
-        const team = charactor.isVisitor ? 'VISITOR' : 'HOME';
+        const team = charactor.isVisitor ? "VISITOR" : "HOME";
         await dialogue.notice(`${index + 1}. ${charactor.name}(${team}) hp:${charactor.hp} mp:${charactor.mp}`);
       }),
     Promise.resolve(),
@@ -142,9 +140,9 @@ const showSortedCharactors: ShowSortedCharactors = dialogue => async battle => {
 type ShowCharactorStatus = (dialogue: Dialogue) => (battle: Battle) => Promise<void>;
 const showCharactorStatus: ShowCharactorStatus =
   ({ select, notice }) =>
-  async battle => {
+  async (battle) => {
     const lastTurn = getLastTurn(battle);
-    const charactorOptions = lastTurn.sortedCharactors.map(charactor => charactorSelectOption(charactor));
+    const charactorOptions = lastTurn.sortedCharactors.map((charactor) => charactorSelectOption(charactor));
     const selectedCharactorName = await select(`対象を選んでください`, charactorOptions);
 
     if (selectedCharactorName instanceof NotApplicable || !selectedCharactorName) {
@@ -153,7 +151,7 @@ const showCharactorStatus: ShowCharactorStatus =
 
     const selectedCharactors = selectCharactor(lastTurn.sortedCharactors, [selectedCharactorName]);
     if (selectedCharactors.length !== 1) {
-      throw new Error('選択したキャラクターが存在しません');
+      throw new Error("選択したキャラクターが存在しません");
     }
 
     const charactor = selectedCharactors[0];
@@ -162,7 +160,7 @@ const showCharactorStatus: ShowCharactorStatus =
     await notice(`MP: ${charactor.mp}`);
     await notice(`WT: ${charactor.restWt}`);
 
-    await notice('ステータス:');
+    await notice("ステータス:");
     await charactor.statuses.reduce(
       (p, s) => p.then(() => notice(`  - ${s.status.label}(${s.restWt})`)),
       Promise.resolve(),
@@ -174,7 +172,7 @@ const showCharactorStatus: ShowCharactorStatus =
     await notice(`武器: ${charactor.weapon.label}`);
 
     const physical = getPhysical(charactor);
-    await notice('能力:');
+    await notice("能力:");
     await notice(`  MaxHP: ${physical.MaxHP}`);
     await notice(`  MaxMP: ${physical.MaxMP}`);
     await notice(`  STR: ${physical.STR}`);
@@ -188,25 +186,24 @@ const showCharactorStatus: ShowCharactorStatus =
     await notice(`  WT: ${physical.WT}`);
 
     const abilities = getAbilities(charactor);
-    await notice('アビリティ:');
+    await notice("アビリティ:");
     await abilities.reduce((p, ability) => p.then(() => notice(`  - ${ability.label}`)), Promise.resolve());
 
     const skills = getSkills(charactor);
-    await notice('スキル:');
+    await notice("スキル:");
     await skills.reduce((p, skill) => p.then(() => notice(`  - ${skill.label}`)), Promise.resolve());
   };
 
 type PlayerSelect = (dialogue: Dialogue) => (actor: CharactorBattling, battle: Battle) => Promise<Turn | null>;
-const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
-  /* eslint-disable no-await-in-loop */
+const playerSelect: PlayerSelect = (dialogue) => async (actor, battle) => {
   for (;;) {
-    const select = await dialogue.select('どうしますか？', [
-      { value: SKILL, label: 'Skillを選ぶ' },
-      { value: LIST, label: '一覧を見る' },
-      { value: CHARACTOR, label: 'Charactorを見る' },
-      { value: NOTHING, label: '何もしない' },
-      { value: INTERRUPTION, label: '戦いを中断する' },
-      { value: SURRENDER, label: '降参する' },
+    const select = await dialogue.select("どうしますか？", [
+      { value: SKILL, label: "Skillを選ぶ" },
+      { value: LIST, label: "一覧を見る" },
+      { value: CHARACTOR, label: "Charactorを見る" },
+      { value: NOTHING, label: "何もしない" },
+      { value: INTERRUPTION, label: "戦いを中断する" },
+      { value: SURRENDER, label: "降参する" },
     ]);
 
     switch (select) {
@@ -226,7 +223,7 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
       case NOTHING:
         return stay(battle, actor, new Date());
       case SURRENDER: {
-        const isSurrender = await dialogue.confirm('降参してもよいですか？');
+        const isSurrender = await dialogue.confirm("降参してもよいですか？");
         if (!(isSurrender instanceof NotApplicable) && isSurrender) {
           return surrender(battle, actor, new Date());
         }
@@ -239,7 +236,6 @@ const playerSelect: PlayerSelect = dialogue => async (actor, battle) => {
       // do nothing
     }
   }
-  /* eslint-enable no-await-in-loop */
 };
 
 type BattleRepository = Repository<
@@ -251,10 +247,9 @@ export type ContinueBattle = (
   dialogue: Dialogue,
   battleRepository: BattleRepository,
 ) => (battle: Battle) => Promise<void>;
-export const continueBattle: ContinueBattle = (dialogue, battleRepository) => async battle => {
+export const continueBattle: ContinueBattle = (dialogue, battleRepository) => async (battle) => {
   const { turns } = battle;
 
-  /* eslint-disable no-await-in-loop */
   for (;;) {
     const firstWaiting = nextActor(battle);
     turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
@@ -273,24 +268,22 @@ export const continueBattle: ContinueBattle = (dialogue, battleRepository) => as
       await battleRepository.save(battle);
     }
 
-    // eslint-disable-next-line no-param-reassign
     battle.result = isSettlement(battle);
     if (battle.result !== GameOngoing) {
       break;
     }
   }
-  /* eslint-enable no-await-in-loop */
 
   await battleRepository.save(battle);
 
   if (battle.result === GameOngoing) {
-    await dialogue.notice('勝負を中断しました');
+    await dialogue.notice("勝負を中断しました");
   }
   if (battle.result === GameHome || battle.result === GameVisitor) {
     await dialogue.notice(`${battle.result}プレイヤーの勝利です`);
   }
   if (battle.result === GameDraw) {
-    await dialogue.notice('勝負は引き分けです');
+    await dialogue.notice("勝負は引き分けです");
   }
 };
 
@@ -339,7 +332,7 @@ export const start: Start = (dialogue, database) => async (title, home, visitor)
 };
 
 export type Resume = (dialogue: Dialogue, database: Database) => (title: string) => Promise<void>;
-export const resume: Resume = (dialogue, database) => async title => {
+export const resume: Resume = (dialogue, database) => async (title) => {
   const battleRepository = await createBattleRepository(database);
   const battle = await battleRepository.get(title);
   if (!battle) {

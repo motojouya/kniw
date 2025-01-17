@@ -1,15 +1,15 @@
-import type { Dialogue, SelectOption } from '@motojouya/kniw/src/io/standard_dialogue';
-import type { Database } from '@motojouya/kniw/src/io/database';
-import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import { NotApplicable } from '@motojouya/kniw/src/io/standard_dialogue';
-import { createRepository as createCharactorRepository } from '@motojouya/kniw/src/store/charactor';
-import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { createParty, CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import type { Dialogue, SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { Database } from "@motojouya/kniw/src/io/database";
+import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
+import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
+import { createRepository as createCharactorRepository } from "@motojouya/kniw/src/store/charactor";
+import { createRepository as createPartyRepository } from "@motojouya/kniw/src/store/party";
+import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { createParty, CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
 
 export type Build = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
-export const build: Build = (dialogue, database) => async name => {
+export const build: Build = (dialogue, database) => async (name) => {
   const { notice, multiSelect } = dialogue;
   const partyRepository = await createPartyRepository(database);
   const charactorRepository = await createCharactorRepository(database);
@@ -20,13 +20,13 @@ export const build: Build = (dialogue, database) => async name => {
   }
 
   const charactorNames = await charactorRepository.list();
-  const charactorOptions: SelectOption[] = charactorNames.map(charactorName => ({
+  const charactorOptions: SelectOption[] = charactorNames.map((charactorName) => ({
     value: charactorName,
     label: charactorName,
   }));
 
   const selectedNames = await multiSelect(
-    'メンバーを複数選択してください。partyの最大は12名までです。',
+    "メンバーを複数選択してください。partyの最大は12名までです。",
     12,
     charactorOptions,
   );
@@ -36,10 +36,8 @@ export const build: Build = (dialogue, database) => async name => {
 
   const charactors: Charactor[] = [];
   for (const selectedName of selectedNames) {
-    // eslint-disable-next-line no-await-in-loop
     const charactor = await charactorRepository.get(selectedName);
     if (!charactor) {
-      // eslint-disable-next-line no-await-in-loop
       await notice(`${selectedName}というキャラクターはいません`);
       return;
     }
@@ -48,7 +46,6 @@ export const build: Build = (dialogue, database) => async name => {
       charactor instanceof DataNotFoundError ||
       charactor instanceof JsonSchemaUnmatchError
     ) {
-      // eslint-disable-next-line no-await-in-loop
       await notice(charactor.message);
       return;
     }

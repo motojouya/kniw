@@ -1,12 +1,12 @@
-import type { Weapon } from '@motojouya/kniw/src/domain/acquirement';
-import { createValidateWearable } from '@motojouya/kniw/src/domain/acquirement';
-import { gunWater } from '@motojouya/kniw/src/data/skill/gunWater';
-import { flashFlood } from '@motojouya/kniw/src/data/skill/flashFlood';
-import { stickyRain } from '@motojouya/kniw/src/data/skill/stickyRain';
+import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
+import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
+import { flashFlood } from "@motojouya/kniw/src/data/skill/flashFlood";
+import { stickyRain } from "@motojouya/kniw/src/data/skill/stickyRain";
 
 export const sapphireStick: Weapon = {
-  name: 'sapphireStick',
-  label: 'サファイアステッキ',
+  name: "sapphireStick",
+  label: "サファイアステッキ",
   skills: [gunWater, flashFlood, stickyRain],
   abilities: [],
   additionalPhysical: {
@@ -42,5 +42,5 @@ export const sapphireStick: Weapon = {
     });
     return validate(race, blessing, clothing, weapon);
   },
-  description: 'サファイアステッキ。水属性',
+  description: "サファイアステッキ。水属性",
 };
