@@ -13,9 +13,10 @@ import { BattleList } from '@motojouya/kniw/src/web/subpage/battle/list';
 import { BattleNew } from '@motojouya/kniw/src/web/subpage/battle/new';
 import { BattleExsiting } from '@motojouya/kniw/src/web/subpage/battle/battle';
 import { IOProvider } from '@motojouya/kniw/src/components/context';
+import { getSearchParams } from '@motojouya/kniw/src/components/utility';
 
 export const App: FC = () => {
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = getSearchParams();
   const title = searchParams.get('title');
 
   const [repositories, setRepositories] = useState<{ partyRepository: PartyRepository, battleRepository: BattleRepository } | null>(null);

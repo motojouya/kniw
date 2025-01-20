@@ -28,6 +28,8 @@ import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@moto
 import { useIO } from '@motojouya/kniw/src/components/context';
 import { importParty } from '@motojouya/kniw/src/web/case/party/importJson';
 import { UserCancel, EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
+import { transit } from '@motojouya/kniw/src/components/utility';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 // FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
 export const ImportParty: FC<{
@@ -100,8 +102,7 @@ export const PartyEditor: FC<{
           message: '保存しました',
         });
       } else {
-        // FIXME window変数はwrapしておきたい
-        window.location.assign(`/party/?name=${partyInput.name}`);
+        transit(`/party/?name=${partyInput.name}`);
       }
     }
   };
@@ -109,14 +110,13 @@ export const PartyEditor: FC<{
   const deleteParty = async (partyName: string) => {
     const result = await dismissParty(dialogue, partyRepository)(partyName);
     if (result) {
-      // FIXME window変数はwrapしておきたい
-      window.location.assign('/party/');
+      transit('/party/');
     }
   };
 
   return (
     <Box p={4}>
-      <a href='/party/'>戻る</a>
+      <Link href='/party/'><span>戻る</span></Link>
       <Text>This is the party page</Text>
       {inoutButton}
       <form onSubmit={handleSubmit(save)}>

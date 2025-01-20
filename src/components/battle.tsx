@@ -57,6 +57,7 @@ import { selectReceiver } from '@motojouya/kniw/src/web/case/battle/selectReceiv
 import { skillReceiverCount } from '@motojouya/kniw/src/web/case/battle/skillReceiverCount';
 import { UserCancel } from '@motojouya/kniw/src/io/window_dialogue';
 import { useIO } from '@motojouya/kniw/src/components/context';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
@@ -210,7 +211,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
   return (
     <Box p={4}>
-      <a href='/battle/'>戻る</a>
+      <Link href='/battle/'><span>戻る</span></Link>
       <Text>This is the battle page</Text>
       {battle.result !== GameOngoing && <Button type="button" onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}
       <GameResultView battle={battle} />

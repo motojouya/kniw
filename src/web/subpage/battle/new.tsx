@@ -16,6 +16,8 @@ import {
 import { ImportParty } from '@motojouya/kniw/src/components/party';
 import { startBattle } from '@motojouya/kniw/src/web/case/battle/start';
 import { useIO } from '@motojouya/kniw/src/components/context';
+import { transit } from '@motojouya/kniw/src/components/utility';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 export const BattleNew: FC = () => {
 
@@ -52,13 +54,12 @@ export const BattleNew: FC = () => {
     }
 
     const battle = await startBattle(battleRepository)(title as string, homeParty as Party, visitorParty as Party, new Date());
-    // FIXME window変数はwrapしておきたい
-    window.location.assign(`/battle/?title=${battle.title}`);
+    transit(`/battle/?title=${battle.title}`);
   };
 
   return (
     <Box p={4}>
-      <a href='/battle/'>戻る</a>
+      <Link href="/battle/"><span>戻る</span></Link>
       <Text>This is the battle page</Text>
       <form onSubmit={handleSubmit(start)}>
         {message && (<FormErrorMessage>{message}</FormErrorMessage>)}

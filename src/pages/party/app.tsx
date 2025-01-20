@@ -13,9 +13,10 @@ import { PartyList } from '@motojouya/kniw/src/web/subpage/party/list';
 import { PartyNew } from '@motojouya/kniw/src/web/subpage/party/new';
 import { PartyExsiting } from '@motojouya/kniw/src/web/subpage/party/party';
 import { IOProvider } from '@motojouya/kniw/src/components/context';
+import { getSearchParams } from '@motojouya/kniw/src/components/utility';
 
 export const App: FC = () => {
-  const searchParams = new URLSearchParams(window.location.search);
+  const searchParams = getSearchParams();
   const name = searchParams.get('name');
 
   const [repositories, setRepositories] = useState<{ partyRepository: PartyRepository, battleRepository: BattleRepository } | null>(null);
