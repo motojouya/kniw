@@ -1,3 +1,4 @@
+/* eslint-disable react-refresh/only-export-components */
 import type { FC, ReactNode } from 'react';
 
 const urlPrefix = import.meta.env.VITE_URL_PREFIX;
@@ -23,5 +24,5 @@ export const Link: FC<{ href: string, children: ReactNode }> = ({ href, children
     assignPath = "/" + urlPrefix + href;
   }
 
-  retun (<a href={assignPath}>{children}</a>);
+  return (<a href={assignPath}>{children}</a>);
 };
