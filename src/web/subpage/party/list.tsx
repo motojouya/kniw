@@ -15,7 +15,7 @@ export const PartyList: FC = () => {
       <Box>
         <List>
           <ListItem key='party-new'>
-            <a href='/party/?name=__new'>新しく作る</a>
+            <Link href='/party/?name=__new'><span>新しく作る</span></Link>
           </ListItem>
           {partyNames && partyNames.map((partyName, index) => (
             <ListItem key={`party-${index}`}>
