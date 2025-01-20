@@ -6,6 +6,7 @@ import {
   Heading,
   Text,
 } from '@chakra-ui/react';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 export const App: FC = () => (
   <Box p='10'>
@@ -16,15 +17,15 @@ export const App: FC = () => (
       <UnorderedList>
         <ListItem>
           <Text>ゲームの準備</Text>
-          <a href="/party/">
+          <Link href="/party/">
             <Text>Partyの作成</Text>
-          </a>
+          </Link>
         </ListItem>
         <ListItem>
           <Text>ゲームの進行</Text>
-          <a href="/battle/">
+          <Link href="/battle/">
             <Text>Battleの管理</Text>
-          </a>
+          </Link>
         </ListItem>
       </UnorderedList>
       <Text>更に詳しい説明は<a href="https://github.com/motojouya/kniw">こちらのページ</a>を参照してください。</Text>

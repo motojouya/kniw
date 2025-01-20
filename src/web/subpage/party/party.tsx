@@ -8,6 +8,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { useIO } from '@motojouya/kniw/src/components/context';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   const { partyRepository } = useIO();
@@ -22,7 +23,7 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
     return (
       <Box>
         <Text>{party.message}</Text>
-        <a href='/party/'>戻る</a>
+        <Link href='/party/'><span>戻る</span></Link>
       </Box>
     );
   }
@@ -31,7 +32,7 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
     return (
       <Box>
         <Text>{`${partyName}というpartyは見つかりません`}</Text>
-        <a href='/party/'>戻る</a>
+        <Link href='/party/'><span>戻る</span></Link>
       </Box>
     );
   }

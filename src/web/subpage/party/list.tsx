@@ -3,6 +3,7 @@ import type { FC } from 'react';
 import { Box, List, ListItem } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 import { useIO } from '@motojouya/kniw/src/components/context';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 export const PartyList: FC = () => {
   const { partyRepository } = useIO();
@@ -10,7 +11,7 @@ export const PartyList: FC = () => {
 
   return (
     <Box>
-      <a href='/'>戻る</a>
+      <Link href="/"><span>戻る</span></Link>
       <Box>
         <List>
           <ListItem key='party-new'>
@@ -18,7 +19,7 @@ export const PartyList: FC = () => {
           </ListItem>
           {partyNames && partyNames.map((partyName, index) => (
             <ListItem key={`party-${index}`}>
-              <a href={`/party/?name=${partyName}`}>{partyName}</a>
+              <Link href={`/party/?name=${partyName}`}><span>{partyName}</span></Link>
             </ListItem>
           ))}
         </List>

@@ -9,6 +9,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
 import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
 import { useIO } from '@motojouya/kniw/src/components/context';
+import { Link } from '@motojouya/kniw/src/components/utility';
 
 export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => {
   const { battleRepository } = useIO();
@@ -24,7 +25,7 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
     return (
       <Box>
         <Text>{battle.message}</Text>
-        <a href='/battle/'>戻る</a>
+        <Link href='/battle/'><span>戻る</span></Link>
       </Box>
     );
   }
@@ -32,7 +33,7 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
   if (!battle) {
     return (
       <Box>
-        <a href='/battle/'>戻る</a>
+        <Link href='/battle/'><span>戻る</span></Link>
         <Text>{`${battleTitle}というbattleは見つかりません`}</Text>
       </Box>
     );
