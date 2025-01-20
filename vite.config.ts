@@ -32,4 +32,5 @@ export default defineConfig({
   server: {
     port: 3000,
   },
+  base: process.env.URL_PREFIX ? '/' + process.env.URL_PREFIX + '/' : '/',
 })
