@@ -1,75 +1,41 @@
 {
   "name": "@motojouya/kniw",
-  "version": "0.0.1",
-  "description": "Node.js on Docker",
-  "author": "Motojouya (Takuya Sugiyama)",
+  "version": "0.1.0",
+  "description": "kniw board game",
   "main": "index.js",
-  "type": "module",
-  "exports": {
-    "./src/*": "./src/*.ts"
+  "directories": {
+    "doc": "docs"
   },
   "scripts": {
-    "kniw": "ts-node -r tsconfig-paths/register src/index.ts",
-    "buildcli": "rollup --config rollup.config.js",
-    "test": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning --test",
-    "try": "ts-node -r tsconfig-paths/register",
-    "manual": "ts-node -r tsconfig-paths/register manually_test/io/standard_dialogue.ts",
-    "format": "npx prettier --write 'src/**/*.ts'",
-    "lint": "eslint --fix src",
-    "format_check": "npx prettier --check 'src/**/*.ts'",
-    "lint_check": "eslint --max-warnings=0 src",
-    "preview": "vite preview",
-    "devweb": "vite",
-    "buildweb": "tsc -b && vite build",
-    "serve": "sudo npx serve out -l 80"
+    "format": "npx prettier --write 'packages/**/*.ts'",
+    "lint": "eslint --fix packages",
+    "format_check": "npx prettier --check 'packages/**/*.ts'",
+    "lint_check": "eslint --max-warnings=0 packages"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/motojouya/kniw.git"
+  },
+  "author": "Takuya Sugiyama @motojouya",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/motojouya/kniw/issues"
+  },
+  "homepage": "https://github.com/motojouya/kniw#readme",
   "private": true,
   "devDependencies": {
-    "@eslint/js": "^9.17.0",
-    "@rollup/plugin-commonjs": "^28.0.2",
-    "@rollup/plugin-node-resolve": "^16.0.0",
-    "@rollup/plugin-terser": "^0.4.4",
-    "@rollup/plugin-typescript": "^12.1.2",
-    "@types/node": "^22.10.5",
-    "@types/react": "^19.0.3",
-    "@types/react-dom": "^19.0.2",
-    "@types/wicg-file-system-access": "^2020.9.6",
-    "@vitejs/plugin-react": "^4.3.4",
-    "eslint": "^9.17.0",
-    "eslint-config-prettier": "^8.8.0",
-    "eslint-plugin-react-hooks": "^5.0.0",
-    "eslint-plugin-react-refresh": "^0.4.16",
+    "@eslint/js": "^9.18.0",
+    "eslint": "^9.18.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "eslint-plugin-react-refresh": "^0.4.18",
     "globals": "^15.14.0",
-    "prettier": "^3.0.0",
-    "rollup": "^4.30.1",
-    "serve": "^14.2.0",
-    "ts-loader": "^9.3.0",
-    "tsconfig-paths": "^4.2.0",
-    "tslib": "^2.8.1",
-    "typescript": "^5.6.2",
-    "typescript-eslint": "^8.19.1",
-    "vite": "^6.0.7",
-    "vite-tsconfig-paths": "^5.1.4"
+    "prettier": "^3.4.2",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.21.0"
   },
-  "dependencies": {
-    "@chakra-ui/react": "^2.8.0",
-    "@commander-js/extra-typings": "^11.0.0",
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
-    "@hookform/resolvers": "^3.2.0",
-    "@types/prompts": "^2.4.4",
-    "commander": "^11.0.0",
-    "date-fns": "^2.30.0",
-    "dexie": "^3.2.4",
-    "dexie-react-hooks": "^1.1.6",
-    "framer-motion": "^10.16.0",
-    "next": "^13.4.19",
-    "prompts": "^2.4.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-hook-form": "^7.45.4",
-    "shebang-loader": "^0.0.1",
-    "ts-node": "^10.9.1",
-    "zod": "^3.24.0"
-  }
+  "workspaces": [
+    "packages/core",
+    "packages/command",
+    "packages/web"
+  ]
 }
