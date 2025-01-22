@@ -31,12 +31,12 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
       - run: npm ci
-      - run: npm run buildweb
+      - run: npm run build -w @motojouya/kniw-web
         env:
           VITE_URL_PREFIX: kniw
       - uses: actions/configure-pages@v4
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: 'dist_react'
+          path: 'packages/web/dist'
       - id: deployment
         uses: actions/deploy-pages@v4
