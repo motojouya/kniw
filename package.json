@@ -7,6 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
+    "preinstall": "npx only-allow npm",
     "format": "npx prettier --write 'packages/**/*.ts'",
     "lint": "eslint --fix packages",
     "format_check": "npx prettier --check 'packages/**/*.ts'",

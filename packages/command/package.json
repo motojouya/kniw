@@ -19,12 +19,16 @@
     "typescript": "^5.7.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning --test",
+    "manually_test": "ts-node -r tsconfig-paths/register manually_test/io/standard_dialogue.ts",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+    "build": "rollup --config rollup.config.js"
   },
   "author": "Takuya Sugiyama @motojouya",
   "license": "MIT",
   "description": "",
   "dependencies": {
+    "@motojouya/kniw-core": "^0.1.0",
     "commander": "^13.1.0",
     "prompts": "^2.4.2"
   }
