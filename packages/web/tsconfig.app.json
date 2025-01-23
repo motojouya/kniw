@@ -26,5 +26,8 @@
       "@motojouya/kniw-web/*": ["./src/*"]
     }
   },
-  "include": ["src"]
+  "include": ["src"],
+  "references": [
+      { "path": "../core" }
+  ]
 }

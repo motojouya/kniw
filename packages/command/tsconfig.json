@@ -24,4 +24,7 @@
     }
   },
   "include": ["src"]
+  "references": [
+      { "path": "../core" }
+  ]
 }
