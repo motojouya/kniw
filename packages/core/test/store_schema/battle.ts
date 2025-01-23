@@ -1,14 +1,14 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Battle } from '@motojouya/kniw/src/domain/battle';
+import type { Battle } from '../../src/model/battle';
 import {
   GameOngoing,
   GameHome,
   GameVisitor,
   GameDraw
-} from '@motojouya/kniw/src/domain/battle';
-import { toBattle } from '@motojouya/kniw/src/store/schema/battle';
+} from '../../src/model/battle';
+import { toBattle } from '../../src/store_schema/battle';
 
 const testData = {
   title: 'first-title',

@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { Database } from '@motojouya/kniw/src/io/database'
-import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
-import { createRepository } from '@motojouya/kniw/src/store/charactor';
+import type { Charactor } from '../../src/model/charactor';
+import type { Database } from '../../src/io/database'
+import { toCharactor } from '../../src/store_schema/charactor';
+import { createRepository } from '../../src/store/charactor';
 
 const dbMock: Database = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),

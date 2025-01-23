@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { Database } from '@motojouya/kniw/src/io/database'
-import { toParty } from '@motojouya/kniw/src/store/schema/party';
-import { createRepository } from '@motojouya/kniw/src/store/party';
+import type { Party } from '../../src/model/party';
+import type { Database } from '../../src/io/database'
+import { toParty } from '../../src/store_schema/party';
+import { createRepository } from '../../src/store/party';
 
 const dbMock: Database = {
   save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),

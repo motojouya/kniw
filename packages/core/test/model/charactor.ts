@@ -1,20 +1,20 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { CharactorJson } from '@motojouya/kniw/src/store/schema/charactor';
+import type { Charactor } from '../../src/model/charactor';
+import type { CharactorJson } from '../../src/store_schema/charactor';
 
 import {
   getAbilities,
   getSkills,
   getPhysical,
-} from '@motojouya/kniw/src/domain/charactor';
-import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
+} from '../../src/model/charactor';
+import { toCharactor } from '../../src/store_schema/charactor';
+import { NotWearableErorr } from '../../src/model/acquirement';
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
-} from '@motojouya/kniw/src/store/schema/schema';
+} from '../../src/store_utility/schema';
 
 describe('Charctor#toCharactor', function () {
   it('DataNotFoundError', function () {

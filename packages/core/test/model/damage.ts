@@ -1,7 +1,7 @@
-import type { Battle } from '@motojouya/kniw/src/domain/battle';
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import type { BattleJson } from '@motojouya/kniw/src/store/schema/battle';
+import type { Battle } from '../../src/model/battle';
+import type { Skill } from '../../src/model/skill';
+import type { CharactorBattling } from '../../src/model/charactor';
+import type { BattleJson } from '../../src/store_schema/battle';
 
 import { describe, it } from "node:test";
 import assert from "node:assert";
@@ -18,20 +18,20 @@ import {
   GameHome,
   GameVisitor,
   GameDraw
-} from '@motojouya/kniw/src/domain/battle';
-import { toBattle } from '@motojouya/kniw/src/store/schema/battle';
-import { toParty } from '@motojouya/kniw/src/store/schema/party';
-import { toTurn, toAction } from '@motojouya/kniw/src/store/schema/turn';
+} from '../../src/model/battle';
+import { toBattle } from '../../src/store_schema/battle';
+import { toParty } from '../../src/store_schema/party';
+import { toTurn, toAction } from '../../src/store_schema/turn';
 import { parse, format } from 'date-fns';
 
-import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
+import { toCharactor } from '../../src/store_schema/charactor';
+import { NotWearableErorr } from '../../src/model/acquirement';
+import { CharactorDuplicationError } from '../../src/model/party';
 import {
   JsonSchemaUnmatchError,
   DataNotFoundError,
-} from '@motojouya/kniw/src/store/schema/schema';
-import { skillRepository } from '@motojouya/kniw/src/store/skill';
+} from '../../src/store_utility/schema';
+import { skillRepository } from '../../src/store/skill';
 
 const testData = {
   title: 'first-title',

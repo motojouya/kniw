@@ -6,7 +6,7 @@ import {
   validateRandoms,
   createRandoms,
   createAbsolute,
-} from '@motojouya/kniw/src/domain/random';
+} from '../../src/model/random';
 
 describe('Randoms#validateRandoms', function () {
   it('createRandoms', function () {
