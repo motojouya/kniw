@@ -1,5 +1,5 @@
-import type { Blessing } from "@motojouya/kniw/src/domain/acquirement";
-import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import type { Blessing } from "../../../model/acquirement";
+import { createValidateWearable } from "../../../model/acquirement";
 
 export const sea: Blessing = {
   name: "sea",

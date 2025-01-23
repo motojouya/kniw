@@ -1,4 +1,4 @@
-import type { Status } from "@motojouya/kniw/src/domain/status";
+import type { Status } from "../../model/status";
 
 export const magicAttackDown: Status = {
   name: "magicAttackDown",

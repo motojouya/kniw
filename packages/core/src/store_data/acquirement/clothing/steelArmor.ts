@@ -1,5 +1,5 @@
-import type { Clothing } from "@motojouya/kniw/src/domain/acquirement";
-import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import type { Clothing } from "../../../model/acquirement";
+import { createValidateWearable } from "../../../model/acquirement";
 import { coldFeet } from "@motojouya/kniw/src/data/skill/coldFeet";
 
 export const steelArmor: Clothing = {

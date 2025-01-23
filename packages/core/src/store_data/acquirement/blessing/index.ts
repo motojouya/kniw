@@ -1,4 +1,4 @@
-export { earth } from "@motojouya/kniw/src/data/acquirement/blessing/earth";
-export { mind } from "@motojouya/kniw/src/data/acquirement/blessing/mind";
-export { sea } from "@motojouya/kniw/src/data/acquirement/blessing/sea";
-export { sky } from "@motojouya/kniw/src/data/acquirement/blessing/sky";
+export { earth } from "./earth";
+export { mind } from "./mind";
+export { sea } from "./sea";
+export { sky } from "./sky";

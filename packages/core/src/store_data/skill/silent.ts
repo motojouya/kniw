@@ -1,5 +1,5 @@
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "@motojouya/kniw/src/domain/skill";
+import type { Skill } from "../../model/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "../../model/skill";
 import { silent as silentStatus } from "@motojouya/kniw/src/data/status/silent";
 
 export const silent: Skill = {

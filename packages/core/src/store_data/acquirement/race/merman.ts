@@ -1,5 +1,5 @@
-import type { Race } from "@motojouya/kniw/src/domain/acquirement";
-import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import type { Race } from "../../../model/acquirement";
+import { createValidateWearable } from "../../../model/acquirement";
 
 export const merman: Race = {
   name: "merman",

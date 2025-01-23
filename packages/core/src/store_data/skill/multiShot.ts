@@ -1,5 +1,5 @@
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
-import { calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from "@motojouya/kniw/src/domain/skill";
+import type { Skill } from "../../model/skill";
+import { calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from "../../model/skill";
 import { shotAction } from "@motojouya/kniw/src/data/skill/shot";
 
 export const multiShot: Skill = {

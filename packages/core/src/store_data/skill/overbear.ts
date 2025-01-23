@@ -1,5 +1,5 @@
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from "@motojouya/kniw/src/domain/skill";
+import type { Skill } from "../../model/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from "../../model/skill";
 import { avoidDown } from "@motojouya/kniw/src/data/status/avoidDown";
 
 export const overbear: Skill = {

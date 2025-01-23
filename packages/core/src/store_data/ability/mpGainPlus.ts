@@ -1,5 +1,5 @@
-import type { Ability, Wait } from "@motojouya/kniw/src/domain/ability";
-import { getPhysical } from "@motojouya/kniw/src/domain/charactor";
+import type { Ability, Wait } from "../../model/ability";
+import { getPhysical } from "../../model/charactor";
 
 const wait: Wait = (wt, charactor, randoms) => {
   const turnAdd = Math.floor(wt / 20);

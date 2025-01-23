@@ -1,5 +1,5 @@
-import type { Weapon } from "@motojouya/kniw/src/domain/acquirement";
-import { createValidateWearable } from "@motojouya/kniw/src/domain/acquirement";
+import type { Weapon } from "../../../model/acquirement";
+import { createValidateWearable } from "../../../model/acquirement";
 import { windEdge } from "@motojouya/kniw/src/data/skill/windEdge";
 import { danceLeaves } from "@motojouya/kniw/src/data/skill/danceLeaves";
 import { clearCloud } from "@motojouya/kniw/src/data/skill/clearCloud";

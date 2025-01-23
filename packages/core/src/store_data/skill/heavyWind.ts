@@ -1,5 +1,5 @@
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
-import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from "@motojouya/kniw/src/domain/skill";
+import type { Skill } from "../../model/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from "../../model/skill";
 import { sleep } from "@motojouya/kniw/src/data/status/sleep";
 
 export const heavyWind: Skill = {

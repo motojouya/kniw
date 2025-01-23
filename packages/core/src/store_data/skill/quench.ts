@@ -1,6 +1,6 @@
-import type { Skill, ActionToCharactor } from "@motojouya/kniw/src/domain/skill";
-import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from "@motojouya/kniw/src/domain/skill";
-import { getPhysical } from "@motojouya/kniw/src/domain/charactor";
+import type { Skill, ActionToCharactor } from "../../model/skill";
+import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from "../../model/skill";
+import { getPhysical } from "../../model/charactor";
 
 export const recover: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const physical = getPhysical(receiver);

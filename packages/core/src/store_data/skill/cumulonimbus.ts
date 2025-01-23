@@ -1,5 +1,5 @@
-import type { Skill, ActionToField } from "@motojouya/kniw/src/domain/skill";
-import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "@motojouya/kniw/src/domain/skill";
+import type { Skill, ActionToField } from "../../model/skill";
+import { calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "../../model/skill";
 
 const changeClimate: ActionToField = (self, actor, randoms, field) => ({
   ...field,

@@ -1,11 +1,11 @@
-import type { Skill, ActionToCharactor } from "@motojouya/kniw/src/domain/skill";
+import type { Skill, ActionToCharactor } from "../../model/skill";
 import {
   calcOrdinaryDirectDamage,
   addStatus,
   calcOrdinaryAccuracy,
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
-} from "@motojouya/kniw/src/domain/skill";
+} from "../../model/skill";
 import { acid } from "@motojouya/kniw/src/data/status/acid";
 
 export const toxicAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
