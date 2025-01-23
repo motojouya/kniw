@@ -1,10 +1,10 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
+import type { CharactorBattling } from '../../src/model/charactor';
 
-import { toCharactor } from '@motojouya/kniw/src/store/schema/charactor';
-import { mpGainPlus } from '@motojouya/kniw/src/data/ability/mpGainPlus';
+import { toCharactor } from '../../src/store_schema/charactor';
+import { mpGainPlus } from '../../src/store_data/ability/mpGainPlus';
 
 describe('mpGainPlus#wait', function () {
   it('calc', function () {
