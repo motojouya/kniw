@@ -1,15 +1,15 @@
-import type { Party, PartyBattling } from "@motojouya/kniw/src/domain/party";
-import type { Charactor, CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
-import type { Randoms } from "@motojouya/kniw/src/domain/random";
-import type { Turn } from "@motojouya/kniw/src/domain/turn";
+import type { Party, PartyBattling } from "./party";
+import type { Charactor, CharactorBattling } from "./charactor";
+import type { Skill } from "./skill";
+import type { Randoms } from "./random";
+import type { Turn } from "./turn";
 
-import { MAGIC_TYPE_NONE } from "@motojouya/kniw/src/domain/skill";
-import { getPhysical, getAbilities } from "@motojouya/kniw/src/domain/charactor";
-import { changeClimate } from "@motojouya/kniw/src/domain/field";
+import { MAGIC_TYPE_NONE } from "./skill";
+import { getPhysical, getAbilities } from "./charactor";
+import { changeClimate } from "./field";
 
 import { acid, paralysis, quick, silent, sleep, slow } from "@motojouya/kniw/src/data/status/index";
-import { underStatus } from "@motojouya/kniw/src/domain/status";
+import { underStatus } from "./status";
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 

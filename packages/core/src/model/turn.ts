@@ -1,6 +1,6 @@
-import type { Field } from "@motojouya/kniw/src/domain/field";
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
+import type { Field } from "./field";
+import type { CharactorBattling } from "./charactor";
+import type { Skill } from "./skill";
 
 export const ACTION_DO_NOTHING = "DO_NOTHING";
 

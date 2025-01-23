@@ -1,4 +1,4 @@
-import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
+import type { Charactor } from "./charactor";
 
 export type Status = {
   name: string;

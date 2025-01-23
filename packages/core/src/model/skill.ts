@@ -1,10 +1,10 @@
-import type { Field } from "@motojouya/kniw/src/domain/field";
-import type { Randoms } from "@motojouya/kniw/src/domain/random";
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { Status } from "@motojouya/kniw/src/domain/status";
+import type { Field } from "./field";
+import type { Randoms } from "./random";
+import type { CharactorBattling } from "./charactor";
+import type { Status } from "./status";
 
-import { underStatus } from "@motojouya/kniw/src/domain/status";
-import { getPhysical } from "@motojouya/kniw/src/domain/charactor";
+import { underStatus } from "./status";
+import { getPhysical } from "./charactor";
 import {
   directAttackUp,
   directAttackDown,

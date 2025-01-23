@@ -1,5 +1,5 @@
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { Randoms } from "@motojouya/kniw/src/domain/random";
+import type { CharactorBattling } from "./charactor";
+import type { Randoms } from "./random";
 
 export type Ability = {
   name: string;

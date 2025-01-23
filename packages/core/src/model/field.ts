@@ -1,5 +1,5 @@
-import type { Randoms } from "@motojouya/kniw/src/domain/random";
-import { validateRandoms, RandomRangeError } from "@motojouya/kniw/src/domain/random";
+import type { Randoms } from "./random";
+import { validateRandoms, RandomRangeError } from "./random";
 
 export type Climate = "SUNNY" | "RAIN" | "STORM" | "SNOW" | "FOGGY";
 type ClimateParcent = {
