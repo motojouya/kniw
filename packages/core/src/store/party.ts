@@ -1,13 +1,13 @@
-import type { Party } from "@motojouya/kniw/src/domain/party";
-import type { PartyJson, PartySchema } from "@motojouya/kniw/src/store/schema/party";
-import type { Repository } from "@motojouya/kniw/src/store/disk_repository";
+import type { Party } from "../model/party";
+import type { PartyJson, PartySchema } from "../store_schema/party";
+import type { Repository } from "../store_utility/disk_repository";
 
-import { CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
-import { toParty, toPartyJson, partySchema } from "@motojouya/kniw/src/store/schema/party";
+import { CharactorDuplicationError } from "../model/party";
+import { toParty, toPartyJson, partySchema } from "../store_schema/party";
 
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { createRepository as createRepositoryBase } from "@motojouya/kniw/src/store/disk_repository";
+import { NotWearableErorr } from "../model/acquirement";
+import { DataNotFoundError } from "../store_utility/schema";
+import { createRepository as createRepositoryBase } from "../store_utility/disk_repository";
 
 export const NAMESPACE = "party";
 export const SCHEMA_KEY = "name";

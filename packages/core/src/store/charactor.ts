@@ -1,10 +1,10 @@
-import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
-import type { CharactorSchema, CharactorJson } from "@motojouya/kniw/src/store/schema/charactor";
+import type { Charactor } from "../model/charactor";
+import type { CharactorSchema, CharactorJson } from "../store_schema/charactor";
 
-import { toCharactor, toCharactorJson, charactorSchema } from "@motojouya/kniw/src/store/schema/charactor";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { createRepository as createRepositoryBase } from "@motojouya/kniw/src/store/disk_repository";
+import { toCharactor, toCharactorJson, charactorSchema } from "../store_schema/charactor";
+import { NotWearableErorr } from "../model/acquirement";
+import { DataNotFoundError } from "../store_utility/schema";
+import { createRepository as createRepositoryBase } from "../store_utility/disk_repository";
 
 export const NAMESPACE = "charactor";
 export const SCHEMA_KEY = "name";

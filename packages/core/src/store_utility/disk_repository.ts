@@ -1,9 +1,9 @@
-import type { Database } from "@motojouya/kniw/src/io/database";
-import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
+import type { Database } from "../io/database";
+import type { ToModel, ToJson } from "./schema";
 
 import { z } from "zod";
-import { CopyFailError } from "@motojouya/kniw/src/io/database";
-import { parseJson, JsonSchemaUnmatchError } from "@motojouya/kniw/src/store/schema/schema";
+import { CopyFailError } from "../io/database";
+import { parseJson, JsonSchemaUnmatchError } from "./schema";
 
 export type Save<M extends Record<string, unknown>> = (obj: M) => Promise<void>;
 export type Get<M extends Record<string, unknown>, E> = (

@@ -1,10 +1,10 @@
-import type { Status } from "@motojouya/kniw/src/domain/status";
-import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
+import type { Status } from "../model/status";
+import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";
 
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { statusRepository } from "@motojouya/kniw/src/store/status";
+import { DataNotFoundError } from "../store_utility/schema";
+import { statusRepository } from "../store/status";
 
 export const statusSchema = z.string();
 export type StatusSchema = typeof statusSchema;

@@ -1,12 +1,12 @@
-import type { Charactor, AttachedStatus } from "@motojouya/kniw/src/domain/charactor";
-import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
+import type { Charactor, AttachedStatus } from "../model/charactor";
+import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";
 
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { validate } from "@motojouya/kniw/src/domain/charactor";
-import { statusSchema, toStatus, toStatusJson } from "@motojouya/kniw/src/store/schema/status";
+import { NotWearableErorr } from "../model/acquirement";
+import { DataNotFoundError } from "../store_utility/schema";
+import { validate } from "../model/charactor";
+import { statusSchema, toStatus, toStatusJson } from "./status";
 import {
   raceRepository,
   weaponRepository,

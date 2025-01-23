@@ -1,19 +1,19 @@
-import type { Turn, Action } from "@motojouya/kniw/src/domain/turn";
-import type { Climate } from "@motojouya/kniw/src/domain/field";
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
+import type { Turn, Action } from "../model/turn";
+import type { Climate } from "../model/field";
+import type { CharactorBattling } from "../model/charactor";
+import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { parse, format } from "date-fns";
 // import ja from 'date-fns/locale/ja'
 
 import { z } from "zod";
 
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { skillRepository } from "@motojouya/kniw/src/store/skill";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { toCharactor, toCharactorJson, charactorSchema } from "@motojouya/kniw/src/store/schema/charactor";
-import { isBattlingCharactor } from "@motojouya/kniw/src/domain/charactor";
-import { NotBattlingError } from "@motojouya/kniw/src/domain/battle";
+import { NotWearableErorr } from "../model/acquirement";
+import { skillRepository } from "../store/skill";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "../store_utility/schema";
+import { toCharactor, toCharactorJson, charactorSchema } from "./charactor";
+import { isBattlingCharactor } from "../model/charactor";
+import { NotBattlingError } from "../model/battle";
 
 export const surrenderSchema = z.object({
   type: z.literal("SURRENDER"),

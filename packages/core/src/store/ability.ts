@@ -1,4 +1,4 @@
-import * as abilities from "@motojouya/kniw/src/data/ability/index";
-import { createMemoryRepository } from "@motojouya/kniw/src/store/memory_repository";
+import * as abilities from "../store_data/ability/index";
+import { createMemoryRepository } from "../store_utility/memory_repository";
 
 export const abilityRepository = createMemoryRepository(abilities);

@@ -1,13 +1,13 @@
-import type { Battle } from "@motojouya/kniw/src/domain/battle";
-import type { BattleJson, BattleSchema } from "@motojouya/kniw/src/store/schema/battle";
-import type { Repository } from "@motojouya/kniw/src/store/disk_repository";
+import type { Battle } from "../model/battle";
+import type { BattleJson, BattleSchema } from "../store_schema/battle";
+import type { Repository } from "../store_utility/disk_repository";
 
-import { NotBattlingError } from "@motojouya/kniw/src/domain/battle";
-import { CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { toBattleJson, toBattle, battleSchema } from "@motojouya/kniw/src/store/schema/battle";
-import { createRepository as createRepositoryBase } from "@motojouya/kniw/src/store/disk_repository";
+import { NotBattlingError } from "../model/battle";
+import { CharactorDuplicationError } from "../model/party";
+import { NotWearableErorr } from "../model/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "../store_utility/schema";
+import { toBattleJson, toBattle, battleSchema } from "../store_schema/battle";
+import { createRepository as createRepositoryBase } from "../store_utility/disk_repository";
 
 export const NAMESPACE = "battle";
 export const SCHEMA_KEY = "title";

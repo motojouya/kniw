@@ -1,16 +1,16 @@
-import type { Battle } from "@motojouya/kniw/src/domain/battle";
-import type { Turn } from "@motojouya/kniw/src/domain/turn";
-import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
+import type { Battle } from "../model/battle";
+import type { Turn } from "../model/turn";
+import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";
 
-import { toTurn, toTurnJson, turnSchema } from "@motojouya/kniw/src/store/schema/turn";
-import { toParty, toPartyJson, partySchema } from "@motojouya/kniw/src/store/schema/party";
+import { toTurn, toTurnJson, turnSchema } from "./turn";
+import { toParty, toPartyJson, partySchema } from "./party";
 
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from "@motojouya/kniw/src/domain/battle";
-import { CharactorDuplicationError, isBattlingParty } from "@motojouya/kniw/src/domain/party";
+import { NotWearableErorr } from "../model/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "../store_utility/schema";
+import { NotBattlingError, GameDraw, GameHome, GameOngoing, GameVisitor } from "../model/battle";
+import { CharactorDuplicationError, isBattlingParty } from "../model/party";
 
 export const battleSchema = z.object({
   title: z.string(),

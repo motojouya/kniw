@@ -1,13 +1,13 @@
-import type { Party } from "@motojouya/kniw/src/domain/party";
-import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
-import type { ToModel, ToJson } from "@motojouya/kniw/src/store/schema/schema";
+import type { Party } from "../model/party";
+import type { Charactor } from "../model/charactor";
+import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";
 
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { validate, CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
-import { toCharactor, toCharactorJson, charactorSchema } from "@motojouya/kniw/src/store/schema/charactor";
+import { NotWearableErorr } from "../model/acquirement";
+import { DataNotFoundError } from "../store_utility/schema";
+import { validate, CharactorDuplicationError } from "../model/party";
+import { toCharactor, toCharactorJson, charactorSchema } from "./charactor";
 
 export const partySchema = z.object({
   name: z.string(),
