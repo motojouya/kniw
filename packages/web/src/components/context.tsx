@@ -1,9 +1,9 @@
 /* eslint react-refresh/only-export-components: 0 */
 import type { ReactNode } from "react";
 
-import type { Dialogue } from '@motojouya/kniw/src/io/window_dialogue';
-import type { PartyRepository } from '@motojouya/kniw/src/store/party';
-import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
+import type { Dialogue } from '../io/window_dialogue';
+import type { PartyRepository } from '@motojouya/kniw-core/store/party';
+import type { BattleRepository } from '@motojouya/kniw-core/store/battle';
 
 import { createContext, useContext } from "react";
 

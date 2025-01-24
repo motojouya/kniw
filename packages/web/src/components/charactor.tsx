@@ -1,7 +1,7 @@
 import type { FC } from 'react';
-import type { Acquirement } from '@motojouya/kniw/src/domain/acquirement';
-import type { Charactor } from '@motojouya/kniw/src/domain/charactor';
-import type { PartyForm } from '@motojouya/kniw/src/form/party';
+import type { Acquirement } from '@motojouya/kniw-core/model/acquirement';
+import type { Charactor } from '@motojouya/kniw-core/model/charactor';
+import type { PartyForm } from '../form/party';
 
 import { useState } from 'react';
 import {
@@ -39,21 +39,21 @@ import {
   Tag,
 } from '@chakra-ui/react';
 
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
+import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
+import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import {
   raceRepository,
   blessingRepository,
   clothingRepository,
   weaponRepository,
-} from '@motojouya/kniw/src/store/acquirement';
+} from '@motojouya/kniw-core/store/acquirement';
 import {
   getPhysical,
   getAbilities,
   getSkills,
-} from '@motojouya/kniw/src/domain/charactor';
-import { hireCharactor } from '@motojouya/kniw/src/web/case/charactor/hire';
-import { EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
+} from '@motojouya/kniw-core/model/charactor';
+import { hireCharactor } from '../procedure/charactor/hire';
+import { EmptyParameter } from '../io/window_dialogue';
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
 const getCharactorError: GetCharactorError = (errors, i, property) => {

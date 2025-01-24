@@ -1,9 +1,9 @@
-import type { Save, List, Get, Remove, ExportJson, ImportJson, Database } from "@motojouya/kniw/src/io/database";
+import type { Save, List, Get, Remove, ExportJson, ImportJson, Database } from "@motojouya/kniw-core/io/database";
 
 import Dexie from "dexie";
 
-import { PartyJson } from "@motojouya/kniw/src/store/schema/party";
-import { BattleJson } from "@motojouya/kniw/src/store/schema/battle";
+import { PartyJson } from "@motojouya/kniw-core/store_schema/party";
+import { BattleJson } from "@motojouya/kniw-core/store_schema/battle";
 
 class KniwDB extends Dexie {
   party!: Dexie.Table<PartyJson, string>;

@@ -1,9 +1,9 @@
 import type { FC } from 'react';
-import type { Battle } from '@motojouya/kniw/src/domain/battle';
-import type { CharactorBattling } from '@motojouya/kniw/src/domain/charactor';
-import type { Skill } from '@motojouya/kniw/src/domain/skill';
-import type { Turn } from '@motojouya/kniw/src/domain/turn';
-import type { DoSkillForm } from '@motojouya/kniw/src/form/battle';
+import type { Battle } from '@motojouya/kniw-core/model/battle';
+import type { CharactorBattling } from '@motojouya/kniw-core/model/charactor';
+import type { Skill } from '@motojouya/kniw-core/model/skill';
+import type { Turn } from '@motojouya/kniw-core/model/turn';
+import type { DoSkillForm } from '../form/battle';
 
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -36,28 +36,28 @@ import {
   GameDraw,
   nextActor,
   getLastTurn,
-} from '@motojouya/kniw/src/domain/battle';
-import { CharactorDetail } from '@motojouya/kniw/src/components/charactor';
+} from '@motojouya/kniw-core/model/battle';
+import { CharactorDetail } from './charactor';
 import {
   doSkillFormSchema,
   receiverSelectOption,
   ReceiverDuplicationError,
-} from '@motojouya/kniw/src/form/battle';
-import { ACTION_DO_NOTHING } from '@motojouya/kniw/src/domain/turn';
-import { getSkills, isVisitorString } from '@motojouya/kniw/src/domain/charactor';
-import { skillRepository } from '@motojouya/kniw/src/store/skill';
-import { MAGIC_TYPE_NONE } from '@motojouya/kniw/src/domain/skill';
+} from '../form/battle';
+import { ACTION_DO_NOTHING } from '@motojouya/kniw-core/model/turn';
+import { getSkills, isVisitorString } from '@motojouya/kniw-core/model/charactor';
+import { skillRepository } from '@motojouya/kniw-core/store/skill';
+import { MAGIC_TYPE_NONE } from '@motojouya/kniw-core/model/skill';
 
-import { underStatus } from '@motojouya/kniw/src/domain/status';
-import { silent } from '@motojouya/kniw/src/data/status';
-import { DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { act } from '@motojouya/kniw/src/web/case/battle/act';
-import { surrender } from '@motojouya/kniw/src/web/case/battle/surrender';
-import { selectReceiver } from '@motojouya/kniw/src/web/case/battle/selectReceiver';
-import { skillReceiverCount } from '@motojouya/kniw/src/web/case/battle/skillReceiverCount';
-import { UserCancel } from '@motojouya/kniw/src/io/window_dialogue';
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { underStatus } from '@motojouya/kniw-core/model/status';
+import { silent } from '@motojouya/kniw-core/store_data/status';
+import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
+import { act } from '../procedure/battle/act';
+import { surrender } from '../procedure/battle/surrender';
+import { selectReceiver } from '../procedure/battle/selectReceiver';
+import { skillReceiverCount } from '../procedure/battle/skillReceiverCount';
+import { UserCancel } from '../io/window_dialogue';
+import { useIO } from './context';
+import { Link } from './utility';
 
 const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;

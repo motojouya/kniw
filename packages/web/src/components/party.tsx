@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
-import type { Party } from '@motojouya/kniw/src/domain/party';
-import type { PartyForm } from '@motojouya/kniw/src/form/party';
+import type { Party } from '@motojouya/kniw-core/model/party';
+import type { PartyForm } from '../form/party';
 
 import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,18 +18,18 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { CharactorCard } from '@motojouya/kniw/src/components/charactor';
-import { partyFormSchema, toPartyForm } from '@motojouya/kniw/src/form/party';
-import { saveParty } from '@motojouya/kniw/src/web/case/party/save';
-import { dismissParty } from '@motojouya/kniw/src/web/case/party/dismiss';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw/src/store/schema/schema';
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { importParty } from '@motojouya/kniw/src/web/case/party/importJson';
-import { UserCancel, EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
-import { transit } from '@motojouya/kniw/src/components/utility';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { CharactorCard } from './charactor';
+import { partyFormSchema, toPartyForm } from '../form/party';
+import { saveParty } from '../procedure/party/save';
+import { dismissParty } from '../procedure/party/dismiss';
+import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
+import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError, DataExistError } from '@motojouya/kniw-core/store_utility/schema';
+import { useIO } from './context';
+import { importParty } from '../procedure/party/importJson';
+import { UserCancel, EmptyParameter } from '../io/window_dialogue';
+import { transit } from './utility';
+import { Link } from './utility';
 
 // FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
 export const ImportParty: FC<{
