@@ -1,7 +1,7 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
-import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
-import { createRepository } from "@motojouya/kniw/src/store/party";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
+import { NotApplicable } from "../io/standard_dialogue";
+import { createRepository } from "@motojouya/kniw-core/store/party";
 
 export type Dismiss = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const dismiss: Dismiss = (dialogue, database) => async (name) => {

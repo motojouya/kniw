@@ -1,5 +1,5 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import { clothingRepository } from "@motojouya/kniw/src/store/acquirement";
+import type { Dialogue } from "../io/standard_dialogue";
+import { clothingRepository } from "@motojouya/kniw-core/store/acquirement";
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;
 export const show: Show =

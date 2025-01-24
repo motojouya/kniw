@@ -1,9 +1,9 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
-import { createRepository } from "@motojouya/kniw/src/store/charactor";
-import { getPhysical, getAbilities, getSkills } from "@motojouya/kniw/src/domain/charactor";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
+import { createRepository } from "@motojouya/kniw-core/store/charactor";
+import { getPhysical, getAbilities, getSkills } from "@motojouya/kniw-core/model/charactor";
+import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 
 export type ShowStatus = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const showStatus: ShowStatus =

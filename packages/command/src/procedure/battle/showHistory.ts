@@ -1,10 +1,10 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
-import { createRepository } from "@motojouya/kniw/src/store/battle";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
-import { NotBattlingError } from "@motojouya/kniw/src/domain/battle";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
+import { createRepository } from "@motojouya/kniw-core/store/battle";
+import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
+import { CharactorDuplicationError } from "@motojouya/kniw-core/model/party";
+import { NotBattlingError } from "@motojouya/kniw-core/model/battle";
 
 export type ShowHistory = (dialogue: Dialogue, database: Database) => (title: string) => Promise<void>;
 export const showHistory: ShowHistory =

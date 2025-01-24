@@ -1,15 +1,15 @@
-import type { Dialogue, SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
-import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
-import { createRepository } from "@motojouya/kniw/src/store/charactor";
+import type { Dialogue, SelectOption } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
+import { NotApplicable } from "../io/standard_dialogue";
+import { createRepository } from "@motojouya/kniw-core/store/charactor";
 import {
   raceRepository,
   blessingRepository,
   clothingRepository,
   weaponRepository,
-} from "@motojouya/kniw/src/store/acquirement";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { createCharactor } from "@motojouya/kniw/src/domain/charactor";
+} from "@motojouya/kniw-core/store/acquirement";
+import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
+import { createCharactor } from "@motojouya/kniw-core/model/charactor";
 
 export type Hire = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const hire: Hire = (dialogue, database) => async (name) => {

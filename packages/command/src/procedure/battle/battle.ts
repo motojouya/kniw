@@ -1,10 +1,10 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
-import type { Repository } from "@motojouya/kniw/src/store/disk_repository";
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Battle } from "@motojouya/kniw/src/domain/battle";
-import type { Turn } from "@motojouya/kniw/src/domain/turn";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
+import type { Repository } from "@motojouya/kniw-core/store/disk_repository";
+import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
+import { NotApplicable } from "../io/standard_dialogue";
+import type { Battle } from "@motojouya/kniw-core/model/battle";
+import type { Turn } from "@motojouya/kniw-core/model/turn";
 import {
   createBattle,
   actToField,
@@ -21,25 +21,25 @@ import {
   GameOngoing,
   getLastTurn,
   NotBattlingError,
-} from "@motojouya/kniw/src/domain/battle";
+} from "@motojouya/kniw-core/model/battle";
 import {
   getSkills,
   getPhysical,
   getAbilities,
   getSelectOption as charactorSelectOption,
   selectCharactor,
-} from "@motojouya/kniw/src/domain/charactor";
-import { createRepository as createBattleRepository } from "@motojouya/kniw/src/store/battle";
-import { createRepository as createPartyRepository } from "@motojouya/kniw/src/store/party";
-import { CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
-import { createAbsolute, createRandoms } from "@motojouya/kniw/src/domain/random";
-import { skillRepository } from "@motojouya/kniw/src/store/skill";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { underStatus } from "@motojouya/kniw/src/domain/status";
-import { sleep } from "@motojouya/kniw/src/data/status/sleep";
-import { MAGIC_TYPE_NONE } from "@motojouya/kniw/src/domain/skill";
-import { silent } from "@motojouya/kniw/src/data/status";
+} from "@motojouya/kniw-core/model/charactor";
+import { createRepository as createBattleRepository } from "@motojouya/kniw-core/store/battle";
+import { createRepository as createPartyRepository } from "@motojouya/kniw-core/store/party";
+import { CharactorDuplicationError } from "@motojouya/kniw-core/model/party";
+import { createAbsolute, createRandoms } from "@motojouya/kniw-core/model/random";
+import { skillRepository } from "@motojouya/kniw-core/store/skill";
+import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
+import { underStatus } from "@motojouya/kniw-core/model/status";
+import { sleep } from "@motojouya/kniw-core/store_data/status/sleep";
+import { MAGIC_TYPE_NONE } from "@motojouya/kniw-core/model/skill";
+import { silent } from "@motojouya/kniw-core/store_data/status";
 
 const SKILL = "SKILL";
 const LIST = "LIST";

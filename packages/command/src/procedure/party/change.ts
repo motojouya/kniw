@@ -1,12 +1,12 @@
-import type { Dialogue, SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
-import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
-import { NotApplicable } from "@motojouya/kniw/src/io/standard_dialogue";
-import { createRepository as createCharactorRepository } from "@motojouya/kniw/src/store/charactor";
-import { createRepository as createPartyRepository } from "@motojouya/kniw/src/store/party";
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { createParty, CharactorDuplicationError } from "@motojouya/kniw/src/domain/party";
+import type { Dialogue, SelectOption } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
+import type { Charactor } from "@motojouya/kniw-core/model/charactor";
+import { NotApplicable } from "../io/standard_dialogue";
+import { createRepository as createCharactorRepository } from "@motojouya/kniw-core/store/charactor";
+import { createRepository as createPartyRepository } from "@motojouya/kniw-core/store/party";
+import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
+import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
+import { createParty, CharactorDuplicationError } from "@motojouya/kniw-core/model/party";
 
 export type Change = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const change: Change = (dialogue, database) => async (name) => {
