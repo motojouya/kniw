@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-import { makeCommand } from "@motojouya/kniw/src/command/index";
-import { dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import { createDatabase, repositoryDirectory } from "@motojouya/kniw/src/io/file_database";
+import { makeCommand } from "./interface/index";
+import { dialogue } from "./io/standard_dialogue";
+import { createDatabase, repositoryDirectory } from "./io/file_database";
 
 const run = async () => {
   const repository = await createDatabase(repositoryDirectory);

@@ -1,11 +1,11 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
 
 import { Command } from "@commander-js/extra-typings";
-import { histories } from "@motojouya/kniw/src/case/battle/histories";
-import { showHistory } from "@motojouya/kniw/src/case/battle/showHistory";
-import { start, resume } from "@motojouya/kniw/src/case/battle/battle";
-import { exportJson } from "@motojouya/kniw/src/case/battle/exportJson";
+import { histories } from "../procedure/battle/histories";
+import { showHistory } from "../procedure/battle/showHistory";
+import { start, resume } from "../procedure/battle/battle";
+import { exportJson } from "../procedure/battle/exportJson";
 
 export const makeCommand = (dialogue: Dialogue, database: Database) => {
   const battle = new Command("battle");

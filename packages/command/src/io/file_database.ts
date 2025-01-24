@@ -7,10 +7,10 @@ import type {
   ExportJson,
   ImportJson,
   Database,
-} from "@motojouya/kniw/src/io/database";
+} from "@motojouya/kniw-core/io/database";
 import fs from "fs";
 import path from "path";
-import { CopyFailError } from "@motojouya/kniw/src/io/database";
+import { CopyFailError } from "@motojouya/kniw-core/io/database";
 
 // 以下実装と、ファイル保存の固有の型
 const FILE_EXTENSION = ".json";

@@ -1,18 +1,18 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
 
 // import commander from 'commander';
 import { Command } from "@commander-js/extra-typings";
 
-import { makeCommand as makeSkill } from "@motojouya/kniw/src/command/skill";
-import { makeCommand as makeAbility } from "@motojouya/kniw/src/command/ability";
-import { makeCommand as makeRace } from "@motojouya/kniw/src/command/race";
-import { makeCommand as makeBlessing } from "@motojouya/kniw/src/command/blessing";
-import { makeCommand as makeClothing } from "@motojouya/kniw/src/command/clothing";
-import { makeCommand as makeWeapon } from "@motojouya/kniw/src/command/weapon";
-import { makeCommand as makeCharactor } from "@motojouya/kniw/src/command/charactor";
-import { makeCommand as makeParty } from "@motojouya/kniw/src/command/party";
-import { makeCommand as makeBattle } from "@motojouya/kniw/src/command/battle";
+import { makeCommand as makeSkill } from "./skill";
+import { makeCommand as makeAbility } from "./ability";
+import { makeCommand as makeRace } from "./race";
+import { makeCommand as makeBlessing } from "./blessing";
+import { makeCommand as makeClothing } from "./clothing";
+import { makeCommand as makeWeapon } from "./weapon";
+import { makeCommand as makeCharactor } from "./charactor";
+import { makeCommand as makeParty } from "./party";
+import { makeCommand as makeBattle } from "./battle";
 
 export const makeCommand = (dialogue: Dialogue, database: Database) => {
   const program = new Command();

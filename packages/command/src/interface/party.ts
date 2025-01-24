@@ -1,13 +1,13 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
 
 import { Command } from "@commander-js/extra-typings";
-import { list } from "@motojouya/kniw/src/case/party/list";
-import { showStatus } from "@motojouya/kniw/src/case/party/showStatus";
-import { build } from "@motojouya/kniw/src/case/party/build";
-import { change } from "@motojouya/kniw/src/case/party/change";
-import { dismiss } from "@motojouya/kniw/src/case/party/dismiss";
-import { exportJson } from "@motojouya/kniw/src/case/party/exportJson";
+import { list } from "../procedure/party/list";
+import { showStatus } from "../procedure/party/showStatus";
+import { build } from "../procedure/party/build";
+import { change } from "../procedure/party/change";
+import { dismiss } from "../procedure/party/dismiss";
+import { exportJson } from "../procedure/party/exportJson";
 
 export const makeCommand = (dialogue: Dialogue, database: Database) => {
   const party = new Command("party");

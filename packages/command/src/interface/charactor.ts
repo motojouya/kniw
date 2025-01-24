@@ -1,11 +1,11 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/standard_dialogue";
-import type { Database } from "@motojouya/kniw/src/io/database";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { Database } from "@motojouya/kniw-core/io/database";
 
 import { Command } from "@commander-js/extra-typings";
-import { list } from "@motojouya/kniw/src/case/charactor/list";
-import { showStatus } from "@motojouya/kniw/src/case/charactor/showStatus";
-import { fire } from "@motojouya/kniw/src/case/charactor/fire";
-import { hire } from "@motojouya/kniw/src/case/charactor/hire";
+import { list } from "../procedure/charactor/list";
+import { showStatus } from "../procedure/charactor/showStatus";
+import { fire } from "../procedure/charactor/fire";
+import { hire } from "../procedure/charactor/hire";
 
 export const makeCommand = (dialogue: Dialogue, database: Database) => {
   const charactor = new Command("charactor");
