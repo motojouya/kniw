@@ -3,7 +3,7 @@ import assert from "node:assert";
 
 import fs from 'fs'
 import path from 'path';
-import { createDatabase } from '@motojouya/kniw/src/io/file_database';
+import { createDatabase } from '../../src/io/file_database';
 
 const DIRNAME = 'temp';
 const NAMESPACE = 'test';
