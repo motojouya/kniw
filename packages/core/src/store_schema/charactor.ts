@@ -12,7 +12,7 @@ import {
   weaponRepository,
   clothingRepository,
   blessingRepository,
-} from "@motojouya/kniw/src/store/acquirement";
+} from "../store/acquirement";
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,
