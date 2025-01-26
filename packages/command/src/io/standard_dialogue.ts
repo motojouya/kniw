@@ -1,10 +1,6 @@
 import prompts from "prompts";
 import type { Choice, Answers } from "prompts";
-
-export type SelectOption = {
-  value: string;
-  label: string;
-};
+import type { SelectOption } from "@motojouya/kniw-core/io/dialogue";
 
 export class NotApplicable {
   constructor(readonly message: string) {}

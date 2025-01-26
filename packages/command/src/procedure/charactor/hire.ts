@@ -1,4 +1,5 @@
-import type { Dialogue, SelectOption } from "../io/standard_dialogue";
+import type { Dialogue } from "../io/standard_dialogue";
+import type { SelectOption } from "@motojouya/kniw-core/io/dialogue";
 import type { Database } from "@motojouya/kniw-core/io/database";
 import { NotApplicable } from "../io/standard_dialogue";
 import { createRepository } from "@motojouya/kniw-core/store/charactor";

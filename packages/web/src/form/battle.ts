@@ -1,5 +1,5 @@
 import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
-import type { SelectOption } from "../io/standard_dialogue";
+import type { SelectOption } from "@motojouya/kniw-core/io/dialogue";
 import type { Skill } from "@motojouya/kniw-core/model/skill";
 
 import { z } from "zod";

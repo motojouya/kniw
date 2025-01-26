@@ -1,5 +1,5 @@
 import type { Status } from "./status";
-import type { SelectOption } from "@motojouya/kniw/src/io/standard_dialogue";
+import type { SelectOption } from "../io/dialogue";
 import type { Physical } from "./physical";
 import type { Race, Weapon, Clothing, Blessing } from "./acquirement";
 import type { Ability } from "./ability";
