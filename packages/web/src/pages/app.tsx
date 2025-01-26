@@ -6,7 +6,7 @@ import {
   Heading,
   Text,
 } from '@chakra-ui/react';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { Link } from '../components/utility';
 
 export const App: FC = () => (
   <Box p='10'>

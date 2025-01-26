@@ -4,7 +4,7 @@ import { ChakraProvider } from '@chakra-ui/react'
 // FIXME v3だと以下のようにする
 // npx @chakra-ui/cli snippet add
 // import { Provider } from "@/components/ui/provider"
-import { App } from "@motojouya/kniw/src/pages/app"
+import { App } from "./app"
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

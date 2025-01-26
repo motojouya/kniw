@@ -3,13 +3,13 @@ import type { FC } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { BattleTurn } from '@motojouya/kniw/src/components/battle';
-import { NotBattlingError } from '@motojouya/kniw/src/domain/battle';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { BattleTurn } from '../../components/battle';
+import { NotBattlingError } from '@motojouya/kniw-core/model/battle';
+import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
+import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
+import { useIO } from '../../components/context';
+import { Link } from '../../components/utility';
 
 export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => {
   const { battleRepository } = useIO();

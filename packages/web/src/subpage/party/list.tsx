@@ -2,8 +2,8 @@ import type { FC } from 'react';
 
 import { Box, List, ListItem } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { useIO } from '../../components/context';
+import { Link } from '../../components/utility';
 
 export const PartyList: FC = () => {
   const { partyRepository } = useIO();

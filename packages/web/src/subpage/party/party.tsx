@@ -3,12 +3,12 @@ import type { FC } from 'react';
 import { Button, Box, Text } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { PartyEditor } from '@motojouya/kniw/src/components/party';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { PartyEditor } from '../../components/party';
+import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
+import { useIO } from '../../components/context';
+import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
+import { Link } from '../../components/utility';
 
 export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   const { partyRepository } = useIO();

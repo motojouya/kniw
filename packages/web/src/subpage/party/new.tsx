@@ -1,16 +1,16 @@
 import type { FC } from 'react';
-import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { Party } from '@motojouya/kniw-core/model/party';
 
 import { useState } from 'react';
 import { Button } from '@chakra-ui/react';
 
-import { PartyEditor } from '@motojouya/kniw/src/components/party';
-import { importParty } from '@motojouya/kniw/src/web/case/party/importJson';
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { CharactorDuplicationError } from '@motojouya/kniw/src/domain/party';
-import { NotWearableErorr } from '@motojouya/kniw/src/domain/acquirement';
-import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw/src/store/schema/schema';
-import { UserCancel, EmptyParameter } from '@motojouya/kniw/src/io/window_dialogue';
+import { PartyEditor } from '../../components/party';
+import { importParty } from '../../procedure/party/importJson';
+import { useIO } from '../../components/context';
+import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
+import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
+import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
+import { UserCancel, EmptyParameter } from '../../io/window_dialogue';
 
 export const PartyNew: FC = () => {
 

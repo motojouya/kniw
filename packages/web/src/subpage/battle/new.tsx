@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { Party } from '@motojouya/kniw/src/domain/party';
+import type { Party } from '@motojouya/kniw-core/model/party';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -13,11 +13,11 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-import { ImportParty } from '@motojouya/kniw/src/components/party';
-import { startBattle } from '@motojouya/kniw/src/web/case/battle/start';
-import { useIO } from '@motojouya/kniw/src/components/context';
-import { transit } from '@motojouya/kniw/src/components/utility';
-import { Link } from '@motojouya/kniw/src/components/utility';
+import { ImportParty } from '../../components/party';
+import { startBattle } from '../../procedure/battle/start';
+import { useIO } from '../../components/context';
+import { transit } from '../../components/utility';
+import { Link } from '../../components/utility';
 
 export const BattleNew: FC = () => {
 

@@ -1,19 +1,19 @@
 import type { FC } from 'react';
-import type { PartyRepository } from '@motojouya/kniw/src/store/party';
-import type { BattleRepository } from '@motojouya/kniw/src/store/battle';
+import type { PartyRepository } from '@motojouya/kniw-core/store/party';
+import type { BattleRepository } from '@motojouya/kniw-core/store/battle';
 
 import { useState, useEffect } from 'react';
 import { Box, Text } from '@chakra-ui/react';
 
-import { createRepository as createPartyRepository } from '@motojouya/kniw/src/store/party';
-import { createRepository as createBattleRepository } from '@motojouya/kniw/src/store/battle';
-import { createDatabase } from '@motojouya/kniw/src/io/indexed_database';
-import { dialogue } from '@motojouya/kniw/src/io/window_dialogue';
-import { PartyList } from '@motojouya/kniw/src/web/subpage/party/list';
-import { PartyNew } from '@motojouya/kniw/src/web/subpage/party/new';
-import { PartyExsiting } from '@motojouya/kniw/src/web/subpage/party/party';
-import { IOProvider } from '@motojouya/kniw/src/components/context';
-import { getSearchParams } from '@motojouya/kniw/src/components/utility';
+import { createRepository as createPartyRepository } from '@motojouya/kniw-core/store/party';
+import { createRepository as createBattleRepository } from '@motojouya/kniw-core/store/battle';
+import { createDatabase } from '../../io/indexed_database';
+import { dialogue } from '../../io/window_dialogue';
+import { PartyList } from '../../subpage/party/list';
+import { PartyNew } from '../../subpage/party/new';
+import { PartyExsiting } from '../../subpage/party/party';
+import { IOProvider } from '../../components/context';
+import { getSearchParams } from '../../components/utility';
 
 export const App: FC = () => {
   const searchParams = getSearchParams();
