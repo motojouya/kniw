@@ -109,3 +109,4 @@ dist-ssr
 *.local
 
 dist_react
+ts_build
