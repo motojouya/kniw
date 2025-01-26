@@ -6,7 +6,7 @@ import {
   DIRECT_TYPE_SLASH,
   MAGIC_TYPE_NONE,
 } from "../../model/skill";
-import { paralysis } from "@motojouya/kniw/src/data/status/paralysis";
+import { paralysis } from "../status/paralysis";
 
 export const paralysisAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);

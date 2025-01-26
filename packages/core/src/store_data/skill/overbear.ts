@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from "../../model/skill";
-import { avoidDown } from "@motojouya/kniw/src/data/status/avoidDown";
+import { avoidDown } from "../status/avoidDown";
 
 export const overbear: Skill = {
   name: "overbear",

@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { shot } from "@motojouya/kniw/src/data/skill/shot";
-import { hardRain } from "@motojouya/kniw/src/data/skill/hardRain";
-import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
+import { shot } from "../../skill/shot";
+import { hardRain } from "../../skill/hardRain";
+import { overbear } from "../../skill/overbear";
 
 export const samuraiBow: Weapon = {
   name: "samuraiBow",

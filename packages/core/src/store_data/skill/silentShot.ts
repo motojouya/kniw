@@ -6,7 +6,7 @@ import {
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
 } from "../../model/skill";
-import { silent } from "@motojouya/kniw/src/data/status/silent";
+import { silent } from "../status/silent";
 
 export const silentAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);

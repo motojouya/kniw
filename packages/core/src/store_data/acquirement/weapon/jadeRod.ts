@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { hailstone } from "@motojouya/kniw/src/data/skill/hailstone";
-import { frostbite } from "@motojouya/kniw/src/data/skill/frostbite";
-import { silent } from "@motojouya/kniw/src/data/skill/silent";
+import { hailstone } from "../../skill/hailstone";
+import { frostbite } from "../../skill/frostbite";
+import { silent } from "../../skill/silent";
 
 export const jadeRod: Weapon = {
   name: "jadeRod",

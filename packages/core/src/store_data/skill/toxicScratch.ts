@@ -6,7 +6,7 @@ import {
   DIRECT_TYPE_SLASH,
   MAGIC_TYPE_NONE,
 } from "../../model/skill";
-import { acid } from "@motojouya/kniw/src/data/status/acid";
+import { acid } from "../status/acid";
 
 export const toxicAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const newReceiver = calcOrdinaryDirectDamage(self, actor, randoms, field, receiver);

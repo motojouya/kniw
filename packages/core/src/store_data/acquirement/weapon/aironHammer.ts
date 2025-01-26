@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { blow } from "@motojouya/kniw/src/data/skill/blow";
-import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
-import { lightMeteor } from "@motojouya/kniw/src/data/skill/lightMeteor";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { blow } from "../../skill/blow";
+import { overbear } from "../../skill/overbear";
+import { lightMeteor } from "../../skill/lightMeteor";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const aironHammer: Weapon = {
   name: "aironHammer",

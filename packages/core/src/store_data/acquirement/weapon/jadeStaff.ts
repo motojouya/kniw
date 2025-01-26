@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { hailstone } from "@motojouya/kniw/src/data/skill/hailstone";
-import { frostbite } from "@motojouya/kniw/src/data/skill/frostbite";
-import { cumulonimbus } from "@motojouya/kniw/src/data/skill/cumulonimbus";
+import { hailstone } from "../../skill/hailstone";
+import { frostbite } from "../../skill/frostbite";
+import { cumulonimbus } from "../../skill/cumulonimbus";
 
 export const jadeStaff: Weapon = {
   name: "jadeStaff",

@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from "../../model/skill";
-import { fear } from "@motojouya/kniw/src/data/status/fear";
+import { fear } from "../status/fear";
 
 export const ghostFire: Skill = {
   name: "ghostFire",

@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { toxicScratch } from "@motojouya/kniw/src/data/skill/toxicScratch";
-import { paralysisScratch } from "@motojouya/kniw/src/data/skill/paralysisScratch";
-import { silentScratch } from "@motojouya/kniw/src/data/skill/silentScratch";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { toxicScratch } from "../../skill/toxicScratch";
+import { paralysisScratch } from "../../skill/paralysisScratch";
+import { silentScratch } from "../../skill/silentScratch";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const dagger: Weapon = {
   name: "dagger",

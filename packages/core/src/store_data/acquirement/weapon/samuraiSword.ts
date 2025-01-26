@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { chop } from "@motojouya/kniw/src/data/skill/chop";
-import { guillotineOfGiant } from "@motojouya/kniw/src/data/skill/guillotineOfGiant";
-import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { chop } from "../../skill/chop";
+import { guillotineOfGiant } from "../../skill/guillotineOfGiant";
+import { overbear } from "../../skill/overbear";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const samuraiSword: Weapon = {
   name: "samuraiSword",

@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from "../../model/skill";
-import { directDiffenceUp } from "@motojouya/kniw/src/data/status/directDiffenceUp";
+import { directDiffenceUp } from "../status/directDiffenceUp";
 
 export const stoneShell: Skill = {
   name: "stoneShell",

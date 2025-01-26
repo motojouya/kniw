@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { stab } from "@motojouya/kniw/src/data/skill/stab";
-import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
-import { blindBull } from "@motojouya/kniw/src/data/skill/blindBull";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { stab } from "../../skill/stab";
+import { overbear } from "../../skill/overbear";
+import { blindBull } from "../../skill/blindBull";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const javelin: Weapon = {
   name: "javelin",

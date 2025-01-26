@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
-import { quench } from "@motojouya/kniw/src/data/skill/quench";
-import { downRushing } from "@motojouya/kniw/src/data/skill/downRushing";
+import { gunWater } from "../../skill/gunWater";
+import { quench } from "../../skill/quench";
+import { downRushing } from "../../skill/downRushing";
 
 export const sapphireRod: Weapon = {
   name: "sapphireRod",

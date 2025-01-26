@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { chop } from "@motojouya/kniw/src/data/skill/chop";
-import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
-import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { chop } from "../../skill/chop";
+import { flameFall } from "../../skill/flameFall";
+import { dazzle } from "../../skill/dazzle";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const rubySaber: Weapon = {
   name: "rubySaber",

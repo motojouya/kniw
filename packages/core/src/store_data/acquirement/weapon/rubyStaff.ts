@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
-import { smallHeat } from "@motojouya/kniw/src/data/skill/smallHeat";
-import { flameDigger } from "@motojouya/kniw/src/data/skill/flameDigger";
+import { flameFall } from "../../skill/flameFall";
+import { smallHeat } from "../../skill/smallHeat";
+import { flameDigger } from "../../skill/flameDigger";
 
 export const rubyStaff: Weapon = {
   name: "rubyStaff",

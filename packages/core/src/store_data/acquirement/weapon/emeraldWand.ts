@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { windEdge } from "@motojouya/kniw/src/data/skill/windEdge";
-import { heavyWind } from "@motojouya/kniw/src/data/skill/heavyWind";
-import { danceLeaves } from "@motojouya/kniw/src/data/skill/danceLeaves";
+import { windEdge } from "../../skill/windEdge";
+import { heavyWind } from "../../skill/heavyWind";
+import { danceLeaves } from "../../skill/danceLeaves";
 
 export const emeraldWand: Weapon = {
   name: "emeraldWand",

@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { higherBolt } from "@motojouya/kniw/src/data/skill/higherBolt";
-import { thunder } from "@motojouya/kniw/src/data/skill/thunder";
-import { eleciWave } from "@motojouya/kniw/src/data/skill/eleciWave";
+import { higherBolt } from "../../skill/higherBolt";
+import { thunder } from "../../skill/thunder";
+import { eleciWave } from "../../skill/eleciWave";
 
 export const amethystRod: Weapon = {
   name: "amethystRod",

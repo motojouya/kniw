@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { blow } from "@motojouya/kniw/src/data/skill/blow";
-import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
-import { gravelWall } from "@motojouya/kniw/src/data/skill/gravelWall";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { blow } from "../../skill/blow";
+import { dazzle } from "../../skill/dazzle";
+import { gravelWall } from "../../skill/gravelWall";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const morningStar: Weapon = {
   name: "morningStar",

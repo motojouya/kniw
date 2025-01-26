@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from "../../model/skill";
-import { directAttackUp } from "@motojouya/kniw/src/data/status/directAttackUp";
+import { directAttackUp } from "../status/directAttackUp";
 
 export const waterCutter: Skill = {
   name: "waterCutter",

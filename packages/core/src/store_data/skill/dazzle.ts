@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_NONE } from "../../model/skill";
-import { accuracyDown } from "@motojouya/kniw/src/data/status/accuracyDown";
+import { accuracyDown } from "../status/accuracyDown";
 
 export const dazzle: Skill = {
   name: "dazzle",

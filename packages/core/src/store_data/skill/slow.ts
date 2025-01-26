@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "../../model/skill";
-import { slow as slowStatus } from "@motojouya/kniw/src/data/status/slow";
+import { slow as slowStatus } from "../status/slow";
 
 export const slow: Skill = {
   name: "slow",

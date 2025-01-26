@@ -5,7 +5,7 @@ import {
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
 } from "../../model/skill";
-import { paralysis } from "@motojouya/kniw/src/data/status/paralysis";
+import { paralysis } from "../status/paralysis";
 
 export const eleciWave: Skill = {
   name: "eleciWave",

@@ -6,7 +6,7 @@ import {
   DIRECT_TYPE_STAB,
   MAGIC_TYPE_NONE,
 } from "../../model/skill";
-import { shootingGuard } from "@motojouya/kniw/src/data/ability/shootingGuard";
+import { shootingGuard } from "../ability/shootingGuard";
 
 export const shotAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {
   const abilities = getAbilities(receiver);

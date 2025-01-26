@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ICE } from "../../model/skill";
-import { silent as silentStatus } from "@motojouya/kniw/src/data/status/silent";
+import { silent as silentStatus } from "../status/silent";
 
 export const silent: Skill = {
   name: "silent",

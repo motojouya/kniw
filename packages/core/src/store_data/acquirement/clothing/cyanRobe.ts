@@ -1,7 +1,7 @@
 import type { Clothing } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
-import { stoneShell } from "@motojouya/kniw/src/data/skill/stoneShell";
+import { mpGainPlus } from "../../ability/mpGainPlus";
+import { stoneShell } from "../../skill/stoneShell";
 
 export const cyanRobe: Clothing = {
   name: "cyanRobe",

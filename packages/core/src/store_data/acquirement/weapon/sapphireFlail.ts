@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { blow } from "@motojouya/kniw/src/data/skill/blow";
-import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
-import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { blow } from "../../skill/blow";
+import { gunWater } from "../../skill/gunWater";
+import { dazzle } from "../../skill/dazzle";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const sapphireFlail: Weapon = {
   name: "sapphireFlail",

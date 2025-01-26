@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
-import { smallHeat } from "@motojouya/kniw/src/data/skill/smallHeat";
-import { ghostFire } from "@motojouya/kniw/src/data/skill/ghostFire";
+import { flameFall } from "../../skill/flameFall";
+import { smallHeat } from "../../skill/smallHeat";
+import { ghostFire } from "../../skill/ghostFire";
 
 export const rubyRod: Weapon = {
   name: "rubyRod",

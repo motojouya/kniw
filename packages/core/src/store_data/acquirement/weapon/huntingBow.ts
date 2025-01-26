@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { toxicShot } from "@motojouya/kniw/src/data/skill/toxicShot";
-import { paralysisShot } from "@motojouya/kniw/src/data/skill/paralysisShot";
-import { silentShot } from "@motojouya/kniw/src/data/skill/silentShot";
+import { toxicShot } from "../../skill/toxicShot";
+import { paralysisShot } from "../../skill/paralysisShot";
+import { silentShot } from "../../skill/silentShot";
 
 export const huntingBow: Weapon = {
   name: "huntingBow",

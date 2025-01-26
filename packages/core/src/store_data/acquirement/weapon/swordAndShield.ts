@@ -1,10 +1,10 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { chop } from "@motojouya/kniw/src/data/skill/chop";
-import { push } from "@motojouya/kniw/src/data/skill/push";
-import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
-import { shootingGuard } from "@motojouya/kniw/src/data/ability/shootingGuard";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { chop } from "../../skill/chop";
+import { push } from "../../skill/push";
+import { dazzle } from "../../skill/dazzle";
+import { shootingGuard } from "../../ability/shootingGuard";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const swordAndShield: Weapon = {
   name: "swordAndShield",

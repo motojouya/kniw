@@ -1,6 +1,6 @@
 import type { Clothing } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { concentration } from "@motojouya/kniw/src/data/skill/concentration";
+import { concentration } from "../../skill/concentration";
 
 export const mithrilArmor: Clothing = {
   name: "mithrilArmor",

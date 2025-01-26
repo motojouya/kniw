@@ -1,9 +1,9 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { chop } from "@motojouya/kniw/src/data/skill/chop";
-import { swordDance } from "@motojouya/kniw/src/data/skill/swordDance";
-import { overbear } from "@motojouya/kniw/src/data/skill/overbear";
-import { rampartForce } from "@motojouya/kniw/src/data/ability/rampartForce";
+import { chop } from "../../skill/chop";
+import { swordDance } from "../../skill/swordDance";
+import { overbear } from "../../skill/overbear";
+import { rampartForce } from "../../ability/rampartForce";
 
 export const claymore: Weapon = {
   name: "claymore",

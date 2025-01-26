@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from "../../model/skill";
-import { shotAction } from "@motojouya/kniw/src/data/skill/shot";
+import { shotAction } from "../skill/shot";
 
 export const hardRain: Skill = {
   name: "hardRain",

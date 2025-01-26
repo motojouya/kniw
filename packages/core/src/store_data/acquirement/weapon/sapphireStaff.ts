@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { gunWater } from "@motojouya/kniw/src/data/skill/gunWater";
-import { stickyRain } from "@motojouya/kniw/src/data/skill/stickyRain";
-import { downRushing } from "@motojouya/kniw/src/data/skill/downRushing";
+import { gunWater } from "../../skill/gunWater";
+import { stickyRain } from "../../skill/stickyRain";
+import { downRushing } from "../../skill/downRushing";
 
 export const sapphireStaff: Weapon = {
   name: "sapphireStaff",

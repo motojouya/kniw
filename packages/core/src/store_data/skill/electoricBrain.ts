@@ -5,7 +5,7 @@ import {
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
 } from "../../model/skill";
-import { magicAttackUp } from "@motojouya/kniw/src/data/status/magicAttackUp";
+import { magicAttackUp } from "../status/magicAttackUp";
 
 export const electoricBrain: Skill = {
   name: "electoricBrain",

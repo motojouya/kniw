@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { hailstone } from "@motojouya/kniw/src/data/skill/hailstone";
-import { iceSandwich } from "@motojouya/kniw/src/data/skill/iceSandwich";
-import { silent } from "@motojouya/kniw/src/data/skill/silent";
+import { hailstone } from "../../skill/hailstone";
+import { iceSandwich } from "../../skill/iceSandwich";
+import { silent } from "../../skill/silent";
 
 export const jadeWand: Weapon = {
   name: "jadeWand",

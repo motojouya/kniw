@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_ROCK } from "../../model/skill";
-import { directDiffenceDown } from "@motojouya/kniw/src/data/status/directDiffenceDown";
+import { directDiffenceDown } from "../status/directDiffenceDown";
 
 export const stoneWeather: Skill = {
   name: "stoneWeather",

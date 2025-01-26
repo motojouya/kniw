@@ -1,6 +1,6 @@
 import type { Skill } from "../../model/skill";
 import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WATER } from "../../model/skill";
-import { directAttackDown } from "@motojouya/kniw/src/data/status/directAttackDown";
+import { directAttackDown } from "../status/directAttackDown";
 
 export const stickyRain: Skill = {
   name: "stickyRain",

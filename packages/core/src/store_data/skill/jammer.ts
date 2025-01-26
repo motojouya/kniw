@@ -5,7 +5,7 @@ import {
   DIRECT_TYPE_NONE,
   MAGIC_TYPE_THUNDER,
 } from "../../model/skill";
-import { magicAttackDown } from "@motojouya/kniw/src/data/status/magicAttackDown";
+import { magicAttackDown } from "../status/magicAttackDown";
 
 export const jammer: Skill = {
   name: "jammer",

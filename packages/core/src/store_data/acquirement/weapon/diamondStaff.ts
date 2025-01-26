@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { gunStone } from "@motojouya/kniw/src/data/skill/gunStone";
-import { mountFall } from "@motojouya/kniw/src/data/skill/mountFall";
-import { stoneWeather } from "@motojouya/kniw/src/data/skill/stoneWeather";
+import { gunStone } from "../../skill/gunStone";
+import { mountFall } from "../../skill/mountFall";
+import { stoneWeather } from "../../skill/stoneWeather";
 
 export const diamondStaff: Weapon = {
   name: "diamondStaff",

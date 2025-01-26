@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { flameFall } from "@motojouya/kniw/src/data/skill/flameFall";
-import { crossFire } from "@motojouya/kniw/src/data/skill/crossFire";
-import { ghostFire } from "@motojouya/kniw/src/data/skill/ghostFire";
+import { flameFall } from "../../skill/flameFall";
+import { crossFire } from "../../skill/crossFire";
+import { ghostFire } from "../../skill/ghostFire";
 
 export const rubyWand: Weapon = {
   name: "rubyWand",

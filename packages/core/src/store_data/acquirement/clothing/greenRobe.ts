@@ -1,7 +1,7 @@
 import type { Clothing } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { mpGainPlus } from "@motojouya/kniw/src/data/ability/mpGainPlus";
-import { quick } from "@motojouya/kniw/src/data/skill/quick";
+import { mpGainPlus } from "../../ability/mpGainPlus";
+import { quick } from "../../skill/quick";
 
 export const greenRobe: Clothing = {
   name: "greenRobe",

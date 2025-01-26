@@ -1,8 +1,8 @@
 import type { Weapon } from "../../../model/acquirement";
 import { createValidateWearable } from "../../../model/acquirement";
-import { shot } from "@motojouya/kniw/src/data/skill/shot";
-import { multiShot } from "@motojouya/kniw/src/data/skill/multiShot";
-import { dazzle } from "@motojouya/kniw/src/data/skill/dazzle";
+import { shot } from "../../skill/shot";
+import { multiShot } from "../../skill/multiShot";
+import { dazzle } from "../../skill/dazzle";
 
 export const crossBow: Weapon = {
   name: "crossBow",
