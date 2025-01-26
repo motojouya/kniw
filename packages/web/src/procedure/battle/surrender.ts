@@ -1,10 +1,10 @@
-import type { Battle } from "@motojouya/kniw/src/domain/battle";
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { BattleRepository } from "@motojouya/kniw/src/store/battle";
-import type { Dialogue } from "@motojouya/kniw/src/io/window_dialogue";
+import type { Battle } from "@motojouya/kniw-core/model/battle";
+import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
+import type { BattleRepository } from "@motojouya/kniw-core/store/battle";
+import type { Dialogue } from "../../io/window_dialogue";
 
-import { GameHome, GameVisitor, surrender as domainSurrender } from "@motojouya/kniw/src/domain/battle";
-import { UserCancel } from "@motojouya/kniw/src/io/window_dialogue";
+import { GameHome, GameVisitor, surrender as modelSurrender } from "@motojouya/kniw-core/model/battle";
+import { UserCancel } from "../../io/window_dialogue";
 
 export type Surrender = (
   battleRepository: BattleRepository,
@@ -15,7 +15,7 @@ export const surrender: Surrender = (battleRepository, dialogue) => async (battl
     return new UserCancel("降参していません");
   }
 
-  const turn = domainSurrender(battle, actor, actionDate);
+  const turn = modelSurrender(battle, actor, actionDate);
   battle.turns.push(turn);
   await battleRepository.save({
     ...battle,

@@ -1,9 +1,9 @@
-import type { Battle } from "@motojouya/kniw/src/domain/battle";
-import type { Turn } from "@motojouya/kniw/src/domain/turn";
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { BattleRepository } from "@motojouya/kniw/src/store/battle";
-import type { DoSkillForm } from "@motojouya/kniw/src/form/battle";
-import type { Dialogue } from "@motojouya/kniw/src/io/window_dialogue";
+import type { Battle } from "@motojouya/kniw-core/model/battle";
+import type { Turn } from "@motojouya/kniw-core/model/turn";
+import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
+import type { BattleRepository } from "@motojouya/kniw-core/store/battle";
+import type { DoSkillForm } from "../../form/battle";
+import type { Dialogue } from "../../io/window_dialogue";
 
 import {
   GameOngoing,
@@ -13,14 +13,14 @@ import {
   isSettlement,
   actToField,
   actToCharactor,
-} from "@motojouya/kniw/src/domain/battle";
+} from "@motojouya/kniw-core/model/battle";
 
-import { toAction, ReceiverDuplicationError } from "@motojouya/kniw/src/form/battle";
-import { underStatus } from "@motojouya/kniw/src/domain/status";
-import { sleep } from "@motojouya/kniw/src/data/status";
-import { createRandoms } from "@motojouya/kniw/src/domain/random";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
-import { UserCancel } from "@motojouya/kniw/src/io/window_dialogue";
+import { toAction, ReceiverDuplicationError } from "../../form/battle";
+import { underStatus } from "@motojouya/kniw-core/model/status";
+import { sleep } from "@motojouya/kniw-core/store_data/status";
+import { createRandoms } from "@motojouya/kniw-core/model/random";
+import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
+import { UserCancel } from "../../io/window_dialogue";
 
 export type Act = (
   dialogue: Dialogue,

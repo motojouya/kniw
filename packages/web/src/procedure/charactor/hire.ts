@@ -1,17 +1,17 @@
-import type { Charactor } from "@motojouya/kniw/src/domain/charactor";
-import type { CharactorForm } from "@motojouya/kniw/src/form/charactor";
-// import type { PartyForm } from '@motojouya/kniw/src/form/party';
+import type { Charactor } from "@motojouya/kniw-core/model/charactor";
+import type { CharactorForm } from "../../form/charactor";
+// import type { PartyForm } from '../../form/party';
 
-import { NotWearableErorr } from "@motojouya/kniw/src/domain/acquirement";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
+import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import {
   raceRepository,
   blessingRepository,
   clothingRepository,
   weaponRepository,
-} from "@motojouya/kniw/src/store/acquirement";
-import { createCharactor } from "@motojouya/kniw/src/domain/charactor";
-import { EmptyParameter } from "@motojouya/kniw/src/io/window_dialogue";
+} from "@motojouya/kniw-core/store/acquirement";
+import { createCharactor } from "@motojouya/kniw-core/model/charactor";
+import { EmptyParameter } from "../../io/window_dialogue";
 
 export type HireCharactor = (
   charactorForm: CharactorForm,

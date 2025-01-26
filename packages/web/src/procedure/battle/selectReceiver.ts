@@ -1,12 +1,12 @@
-import type { CharactorBattling } from "@motojouya/kniw/src/domain/charactor";
-import type { Battle } from "@motojouya/kniw/src/domain/battle";
-import type { Turn } from "@motojouya/kniw/src/domain/turn";
-import type { Skill } from "@motojouya/kniw/src/domain/skill";
+import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
+import type { Battle } from "@motojouya/kniw-core/model/battle";
+import type { Turn } from "@motojouya/kniw-core/model/turn";
+import type { Skill } from "@motojouya/kniw-core/model/skill";
 
-import { actToCharactor } from "@motojouya/kniw/src/domain/battle";
-import { toReceiver } from "@motojouya/kniw/src/form/battle";
-import { createAbsolute } from "@motojouya/kniw/src/domain/random";
-import { DataNotFoundError } from "@motojouya/kniw/src/store/schema/schema";
+import { actToCharactor } from "@motojouya/kniw-core/model/battle";
+import { toReceiver } from "../../form/battle";
+import { createAbsolute } from "@motojouya/kniw-core/model/random";
+import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 
 export type WillReceiver = { survive: boolean; receiver: CharactorBattling };
 

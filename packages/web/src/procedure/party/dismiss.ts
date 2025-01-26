@@ -1,5 +1,5 @@
-import type { Dialogue } from "@motojouya/kniw/src/io/window_dialogue";
-import type { PartyRepository } from "@motojouya/kniw/src/store/party";
+import type { Dialogue } from "../../io/window_dialogue";
+import type { PartyRepository } from "@motojouya/kniw-core/store/party";
 
 export type DismissParty = (dialogue: Dialogue, repository: PartyRepository) => (name: string) => Promise<boolean>;
 export const dismissParty: DismissParty = (dialogue, repository) => async (name) => {
