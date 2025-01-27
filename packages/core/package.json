@@ -2,9 +2,11 @@
   "name": "@motojouya/kniw-core",
   "version": "0.1.0",
   "description": "kniw core",
-  "main": "index.js",
   "directories": {
     "test": "test"
+  },
+  "exports": {
+    "./*": "./src/*.ts"
   },
   "devDependencies": {
     "typescript": "^5.7.3"

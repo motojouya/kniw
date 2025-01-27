@@ -22,6 +22,7 @@
     "noUncheckedSideEffectImports": true,
 
     /* Optional */
+    "rootDir": "src",
     "outDir": "ts_build"
   },
   "include": ["src"]
