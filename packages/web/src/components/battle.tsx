@@ -49,7 +49,7 @@ import { skillRepository } from '@motojouya/kniw-core/store/skill';
 import { MAGIC_TYPE_NONE } from '@motojouya/kniw-core/model/skill';
 
 import { underStatus } from '@motojouya/kniw-core/model/status';
-import { silent } from '@motojouya/kniw-core/store_data/status';
+import { silent } from '@motojouya/kniw-core/store_data/status/index';
 import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import { act } from '../procedure/battle/act';
 import { surrender } from '../procedure/battle/surrender';

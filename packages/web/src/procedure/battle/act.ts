@@ -17,7 +17,7 @@ import {
 
 import { toAction, ReceiverDuplicationError } from "../../form/battle";
 import { underStatus } from "@motojouya/kniw-core/model/status";
-import { sleep } from "@motojouya/kniw-core/store_data/status";
+import { sleep } from "@motojouya/kniw-core/store_data/status/index";
 import { createRandoms } from "@motojouya/kniw-core/model/random";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { UserCancel } from "../../io/window_dialogue";
