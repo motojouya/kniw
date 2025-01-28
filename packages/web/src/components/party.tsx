@@ -6,18 +6,15 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import {
-  FormErrorMessage,
-  FormLabel,
-  FormControl,
   Input,
   Button,
   Box,
   List,
-  ListItem,
   Heading,
   Text,
 } from '@chakra-ui/react';
 
+import { Field } from "./ui/field"
 import { CharactorCard } from './charactor';
 import { partyFormSchema, toPartyForm } from '../form/party';
 import { saveParty } from '../procedure/party/save';
@@ -114,6 +111,7 @@ export const PartyEditor: FC<{
     }
   };
 
+  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
   return (
     <Box p={4}>
       <Link href='/party/'><span>戻る</span></Link>
@@ -122,7 +120,7 @@ export const PartyEditor: FC<{
       <form onSubmit={handleSubmit(save)}>
         {saveMessage.message && (
           saveMessage.error
-            ? <FormErrorMessage>{saveMessage.message}</FormErrorMessage>
+            ? <Text>{saveMessage.message}</Text>
             : <Text>{saveMessage.message}</Text>
         )}
         {exist ? (
@@ -131,19 +129,17 @@ export const PartyEditor: FC<{
             <Text as={'dd'}>{partyForm.name}</Text>
           </Box>
         ) : (
-          <FormControl isInvalid={!!errors.name}>
-            <FormLabel htmlFor="name">name</FormLabel>
+          <Field invalid={!!errors.name} label="name" errorText={errors.name && errors.name.message}>
             <Input id="name" placeholder="name" {...register('name')} />
-            <FormErrorMessage>{errors.name && errors.name.message}</FormErrorMessage>
-          </FormControl>
+          </Field>
         )}
-        <List>
+        <List.Root>
           {fields.map((item, index) => (
-            <ListItem key={`charactor-${index}`}>
+            <List.Item key={`charactor-${index}`}>
               <CharactorCard register={register} getValues={getValues} remove={remove} errors={errors} index={index} />
-            </ListItem>
+            </List.Item>
           ))}
-        </List>
+        </List.Root>
         <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire</Button>
         <Button colorScheme="teal" isLoading={isSubmitting} type="submit">{exist ? 'Change' : 'Create'}</Button>
         {exist && (

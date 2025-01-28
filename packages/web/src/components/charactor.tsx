@@ -14,31 +14,19 @@ import {
   UseFormGetValues,
 } from 'react-hook-form';
 import {
-  FormErrorMessage,
-  FormLabel,
-  FormControl,
   Input,
   Button,
-//  Box,
   Card,
   CardHeader,
   CardBody,
   CardFooter,
-  Select,
-//  Heading,
   Text,
   Table,
-//  Thead,
-  Tbody,
-//  Tfoot,
-  Tr,
-  Th,
-  Td,
-//  TableCaption,
-  TableContainer,
-  Tag,
 } from '@chakra-ui/react';
 
+import { Select } from "./ui/select"
+import { Tag } from "./ui/tag"
+import { Field } from "./ui/field"
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import {
@@ -77,6 +65,7 @@ const getCharactorError: GetCharactorError = (errors, i, property) => {
   return error as FieldError;
 };
 
+// TODO working select tag https://www.chakra-ui.com/docs/components/select
 const SelectAcquirement: FC<{
   name: string,
   keyPrefix: string,
@@ -84,8 +73,7 @@ const SelectAcquirement: FC<{
   selectProps: UseFormRegisterReturn,
   error: FieldError | undefined,
 }> = ({ name, keyPrefix, allAcquirements, selectProps, error }) => (
-  <FormControl isInvalid={!!error}>
-    <FormLabel htmlFor={keyPrefix}>{name}</FormLabel>
+  <Field invalid={!!error} label={name} errorText={!!error && error.message}>
     <Select {...selectProps} placeholder={name}>
       {allAcquirements.map(acquirement => (
         <option key={`${keyPrefix}.${acquirement.name}`} value={acquirement.name}>
@@ -93,8 +81,7 @@ const SelectAcquirement: FC<{
         </option>
       ))}
     </Select>
-    <FormErrorMessage>{!!error && error.message}</FormErrorMessage>
-  </FormControl>
+  </Field>
 );
 
 export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
@@ -114,64 +101,62 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
     : (<Tag>{'HOME'}</Tag>);
 
   return (
-    <TableContainer>
-      <Table variant='simple'>
-        <Tbody>
-          <Tr>
-            <Th>名前      </Th><Td>{`${charactor.name}`}{isVisitorTag}    </Td>
-            <Th>HP        </Th><Td>{`${charactor.hp}/${physical.MaxHP}`}  </Td>
-            <Th>MP        </Th><Td>{`${charactor.mp}/${physical.MaxMP}`}  </Td>
-            <Th>WT        </Th><Td>{`${charactor.restWt}(${physical.WT})`}</Td>
-          </Tr>
-          <Tr>
-            <Th colSpan={2}>ステータス</Th><Td colSpan={6}>{statusesText} </Td>
-          </Tr>
-          <Tr>
-            <Th>種族      </Th><Td>{charactor.race.label}                 </Td>
-            <Th>祝福      </Th><Td>{charactor.blessing.label}             </Td>
-            <Th>装備      </Th><Td>{charactor.clothing.label}             </Td>
-            <Th>武器      </Th><Td>{charactor.weapon.label}               </Td>
-          </Tr>
-          <Tr>
-            <Th>STR       </Th><Td>{physical.STR}                         </Td>
-            <Th>VIT       </Th><Td>{physical.VIT}                         </Td>
-            <Th>DEX       </Th><Td>{physical.DEX}                         </Td>
-            <Th>AGI       </Th><Td>{physical.AGI}                         </Td>
-          </Tr>
-          <Tr>
-            <Th>AVD       </Th><Td>{physical.AVD}                         </Td>
-            <Th>INT       </Th><Td>{physical.INT}                         </Td>
-            <Th>MND       </Th><Td>{physical.MND}                         </Td>
-            <Th>RES       </Th><Td>{physical.RES}                         </Td>
-          </Tr>
-          <Tr>
-            <Th>刺突耐性  </Th><Td>{physical.StabResistance}              </Td>
-            <Th>斬撃耐性  </Th><Td>{physical.SlashResistance}             </Td>
-            <Th>打撃耐性  </Th><Td>{physical.BlowResistance}              </Td>
-          </Tr>
-          <Tr>
-            <Th>火属性    </Th><Td>{physical.FireSuitable}                </Td>
-            <Th>岩属性    </Th><Td>{physical.RockSuitable}                </Td>
-            <Th>水属性    </Th><Td>{physical.WaterSuitable}               </Td>
-          </Tr>
-          <Tr>
-            <Th>氷属性    </Th><Td>{physical.IceSuitable}                 </Td>
-            <Th>風属性    </Th><Td>{physical.AirSuitable}                 </Td>
-            <Th>雷属性    </Th><Td>{physical.ThunderSuitable}             </Td>
-          </Tr>
-          <Tr>
-            <Th colSpan={2}>アビリティ</Th><Td colSpan={6}>{abilitiesText}</Td>
-          </Tr>
-          <Tr>
-            <Th colSpan={2}>スキル    </Th><Td colSpan={6}>{skillsText}   </Td>
-          </Tr>
-          <Tr>
-            <Th>移動距離  </Th><Td>{physical.move}                        </Td>
-            <Th>移動高さ  </Th><Td>{physical.jump}                        </Td>
-          </Tr>
-        </Tbody>
-      </Table>
-    </TableContainer>
+    <Table.Root variant='simple'>
+      <Table.Body>
+        <Table.Row>
+          <Table.ColumnHeader>名前      </Table.ColumnHeader><Table.Cell>{`${charactor.name}`}{isVisitorTag}    </Table.Cell>
+          <Table.ColumnHeader>HP        </Table.ColumnHeader><Table.Cell>{`${charactor.hp}/${physical.MaxHP}`}  </Table.Cell>
+          <Table.ColumnHeader>MP        </Table.ColumnHeader><Table.Cell>{`${charactor.mp}/${physical.MaxMP}`}  </Table.Cell>
+          <Table.ColumnHeader>WT        </Table.ColumnHeader><Table.Cell>{`${charactor.restWt}(${physical.WT})`}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader colSpan={2}>ステータス</Table.ColumnHeader><Table.Cell colSpan={6}>{statusesText} </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>種族      </Table.ColumnHeader><Table.Cell>{charactor.race.label}                 </Table.Cell>
+          <Table.ColumnHeader>祝福      </Table.ColumnHeader><Table.Cell>{charactor.blessing.label}             </Table.Cell>
+          <Table.ColumnHeader>装備      </Table.ColumnHeader><Table.Cell>{charactor.clothing.label}             </Table.Cell>
+          <Table.ColumnHeader>武器      </Table.ColumnHeader><Table.Cell>{charactor.weapon.label}               </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>STR       </Table.ColumnHeader><Table.Cell>{physical.STR}                         </Table.Cell>
+          <Table.ColumnHeader>VIT       </Table.ColumnHeader><Table.Cell>{physical.VIT}                         </Table.Cell>
+          <Table.ColumnHeader>DEX       </Table.ColumnHeader><Table.Cell>{physical.DEX}                         </Table.Cell>
+          <Table.ColumnHeader>AGI       </Table.ColumnHeader><Table.Cell>{physical.AGI}                         </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>AVD       </Table.ColumnHeader><Table.Cell>{physical.AVD}                         </Table.Cell>
+          <Table.ColumnHeader>INT       </Table.ColumnHeader><Table.Cell>{physical.INT}                         </Table.Cell>
+          <Table.ColumnHeader>MND       </Table.ColumnHeader><Table.Cell>{physical.MND}                         </Table.Cell>
+          <Table.ColumnHeader>RES       </Table.ColumnHeader><Table.Cell>{physical.RES}                         </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>刺突耐性  </Table.ColumnHeader><Table.Cell>{physical.StabResistance}              </Table.Cell>
+          <Table.ColumnHeader>斬撃耐性  </Table.ColumnHeader><Table.Cell>{physical.SlashResistance}             </Table.Cell>
+          <Table.ColumnHeader>打撃耐性  </Table.ColumnHeader><Table.Cell>{physical.BlowResistance}              </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>火属性    </Table.ColumnHeader><Table.Cell>{physical.FireSuitable}                </Table.Cell>
+          <Table.ColumnHeader>岩属性    </Table.ColumnHeader><Table.Cell>{physical.RockSuitable}                </Table.Cell>
+          <Table.ColumnHeader>水属性    </Table.ColumnHeader><Table.Cell>{physical.WaterSuitable}               </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>氷属性    </Table.ColumnHeader><Table.Cell>{physical.IceSuitable}                 </Table.Cell>
+          <Table.ColumnHeader>風属性    </Table.ColumnHeader><Table.Cell>{physical.AirSuitable}                 </Table.Cell>
+          <Table.ColumnHeader>雷属性    </Table.ColumnHeader><Table.Cell>{physical.Table.ColumnHeaderunderSuitable}             </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader colSpan={2}>アビリティ</Table.ColumnHeader><Table.Cell colSpan={6}>{abilitiesText}</Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader colSpan={2}>スキル    </Table.ColumnHeader><Table.Cell colSpan={6}>{skillsText}   </Table.Cell>
+        </Table.Row>
+        <Table.Row>
+          <Table.ColumnHeader>移動距離  </Table.ColumnHeader><Table.Cell>{physical.move}                        </Table.Cell>
+          <Table.ColumnHeader>移動高さ  </Table.ColumnHeader><Table.Cell>{physical.jump}                        </Table.Cell>
+        </Table.Row>
+      </Table.Body>
+    </Table.Root>
   );
 };
 
@@ -206,11 +191,9 @@ export const CharactorCard: FC<{
         <Button type="button" onClick={() => remove(index)}>Fire</Button>
       </CardHeader>
       <CardBody>
-        <FormControl isInvalid={!!nameError}>
-          <FormLabel htmlFor={`charactors.${index}.name`}>name</FormLabel>
+        <Field invalid={!!nameError} label="name" errorText={!!nameError && nameError.message}>
           <Input {...register(`charactors.${index}.name` as const, { onBlur })} placeholder="name" />
-          <FormErrorMessage>{!!nameError && nameError.message}</FormErrorMessage>
-        </FormControl>
+        </Field>
         <SelectAcquirement
           name={'race'}
           keyPrefix={`charactors.${index}.race`}

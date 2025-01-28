@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Box, List, ListItem } from '@chakra-ui/react';
+import { Box, List } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { useIO } from '../../components/context';
@@ -13,16 +13,16 @@ export const BattleList: FC = () => {
     <Box>
       <Link href="/"><span>戻る</span></Link>
       <Box>
-        <List>
-          <ListItem key='battle-new'>
+        <List.Root>
+          <List.Item key='battle-new'>
             <Link href="/battle/?title=__new"><span>新しく作る</span></Link>
-          </ListItem>
+          </List.Item>
           {battleNames && battleNames.map((battleTitle: string, index: number) => (
-            <ListItem key={`battle-${index}`}>
+            <List.Item key={`battle-${index}`}>
               <Link href={`/battle/?title=${battleTitle}`}><span>{battleTitle}</span></Link>
-            </ListItem>
+            </List.Item>
           ))}
-        </List>
+        </List.Root>
       </Box>
     </Box>
   );

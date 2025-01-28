@@ -16,19 +16,16 @@ import {
   UseFieldArrayReplace,
 } from 'react-hook-form';
 import {
-  FormErrorMessage,
-  FormLabel,
-  FormControl,
   Button,
   Box,
   List,
-  ListItem,
   Heading,
   Text,
-  Tag,
-  Select,
 } from '@chakra-ui/react';
 
+import { Select } from "./ui/select"
+import { Tag } from "./ui/tag"
+import { Field } from "./ui/field"
 import {
   GameOngoing,
   GameHome,
@@ -104,10 +101,10 @@ const ReceiverSelect: FC<{
 
   const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
 
+  // TODO working select tag https://www.chakra-ui.com/docs/components/select
   return (
     <Box>
-      <FormControl>
-        <FormLabel htmlFor={formItemName}>receiver</FormLabel>
+      <Field label="receiver">
         <Select  {...register(formItemName, { onBlur })} placeholder='receiver'>
           {receiverOptions.map(receiverOption => (
             <option key={`${receiverOption.value}`} value={receiverOption.value}>
@@ -115,7 +112,7 @@ const ReceiverSelect: FC<{
             </option>
           ))}
         </Select>
-      </FormControl>
+      </Field>
       <Box>
         {receiverResult && (typeof receiverResult === 'string' ? receiverResult : <CharactorDetail charactor={receiverResult} />)}
       </Box>
@@ -153,8 +150,7 @@ const SkillSelect: FC<{
   };
 
   return (
-    <FormControl isInvalid={!!errors.skillName}>
-      <FormLabel htmlFor='skill'>skill</FormLabel>
+    <Field invalid={!!errors.skillName} label="skill" errorText={!!errors.skillName && errors.skillName.message}>
       <Select  {...register('skillName', { onBlur })} placeholder='skill'>
         {skillOptions.map(skillOption => (
           <option key={`${skillOption.value}`} value={skillOption.value}>
@@ -162,8 +158,7 @@ const SkillSelect: FC<{
           </option>
         ))}
       </Select>
-      <FormErrorMessage>{!!errors.skillName && errors.skillName.message}</FormErrorMessage>
-    </FormControl>
+    </Field>
   );
 };
 
@@ -209,6 +204,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const isVisitorTag = actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
   const skill = skillRepository.get(getValues('skillName'))
 
+  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
   return (
     <Box p={4}>
       <Link href='/battle/'><span>戻る</span></Link>
@@ -218,7 +214,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
       {battle.result === GameOngoing && (
         <>
           <form onSubmit={handleSubmit(actSkill)}>
-            {message && (<FormErrorMessage>{message}</FormErrorMessage>)}
+            {message && (<Text>{message}</Text>)}
             {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} />}
             <Box as={'dl'}>
               <Heading as={'dt'}>battle title</Heading>
@@ -232,23 +228,23 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
               errors={errors}
               replace={replace}
             />
-            <List>
+            <List.Root>
               {fields.map((item, index) => (
-                <ListItem key={`receiversWithIsVisitor.${index}`}>
+                <List.Item key={`receiversWithIsVisitor.${index}`}>
                   {skill && (<ReceiverSelect battle={battle} actor={actor} lastTurn={lastTurn} skill={skill} getValues={getValues} register={register} index={index} />)}
-                </ListItem>
+                </List.Item>
               ))}
-            </List>
+            </List.Root>
             <Button colorScheme="teal" isLoading={isSubmitting} type="submit">実行</Button>
           </form>
           <Box>
-            <List>
+            <List.Root>
               {lastTurn.sortedCharactors.map(charactor => (
-                <ListItem key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
+                <List.Item key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
                   <CharactorDetail charactor={charactor} />
-                </ListItem>
+                </List.Item>
               ))}
-            </List>
+            </List.Root>
           </Box>
         </>
       )}
