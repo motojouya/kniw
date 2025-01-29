@@ -21,9 +21,17 @@ import {
   List,
   Heading,
   Text,
+  createListCollection,
 } from '@chakra-ui/react';
 
-import { Select } from "./ui/select"
+import {
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "./ui/select"
 import { Tag } from "./ui/tag"
 import { Field } from "./ui/field"
 import {
@@ -101,17 +109,24 @@ const ReceiverSelect: FC<{
 
   const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
 
+  const collection = createListCollection({ items: receiverOptions });
   // TODO working select tag https://www.chakra-ui.com/docs/components/select
   return (
     <Box>
       <Field label="receiver">
-        <Select  {...register(formItemName, { onBlur })} placeholder='receiver'>
-          {receiverOptions.map(receiverOption => (
-            <option key={`${receiverOption.value}`} value={receiverOption.value}>
-              {receiverOption.label}
-            </option>
-          ))}
-        </Select>
+        <SelectRoot  {...register(formItemName, { onBlur })} collection={collection}>
+          <SelectLabel>receiver</SelectLabel>
+          <SelectTrigger>
+            <SelectValueText placeholder='receiver' />
+          </SelectTrigger>
+          <SelectContent>
+            {collection.items.map(receiverOption => (
+              <SelectItem key={`${receiverOption.value}`} item={receiverOption}>
+                {receiverOption.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </SelectRoot>
       </Field>
       <Box>
         {receiverResult && (typeof receiverResult === 'string' ? receiverResult : <CharactorDetail charactor={receiverResult} />)}
@@ -149,15 +164,22 @@ const SkillSelect: FC<{
     replace(Array(receiverCount).fill(''));
   };
 
+  const collection = createListCollection({ items: skillOptions });
   return (
     <Field invalid={!!errors.skillName} label="skill" errorText={!!errors.skillName && errors.skillName.message}>
-      <Select  {...register('skillName', { onBlur })} placeholder='skill'>
-        {skillOptions.map(skillOption => (
-          <option key={`${skillOption.value}`} value={skillOption.value}>
-            {skillOption.label}
-          </option>
-        ))}
-      </Select>
+      <SelectRoot  {...register('skillName', { onBlur })} collection={collection}>
+        <SelectLabel>skill</SelectLabel>
+        <SelectTrigger>
+          <SelectValueText placeholder='skill' />
+        </SelectTrigger>
+        <SelectContent>
+          {collection.items.map(skillOption => (
+            <SelectItem key={`${skillOption.value}`} item={skillOption}>
+              {skillOption.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
     </Field>
   );
 };
@@ -172,7 +194,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     handleSubmit,
     register,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors }, //, isSubmitting
     control,
   } = useForm<DoSkillForm>({ resolver: zodResolver(doSkillFormSchema) });
 
@@ -205,6 +227,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const skill = skillRepository.get(getValues('skillName'))
 
   // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
+  // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
     <Box p={4}>
       <Link href='/battle/'><span>戻る</span></Link>
@@ -235,7 +258,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                 </List.Item>
               ))}
             </List.Root>
-            <Button colorScheme="teal" isLoading={isSubmitting} type="submit">実行</Button>
+            <Button colorScheme="teal" type="submit">実行</Button>
           </form>
           <Box>
             <List.Root>

@@ -20,7 +20,7 @@ export const BattleNew: FC = () => {
   const {
     handleSubmit,
     register,
-    formState: { errors, isSubmitting },
+    formState: { errors }, //, isSubmitting
   } = useForm<{ title: string }>();
   const [homeParty, setHomeParty] = useState<Party | null>(null);
   const [visitorParty, setVisitorParty] = useState<Party | null>(null);
@@ -51,6 +51,7 @@ export const BattleNew: FC = () => {
   };
 
   // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
+  // FIXME Button loading={isSubmitting} loadingText="Starting Battle..." としたかったがloadingがエラーになる
   return (
     <Box p={4}>
       <Link href="/battle/"><span>戻る</span></Link>
@@ -62,7 +63,7 @@ export const BattleNew: FC = () => {
         </Field>
         <ImportParty type='HOME' party={homeParty} setParty={setHomeParty}/>
         <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty}/>
-        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">Start Battle</Button>
+        <Button colorScheme="teal" type="submit">Start Battle</Button>
       </form>
     </Box>
   );

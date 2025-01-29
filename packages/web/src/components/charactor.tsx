@@ -17,14 +17,19 @@ import {
   Input,
   Button,
   Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
   Text,
   Table,
+  createListCollection,
 } from '@chakra-ui/react';
 
-import { Select } from "./ui/select"
+import {
+  SelectContent,
+  SelectItem,
+  SelectLabel,
+  SelectRoot,
+  SelectTrigger,
+  SelectValueText,
+} from "./ui/select"
 import { Tag } from "./ui/tag"
 import { Field } from "./ui/field"
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
@@ -72,17 +77,26 @@ const SelectAcquirement: FC<{
   allAcquirements: Acquirement[],
   selectProps: UseFormRegisterReturn,
   error: FieldError | undefined,
-}> = ({ name, keyPrefix, allAcquirements, selectProps, error }) => (
-  <Field invalid={!!error} label={name} errorText={!!error && error.message}>
-    <Select {...selectProps} placeholder={name}>
-      {allAcquirements.map(acquirement => (
-        <option key={`${keyPrefix}.${acquirement.name}`} value={acquirement.name}>
-          {acquirement.label}
-        </option>
-      ))}
-    </Select>
-  </Field>
-);
+}> = ({ name, keyPrefix, allAcquirements, selectProps, error }) => {
+  const collection = createListCollection({ items: allAcquirements });
+  return (
+    <Field invalid={!!error} label={name} errorText={!!error && error.message}>
+      <SelectRoot {...selectProps} collection={collection}>
+        <SelectLabel>{name}</SelectLabel>
+        <SelectTrigger>
+          <SelectValueText placeholder={name} />
+        </SelectTrigger>
+        <SelectContent>
+          {collection.items.map(acquirement => (
+            <SelectItem key={`${keyPrefix}.${acquirement.name}`} item={{ label: acquirement.label, value: acquirement.name }}>
+              {acquirement.label}
+            </SelectItem>
+          ))}
+        </SelectContent>
+      </SelectRoot>
+    </Field>
+  );
+}
 
 export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
   const physical = getPhysical(charactor);
@@ -101,7 +115,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
     : (<Tag>{'HOME'}</Tag>);
 
   return (
-    <Table.Root variant='simple'>
+    <Table.Root variant='line'>
       <Table.Body>
         <Table.Row>
           <Table.ColumnHeader>名前      </Table.ColumnHeader><Table.Cell>{`${charactor.name}`}{isVisitorTag}    </Table.Cell>
@@ -143,7 +157,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
         <Table.Row>
           <Table.ColumnHeader>氷属性    </Table.ColumnHeader><Table.Cell>{physical.IceSuitable}                 </Table.Cell>
           <Table.ColumnHeader>風属性    </Table.ColumnHeader><Table.Cell>{physical.AirSuitable}                 </Table.Cell>
-          <Table.ColumnHeader>雷属性    </Table.ColumnHeader><Table.Cell>{physical.Table.ColumnHeaderunderSuitable}             </Table.Cell>
+          <Table.ColumnHeader>雷属性    </Table.ColumnHeader><Table.Cell>{physical.ThunderSuitable}             </Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.ColumnHeader colSpan={2}>アビリティ</Table.ColumnHeader><Table.Cell colSpan={6}>{abilitiesText}</Table.Cell>
@@ -186,11 +200,11 @@ export const CharactorCard: FC<{
   };
 
   return (
-    <Card p={3} border='solid'>
-      <CardHeader>
+    <Card.Root p={3} border='solid'>
+      <Card.Header>
         <Button type="button" onClick={() => remove(index)}>Fire</Button>
-      </CardHeader>
-      <CardBody>
+      </Card.Header>
+      <Card.Body>
         <Field invalid={!!nameError} label="name" errorText={!!nameError && nameError.message}>
           <Input {...register(`charactors.${index}.name` as const, { onBlur })} placeholder="name" />
         </Field>
@@ -222,10 +236,10 @@ export const CharactorCard: FC<{
           error={getCharactorError(errors, index, 'weapon')}
           selectProps={register(`charactors.${index}.weapon` as const, { onBlur })}
         />
-      </CardBody>
-      <CardFooter>
+      </Card.Body>
+      <Card.Footer>
         {typeof charactor === 'string' ? <Text>{charactor}</Text> : <CharactorDetail charactor={charactor} />}
-      </CardFooter>
-    </Card>
+      </Card.Footer>
+    </Card.Root>
   );
 };

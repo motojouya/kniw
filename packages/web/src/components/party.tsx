@@ -70,7 +70,7 @@ export const PartyEditor: FC<{
     handleSubmit,
     register,
     getValues,
-    formState: { errors, isSubmitting },
+    formState: { errors }, //, isSubmitting
     control,
   } = useForm<PartyForm>({
     resolver: zodResolver(partyFormSchema),
@@ -112,6 +112,7 @@ export const PartyEditor: FC<{
   };
 
   // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
+  // FIXME Button  loading={isSubmitting} loadingText="Creating Party..." としたかったがloadingがエラーになる
   return (
     <Box p={4}>
       <Link href='/party/'><span>戻る</span></Link>
@@ -141,7 +142,7 @@ export const PartyEditor: FC<{
           ))}
         </List.Root>
         <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire</Button>
-        <Button colorScheme="teal" isLoading={isSubmitting} type="submit">{exist ? 'Change' : 'Create'}</Button>
+        <Button colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
         {exist && (
           <Button type="button" onClick={() => deleteParty(partyForm.name)} >Dismiss</Button>
         )}
