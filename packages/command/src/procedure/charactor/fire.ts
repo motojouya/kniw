@@ -1,6 +1,6 @@
-import type { Dialogue } from "../io/standard_dialogue";
+import type { Dialogue } from "../../io/standard_dialogue";
 import type { Database } from "@motojouya/kniw-core/io/database";
-import { NotApplicable } from "../io/standard_dialogue";
+import { NotApplicable } from "../../io/standard_dialogue";
 import { createRepository } from "@motojouya/kniw-core/store/charactor";
 import { createRandoms } from "@motojouya/kniw-core/model/random";
 

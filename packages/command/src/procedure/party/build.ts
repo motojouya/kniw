@@ -1,8 +1,8 @@
-import type { Dialogue } from "../io/standard_dialogue";
+import type { Dialogue } from "../../io/standard_dialogue";
 import type { SelectOption } from "@motojouya/kniw-core/io/dialogue";
 import type { Database } from "@motojouya/kniw-core/io/database";
 import type { Charactor } from "@motojouya/kniw-core/model/charactor";
-import { NotApplicable } from "../io/standard_dialogue";
+import { NotApplicable } from "../../io/standard_dialogue";
 import { createRepository as createCharactorRepository } from "@motojouya/kniw-core/store/charactor";
 import { createRepository as createPartyRepository } from "@motojouya/kniw-core/store/party";
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";

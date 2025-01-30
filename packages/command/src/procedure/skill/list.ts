@@ -1,4 +1,4 @@
-import type { Dialogue } from "../io/standard_dialogue";
+import type { Dialogue } from "../../io/standard_dialogue";
 import { skillRepository } from "@motojouya/kniw-core/store/skill";
 
 export type List = (dialogue: Dialogue) => Promise<void>;

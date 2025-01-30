@@ -1,4 +1,4 @@
-import type { Dialogue } from "../io/standard_dialogue";
+import type { Dialogue } from "../../io/standard_dialogue";
 import type { Database } from "@motojouya/kniw-core/io/database";
 import { createRepository } from "@motojouya/kniw-core/store/party";
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";

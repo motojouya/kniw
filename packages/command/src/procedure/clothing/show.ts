@@ -1,4 +1,4 @@
-import type { Dialogue } from "../io/standard_dialogue";
+import type { Dialogue } from "../../io/standard_dialogue";
 import { clothingRepository } from "@motojouya/kniw-core/store/acquirement";
 
 export type Show = (dialogue: Dialogue) => (name: string) => Promise<void>;

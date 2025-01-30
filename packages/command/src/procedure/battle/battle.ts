@@ -1,8 +1,8 @@
-import type { Dialogue } from "../io/standard_dialogue";
+import type { Dialogue } from "../../io/standard_dialogue";
 import type { Database } from "@motojouya/kniw-core/io/database";
-import type { Repository } from "@motojouya/kniw-core/store/disk_repository";
+import type { Repository } from "@motojouya/kniw-core/store_utility/disk_repository";
 import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
-import { NotApplicable } from "../io/standard_dialogue";
+import { NotApplicable } from "../../io/standard_dialogue";
 import type { Battle } from "@motojouya/kniw-core/model/battle";
 import type { Turn } from "@motojouya/kniw-core/model/turn";
 import {
@@ -37,9 +37,8 @@ import { skillRepository } from "@motojouya/kniw-core/store/skill";
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
 import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { underStatus } from "@motojouya/kniw-core/model/status";
-import { sleep } from "@motojouya/kniw-core/store_data/status/sleep";
 import { MAGIC_TYPE_NONE } from "@motojouya/kniw-core/model/skill";
-import { silent } from "@motojouya/kniw-core/store_data/status";
+import { silent, sleep } from "@motojouya/kniw-core/store_data/status/index";
 
 const SKILL = "SKILL";
 const LIST = "LIST";
