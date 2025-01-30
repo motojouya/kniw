@@ -104,9 +104,6 @@ out
 .tern-port
 
 # vite
-# dist
+dist
 dist-ssr
 *.local
-
-dist_react
-ts_build

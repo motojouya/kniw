@@ -8,7 +8,7 @@ export default {
   input: 'src/index.ts',
   output: [
     {
-      file: 'dist/kniw',
+      file: 'build/kniw',
       format: 'es',
       plugins: [terser()],
     },

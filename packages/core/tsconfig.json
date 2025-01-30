@@ -23,7 +23,7 @@
 
     /* Optional */
     "rootDir": "src",
-    "outDir": "ts_build"
+    "outDir": "dist"
   },
   "include": ["src"]
 }
