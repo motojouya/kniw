@@ -50,7 +50,7 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
       - run: npm ci
-      - run: npm run build -w @motojouya/kniw-cli
+      - run: npm run build -w @motojouya/kniw-command
       - name: check build diff
         run: |
           build_diff=$(git diff --name-only | wc -l)
