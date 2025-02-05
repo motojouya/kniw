@@ -1,5 +1,4 @@
-import { describe, it } from "node:test";
-import assert from "node:assert";
+import { describe, it, expect } from 'vitest'
 
 import type { Physical } from "../../src/model/physical";
 import { addPhysicals } from "../../src/model/physical";

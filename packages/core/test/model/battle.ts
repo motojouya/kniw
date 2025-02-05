@@ -4,8 +4,7 @@ import type { Skill } from "../../src/model/skill";
 import type { CharactorBattling } from "../../src/model/charactor";
 import type { BattleJson } from "../../src/store_schema/battle";
 
-import { describe, it } from "node:test";
-import assert from "node:assert";
+import { describe, it, expect } from 'vitest'
 
 import {
   actToCharactor,

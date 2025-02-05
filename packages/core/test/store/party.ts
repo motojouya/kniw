@@ -1,5 +1,4 @@
-import { describe, it } from "node:test";
-import assert from "node:assert";
+import { describe, it, expect } from 'vitest'
 
 import type { Party } from "../../src/model/party";
 import type { Database } from "../../src/io/database";
