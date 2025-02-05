@@ -7,25 +7,25 @@ import { toParty } from '../../src/store_schema/party';
 import { createRepository } from '../../src/store/party';
 
 const dbMock: Database = {
-  save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
-  get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({
+  save: (_namespace, _objctKey, _obj) => new Promise((resolve, _reject) => resolve()),
+  get: (_namespace, _objctKey) => new Promise((resolve, _reject) => resolve({
     name: 'team01',
     charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ],
   })),
-  remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
-  list: namespace => new Promise((resolve, reject) => resolve(['team01', 'team02'])),
-  checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  importJson: (fileName) => new Promise((resolve, reject) => resolve({
+  remove: (_namespace, _objctKey) => new Promise((resolve, _reject) => resolve()),
+  list: _namespace => new Promise((resolve, _reject) => resolve(['team01', 'team02'])),
+  checkNamespace: _namespace => new Promise((resolve, _reject) => resolve()),
+  importJson: (_fileName) => new Promise((resolve, _reject) => resolve({
     name: 'team01',
     charactors: [
       { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120 },
       { name: 'john', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 },
     ],
   })),
-  exportJson: (obj, fileName) => new Promise((resolve, reject) => resolve(null)),
+  exportJson: (_obj, _fileName) => new Promise((resolve, _reject) => resolve(null)),
 };
 
 describe('Party#createRepository', function () {

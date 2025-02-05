@@ -58,15 +58,16 @@ describe('Database#checkNamespace', function () {
 
     assert.strictEqual(fs.existsSync(DIRNAME), true);
 
-    const listResult = await database.list(NAMESPACE);
+    const _listResult = await database.list(NAMESPACE);
 
-    const getResult = await database.get(NAMESPACE, 'something');
+    const _getResult = await database.get(NAMESPACE, 'something');
 
     try {
       await database.save(NAMESPACE, 'something', { test: 'something', check: 'anything' });
       assert.fail();
     } catch(e) {
       console.log(e);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const error = e as any
       assert.strictEqual(error.code, 'ENOENT');
     }

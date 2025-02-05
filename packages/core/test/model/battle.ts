@@ -9,7 +9,6 @@ import assert from "node:assert";
 
 import {
   actToCharactor,
-  actToField,
   stay,
   wait,
   start,
@@ -23,8 +22,7 @@ import {
 } from '../../src/model/battle';
 import { toBattle } from '../../src/store_schema/battle';
 import { toParty } from '../../src/store_schema/party';
-import { toTurn, toAction } from '../../src/store_schema/turn';
-import { parse, format } from 'date-fns';
+import { format } from 'date-fns';
 
 import { toCharactor } from '../../src/store_schema/charactor';
 import { NotWearableErorr } from '../../src/model/acquirement';

@@ -3,15 +3,10 @@ import assert from "node:assert";
 
 import type { Database } from '../../src/io/database'
 import type { Battle } from '../../src/model/battle';
-import {
-  GameOngoing,
-  GameHome,
-  GameVisitor,
-  GameDraw
-} from '../../src/model/battle';
+import { GameOngoing } from '../../src/model/battle';
 import { toBattle } from '../../src/store_schema/battle';
 import { createRepository } from '../../src/store/battle';
-import { parse, format } from 'date-fns';
+import { format } from 'date-fns';
 
 const testData = {
   title: 'first-title',
@@ -51,13 +46,13 @@ const testData = {
 };
 
 const dbMock: Database = {
-  save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
-  get: (namespace, objctKey) => new Promise((resolve, reject) => resolve(testData)),
-  remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
-  list: namespace => new Promise((resolve, reject) => resolve(['2023-06-29T12:12:12', '2023-06-29T15:15:15'])),
-  checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  importJson: (fileName) => new Promise((resolve, reject) => resolve(testData)),
-  exportJson: (obj, fileName) => new Promise((resolve, reject) => resolve(null)),
+  save: (_namespace, _objctKey, _obj) => new Promise((resolve, _reject) => resolve()),
+  get: (_namespace, _objctKey) => new Promise((resolve, _reject) => resolve(testData)),
+  remove: (_namespace, _objctKey) => new Promise((resolve, _reject) => resolve()),
+  list: _namespace => new Promise((resolve, _reject) => resolve(['2023-06-29T12:12:12', '2023-06-29T15:15:15'])),
+  checkNamespace: _namespace => new Promise((resolve, _reject) => resolve()),
+  importJson: (_fileName) => new Promise((resolve, _reject) => resolve(testData)),
+  exportJson: (_obj, _fileName) => new Promise((resolve, _reject) => resolve(null)),
 };
 
 

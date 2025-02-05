@@ -7,13 +7,13 @@ import { toCharactor } from '../../src/store_schema/charactor';
 import { createRepository } from '../../src/store/charactor';
 
 const dbMock: Database = {
-  save: (namespace, objctKey, obj) => new Promise((resolve, reject) => resolve()),
-  get: (namespace, objctKey) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
-  remove: (namespace, objctKey) => new Promise((resolve, reject) => resolve()),
-  list: namespace => new Promise((resolve, reject) => resolve(['sam', 'john'])),
-  checkNamespace: namespace => new Promise((resolve, reject) => resolve()),
-  importJson: (fileName) => new Promise((resolve, reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
-  exportJson: (obj, fileName) => new Promise((resolve, reject) => resolve(null)),
+  save: (_namespace, _objctKey, _obj) => new Promise((resolve, _reject) => resolve()),
+  get: (_namespace, _objctKey) => new Promise((resolve, _reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
+  remove: (_namespace, _objctKey) => new Promise((resolve, _reject) => resolve()),
+  list: _namespace => new Promise((resolve, _reject) => resolve(['sam', 'john'])),
+  checkNamespace: _namespace => new Promise((resolve, _reject) => resolve()),
+  importJson: (_fileName) => new Promise((resolve, _reject) => resolve({ name: 'sam', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115 })),
+  exportJson: (_obj, _fileName) => new Promise((resolve, _reject) => resolve(null)),
 };
 
 describe('Charctor#createRepository', function () {

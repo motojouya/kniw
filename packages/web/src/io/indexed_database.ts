@@ -59,8 +59,7 @@ const createRemove: CreateRemove = (db) => async (namespace, objctKey) => {
   await table.delete(objctKey);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const exportJson: ExportJson = async (json, fileName) => {
+const exportJson: ExportJson = async (json, _fileName) => {
   const newHandle = await window.showSaveFilePicker();
   const writableStream = await newHandle.createWritable();
   await writableStream.write(JSON.stringify(json));
@@ -81,8 +80,7 @@ const pickerOpts = {
   multiple: false,
 };
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-export const importJson: ImportJson = async (dammyFileName) => {
+export const importJson: ImportJson = async (_dammyFileName) => {
   // @ts-expect-error なんか型エラーでるので要対応ですけど？
   const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
   const file = await fileHandle.getFile();
@@ -94,9 +92,8 @@ export type CreateDatabase = () => Promise<Database>;
 
 export const createDatabase: CreateDatabase = async () => {
   const db = createDB();
-  /* eslint-disable @typescript-eslint/no-unused-vars */
   return {
-    checkNamespace: async (namespace) => {},
+    checkNamespace: async (_namespace) => {},
     save: createSave(db),
     list: createList(db),
     get: createGet(db),
@@ -104,5 +101,4 @@ export const createDatabase: CreateDatabase = async () => {
     importJson,
     exportJson,
   };
-  /* eslint-enable @typescript-eslint/no-unused-vars */
 };

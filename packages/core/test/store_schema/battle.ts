@@ -2,12 +2,6 @@ import { describe, it } from "node:test";
 import assert from "node:assert";
 
 import type { Battle } from '../../src/model/battle';
-import {
-  GameOngoing,
-  GameHome,
-  GameVisitor,
-  GameDraw
-} from '../../src/model/battle';
 import { toBattle } from '../../src/store_schema/battle';
 
 const testData = {

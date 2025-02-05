@@ -1,13 +1,13 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import { NotWearableErorr } from '../../../src/model/acquirement';
+// import { NotWearableErorr } from '../../../src/model/acquirement';
 
 // import { earth } from '../../../src/store_data/acquirement/blessing/earth';
 // import { mind } from '../../../src/store_data/acquirement/blessing/mind';
 // import { sea } from '../../../src/store_data/acquirement/blessing/sea';
 import { sky } from '../../../src/store_data/acquirement/blessing/sky';
-import { redRobe } from '../../../src/store_data/acquirement/clothing/redRobe';
+// import { redRobe } from '../../../src/store_data/acquirement/clothing/redRobe';
 import { steelArmor } from '../../../src/store_data/acquirement/clothing/steelArmor';
 // import { fairy } from '../../../src/store_data/acquirement/race/fairy';
 // import { golem } from '../../../src/store_data/acquirement/race/golem';

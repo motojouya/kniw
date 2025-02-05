@@ -4,7 +4,6 @@ import assert from "node:assert";
 import type { Party } from '../../src/model/party';
 import { CharactorDuplicationError } from '../../src/model/party';
 import { toParty } from '../../src/store_schema/party';
-import { toCharactor } from '../../src/store_schema/charactor';
 
 describe('Party#toParty', function () {
   it('CharactorDuplicationError', function () {

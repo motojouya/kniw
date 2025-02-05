@@ -6,31 +6,10 @@ import type { BattleJson } from '../../src/store_schema/battle';
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import {
-  actToCharactor,
-  actToField,
-  stay,
-  wait,
-  start,
-  isSettlement,
-  createBattle,
-  GameOngoing,
-  GameHome,
-  GameVisitor,
-  GameDraw
-} from '../../src/model/battle';
+import { actToCharactor, GameOngoing } from '../../src/model/battle';
 import { toBattle } from '../../src/store_schema/battle';
-import { toParty } from '../../src/store_schema/party';
-import { toTurn, toAction } from '../../src/store_schema/turn';
-import { parse, format } from 'date-fns';
 
 import { toCharactor } from '../../src/store_schema/charactor';
-import { NotWearableErorr } from '../../src/model/acquirement';
-import { CharactorDuplicationError } from '../../src/model/party';
-import {
-  JsonSchemaUnmatchError,
-  DataNotFoundError,
-} from '../../src/store_utility/schema';
 import { skillRepository } from '../../src/store/skill';
 
 const testData = {
@@ -77,9 +56,6 @@ const testData = {
   ],
   result: GameOngoing,
 } as BattleJson;
-
-type FormatDate = (date: Date) => string;
-const formatDate: FormatDate = date => format(date, "yyyy-MM-dd'T'HH:mm:ss")
 
 describe('Damage#rapier', function () {
   it('前衛刺突耐性なし', function () {

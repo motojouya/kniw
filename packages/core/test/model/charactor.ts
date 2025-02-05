@@ -11,10 +11,7 @@ import {
 } from '../../src/model/charactor';
 import { toCharactor } from '../../src/store_schema/charactor';
 import { NotWearableErorr } from '../../src/model/acquirement';
-import {
-  JsonSchemaUnmatchError,
-  DataNotFoundError,
-} from '../../src/store_utility/schema';
+import { DataNotFoundError } from '../../src/store_utility/schema';
 
 describe('Charctor#toCharactor', function () {
   it('DataNotFoundError', function () {

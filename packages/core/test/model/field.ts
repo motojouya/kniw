@@ -137,7 +137,7 @@ describe('Climate#changeClimate', function () {
 
   it('minus test', function () {
     try {
-      const result = changeClimate({
+      const _result = changeClimate({
         times: 0.1,
         damage: 0.1,
         accuracy: -0.5,
@@ -150,7 +150,7 @@ describe('Climate#changeClimate', function () {
   });
   it('over test', function () {
     try {
-      const result = changeClimate({
+      const _result = changeClimate({
         times: 0.1,
         damage: 0.1,
         accuracy: 1.5,
