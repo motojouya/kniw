@@ -1,3 +1,4 @@
+/// <reference types="vitest/config" />
 import { resolve } from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
@@ -33,4 +34,5 @@ export default defineConfig({
     port: 3000,
   },
   base: process.env.VITE_URL_PREFIX ? "/" + process.env.VITE_URL_PREFIX + "/" : "/",
+  test: {},
 });

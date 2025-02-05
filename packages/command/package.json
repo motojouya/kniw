@@ -17,10 +17,11 @@
     "rollup": "^4.31.0",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
   },
   "scripts": {
-    "test": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning --test",
+    "test": "vitest run",
     "manually_test": "ts-node -r tsconfig-paths/register manually_test/io/standard_dialogue.ts",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "build": "tsc -b && rollup --config rollup.config.js"

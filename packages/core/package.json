@@ -9,10 +9,11 @@
     "./*": "./dist/*.js"
   },
   "devDependencies": {
-    "typescript": "^5.7.3"
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.5"
   },
   "scripts": {
-    "test": "node --experimental-strip-types --experimental-transform-types --experimental-detect-module --no-warnings=ExperimentalWarning --test"
+    "test": "vitest run"
   },
   "author": "Takuya Sugiyama @motojouya",
   "license": "MIT",
