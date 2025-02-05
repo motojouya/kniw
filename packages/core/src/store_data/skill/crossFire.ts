@@ -1,10 +1,5 @@
 import type { Skill } from "../../model/skill";
-import {
-  calcOrdinaryMagicalDamage,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_NONE,
-  MAGIC_TYPE_FIRE,
-} from "../../model/skill";
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_FIRE } from "../../model/skill";
 
 export const crossFire: Skill = {
   name: "crossFire",

@@ -1,11 +1,6 @@
 import { getAbilities } from "../../model/charactor";
 import type { Skill, ActionToCharactor } from "../../model/skill";
-import {
-  calcOrdinaryDirectDamage,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_STAB,
-  MAGIC_TYPE_NONE,
-} from "../../model/skill";
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from "../../model/skill";
 import { shootingGuard } from "../ability/shootingGuard";
 
 export const shotAction: ActionToCharactor = (self, actor, randoms, field, receiver) => {

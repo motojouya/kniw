@@ -1,10 +1,5 @@
 import type { Skill } from "../../model/skill";
-import {
-  calcOrdinaryMagicalDamage,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_NONE,
-  MAGIC_TYPE_WIND,
-} from "../../model/skill";
+import { calcOrdinaryMagicalDamage, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_WIND } from "../../model/skill";
 
 export const tornade: Skill = {
   name: "tornade",

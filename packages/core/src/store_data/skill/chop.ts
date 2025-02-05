@@ -1,10 +1,5 @@
 import type { Skill } from "../../model/skill";
-import {
-  calcOrdinaryDirectDamage,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_SLASH,
-  MAGIC_TYPE_NONE,
-} from "../../model/skill";
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_SLASH, MAGIC_TYPE_NONE } from "../../model/skill";
 
 export const chop: Skill = {
   name: "chop",

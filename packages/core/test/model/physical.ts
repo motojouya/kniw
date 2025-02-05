@@ -1,8 +1,8 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Physical } from '../../src/model/physical';
-import { addPhysicals } from '../../src/model/physical';
+import type { Physical } from "../../src/model/physical";
+import { addPhysicals } from "../../src/model/physical";
 
 const basePhysical: Physical = {
   MaxHP: 100,
@@ -29,8 +29,8 @@ const basePhysical: Physical = {
   jump: 3,
 };
 
-describe('Physical#addPhysicals', function () {
-  it('add', function () {
+describe("Physical#addPhysicals", function () {
+  it("add", function () {
     const result = addPhysicals([
       basePhysical,
       {
@@ -107,7 +107,7 @@ describe('Physical#addPhysicals', function () {
     assert.strictEqual(result.jump, 6);
   });
 
-  it('minus', function () {
+  it("minus", function () {
     const result = addPhysicals([
       basePhysical,
       {
@@ -184,4 +184,3 @@ describe('Physical#addPhysicals', function () {
     assert.strictEqual(result.jump, 3);
   });
 });
-

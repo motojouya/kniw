@@ -7,12 +7,7 @@ import { NotWearableErorr } from "../model/acquirement";
 import { DataNotFoundError } from "../store_utility/schema";
 import { validate } from "../model/charactor";
 import { statusSchema, toStatus, toStatusJson } from "./status";
-import {
-  raceRepository,
-  weaponRepository,
-  clothingRepository,
-  blessingRepository,
-} from "../store/acquirement";
+import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from "../store/acquirement";
 
 export const attachedStatusSchema = z.object({
   status: statusSchema,

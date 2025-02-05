@@ -1,66 +1,198 @@
 import { describe, it } from "node:test";
 import assert from "node:assert";
 
-import type { Battle } from '../../src/model/battle';
-import { toBattle } from '../../src/store_schema/battle';
+import type { Battle } from "../../src/model/battle";
+import { toBattle } from "../../src/store_schema/battle";
 
 const testData = {
-  title: 'first-title',
+  title: "first-title",
   home: {
-    name: 'light',
+    name: "light",
     charactors: [
-      { name: 'denim', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-      { name: 'vyse', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
+      {
+        name: "denim",
+        race: "human",
+        blessing: "earth",
+        clothing: "steelArmor",
+        weapon: "swordAndShield",
+        statuses: [],
+        hp: 100,
+        mp: 0,
+        restWt: 120,
+        isVisitor: false,
+      },
+      {
+        name: "vyse",
+        race: "human",
+        blessing: "earth",
+        clothing: "redRobe",
+        weapon: "rubyRod",
+        statuses: [],
+        hp: 100,
+        mp: 0,
+        restWt: 115,
+        isVisitor: false,
+      },
     ],
   },
   visitor: {
-    name: 'dark',
+    name: "dark",
     charactors: [
-      { name: 'catiua', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-      { name: 'lanselot', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+      {
+        name: "catiua",
+        race: "human",
+        blessing: "earth",
+        clothing: "steelArmor",
+        weapon: "swordAndShield",
+        statuses: [],
+        hp: 100,
+        mp: 0,
+        restWt: 130,
+        isVisitor: true,
+      },
+      {
+        name: "lanselot",
+        race: "human",
+        blessing: "earth",
+        clothing: "redRobe",
+        weapon: "rubyRod",
+        statuses: [],
+        hp: 100,
+        mp: 0,
+        restWt: 110,
+        isVisitor: true,
+      },
     ],
   },
   turns: [
     {
-      datetime: '2023-06-29T12:12:21',
+      datetime: "2023-06-29T12:12:21",
       action: {
-        type: 'TIME_PASSING',
+        type: "TIME_PASSING",
         wt: 0,
       },
       sortedCharactors: [
-        { name: 'denim', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'vyse', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
-        { name: 'catiua', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-        { name: 'lanselot', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+        {
+          name: "denim",
+          race: "human",
+          blessing: "earth",
+          clothing: "steelArmor",
+          weapon: "swordAndShield",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 120,
+          isVisitor: false,
+        },
+        {
+          name: "vyse",
+          race: "human",
+          blessing: "earth",
+          clothing: "redRobe",
+          weapon: "rubyRod",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 115,
+          isVisitor: false,
+        },
+        {
+          name: "catiua",
+          race: "human",
+          blessing: "earth",
+          clothing: "steelArmor",
+          weapon: "swordAndShield",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 130,
+          isVisitor: true,
+        },
+        {
+          name: "lanselot",
+          race: "human",
+          blessing: "earth",
+          clothing: "redRobe",
+          weapon: "rubyRod",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 110,
+          isVisitor: true,
+        },
       ],
       field: {
-        climate: 'SUNNY',
+        climate: "SUNNY",
       },
     },
     {
-      datetime: '2023-06-29T12:12:23',
+      datetime: "2023-06-29T12:12:23",
       action: {
-        type: 'TIME_PASSING',
+        type: "TIME_PASSING",
         wt: 130,
       },
       sortedCharactors: [
-        { name: 'sam', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 120, isVisitor: false },
-        { name: 'sara', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 115, isVisitor: false },
-        { name: 'john', race: 'human', blessing: 'earth', clothing: 'steelArmor', weapon: 'swordAndShield', statuses: [], hp: 100, mp: 0, restWt: 130, isVisitor: true },
-        { name: 'noa', race: 'human', blessing: 'earth', clothing: 'redRobe', weapon: 'rubyRod', statuses: [], hp: 100, mp: 0, restWt: 110, isVisitor: true },
+        {
+          name: "sam",
+          race: "human",
+          blessing: "earth",
+          clothing: "steelArmor",
+          weapon: "swordAndShield",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 120,
+          isVisitor: false,
+        },
+        {
+          name: "sara",
+          race: "human",
+          blessing: "earth",
+          clothing: "redRobe",
+          weapon: "rubyRod",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 115,
+          isVisitor: false,
+        },
+        {
+          name: "john",
+          race: "human",
+          blessing: "earth",
+          clothing: "steelArmor",
+          weapon: "swordAndShield",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 130,
+          isVisitor: true,
+        },
+        {
+          name: "noa",
+          race: "human",
+          blessing: "earth",
+          clothing: "redRobe",
+          weapon: "rubyRod",
+          statuses: [],
+          hp: 100,
+          mp: 0,
+          restWt: 110,
+          isVisitor: true,
+        },
       ],
       field: {
-        climate: 'RAIN',
+        climate: "RAIN",
       },
-    }
+    },
   ],
-  result: 'ONGOING',
+  result: "ONGOING",
 };
 
-describe('Battle#toBattle', function () {
-  it('toBattle', async () => {
-    const battle = (toBattle(testData) as Battle);
+describe("Battle#toBattle", function () {
+  it("toBattle", async () => {
+    const battle = toBattle(testData) as Battle;
     console.log(battle);
-    assert.strictEqual(battle.title, 'first-title');
+    assert.strictEqual(battle.title, "first-title");
   });
 });

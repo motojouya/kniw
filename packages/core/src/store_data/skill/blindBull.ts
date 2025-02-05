@@ -1,10 +1,5 @@
 import type { Skill } from "../../model/skill";
-import {
-  calcOrdinaryDirectDamage,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_STAB,
-  MAGIC_TYPE_NONE,
-} from "../../model/skill";
+import { calcOrdinaryDirectDamage, calcOrdinaryAccuracy, DIRECT_TYPE_STAB, MAGIC_TYPE_NONE } from "../../model/skill";
 
 export const blindBull: Skill = {
   name: "blindBull",

@@ -1,10 +1,5 @@
 import type { Skill } from "../../model/skill";
-import {
-  addStatus,
-  calcOrdinaryAccuracy,
-  DIRECT_TYPE_NONE,
-  MAGIC_TYPE_THUNDER,
-} from "../../model/skill";
+import { addStatus, calcOrdinaryAccuracy, DIRECT_TYPE_NONE, MAGIC_TYPE_THUNDER } from "../../model/skill";
 import { magicAttackUp } from "../status/magicAttackUp";
 
 export const electoricBrain: Skill = {
