@@ -8,17 +8,17 @@ describe("Randoms#validateRandoms", function () {
     const result = validateRandoms(randoms);
     const isError = result instanceof RandomRangeError;
 
-    expect(isError, false);
+    expect(isError).toBe(false);
   });
   it("createAbsolute", function () {
     const randoms = createAbsolute();
     const result = validateRandoms(randoms);
     const isError = result instanceof RandomRangeError;
 
-    expect(isError, false);
-    expect(randoms.times, 1);
-    expect(randoms.damage, 1);
-    expect(randoms.accuracy, 1);
+    expect(isError).toBe(false);
+    expect(randoms.times).toBe(1);
+    expect(randoms.damage).toBe(1);
+    expect(randoms.accuracy).toBe(1);
   });
   it("zero", function () {
     const result = validateRandoms({
@@ -28,7 +28,7 @@ describe("Randoms#validateRandoms", function () {
     });
     const isError = result instanceof RandomRangeError;
 
-    expect(isError, false);
+    expect(isError).toBe(false);
   });
 
   it("minus times", function () {
@@ -38,12 +38,11 @@ describe("Randoms#validateRandoms", function () {
       accuracy: -0.1,
     });
     if (result instanceof RandomRangeError) {
-      assert.ok(result);
-      expect(result.prop, "times");
-      expect(result.value, -0.1);
-      expect(result.message, "timesの値は0から1です");
+      expect(result.prop).toBe("times");
+      expect(result.value).toBe(-0.1);
+      expect(result.message).toBe("timesの値は0から1です");
     } else {
-      assert.fail();
+      expect.unreachable('result should be error');
     }
   });
   it("minus damage", function () {
@@ -53,12 +52,11 @@ describe("Randoms#validateRandoms", function () {
       accuracy: -0.1,
     });
     if (result instanceof RandomRangeError) {
-      assert.ok(result);
-      expect(result.prop, "damage");
-      expect(result.value, -0.1);
-      expect(result.message, "damageの値は0から1です");
+      expect(result.prop).toBe("damage");
+      expect(result.value).toBe(-0.1);
+      expect(result.message).toBe("damageの値は0から1です");
     } else {
-      assert.fail();
+      expect.unreachable('result should be error');
     }
   });
   it("minus accuracy", function () {
@@ -68,12 +66,11 @@ describe("Randoms#validateRandoms", function () {
       accuracy: -0.1,
     });
     if (result instanceof RandomRangeError) {
-      assert.ok(result);
-      expect(result.prop, "accuracy");
-      expect(result.value, -0.1);
-      expect(result.message, "accuracyの値は0から1です");
+      expect(result.prop).toBe("accuracy");
+      expect(result.value).toBe(-0.1);
+      expect(result.message).toBe("accuracyの値は0から1です");
     } else {
-      assert.fail();
+      expect.unreachable('result should be error');
     }
   });
 
@@ -84,12 +81,11 @@ describe("Randoms#validateRandoms", function () {
       accuracy: 1.1,
     });
     if (result instanceof RandomRangeError) {
-      assert.ok(result);
-      expect(result.prop, "times");
-      expect(result.value, 1.1);
-      expect(result.message, "timesの値は0から1です");
+      expect(result.prop).toBe("times");
+      expect(result.value).toBe(1.1);
+      expect(result.message).toBe("timesの値は0から1です");
     } else {
-      assert.fail();
+      expect.unreachable('result should be error');
     }
   });
   it("over damage", function () {
@@ -99,12 +95,11 @@ describe("Randoms#validateRandoms", function () {
       accuracy: 1.1,
     });
     if (result instanceof RandomRangeError) {
-      assert.ok(result);
-      expect(result.prop, "damage");
-      expect(result.value, 1.1);
-      expect(result.message, "damageの値は0から1です");
+      expect(result.prop).toBe("damage");
+      expect(result.value).toBe(1.1);
+      expect(result.message).toBe("damageの値は0から1です");
     } else {
-      assert.fail();
+      expect.unreachable('result should be error');
     }
   });
   it("over accuracy", function () {
@@ -114,12 +109,11 @@ describe("Randoms#validateRandoms", function () {
       accuracy: 1.1,
     });
     if (result instanceof RandomRangeError) {
-      assert.ok(result);
-      expect(result.prop, "accuracy");
-      expect(result.value, 1.1);
-      expect(result.message, "accuracyの値は0から1です");
+      expect(result.prop).toBe("accuracy");
+      expect(result.value).toBe(1.1);
+      expect(result.message).toBe("accuracyの値は0から1です");
     } else {
-      assert.fail();
+      expect.unreachable('result should be error');
     }
   });
 });

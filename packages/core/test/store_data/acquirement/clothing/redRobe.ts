@@ -21,16 +21,16 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("redRobe#validateWearable", function () {
   it("ok", function () {
     const result = redRobe.validateWearable(human, earth, redRobe, rubyRod);
-    expect(result, null);
+    expect(result).toBe(null);
   });
   //it('ng', function () {
   //  const result = redRobe.validateWearable(human, sky, redRobe, rubyRod);
   //  if (result instanceof NotWearableErorr) {
-  //    expect(result.acquirement.name, 'redRobe');
-  //    expect(result.cause.name, 'sky');
-  //    expect(result.message, 'このキャラクターの設定ではredRobeを装備できません');
+  //    expect(result.acquirement.name).toBe('redRobe');
+  //    expect(result.cause.name).toBe('sky');
+  //    expect(result.message).toBe('このキャラクターの設定ではredRobeを装備できません');
   //  } else {
-  //    expect(true, false);
+  //    expect.unreachable('result shoud be error');
   //  }
   //});
 });

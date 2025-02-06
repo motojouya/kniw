@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("werewolf#validateWearable", function () {
   it("ok", function () {
     const result = werewolf.validateWearable(werewolf, sky, redRobe, rubyRod);
-    expect(result, null);
+    expect(result).toBe(null);
   });
 });

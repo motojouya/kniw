@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("human#validateWearable", function () {
   it("ok", function () {
     const result = human.validateWearable(human, sky, redRobe, rubyRod);
-    expect(result, null);
+    expect(result).toBe(null);
   });
 });

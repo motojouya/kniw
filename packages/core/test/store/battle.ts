@@ -150,60 +150,60 @@ describe("Battle#createRepository", function () {
     const repository = await createRepository(dbMock);
     const battle = toBattle(testData) as Battle;
     await repository.save(battle);
-    expect(true, true);
+    expect(true).toBe(true);
   });
   it("get", async () => {
     const repository = await createRepository(dbMock);
     const battle = await repository.get("2023-06-29T12:12:12");
     const typedBattle = battle as Battle;
     if (typedBattle) {
-      expect(typedBattle.title, "first-title");
+      expect(typedBattle.title).toBe("first-title");
 
       const home = typedBattle.home;
-      expect(home.name, "home");
-      expect(home.charactors.length, 2);
-      expect(home.charactors[0].name, "sam");
-      expect(home.charactors[1].name, "sara");
+      expect(home.name).toBe("home");
+      expect(home.charactors.length).toBe(2);
+      expect(home.charactors[0].name).toBe("sam");
+      expect(home.charactors[1].name).toBe("sara");
 
       const visitor = typedBattle.visitor;
-      expect(visitor.name, "visitor");
-      expect(visitor.charactors.length, 2);
-      expect(visitor.charactors[0].name, "john");
-      expect(visitor.charactors[1].name, "noa");
+      expect(visitor.name).toBe("visitor");
+      expect(visitor.charactors.length).toBe(2);
+      expect(visitor.charactors[0].name).toBe("john");
+      expect(visitor.charactors[1].name).toBe("noa");
 
       const turns = typedBattle.turns;
-      expect(turns.length, 1);
-      expect(formatDate(turns[0].datetime), "2023-06-29T12:12:21");
+      expect(turns.length).toBe(1);
+      expect(formatDate(turns[0].datetime)).toBe("2023-06-29T12:12:21");
       if (turns[0].action.type === "TIME_PASSING") {
-        expect(turns[0].action.type, "TIME_PASSING");
-        expect(turns[0].action.wt, 0);
+        expect(turns[0].action.type).toBe("TIME_PASSING");
+        expect(turns[0].action.wt).toBe(0);
       } else {
-        expect(true, false);
+        expect.unreachable('type shoud be TIME_PASSING');
       }
 
-      expect(turns[0].sortedCharactors.length, 4);
-      expect(turns[0].sortedCharactors[0].name, "sam");
-      expect(turns[0].sortedCharactors[1].name, "sara");
-      expect(turns[0].sortedCharactors[2].name, "john");
-      expect(turns[0].sortedCharactors[3].name, "noa");
+      expect(turns[0].sortedCharactors.length).toBe(4);
+      expect(turns[0].sortedCharactors[0].name).toBe("sam");
+      expect(turns[0].sortedCharactors[1].name).toBe("sara");
+      expect(turns[0].sortedCharactors[2].name).toBe("john");
+      expect(turns[0].sortedCharactors[3].name).toBe("noa");
 
-      expect(turns[0].field.climate, "SUNNY");
+      expect(turns[0].field.climate).toBe("SUNNY");
 
-      expect(typedBattle.result, GameOngoing);
+      expect(typedBattle.result).toBe(GameOngoing);
     } else {
-      expect(true, false);
+      expect.unreachable('battle shoud be exist');
     }
   });
   it("remove", async () => {
     const repository = await createRepository(dbMock);
     await repository.remove("2023-06-29T12:12:12");
-    expect(true, true);
+    expect(true).toBe(true);
   });
   it("list", async () => {
     const repository = await createRepository(dbMock);
     const battleList = await repository.list();
-    expect(battleList.length, 2);
-    expect(battleList[0], "2023-06-29T12:12:12");
-    expect(battleList[1], "2023-06-29T15:15:15");
+    expect(battleList.length).toBe(2);
+    expect(battleList[0]).toBe("2023-06-29T12:12:12");
+    expect(battleList[1]).toBe("2023-06-29T15:15:15");
   });
 });

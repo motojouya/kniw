@@ -23,10 +23,10 @@ describe("mpGainPlus#wait", function () {
       mp: 0,
       restWt: 115,
     }) as CharactorBattling;
-    expect(charactor.mp, 0);
+    expect(charactor.mp).toBe(0);
 
     const result = mpGainPlus.wait(30, charactor, randoms);
-    expect(result.mp, 2);
+    expect(result.mp).toBe(2);
   });
   it("zero", function () {
     const randoms = {
@@ -45,10 +45,10 @@ describe("mpGainPlus#wait", function () {
       mp: 0,
       restWt: 115,
     }) as CharactorBattling;
-    expect(charactor.mp, 0);
+    expect(charactor.mp).toBe(0);
 
     const result = mpGainPlus.wait(0, charactor, randoms);
-    expect(result.mp, 0);
+    expect(result.mp).toBe(0);
   });
   it("over", function () {
     const randoms = {
@@ -67,9 +67,9 @@ describe("mpGainPlus#wait", function () {
       mp: 0,
       restWt: 115,
     }) as CharactorBattling;
-    expect(charactor.mp, 0);
+    expect(charactor.mp).toBe(0);
 
     const result = mpGainPlus.wait(210, charactor, randoms);
-    expect(result.mp, 11);
+    expect(result.mp).toBe(11);
   });
 });

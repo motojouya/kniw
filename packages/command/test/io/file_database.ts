@@ -61,7 +61,6 @@ describe("Database#checkNamespace", function () {
 
     try {
       await database.save(NAMESPACE, "something", { test: "something", check: "anything" });
-      assert.fail();
       expect.unreachable('expect to throw error');
     } catch (e) {
       console.log(e);

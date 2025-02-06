@@ -56,32 +56,32 @@ describe("Charctor#createRepository", function () {
       restWt: 115,
     }) as Charactor;
     await repository.save(charactor);
-    expect(true, true);
+    expect(true).toBe(true);
   });
   it("get", async () => {
     const repository = await createRepository(dbMock);
     const charactor = await repository.get("sam");
     const typedCharactor = charactor as Charactor;
     if (typedCharactor) {
-      expect(typedCharactor.name, "sam");
-      expect(typedCharactor.race.name, "human");
-      expect(typedCharactor.blessing.name, "earth");
-      expect(typedCharactor.clothing.name, "redRobe");
-      expect(typedCharactor.weapon.name, "rubyRod");
+      expect(typedCharactor.name).toBe("sam");
+      expect(typedCharactor.race.name).toBe("human");
+      expect(typedCharactor.blessing.name).toBe("earth");
+      expect(typedCharactor.clothing.name).toBe("redRobe");
+      expect(typedCharactor.weapon.name).toBe("rubyRod");
     } else {
-      expect(true, false);
+      expect.unreachable('charactor shoud be exist');
     }
   });
   it("remove", async () => {
     const repository = await createRepository(dbMock);
     await repository.remove("sam");
-    expect(true, true);
+    expect(true).toBe(true);
   });
   it("list", async () => {
     const repository = await createRepository(dbMock);
     const charactorList = await repository.list();
-    expect(charactorList.length, 2);
-    expect(charactorList[0], "sam");
-    expect(charactorList[1], "john");
+    expect(charactorList.length).toBe(2);
+    expect(charactorList[0]).toBe("sam");
+    expect(charactorList[1]).toBe("john");
   });
 });

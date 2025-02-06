@@ -104,40 +104,40 @@ describe("Party#createRepository", function () {
       ],
     }) as Party;
     await repository.save(party);
-    expect(true, true);
+    expect(true).toBe(true);
   });
   it("get", async () => {
     const repository = await createRepository(dbMock);
     const party = await repository.get("team01");
     const typedParty = party as Party;
     if (typedParty) {
-      expect(typedParty.name, "team01");
+      expect(typedParty.name).toBe("team01");
       const charactors = typedParty.charactors;
-      expect(charactors.length, 2);
-      expect(charactors[0].name, "sam");
-      expect(charactors[0].race.name, "human");
-      expect(charactors[0].blessing.name, "earth");
-      expect(charactors[0].clothing.name, "steelArmor");
-      expect(charactors[0].weapon.name, "swordAndShield");
-      expect(charactors[1].name, "john");
-      expect(charactors[1].race.name, "human");
-      expect(charactors[1].blessing.name, "earth");
-      expect(charactors[1].clothing.name, "redRobe");
-      expect(charactors[1].weapon.name, "rubyRod");
+      expect(charactors.length).toBe(2);
+      expect(charactors[0].name).toBe("sam");
+      expect(charactors[0].race.name).toBe("human");
+      expect(charactors[0].blessing.name).toBe("earth");
+      expect(charactors[0].clothing.name).toBe("steelArmor");
+      expect(charactors[0].weapon.name).toBe("swordAndShield");
+      expect(charactors[1].name).toBe("john");
+      expect(charactors[1].race.name).toBe("human");
+      expect(charactors[1].blessing.name).toBe("earth");
+      expect(charactors[1].clothing.name).toBe("redRobe");
+      expect(charactors[1].weapon.name).toBe("rubyRod");
     } else {
-      expect(true, false);
+      expect.unreachable('party shoud be exist');
     }
   });
   it("remove", async () => {
     const repository = await createRepository(dbMock);
     await repository.remove("team01");
-    expect(true, true);
+    expect(true).toBe(true);
   });
   it("list", async () => {
     const repository = await createRepository(dbMock);
     const partyList = await repository.list();
-    expect(partyList.length, 2);
-    expect(partyList[0], "team01");
-    expect(partyList[1], "team02");
+    expect(partyList.length).toBe(2);
+    expect(partyList[0]).toBe("team01");
+    expect(partyList[1]).toBe("team02");
   });
 });

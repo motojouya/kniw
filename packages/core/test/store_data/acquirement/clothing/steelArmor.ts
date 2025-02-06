@@ -21,16 +21,16 @@ import { swordAndShield } from "../../../src/store_data/acquirement/weapon/sword
 describe("steelArmor#validateWearable", function () {
   it("ok", function () {
     const result = steelArmor.validateWearable(human, earth, steelArmor, swordAndShield);
-    expect(result, null);
+    expect(result).toBe(null);
   });
   // it('ng', function () {
   //   const result = steelArmor.validateWearable(fairy, earth, steelArmor, swordAndShield);
   //   if (result instanceof NotWearableErorr) {
-  //     expect(result.acquirement.name, 'steelArmor');
-  //     expect(result.cause.name, 'fairy');
-  //     expect(result.message, 'このキャラクターの設定ではsteelArmorを装備できません');
+  //     expect(result.acquirement.name).toBe('steelArmor');
+  //     expect(result.cause.name).toBe('fairy');
+  //     expect(result.message).toBe('このキャラクターの設定ではsteelArmorを装備できません');
   //   } else {
-  //     expect(true, false);
+  //    expect.unreachable('result shoud be error');
   //   }
   // });
 });

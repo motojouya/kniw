@@ -168,14 +168,14 @@ describe("Battle#toBattle", function () {
       battle instanceof JsonSchemaUnmatchError ||
       battle instanceof NotBattlingError
     ) {
-      expect(true, false);
+      expect.unreachable('battle is value');
     } else {
-      expect(battle.title, "first-title");
-      expect(battle.home.name, "home");
-      expect(battle.visitor.name, "visitor");
-      expect(battle.turns.length, 1);
-      expect(formatDate(battle.turns[0].datetime), "2023-06-29T12:12:21");
-      expect(battle.result, GameOngoing);
+      expect(battle.title).toBe("first-title");
+      expect(battle.home.name).toBe("home");
+      expect(battle.visitor.name).toBe("visitor");
+      expect(battle.turns.length).toBe(1);
+      expect(formatDate(battle.turns[0].datetime)).toBe("2023-06-29T12:12:21");
+      expect(battle.result).toBe(GameOngoing);
     }
   });
 });
@@ -238,7 +238,7 @@ describe("Battle#start", function () {
     }) as Party;
 
     const battle = createBattle("first-title", homeParty, visitorParty);
-    expect(battle.result, GameOngoing);
+    expect(battle.result).toBe(GameOngoing);
 
     const turn = start(battle, new Date(), {
       times: 0.1,
@@ -246,23 +246,23 @@ describe("Battle#start", function () {
       accuracy: 0.1,
     });
 
-    expect(turn.action.type, "TIME_PASSING");
+    expect(turn.action.type).toBe("TIME_PASSING");
     if (turn.action.type === "TIME_PASSING") {
-      expect(turn.action.wt, 0);
+      expect(turn.action.wt).toBe(0);
     } else {
-      expect(true, false);
+      expect.unreachable('type should be TIME_PASSING');
     }
 
-    expect(turn.field.climate, "SUNNY");
-    expect(turn.sortedCharactors.length, 4);
-    expect(turn.sortedCharactors[0].name, "chang");
-    expect(turn.sortedCharactors[0].isVisitor, true);
-    expect(turn.sortedCharactors[1].name, "john");
-    expect(turn.sortedCharactors[1].isVisitor, false);
-    expect(turn.sortedCharactors[2].name, "sam");
-    expect(turn.sortedCharactors[2].isVisitor, false);
-    expect(turn.sortedCharactors[3].name, "tom");
-    expect(turn.sortedCharactors[3].isVisitor, true);
+    expect(turn.field.climate).toBe("SUNNY");
+    expect(turn.sortedCharactors.length).toBe(4);
+    expect(turn.sortedCharactors[0].name).toBe("chang");
+    expect(turn.sortedCharactors[0].isVisitor).toBe(true);
+    expect(turn.sortedCharactors[1].name).toBe("john");
+    expect(turn.sortedCharactors[1].isVisitor).toBe(false);
+    expect(turn.sortedCharactors[2].name).toBe("sam");
+    expect(turn.sortedCharactors[2].isVisitor).toBe(false);
+    expect(turn.sortedCharactors[3].name).toBe("tom");
+    expect(turn.sortedCharactors[3].isVisitor).toBe(true);
   });
 });
 
@@ -279,28 +279,28 @@ describe("Battle#act", function () {
       accuracy: 0.1,
     });
 
-    expect(turn.action.type, "DO_SKILL");
+    expect(turn.action.type).toBe("DO_SKILL");
     if (turn.action.type === "DO_SKILL") {
-      expect(turn.action.actor.name, "sam");
-      expect(turn.action.skill.name, "chop");
-      expect(turn.action.receivers.length, 1);
-      expect(turn.action.receivers[0].name, "john");
+      expect(turn.action.actor.name).toBe("sam");
+      expect(turn.action.skill.name).toBe("chop");
+      expect(turn.action.receivers.length).toBe(1);
+      expect(turn.action.receivers[0].name).toBe("john");
     } else {
-      expect(true, false);
+      expect.unreachable('type should be DO_SKILL');
     }
 
-    expect(turn.field.climate, "SUNNY");
-    expect(turn.sortedCharactors.length, 4);
-    expect(turn.sortedCharactors[0].name, "noa");
-    expect(turn.sortedCharactors[1].name, "sara");
+    expect(turn.field.climate).toBe("SUNNY");
+    expect(turn.sortedCharactors.length).toBe(4);
+    expect(turn.sortedCharactors[0].name).toBe("noa");
+    expect(turn.sortedCharactors[1].name).toBe("sara");
 
-    expect(turn.sortedCharactors[2].name, "john");
-    expect(turn.sortedCharactors[2].hp, 54);
-    expect(turn.sortedCharactors[2].restWt, 130);
+    expect(turn.sortedCharactors[2].name).toBe("john");
+    expect(turn.sortedCharactors[2].hp).toBe(54);
+    expect(turn.sortedCharactors[2].restWt).toBe(130);
 
-    expect(turn.sortedCharactors[3].name, "sam");
-    expect(turn.sortedCharactors[3].hp, 100);
-    expect(turn.sortedCharactors[3].restWt, 240);
+    expect(turn.sortedCharactors[3].name).toBe("sam");
+    expect(turn.sortedCharactors[3].hp).toBe(100);
+    expect(turn.sortedCharactors[3].restWt).toBe(240);
   });
 });
 
@@ -311,19 +311,19 @@ describe("Battle#stay", function () {
 
     const turn = stay(battle, actor, new Date());
 
-    expect(turn.action.type, "DO_NOTHING");
+    expect(turn.action.type).toBe("DO_NOTHING");
     if (turn.action.type === "DO_NOTHING") {
-      expect(turn.action.actor.name, "sam");
+      expect(turn.action.actor.name).toBe("sam");
     } else {
-      expect(true, false);
+      expect.unreachable('type should be DO_NOTHING');
     }
 
-    expect(turn.field.climate, "SUNNY");
-    expect(turn.sortedCharactors.length, 4);
-    expect(turn.sortedCharactors[0].name, "noa");
-    expect(turn.sortedCharactors[1].name, "sara");
-    expect(turn.sortedCharactors[2].name, "john");
-    expect(turn.sortedCharactors[3].name, "sam");
+    expect(turn.field.climate).toBe("SUNNY");
+    expect(turn.sortedCharactors.length).toBe(4);
+    expect(turn.sortedCharactors[0].name).toBe("noa");
+    expect(turn.sortedCharactors[1].name).toBe("sara");
+    expect(turn.sortedCharactors[2].name).toBe("john");
+    expect(turn.sortedCharactors[3].name).toBe("sam");
   });
 });
 
@@ -337,23 +337,23 @@ describe("Battle#wait", function () {
       accuracy: 0.1,
     });
 
-    expect(turn.action.type, "TIME_PASSING");
+    expect(turn.action.type).toBe("TIME_PASSING");
     if (turn.action.type === "TIME_PASSING") {
-      expect(turn.action.wt, 115);
+      expect(turn.action.wt).toBe(115);
     } else {
-      expect(true, false);
+      expect.unreachable('type should be TIME_PASSING');
     }
 
-    expect(turn.field.climate, "SUNNY");
-    expect(turn.sortedCharactors.length, 4);
-    expect(turn.sortedCharactors[0].name, "sam");
-    expect(turn.sortedCharactors[0].restWt, 5);
-    expect(turn.sortedCharactors[1].name, "sara");
-    expect(turn.sortedCharactors[1].restWt, 0);
-    expect(turn.sortedCharactors[2].name, "john");
-    expect(turn.sortedCharactors[2].restWt, 15);
-    expect(turn.sortedCharactors[3].name, "noa");
-    expect(turn.sortedCharactors[3].restWt, 0);
+    expect(turn.field.climate).toBe("SUNNY");
+    expect(turn.sortedCharactors.length).toBe(4);
+    expect(turn.sortedCharactors[0].name).toBe("sam");
+    expect(turn.sortedCharactors[0].restWt).toBe(5);
+    expect(turn.sortedCharactors[1].name).toBe("sara");
+    expect(turn.sortedCharactors[1].restWt).toBe(0);
+    expect(turn.sortedCharactors[2].name).toBe("john");
+    expect(turn.sortedCharactors[2].restWt).toBe(15);
+    expect(turn.sortedCharactors[3].name).toBe("noa");
+    expect(turn.sortedCharactors[3].restWt).toBe(0);
   });
 });
 
@@ -367,7 +367,7 @@ describe("Battle#isSettlement", function () {
   it("GameOngoing", function () {
     const battle = toBattle(testData) as Battle;
     const gameResult = isSettlement(battle);
-    expect(gameResult, GameOngoing);
+    expect(gameResult).toBe(GameOngoing);
   });
   it("GameHome", function () {
     const data = {
@@ -387,7 +387,7 @@ describe("Battle#isSettlement", function () {
 
     const battle = toBattle(data) as Battle;
     const gameResult = isSettlement(battle);
-    expect(gameResult, GameHome);
+    expect(gameResult).toBe(GameHome);
   });
   it("GameVisitor", function () {
     const data = {
@@ -407,7 +407,7 @@ describe("Battle#isSettlement", function () {
 
     const battle = toBattle(data) as Battle;
     const gameResult = isSettlement(battle);
-    expect(gameResult, GameVisitor);
+    expect(gameResult).toBe(GameVisitor);
   });
   it("GameDraw", function () {
     const data = {
@@ -427,6 +427,6 @@ describe("Battle#isSettlement", function () {
 
     const battle = toBattle(data) as Battle;
     const gameResult = isSettlement(battle);
-    expect(gameResult, GameDraw);
+    expect(gameResult).toBe(GameDraw);
   });
 });

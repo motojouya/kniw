@@ -21,16 +21,16 @@ import { swordAndShield } from "../../../src/store_data/acquirement/weapon/sword
 describe("mind#validateWearable", function () {
   it("ok", function () {
     const result = mind.validateWearable(human, mind, steelArmor, swordAndShield);
-    expect(result, null);
+    expect(result).toBe(null);
   });
   it("ng", function () {
     const result = mind.validateWearable(fairy, mind, steelArmor, swordAndShield);
     if (result instanceof NotWearableErorr) {
-      expect(result.acquirement.name, "mind");
-      expect(result.cause.name, "fairy");
-      expect(result.message, "このキャラクターの設定ではmindを装備できません");
+      expect(result.acquirement.name).toBe("mind");
+      expect(result.cause.name).toBe("fairy");
+      expect(result.message).toBe("このキャラクターの設定ではmindを装備できません");
     } else {
-      expect(true, false);
+      expect.unreachable('result shoud be error');
     }
   });
 });

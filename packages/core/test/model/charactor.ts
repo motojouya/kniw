@@ -21,13 +21,13 @@ describe("Charctor#toCharactor", function () {
       mp: 0,
       restWt: 120,
     } as CharactorJson);
-    expect(charactor instanceof DataNotFoundError, true);
+    expect(charactor instanceof DataNotFoundError).toBe(true);
     if (charactor instanceof DataNotFoundError) {
-      expect(charactor.name, "race01");
-      expect(charactor.type, "race");
-      expect(charactor.message, "race01という種族は存在しません");
+      expect(charactor.name).toBe("race01");
+      expect(charactor.type).toBe("race");
+      expect(charactor.message).toBe("race01という種族は存在しません");
     } else {
-      expect(true, false);
+      expect.unreachable('charactor should be value');
     }
   });
   it("NotWearableErorr", function () {
@@ -42,13 +42,13 @@ describe("Charctor#toCharactor", function () {
       mp: 0,
       restWt: 120,
     } as CharactorJson);
-    expect(charactor instanceof NotWearableErorr, true);
+    expect(charactor instanceof NotWearableErorr).toBe(true);
     if (charactor instanceof NotWearableErorr) {
-      expect(charactor.acquirement.name, "earth");
-      expect(charactor.cause.name, "fairy");
-      expect(charactor.message, "このキャラクターの設定ではearthを装備できません");
+      expect(charactor.acquirement.name).toBe("earth");
+      expect(charactor.cause.name).toBe("fairy");
+      expect(charactor.message).toBe("このキャラクターの設定ではearthを装備できません");
     } else {
-      expect(true, false);
+      expect.unreachable('charactor should be value');
     }
   });
   it("ok", function () {
@@ -63,34 +63,34 @@ describe("Charctor#toCharactor", function () {
       mp: 0,
       restWt: 115,
     } as CharactorJson) as Charactor;
-    expect(charactor.name, "sam");
-    expect(charactor.race.name, "human");
-    expect(charactor.blessing.name, "earth");
-    expect(charactor.clothing.name, "redRobe");
-    expect(charactor.weapon.name, "rubyRod");
+    expect(charactor.name).toBe("sam");
+    expect(charactor.race.name).toBe("human");
+    expect(charactor.blessing.name).toBe("earth");
+    expect(charactor.clothing.name).toBe("redRobe");
+    expect(charactor.weapon.name).toBe("rubyRod");
 
     const abilities = getAbilities(charactor);
-    expect(abilities.length, 1);
-    expect(abilities[0].name, "mpGainPlus");
+    expect(abilities.length).toBe(1);
+    expect(abilities[0].name).toBe("mpGainPlus");
 
     const skills = getSkills(charactor);
-    expect(skills.length, 4);
-    expect(skills[0].name, "fireWall");
-    expect(skills[1].name, "flameFall");
-    expect(skills[2].name, "smallHeat");
-    expect(skills[3].name, "ghostFire");
+    expect(skills.length).toBe(4);
+    expect(skills[0].name).toBe("fireWall");
+    expect(skills[1].name).toBe("flameFall");
+    expect(skills[2].name).toBe("smallHeat");
+    expect(skills[3].name).toBe("ghostFire");
 
     const physical = getPhysical(charactor);
-    expect(physical.MaxHP, 300);
-    expect(physical.MaxMP, 200);
-    expect(physical.STR, 100);
-    expect(physical.VIT, 110);
-    expect(physical.DEX, 100);
-    expect(physical.AGI, 100);
-    expect(physical.AVD, 100);
-    expect(physical.INT, 130);
-    expect(physical.MND, 120);
-    expect(physical.RES, 100);
-    expect(physical.WT, 130);
+    expect(physical.MaxHP).toBe(300);
+    expect(physical.MaxMP).toBe(200);
+    expect(physical.STR).toBe(100);
+    expect(physical.VIT).toBe(110);
+    expect(physical.DEX).toBe(100);
+    expect(physical.AGI).toBe(100);
+    expect(physical.AVD).toBe(100);
+    expect(physical.INT).toBe(130);
+    expect(physical.MND).toBe(120);
+    expect(physical.RES).toBe(100);
+    expect(physical.WT).toBe(130);
   });
 });

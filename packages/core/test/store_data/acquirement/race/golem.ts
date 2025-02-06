@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("golem#validateWearable", function () {
   it("ok", function () {
     const result = golem.validateWearable(golem, sky, redRobe, rubyRod);
-    expect(result, null);
+    expect(result).toBe(null);
   });
 });

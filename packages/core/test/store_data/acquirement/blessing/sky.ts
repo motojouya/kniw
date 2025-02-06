@@ -21,16 +21,16 @@ import { swordAndShield } from "../../../src/store_data/acquirement/weapon/sword
 describe("sky#validateWearable", function () {
   it("ok", function () {
     const result = sky.validateWearable(human, sky, steelArmor, swordAndShield);
-    expect(result, null);
+    expect(result).toBe(null);
   });
   it("ng", function () {
     const result = sky.validateWearable(merman, sky, steelArmor, swordAndShield);
     if (result instanceof NotWearableErorr) {
-      expect(result.acquirement.name, "sky");
-      expect(result.cause.name, "merman");
-      expect(result.message, "このキャラクターの設定ではskyを装備できません");
+      expect(result.acquirement.name).toBe("sky");
+      expect(result.cause.name).toBe("merman");
+      expect(result.message).toBe("このキャラクターの設定ではskyを装備できません");
     } else {
-      expect(true, false);
+      expect.unreachable('result shoud be error');
     }
   });
 });

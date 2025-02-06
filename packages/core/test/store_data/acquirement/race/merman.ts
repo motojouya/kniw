@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("merman#validateWearable", function () {
   it("ok", function () {
     const result = merman.validateWearable(merman, sky, redRobe, rubyRod);
-    expect(result, null);
+    expect(result).toBe(null);
   });
 });

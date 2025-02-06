@@ -9,7 +9,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.05,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("15 test", function () {
     const result = changeClimate({
@@ -17,7 +17,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.15,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("25 test", function () {
     const result = changeClimate({
@@ -25,7 +25,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.25,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("35 test", function () {
     const result = changeClimate({
@@ -33,7 +33,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.35,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("45 test", function () {
     const result = changeClimate({
@@ -41,7 +41,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.45,
     });
-    expect(result, "RAIN");
+    expect(result).toBe("RAIN");
   });
   it("55 test", function () {
     const result = changeClimate({
@@ -49,7 +49,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.55,
     });
-    expect(result, "RAIN");
+    expect(result).toBe("RAIN");
   });
   it("65 test", function () {
     const result = changeClimate({
@@ -57,7 +57,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.65,
     });
-    expect(result, "RAIN");
+    expect(result).toBe("RAIN");
   });
   it("75 test", function () {
     const result = changeClimate({
@@ -65,7 +65,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.75,
     });
-    expect(result, "FOGGY");
+    expect(result).toBe("FOGGY");
   });
   it("85 test", function () {
     const result = changeClimate({
@@ -73,7 +73,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.85,
     });
-    expect(result, "STORM");
+    expect(result).toBe("STORM");
   });
   it("95 test", function () {
     const result = changeClimate({
@@ -81,7 +81,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.95,
     });
-    expect(result, "SNOW");
+    expect(result).toBe("SNOW");
   });
 
   it("0 test", function () {
@@ -90,7 +90,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("40 test", function () {
     const result = changeClimate({
@@ -98,7 +98,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.4,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("41 test", function () {
     const result = changeClimate({
@@ -106,7 +106,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.41,
     });
-    expect(result, "RAIN");
+    expect(result).toBe("RAIN");
   });
   it("100 test", function () {
     const result = changeClimate({
@@ -114,7 +114,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 1,
     });
-    expect(result, "SNOW");
+    expect(result).toBe("SNOW");
   });
 
   it("times test", function () {
@@ -123,7 +123,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.1,
       accuracy: 0.05,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
   it("damage test", function () {
     const result = changeClimate({
@@ -131,7 +131,7 @@ describe("Climate#changeClimate", function () {
       damage: 0.95,
       accuracy: 0.05,
     });
-    expect(result, "SUNNY");
+    expect(result).toBe("SUNNY");
   });
 
   it("minus test", function () {
@@ -141,10 +141,10 @@ describe("Climate#changeClimate", function () {
         damage: 0.1,
         accuracy: -0.5,
       });
-      assert.fail();
+      expect.unreachable('expected to throw');
     } catch (e) {
       const error = e as Error;
-      expect(error.message, "accuracyの値は0から1です");
+      expect(error.message).toBe("accuracyの値は0から1です");
     }
   });
   it("over test", function () {
@@ -154,10 +154,10 @@ describe("Climate#changeClimate", function () {
         damage: 0.1,
         accuracy: 1.5,
       });
-      assert.fail();
+      expect.unreachable('expected to throw');
     } catch (e) {
       const error = e as Error;
-      expect(error.message, "accuracyの値は0から1です");
+      expect(error.message).toBe("accuracyの値は0から1です");
     }
   });
 });

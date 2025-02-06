@@ -21,16 +21,16 @@ import { swordAndShield } from "../../../src/store_data/acquirement/weapon/sword
 describe("swordAndShield#validateWearable", function () {
   it("ok", function () {
     const result = swordAndShield.validateWearable(human, sky, steelArmor, swordAndShield);
-    expect(result, null);
+    expect(result).toBe(null);
   });
   //it('ng', function () {
   //  const result = swordAndShield.validateWearable(human, sky, redRobe, swordAndShield);
   //  if (result instanceof NotWearableErorr) {
-  //    expect(result.acquirement.name, 'swordAndShield');
-  //    expect(result.cause.name, 'redRobe');
-  //    expect(result.message, 'このキャラクターの設定ではswordAndShieldを装備できません');
+  //    expect(result.acquirement.name).toBe('swordAndShield');
+  //    expect(result.cause.name).toBe('redRobe');
+  //    expect(result.message).toBe('このキャラクターの設定ではswordAndShieldを装備できません');
   //  } else {
-  //    expect(true, false);
+  //    expect.unreachable('result shoud be error');
   //  }
   //});
 });
