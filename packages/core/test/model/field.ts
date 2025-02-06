@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import { changeClimate } from "../../src/model/field";
 
@@ -141,7 +141,7 @@ describe("Climate#changeClimate", function () {
         damage: 0.1,
         accuracy: -0.5,
       });
-      expect.unreachable('expected to throw');
+      expect.unreachable("expected to throw");
     } catch (e) {
       const error = e as Error;
       expect(error.message).toBe("accuracyの値は0から1です");
@@ -154,7 +154,7 @@ describe("Climate#changeClimate", function () {
         damage: 0.1,
         accuracy: 1.5,
       });
-      expect.unreachable('expected to throw');
+      expect.unreachable("expected to throw");
     } catch (e) {
       const error = e as Error;
       expect(error.message).toBe("accuracyの値は0から1です");

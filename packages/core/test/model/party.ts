@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import type { Party } from "../../src/model/party";
 import { CharactorDuplicationError } from "../../src/model/party";
@@ -37,7 +37,7 @@ describe("Party#toParty", function () {
     if (party instanceof CharactorDuplicationError) {
       expect(party.message).toBe("Partyに同じ名前のキャラクターが存在します");
     } else {
-      expect.unreachable('party should be value');
+      expect.unreachable("party should be value");
     }
   });
   it("ok", function () {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import type { Database } from "../../src/io/database";
 import type { Battle } from "../../src/model/battle";
@@ -178,7 +178,7 @@ describe("Battle#createRepository", function () {
         expect(turns[0].action.type).toBe("TIME_PASSING");
         expect(turns[0].action.wt).toBe(0);
       } else {
-        expect.unreachable('type shoud be TIME_PASSING');
+        expect.unreachable("type shoud be TIME_PASSING");
       }
 
       expect(turns[0].sortedCharactors.length).toBe(4);
@@ -191,7 +191,7 @@ describe("Battle#createRepository", function () {
 
       expect(typedBattle.result).toBe(GameOngoing);
     } else {
-      expect.unreachable('battle shoud be exist');
+      expect.unreachable("battle shoud be exist");
     }
   });
   it("remove", async () => {

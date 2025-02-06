@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 // import { earth } from '../../../../src/store_data/acquirement/blessing/earth';
 // import { mind } from '../../../../src/store_data/acquirement/blessing/mind';

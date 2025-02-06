@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import { NotWearableErorr } from "../../../../src/model/acquirement";
 
@@ -30,7 +30,7 @@ describe("sky#validateWearable", function () {
       expect(result.cause.name).toBe("merman");
       expect(result.message).toBe("このキャラクターの設定ではskyを装備できません");
     } else {
-      expect.unreachable('result shoud be error');
+      expect.unreachable("result shoud be error");
     }
   });
 });

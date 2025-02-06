@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import { RandomRangeError, validateRandoms, createRandoms, createAbsolute } from "../../src/model/random";
 
@@ -42,7 +42,7 @@ describe("Randoms#validateRandoms", function () {
       expect(result.value).toBe(-0.1);
       expect(result.message).toBe("timesの値は0から1です");
     } else {
-      expect.unreachable('result should be error');
+      expect.unreachable("result should be error");
     }
   });
   it("minus damage", function () {
@@ -56,7 +56,7 @@ describe("Randoms#validateRandoms", function () {
       expect(result.value).toBe(-0.1);
       expect(result.message).toBe("damageの値は0から1です");
     } else {
-      expect.unreachable('result should be error');
+      expect.unreachable("result should be error");
     }
   });
   it("minus accuracy", function () {
@@ -70,7 +70,7 @@ describe("Randoms#validateRandoms", function () {
       expect(result.value).toBe(-0.1);
       expect(result.message).toBe("accuracyの値は0から1です");
     } else {
-      expect.unreachable('result should be error');
+      expect.unreachable("result should be error");
     }
   });
 
@@ -85,7 +85,7 @@ describe("Randoms#validateRandoms", function () {
       expect(result.value).toBe(1.1);
       expect(result.message).toBe("timesの値は0から1です");
     } else {
-      expect.unreachable('result should be error');
+      expect.unreachable("result should be error");
     }
   });
   it("over damage", function () {
@@ -99,7 +99,7 @@ describe("Randoms#validateRandoms", function () {
       expect(result.value).toBe(1.1);
       expect(result.message).toBe("damageの値は0から1です");
     } else {
-      expect.unreachable('result should be error');
+      expect.unreachable("result should be error");
     }
   });
   it("over accuracy", function () {
@@ -113,7 +113,7 @@ describe("Randoms#validateRandoms", function () {
       expect(result.value).toBe(1.1);
       expect(result.message).toBe("accuracyの値は0から1です");
     } else {
-      expect.unreachable('result should be error');
+      expect.unreachable("result should be error");
     }
   });
 });

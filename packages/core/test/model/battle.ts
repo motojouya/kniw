@@ -4,7 +4,7 @@ import type { Skill } from "../../src/model/skill";
 import type { CharactorBattling } from "../../src/model/charactor";
 import type { BattleJson } from "../../src/store_schema/battle";
 
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import {
   actToCharactor,
@@ -168,7 +168,7 @@ describe("Battle#toBattle", function () {
       battle instanceof JsonSchemaUnmatchError ||
       battle instanceof NotBattlingError
     ) {
-      expect.unreachable('battle is value');
+      expect.unreachable("battle is value");
     } else {
       expect(battle.title).toBe("first-title");
       expect(battle.home.name).toBe("home");
@@ -250,7 +250,7 @@ describe("Battle#start", function () {
     if (turn.action.type === "TIME_PASSING") {
       expect(turn.action.wt).toBe(0);
     } else {
-      expect.unreachable('type should be TIME_PASSING');
+      expect.unreachable("type should be TIME_PASSING");
     }
 
     expect(turn.field.climate).toBe("SUNNY");
@@ -286,7 +286,7 @@ describe("Battle#act", function () {
       expect(turn.action.receivers.length).toBe(1);
       expect(turn.action.receivers[0].name).toBe("john");
     } else {
-      expect.unreachable('type should be DO_SKILL');
+      expect.unreachable("type should be DO_SKILL");
     }
 
     expect(turn.field.climate).toBe("SUNNY");
@@ -315,7 +315,7 @@ describe("Battle#stay", function () {
     if (turn.action.type === "DO_NOTHING") {
       expect(turn.action.actor.name).toBe("sam");
     } else {
-      expect.unreachable('type should be DO_NOTHING');
+      expect.unreachable("type should be DO_NOTHING");
     }
 
     expect(turn.field.climate).toBe("SUNNY");
@@ -341,7 +341,7 @@ describe("Battle#wait", function () {
     if (turn.action.type === "TIME_PASSING") {
       expect(turn.action.wt).toBe(115);
     } else {
-      expect.unreachable('type should be TIME_PASSING');
+      expect.unreachable("type should be TIME_PASSING");
     }
 
     expect(turn.field.climate).toBe("SUNNY");

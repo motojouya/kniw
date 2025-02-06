@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import type { Charactor } from "../../src/model/charactor";
 import type { CharactorJson } from "../../src/store_schema/charactor";
@@ -27,7 +27,7 @@ describe("Charctor#toCharactor", function () {
       expect(charactor.type).toBe("race");
       expect(charactor.message).toBe("race01という種族は存在しません");
     } else {
-      expect.unreachable('charactor should be value');
+      expect.unreachable("charactor should be value");
     }
   });
   it("NotWearableErorr", function () {
@@ -48,7 +48,7 @@ describe("Charctor#toCharactor", function () {
       expect(charactor.cause.name).toBe("fairy");
       expect(charactor.message).toBe("このキャラクターの設定ではearthを装備できません");
     } else {
-      expect.unreachable('charactor should be value');
+      expect.unreachable("charactor should be value");
     }
   });
   it("ok", function () {

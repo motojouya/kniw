@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import type { Charactor } from "../../src/model/charactor";
 import type { Database } from "../../src/io/database";
@@ -69,7 +69,7 @@ describe("Charctor#createRepository", function () {
       expect(typedCharactor.clothing.name).toBe("redRobe");
       expect(typedCharactor.weapon.name).toBe("rubyRod");
     } else {
-      expect.unreachable('charactor shoud be exist');
+      expect.unreachable("charactor shoud be exist");
     }
   });
   it("remove", async () => {

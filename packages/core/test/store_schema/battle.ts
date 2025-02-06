@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import type { Battle } from "../../src/model/battle";
 import { toBattle } from "../../src/store_schema/battle";

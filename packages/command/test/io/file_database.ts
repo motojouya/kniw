@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach } from "vitest";
 import { createDatabase } from "../../src/io/file_database";
 
 const DIRNAME = "temp";
@@ -33,7 +33,7 @@ describe("Database#checkNamespace", function () {
 
     const getResult02 = await database.get(NAMESPACE, "something");
     if (!getResult02) {
-      expect.unreachable('expect falsy value');
+      expect.unreachable("expect falsy value");
     }
     expect(getResult02.test).toBe("something");
     expect(getResult02.check).toBe("anything");
@@ -61,7 +61,7 @@ describe("Database#checkNamespace", function () {
 
     try {
       await database.save(NAMESPACE, "something", { test: "something", check: "anything" });
-      expect.unreachable('expect to throw error');
+      expect.unreachable("expect to throw error");
     } catch (e) {
       console.log(e);
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

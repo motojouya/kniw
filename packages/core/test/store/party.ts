@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect } from "vitest";
 
 import type { Party } from "../../src/model/party";
 import type { Database } from "../../src/io/database";
@@ -125,7 +125,7 @@ describe("Party#createRepository", function () {
       expect(charactors[1].clothing.name).toBe("redRobe");
       expect(charactors[1].weapon.name).toBe("rubyRod");
     } else {
-      expect.unreachable('party shoud be exist');
+      expect.unreachable("party shoud be exist");
     }
   });
   it("remove", async () => {
