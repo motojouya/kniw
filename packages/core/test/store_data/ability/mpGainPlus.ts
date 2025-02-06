@@ -1,9 +1,9 @@
 import { describe, it, expect } from 'vitest'
 
-import type { CharactorBattling } from "../../src/model/charactor";
+import type { CharactorBattling } from "../../../src/model/charactor";
 
-import { toCharactor } from "../../src/store_schema/charactor";
-import { mpGainPlus } from "../../src/store_data/ability/mpGainPlus";
+import { toCharactor } from "../../../src/store_schema/charactor";
+import { mpGainPlus } from "../../../src/store_data/ability/mpGainPlus";
 
 describe("mpGainPlus#wait", function () {
   it("calc", function () {
