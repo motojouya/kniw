@@ -21,16 +21,16 @@ import { swordAndShield } from "../../../src/store_data/acquirement/weapon/sword
 describe("sea#validateWearable", function () {
   it("ok", function () {
     const result = sea.validateWearable(human, sea, steelArmor, swordAndShield);
-    assert.strictEqual(result, null);
+    expect(result, null);
   });
   it("ng", function () {
     const result = sea.validateWearable(hawkman, sea, steelArmor, swordAndShield);
     if (result instanceof NotWearableErorr) {
-      assert.strictEqual(result.acquirement.name, "sea");
-      assert.strictEqual(result.cause.name, "hawkman");
-      assert.strictEqual(result.message, "このキャラクターの設定ではseaを装備できません");
+      expect(result.acquirement.name, "sea");
+      expect(result.cause.name, "hawkman");
+      expect(result.message, "このキャラクターの設定ではseaを装備できません");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
   });
 });

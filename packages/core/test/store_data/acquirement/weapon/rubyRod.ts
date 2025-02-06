@@ -21,16 +21,16 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("rubyRod#validateWearable", function () {
   it("ok", function () {
     const result = rubyRod.validateWearable(human, sky, redRobe, rubyRod);
-    assert.strictEqual(result, null);
+    expect(result, null);
   });
   //it('ng', function () {
   //  const result = rubyRod.validateWearable(human, sky, steelArmor, rubyRod);
   //  if (result instanceof NotWearableErorr) {
-  //    assert.strictEqual(result.acquirement.name, 'rubyRod');
-  //    assert.strictEqual(result.cause.name, 'steelArmor');
-  //    assert.strictEqual(result.message, 'このキャラクターの設定ではrubyRodを装備できません');
+  //    expect(result.acquirement.name, 'rubyRod');
+  //    expect(result.cause.name, 'steelArmor');
+  //    expect(result.message, 'このキャラクターの設定ではrubyRodを装備できません');
   //  } else {
-  //    assert.strictEqual(true, false);
+  //    expect(true, false);
   //  }
   //});
 });

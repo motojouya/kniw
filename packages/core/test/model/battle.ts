@@ -168,14 +168,14 @@ describe("Battle#toBattle", function () {
       battle instanceof JsonSchemaUnmatchError ||
       battle instanceof NotBattlingError
     ) {
-      assert.strictEqual(true, false);
+      expect(true, false);
     } else {
-      assert.strictEqual(battle.title, "first-title");
-      assert.strictEqual(battle.home.name, "home");
-      assert.strictEqual(battle.visitor.name, "visitor");
-      assert.strictEqual(battle.turns.length, 1);
-      assert.strictEqual(formatDate(battle.turns[0].datetime), "2023-06-29T12:12:21");
-      assert.strictEqual(battle.result, GameOngoing);
+      expect(battle.title, "first-title");
+      expect(battle.home.name, "home");
+      expect(battle.visitor.name, "visitor");
+      expect(battle.turns.length, 1);
+      expect(formatDate(battle.turns[0].datetime), "2023-06-29T12:12:21");
+      expect(battle.result, GameOngoing);
     }
   });
 });
@@ -238,7 +238,7 @@ describe("Battle#start", function () {
     }) as Party;
 
     const battle = createBattle("first-title", homeParty, visitorParty);
-    assert.strictEqual(battle.result, GameOngoing);
+    expect(battle.result, GameOngoing);
 
     const turn = start(battle, new Date(), {
       times: 0.1,
@@ -246,23 +246,23 @@ describe("Battle#start", function () {
       accuracy: 0.1,
     });
 
-    assert.strictEqual(turn.action.type, "TIME_PASSING");
+    expect(turn.action.type, "TIME_PASSING");
     if (turn.action.type === "TIME_PASSING") {
-      assert.strictEqual(turn.action.wt, 0);
+      expect(turn.action.wt, 0);
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
 
-    assert.strictEqual(turn.field.climate, "SUNNY");
-    assert.strictEqual(turn.sortedCharactors.length, 4);
-    assert.strictEqual(turn.sortedCharactors[0].name, "chang");
-    assert.strictEqual(turn.sortedCharactors[0].isVisitor, true);
-    assert.strictEqual(turn.sortedCharactors[1].name, "john");
-    assert.strictEqual(turn.sortedCharactors[1].isVisitor, false);
-    assert.strictEqual(turn.sortedCharactors[2].name, "sam");
-    assert.strictEqual(turn.sortedCharactors[2].isVisitor, false);
-    assert.strictEqual(turn.sortedCharactors[3].name, "tom");
-    assert.strictEqual(turn.sortedCharactors[3].isVisitor, true);
+    expect(turn.field.climate, "SUNNY");
+    expect(turn.sortedCharactors.length, 4);
+    expect(turn.sortedCharactors[0].name, "chang");
+    expect(turn.sortedCharactors[0].isVisitor, true);
+    expect(turn.sortedCharactors[1].name, "john");
+    expect(turn.sortedCharactors[1].isVisitor, false);
+    expect(turn.sortedCharactors[2].name, "sam");
+    expect(turn.sortedCharactors[2].isVisitor, false);
+    expect(turn.sortedCharactors[3].name, "tom");
+    expect(turn.sortedCharactors[3].isVisitor, true);
   });
 });
 
@@ -279,28 +279,28 @@ describe("Battle#act", function () {
       accuracy: 0.1,
     });
 
-    assert.strictEqual(turn.action.type, "DO_SKILL");
+    expect(turn.action.type, "DO_SKILL");
     if (turn.action.type === "DO_SKILL") {
-      assert.strictEqual(turn.action.actor.name, "sam");
-      assert.strictEqual(turn.action.skill.name, "chop");
-      assert.strictEqual(turn.action.receivers.length, 1);
-      assert.strictEqual(turn.action.receivers[0].name, "john");
+      expect(turn.action.actor.name, "sam");
+      expect(turn.action.skill.name, "chop");
+      expect(turn.action.receivers.length, 1);
+      expect(turn.action.receivers[0].name, "john");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
 
-    assert.strictEqual(turn.field.climate, "SUNNY");
-    assert.strictEqual(turn.sortedCharactors.length, 4);
-    assert.strictEqual(turn.sortedCharactors[0].name, "noa");
-    assert.strictEqual(turn.sortedCharactors[1].name, "sara");
+    expect(turn.field.climate, "SUNNY");
+    expect(turn.sortedCharactors.length, 4);
+    expect(turn.sortedCharactors[0].name, "noa");
+    expect(turn.sortedCharactors[1].name, "sara");
 
-    assert.strictEqual(turn.sortedCharactors[2].name, "john");
-    assert.strictEqual(turn.sortedCharactors[2].hp, 54);
-    assert.strictEqual(turn.sortedCharactors[2].restWt, 130);
+    expect(turn.sortedCharactors[2].name, "john");
+    expect(turn.sortedCharactors[2].hp, 54);
+    expect(turn.sortedCharactors[2].restWt, 130);
 
-    assert.strictEqual(turn.sortedCharactors[3].name, "sam");
-    assert.strictEqual(turn.sortedCharactors[3].hp, 100);
-    assert.strictEqual(turn.sortedCharactors[3].restWt, 240);
+    expect(turn.sortedCharactors[3].name, "sam");
+    expect(turn.sortedCharactors[3].hp, 100);
+    expect(turn.sortedCharactors[3].restWt, 240);
   });
 });
 
@@ -311,19 +311,19 @@ describe("Battle#stay", function () {
 
     const turn = stay(battle, actor, new Date());
 
-    assert.strictEqual(turn.action.type, "DO_NOTHING");
+    expect(turn.action.type, "DO_NOTHING");
     if (turn.action.type === "DO_NOTHING") {
-      assert.strictEqual(turn.action.actor.name, "sam");
+      expect(turn.action.actor.name, "sam");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
 
-    assert.strictEqual(turn.field.climate, "SUNNY");
-    assert.strictEqual(turn.sortedCharactors.length, 4);
-    assert.strictEqual(turn.sortedCharactors[0].name, "noa");
-    assert.strictEqual(turn.sortedCharactors[1].name, "sara");
-    assert.strictEqual(turn.sortedCharactors[2].name, "john");
-    assert.strictEqual(turn.sortedCharactors[3].name, "sam");
+    expect(turn.field.climate, "SUNNY");
+    expect(turn.sortedCharactors.length, 4);
+    expect(turn.sortedCharactors[0].name, "noa");
+    expect(turn.sortedCharactors[1].name, "sara");
+    expect(turn.sortedCharactors[2].name, "john");
+    expect(turn.sortedCharactors[3].name, "sam");
   });
 });
 
@@ -337,23 +337,23 @@ describe("Battle#wait", function () {
       accuracy: 0.1,
     });
 
-    assert.strictEqual(turn.action.type, "TIME_PASSING");
+    expect(turn.action.type, "TIME_PASSING");
     if (turn.action.type === "TIME_PASSING") {
-      assert.strictEqual(turn.action.wt, 115);
+      expect(turn.action.wt, 115);
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
 
-    assert.strictEqual(turn.field.climate, "SUNNY");
-    assert.strictEqual(turn.sortedCharactors.length, 4);
-    assert.strictEqual(turn.sortedCharactors[0].name, "sam");
-    assert.strictEqual(turn.sortedCharactors[0].restWt, 5);
-    assert.strictEqual(turn.sortedCharactors[1].name, "sara");
-    assert.strictEqual(turn.sortedCharactors[1].restWt, 0);
-    assert.strictEqual(turn.sortedCharactors[2].name, "john");
-    assert.strictEqual(turn.sortedCharactors[2].restWt, 15);
-    assert.strictEqual(turn.sortedCharactors[3].name, "noa");
-    assert.strictEqual(turn.sortedCharactors[3].restWt, 0);
+    expect(turn.field.climate, "SUNNY");
+    expect(turn.sortedCharactors.length, 4);
+    expect(turn.sortedCharactors[0].name, "sam");
+    expect(turn.sortedCharactors[0].restWt, 5);
+    expect(turn.sortedCharactors[1].name, "sara");
+    expect(turn.sortedCharactors[1].restWt, 0);
+    expect(turn.sortedCharactors[2].name, "john");
+    expect(turn.sortedCharactors[2].restWt, 15);
+    expect(turn.sortedCharactors[3].name, "noa");
+    expect(turn.sortedCharactors[3].restWt, 0);
   });
 });
 
@@ -367,7 +367,7 @@ describe("Battle#isSettlement", function () {
   it("GameOngoing", function () {
     const battle = toBattle(testData) as Battle;
     const gameResult = isSettlement(battle);
-    assert.strictEqual(gameResult, GameOngoing);
+    expect(gameResult, GameOngoing);
   });
   it("GameHome", function () {
     const data = {
@@ -387,7 +387,7 @@ describe("Battle#isSettlement", function () {
 
     const battle = toBattle(data) as Battle;
     const gameResult = isSettlement(battle);
-    assert.strictEqual(gameResult, GameHome);
+    expect(gameResult, GameHome);
   });
   it("GameVisitor", function () {
     const data = {
@@ -407,7 +407,7 @@ describe("Battle#isSettlement", function () {
 
     const battle = toBattle(data) as Battle;
     const gameResult = isSettlement(battle);
-    assert.strictEqual(gameResult, GameVisitor);
+    expect(gameResult, GameVisitor);
   });
   it("GameDraw", function () {
     const data = {
@@ -427,6 +427,6 @@ describe("Battle#isSettlement", function () {
 
     const battle = toBattle(data) as Battle;
     const gameResult = isSettlement(battle);
-    assert.strictEqual(gameResult, GameDraw);
+    expect(gameResult, GameDraw);
   });
 });

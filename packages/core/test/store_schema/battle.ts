@@ -192,6 +192,6 @@ describe("Battle#toBattle", function () {
   it("toBattle", async () => {
     const battle = toBattle(testData) as Battle;
     console.log(battle);
-    assert.strictEqual(battle.title, "first-title");
+    expect(battle.title, "first-title");
   });
 });

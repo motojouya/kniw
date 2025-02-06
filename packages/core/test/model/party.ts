@@ -33,11 +33,11 @@ describe("Party#toParty", function () {
         },
       ],
     }) as Party;
-    assert.strictEqual(party instanceof CharactorDuplicationError, true);
+    expect(party instanceof CharactorDuplicationError, true);
     if (party instanceof CharactorDuplicationError) {
-      assert.strictEqual(party.message, "Partyに同じ名前のキャラクターが存在します");
+      expect(party.message, "Partyに同じ名前のキャラクターが存在します");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
   });
   it("ok", function () {
@@ -69,9 +69,9 @@ describe("Party#toParty", function () {
       ],
     }) as Party;
 
-    assert.strictEqual(party.name, "team01");
-    assert.strictEqual(party.charactors.length, 2);
-    assert.strictEqual(party.charactors[0].name, "sam");
-    assert.strictEqual(party.charactors[1].name, "john");
+    expect(party.name, "team01");
+    expect(party.charactors.length, 2);
+    expect(party.charactors[0].name, "sam");
+    expect(party.charactors[1].name, "john");
   });
 });

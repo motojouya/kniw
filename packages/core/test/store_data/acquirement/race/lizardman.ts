@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("lizardman#validateWearable", function () {
   it("ok", function () {
     const result = lizardman.validateWearable(lizardman, sky, redRobe, rubyRod);
-    assert.strictEqual(result, null);
+    expect(result, null);
   });
 });

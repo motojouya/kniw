@@ -56,32 +56,32 @@ describe("Charctor#createRepository", function () {
       restWt: 115,
     }) as Charactor;
     await repository.save(charactor);
-    assert.strictEqual(true, true);
+    expect(true, true);
   });
   it("get", async () => {
     const repository = await createRepository(dbMock);
     const charactor = await repository.get("sam");
     const typedCharactor = charactor as Charactor;
     if (typedCharactor) {
-      assert.strictEqual(typedCharactor.name, "sam");
-      assert.strictEqual(typedCharactor.race.name, "human");
-      assert.strictEqual(typedCharactor.blessing.name, "earth");
-      assert.strictEqual(typedCharactor.clothing.name, "redRobe");
-      assert.strictEqual(typedCharactor.weapon.name, "rubyRod");
+      expect(typedCharactor.name, "sam");
+      expect(typedCharactor.race.name, "human");
+      expect(typedCharactor.blessing.name, "earth");
+      expect(typedCharactor.clothing.name, "redRobe");
+      expect(typedCharactor.weapon.name, "rubyRod");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
   });
   it("remove", async () => {
     const repository = await createRepository(dbMock);
     await repository.remove("sam");
-    assert.strictEqual(true, true);
+    expect(true, true);
   });
   it("list", async () => {
     const repository = await createRepository(dbMock);
     const charactorList = await repository.list();
-    assert.strictEqual(charactorList.length, 2);
-    assert.strictEqual(charactorList[0], "sam");
-    assert.strictEqual(charactorList[1], "john");
+    expect(charactorList.length, 2);
+    expect(charactorList[0], "sam");
+    expect(charactorList[1], "john");
   });
 });

@@ -21,13 +21,13 @@ describe("Charctor#toCharactor", function () {
       mp: 0,
       restWt: 120,
     } as CharactorJson);
-    assert.strictEqual(charactor instanceof DataNotFoundError, true);
+    expect(charactor instanceof DataNotFoundError, true);
     if (charactor instanceof DataNotFoundError) {
-      assert.strictEqual(charactor.name, "race01");
-      assert.strictEqual(charactor.type, "race");
-      assert.strictEqual(charactor.message, "race01という種族は存在しません");
+      expect(charactor.name, "race01");
+      expect(charactor.type, "race");
+      expect(charactor.message, "race01という種族は存在しません");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
   });
   it("NotWearableErorr", function () {
@@ -42,13 +42,13 @@ describe("Charctor#toCharactor", function () {
       mp: 0,
       restWt: 120,
     } as CharactorJson);
-    assert.strictEqual(charactor instanceof NotWearableErorr, true);
+    expect(charactor instanceof NotWearableErorr, true);
     if (charactor instanceof NotWearableErorr) {
-      assert.strictEqual(charactor.acquirement.name, "earth");
-      assert.strictEqual(charactor.cause.name, "fairy");
-      assert.strictEqual(charactor.message, "このキャラクターの設定ではearthを装備できません");
+      expect(charactor.acquirement.name, "earth");
+      expect(charactor.cause.name, "fairy");
+      expect(charactor.message, "このキャラクターの設定ではearthを装備できません");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
   });
   it("ok", function () {
@@ -63,34 +63,34 @@ describe("Charctor#toCharactor", function () {
       mp: 0,
       restWt: 115,
     } as CharactorJson) as Charactor;
-    assert.strictEqual(charactor.name, "sam");
-    assert.strictEqual(charactor.race.name, "human");
-    assert.strictEqual(charactor.blessing.name, "earth");
-    assert.strictEqual(charactor.clothing.name, "redRobe");
-    assert.strictEqual(charactor.weapon.name, "rubyRod");
+    expect(charactor.name, "sam");
+    expect(charactor.race.name, "human");
+    expect(charactor.blessing.name, "earth");
+    expect(charactor.clothing.name, "redRobe");
+    expect(charactor.weapon.name, "rubyRod");
 
     const abilities = getAbilities(charactor);
-    assert.strictEqual(abilities.length, 1);
-    assert.strictEqual(abilities[0].name, "mpGainPlus");
+    expect(abilities.length, 1);
+    expect(abilities[0].name, "mpGainPlus");
 
     const skills = getSkills(charactor);
-    assert.strictEqual(skills.length, 4);
-    assert.strictEqual(skills[0].name, "fireWall");
-    assert.strictEqual(skills[1].name, "flameFall");
-    assert.strictEqual(skills[2].name, "smallHeat");
-    assert.strictEqual(skills[3].name, "ghostFire");
+    expect(skills.length, 4);
+    expect(skills[0].name, "fireWall");
+    expect(skills[1].name, "flameFall");
+    expect(skills[2].name, "smallHeat");
+    expect(skills[3].name, "ghostFire");
 
     const physical = getPhysical(charactor);
-    assert.strictEqual(physical.MaxHP, 300);
-    assert.strictEqual(physical.MaxMP, 200);
-    assert.strictEqual(physical.STR, 100);
-    assert.strictEqual(physical.VIT, 110);
-    assert.strictEqual(physical.DEX, 100);
-    assert.strictEqual(physical.AGI, 100);
-    assert.strictEqual(physical.AVD, 100);
-    assert.strictEqual(physical.INT, 130);
-    assert.strictEqual(physical.MND, 120);
-    assert.strictEqual(physical.RES, 100);
-    assert.strictEqual(physical.WT, 130);
+    expect(physical.MaxHP, 300);
+    expect(physical.MaxMP, 200);
+    expect(physical.STR, 100);
+    expect(physical.VIT, 110);
+    expect(physical.DEX, 100);
+    expect(physical.AGI, 100);
+    expect(physical.AVD, 100);
+    expect(physical.INT, 130);
+    expect(physical.MND, 120);
+    expect(physical.RES, 100);
+    expect(physical.WT, 130);
   });
 });

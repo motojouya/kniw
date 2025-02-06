@@ -104,40 +104,40 @@ describe("Party#createRepository", function () {
       ],
     }) as Party;
     await repository.save(party);
-    assert.strictEqual(true, true);
+    expect(true, true);
   });
   it("get", async () => {
     const repository = await createRepository(dbMock);
     const party = await repository.get("team01");
     const typedParty = party as Party;
     if (typedParty) {
-      assert.strictEqual(typedParty.name, "team01");
+      expect(typedParty.name, "team01");
       const charactors = typedParty.charactors;
-      assert.strictEqual(charactors.length, 2);
-      assert.strictEqual(charactors[0].name, "sam");
-      assert.strictEqual(charactors[0].race.name, "human");
-      assert.strictEqual(charactors[0].blessing.name, "earth");
-      assert.strictEqual(charactors[0].clothing.name, "steelArmor");
-      assert.strictEqual(charactors[0].weapon.name, "swordAndShield");
-      assert.strictEqual(charactors[1].name, "john");
-      assert.strictEqual(charactors[1].race.name, "human");
-      assert.strictEqual(charactors[1].blessing.name, "earth");
-      assert.strictEqual(charactors[1].clothing.name, "redRobe");
-      assert.strictEqual(charactors[1].weapon.name, "rubyRod");
+      expect(charactors.length, 2);
+      expect(charactors[0].name, "sam");
+      expect(charactors[0].race.name, "human");
+      expect(charactors[0].blessing.name, "earth");
+      expect(charactors[0].clothing.name, "steelArmor");
+      expect(charactors[0].weapon.name, "swordAndShield");
+      expect(charactors[1].name, "john");
+      expect(charactors[1].race.name, "human");
+      expect(charactors[1].blessing.name, "earth");
+      expect(charactors[1].clothing.name, "redRobe");
+      expect(charactors[1].weapon.name, "rubyRod");
     } else {
-      assert.strictEqual(true, false);
+      expect(true, false);
     }
   });
   it("remove", async () => {
     const repository = await createRepository(dbMock);
     await repository.remove("team01");
-    assert.strictEqual(true, true);
+    expect(true, true);
   });
   it("list", async () => {
     const repository = await createRepository(dbMock);
     const partyList = await repository.list();
-    assert.strictEqual(partyList.length, 2);
-    assert.strictEqual(partyList[0], "team01");
-    assert.strictEqual(partyList[1], "team02");
+    expect(partyList.length, 2);
+    expect(partyList[0], "team01");
+    expect(partyList[1], "team02");
   });
 });

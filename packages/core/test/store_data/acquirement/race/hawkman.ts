@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("hawkman#validateWearable", function () {
   it("ok", function () {
     const result = hawkman.validateWearable(hawkman, sky, redRobe, rubyRod);
-    assert.strictEqual(result, null);
+    expect(result, null);
   });
 });

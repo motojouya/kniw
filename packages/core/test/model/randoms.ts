@@ -8,17 +8,17 @@ describe("Randoms#validateRandoms", function () {
     const result = validateRandoms(randoms);
     const isError = result instanceof RandomRangeError;
 
-    assert.strictEqual(isError, false);
+    expect(isError, false);
   });
   it("createAbsolute", function () {
     const randoms = createAbsolute();
     const result = validateRandoms(randoms);
     const isError = result instanceof RandomRangeError;
 
-    assert.strictEqual(isError, false);
-    assert.strictEqual(randoms.times, 1);
-    assert.strictEqual(randoms.damage, 1);
-    assert.strictEqual(randoms.accuracy, 1);
+    expect(isError, false);
+    expect(randoms.times, 1);
+    expect(randoms.damage, 1);
+    expect(randoms.accuracy, 1);
   });
   it("zero", function () {
     const result = validateRandoms({
@@ -28,7 +28,7 @@ describe("Randoms#validateRandoms", function () {
     });
     const isError = result instanceof RandomRangeError;
 
-    assert.strictEqual(isError, false);
+    expect(isError, false);
   });
 
   it("minus times", function () {
@@ -39,9 +39,9 @@ describe("Randoms#validateRandoms", function () {
     });
     if (result instanceof RandomRangeError) {
       assert.ok(result);
-      assert.strictEqual(result.prop, "times");
-      assert.strictEqual(result.value, -0.1);
-      assert.strictEqual(result.message, "timesの値は0から1です");
+      expect(result.prop, "times");
+      expect(result.value, -0.1);
+      expect(result.message, "timesの値は0から1です");
     } else {
       assert.fail();
     }
@@ -54,9 +54,9 @@ describe("Randoms#validateRandoms", function () {
     });
     if (result instanceof RandomRangeError) {
       assert.ok(result);
-      assert.strictEqual(result.prop, "damage");
-      assert.strictEqual(result.value, -0.1);
-      assert.strictEqual(result.message, "damageの値は0から1です");
+      expect(result.prop, "damage");
+      expect(result.value, -0.1);
+      expect(result.message, "damageの値は0から1です");
     } else {
       assert.fail();
     }
@@ -69,9 +69,9 @@ describe("Randoms#validateRandoms", function () {
     });
     if (result instanceof RandomRangeError) {
       assert.ok(result);
-      assert.strictEqual(result.prop, "accuracy");
-      assert.strictEqual(result.value, -0.1);
-      assert.strictEqual(result.message, "accuracyの値は0から1です");
+      expect(result.prop, "accuracy");
+      expect(result.value, -0.1);
+      expect(result.message, "accuracyの値は0から1です");
     } else {
       assert.fail();
     }
@@ -85,9 +85,9 @@ describe("Randoms#validateRandoms", function () {
     });
     if (result instanceof RandomRangeError) {
       assert.ok(result);
-      assert.strictEqual(result.prop, "times");
-      assert.strictEqual(result.value, 1.1);
-      assert.strictEqual(result.message, "timesの値は0から1です");
+      expect(result.prop, "times");
+      expect(result.value, 1.1);
+      expect(result.message, "timesの値は0から1です");
     } else {
       assert.fail();
     }
@@ -100,9 +100,9 @@ describe("Randoms#validateRandoms", function () {
     });
     if (result instanceof RandomRangeError) {
       assert.ok(result);
-      assert.strictEqual(result.prop, "damage");
-      assert.strictEqual(result.value, 1.1);
-      assert.strictEqual(result.message, "damageの値は0から1です");
+      expect(result.prop, "damage");
+      expect(result.value, 1.1);
+      expect(result.message, "damageの値は0から1です");
     } else {
       assert.fail();
     }
@@ -115,9 +115,9 @@ describe("Randoms#validateRandoms", function () {
     });
     if (result instanceof RandomRangeError) {
       assert.ok(result);
-      assert.strictEqual(result.prop, "accuracy");
-      assert.strictEqual(result.value, 1.1);
-      assert.strictEqual(result.message, "accuracyの値は0から1です");
+      expect(result.prop, "accuracy");
+      expect(result.value, 1.1);
+      expect(result.message, "accuracyの値は0から1です");
     } else {
       assert.fail();
     }

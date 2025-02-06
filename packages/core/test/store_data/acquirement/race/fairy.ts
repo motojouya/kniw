@@ -19,6 +19,6 @@ import { rubyRod } from "../../../src/store_data/acquirement/weapon/rubyRod";
 describe("fairy#validateWearable", function () {
   it("ok", function () {
     const result = fairy.validateWearable(fairy, sky, redRobe, rubyRod);
-    assert.strictEqual(result, null);
+    expect(result, null);
   });
 });
