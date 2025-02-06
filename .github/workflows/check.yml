@@ -39,6 +39,7 @@ jobs:
           node-version: '22.x'
           cache: 'npm'
       - run: npm ci
+      - run: npm run build -w @motojouya/kniw-core
       - run: npm run test -ws --if-present
 
   build:
