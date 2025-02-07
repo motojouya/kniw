@@ -3,11 +3,27 @@ import { resolve } from "path";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import tsconfigPaths from "vite-tsconfig-paths";
+import { VitePWA } from "vite-plugin-pwa";
+
+const path = process.env.VITE_URL_PREFIX ? "/" + process.env.VITE_URL_PREFIX + "/" : "/";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   root: "src/pages",
-  plugins: [react(), tsconfigPaths()],
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    VitePWA({
+      registerType: "autoUpdate",
+      manifest: {
+        scope: path,
+        name: "KNIW - tactics board game",
+        short_name: "KNIW",
+        description: "KNIW is a board game that combines tactics and strategy.",
+        theme_color: "#ffffff",
+      },
+    }),
+  ],
   publicDir: resolve(__dirname, "public"),
   build: {
     outDir: resolve(__dirname, "dist"),
@@ -33,6 +49,6 @@ export default defineConfig({
   server: {
     port: 3000,
   },
-  base: process.env.VITE_URL_PREFIX ? "/" + process.env.VITE_URL_PREFIX + "/" : "/",
+  base: path,
   test: {},
 });

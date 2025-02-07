@@ -12,6 +12,7 @@
     "@vitejs/plugin-react": "^4.3.4",
     "tslib": "^2.8.1",
     "typescript": "^5.7.3",
+    "vite-plugin-pwa": "^0.21.1",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^3.0.5"
   },
