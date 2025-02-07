@@ -50,5 +50,7 @@ export default defineConfig({
     port: 3000,
   },
   base: path,
-  test: {},
+  test: {
+    include: ["test/**/*.ts"],
+  },
 });
