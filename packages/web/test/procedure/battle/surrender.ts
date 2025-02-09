@@ -1,5 +1,3 @@
-import type { Battle } from "@motojouya/kniw-core/model/battle";
-import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
 import type { BattleRepository } from "@motojouya/kniw-core/store/battle";
 import type { Dialogue } from "../../../src/io/window_dialogue";
 
@@ -135,8 +133,6 @@ const testData = {
   result: GameOngoing,
 };
 
-const battleData = toBattle(testData);
-
 const battleRepository: BattleRepository = {
   save: (_obj) => new Promise((resolve, _reject) => resolve()),
   get: (_name) => new Promise((resolve, _reject) => resolve(battle)),
@@ -149,6 +145,8 @@ const battleRepository: BattleRepository = {
 // test
 describe("surrender", () => {
   it("home surrender", async () => {
+    const battleData = toBattle(testData);
+
     const mockRepo: BattleRepository = {
       ...battleRepository,
       save: async (battle) => {
@@ -157,7 +155,7 @@ describe("surrender", () => {
     };
     const dialogue: Dialogue = {
       confirm: () => true,
-      notice : (_message) => {},
+      notice: (_message) => {},
     };
 
     const battle = await surrender(mockRepo, dialogue)(battleData, battleData.home.charactors[0], new Date());
@@ -166,6 +164,8 @@ describe("surrender", () => {
   });
 
   it("visitor surrender", async () => {
+    const battleData = toBattle(testData);
+
     const mockRepo: BattleRepository = {
       ...battleRepository,
       save: async (battle) => {
@@ -174,7 +174,7 @@ describe("surrender", () => {
     };
     const dialogue: Dialogue = {
       confirm: () => true,
-      notice : (_message) => {},
+      notice: (_message) => {},
     };
 
     const battle = await surrender(mockRepo, dialogue)(battleData, battleData.visitor.charactors[0], new Date());
@@ -183,6 +183,8 @@ describe("surrender", () => {
   });
 
   it("cancel", async () => {
+    const battleData = toBattle(testData);
+
     const mockRepo: BattleRepository = {
       ...battleRepository,
       save: async () => {
@@ -191,7 +193,7 @@ describe("surrender", () => {
     };
     const dialogue: Dialogue = {
       confirm: () => false,
-      notice : (_message) => {},
+      notice: (_message) => {},
     };
 
     const battle = await surrender(mockRepo, dialogue)(battleData, battleData.home.charactors[0], new Date());
