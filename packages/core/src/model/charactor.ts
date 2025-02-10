@@ -48,14 +48,15 @@ export type Charactor = {
   clothing: Clothing;
   blessing: Blessing;
   race: Race;
+};
+
+export type CharactorBattling = Charactor & {
   statuses: AttachedStatus[];
   hp: number;
   mp: number;
   restWt: number;
-  isVisitor?: boolean;
+  isVisitor: boolean;
 };
-
-export type CharactorBattling = Required<Charactor>;
 
 export type GetSelectOption = (charactor: Charactor) => SelectOption;
 export const getSelectOption: GetSelectOption = (charactor) => ({
@@ -124,36 +125,18 @@ export const validate: Validate = (name, race, blessing, clothing, weapon) => {
   return null;
 };
 
-export type CreateCharactor = (
-  name: string,
-  race: Race,
-  blessing: Blessing,
-  clothing: Clothing,
-  weapon: Weapon,
-) => Charactor | NotWearableErorr;
-export const createCharactor: CreateCharactor = (name, race, blessing, clothing, weapon) => {
-  const validateResult = validate(name, race, blessing, clothing, weapon);
-  if (validateResult instanceof NotWearableErorr) {
-    return validateResult;
-  }
+export type toBattleCharactor = (charactor: Charactor, isVisitor: boolean) => CharactorBattling;
+export const toBattleCharactor: toBattleCharactor = (charactor, isVisitor) => {
 
-  const someone: Charactor = {
-    name,
-    race,
-    blessing,
-    clothing,
-    weapon,
+  const physical = getPhysical(charactor);
+  return {
+    ...charactor,
     statuses: [],
-    hp: 0,
+    hp: physical.MaxHP,
     mp: 0,
-    restWt: 0,
-  };
-
-  const someonesPhysical = getPhysical(someone);
-  someone.hp = someonesPhysical.MaxHP;
-  someone.restWt = someonesPhysical.WT;
-
-  return someone;
+    restWt: physical.WT,
+    isVisitor: isVisitor,
+  }
 };
 
 export type IsVisitorString = (isVisitor: boolean) => string;

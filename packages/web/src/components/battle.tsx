@@ -59,7 +59,7 @@ import { silent } from '@motojouya/kniw-core/store_data/status/index';
 import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import { act } from '../procedure/battle/act';
 import { surrender } from '../procedure/battle/surrender';
-import { selectReceiver } from '../procedure/battle/selectReceiver';
+import { simulate } from '../procedure/battle/simulate';
 import { skillReceiverCount } from '../procedure/battle/skillReceiverCount';
 import { UserCancel } from '../io/window_dialogue';
 import { useIO } from './context';
@@ -91,7 +91,7 @@ const ReceiverSelect: FC<{
   const onBlur = () => {
 
     const receiverWithIsVisitor = getValues(formItemName);
-    const result = selectReceiver(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
+    const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
     if (result instanceof DataNotFoundError) {
       setReceiverResult(null);

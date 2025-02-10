@@ -5,7 +5,7 @@ import type { Randoms } from "./random";
 import type { Turn } from "./turn";
 
 import { MAGIC_TYPE_NONE } from "./skill";
-import { getPhysical, getAbilities } from "./charactor";
+import { getPhysical, getAbilities, toBattleCharactor } from "./charactor";
 import { changeClimate } from "./field";
 
 import { acid, paralysis, quick, silent, sleep, slow } from "../store_data/status/index";
@@ -80,11 +80,11 @@ export type CreateBattle = (title: string, home: Party, visitor: Party) => Battl
 export const createBattle: CreateBattle = (title, home, visitor) => {
   const homeBatting: PartyBattling = {
     name: home.name,
-    charactors: home.charactors.map((charactor) => ({ ...charactor, isVisitor: false })),
+    charactors: home.charactors.map((charactor) => (toBattleCharactor(charactor, false))),
   };
   const visitorBatting: PartyBattling = {
     name: visitor.name,
-    charactors: visitor.charactors.map((charactor) => ({ ...charactor, isVisitor: true })),
+    charactors: visitor.charactors.map((charactor) => (toBattleCharactor(charactor,true))),
   };
   return {
     title,

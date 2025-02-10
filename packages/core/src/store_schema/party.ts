@@ -7,7 +7,7 @@ import { z } from "zod";
 import { NotWearableErorr } from "../model/acquirement";
 import { DataNotFoundError } from "../store_utility/schema";
 import { validate, CharactorDuplicationError } from "../model/party";
-import { toCharactor, toCharactorJson, charactorSchema } from "./charactor";
+import { toCharactor, toCharactorBattling, toCharactorJson, toCharactorBattlingJson, charactorSchema, charactorBattlingSchema } from "./charactor";
 
 export const partySchema = z.object({
   name: z.string(),
@@ -16,12 +16,20 @@ export const partySchema = z.object({
 export type PartySchema = typeof partySchema;
 export type PartyJson = z.infer<PartySchema>;
 
+export const partyBattlingSchema = z.object({
+  name: z.string(),
+  charactors: z.array(charactorBattlingSchema),
+});
+export type PartyBattlingSchema = typeof partyBattlingSchema;
+export type PartyBattlingJson = z.infer<PartyBattlingSchema>;
+
 export type ToPartyJson = (party: Party) => PartyJson;
 export const toPartyJson: ToJson<Party, PartyJson> = (party) => ({
   name: party.name,
   charactors: party.charactors.map(toCharactorJson),
 });
 
+// TODO toPartyもBattlingとある程度まで共通化したい。
 export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = (
   partyJson,
 ) => {
@@ -30,6 +38,31 @@ export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundE
   const charactorObjs: Charactor[] = [];
   for (const charactor of partyJson.charactors) {
     const charactorObj = toCharactor(charactor);
+    if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {
+      return charactorObj;
+    }
+    charactorObjs.push(charactorObj);
+  }
+
+  const validateResult = validate(name, charactorObjs);
+  if (validateResult instanceof CharactorDuplicationError) {
+    return validateResult;
+  }
+
+  return {
+    name,
+    charactors: charactorObjs,
+  };
+};
+
+export const toPartyBattling: ToModel<PartyBattling, PartyBattlingJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = (
+  partyJson,
+) => {
+  const { name } = partyJson;
+
+  const charactorObjs: Charactor[] = [];
+  for (const charactor of partyJson.charactors) {
+    const charactorObj = toCharactorBattling(charactor);
     if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {
       return charactorObj;
     }

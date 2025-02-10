@@ -45,7 +45,7 @@ import {
   getAbilities,
   getSkills,
 } from '@motojouya/kniw-core/model/charactor';
-import { hireCharactor } from '../procedure/charactor/hire';
+import { toCharactor } from '../form/charactor';
 import { EmptyParameter } from '../io/window_dialogue';
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
@@ -186,7 +186,7 @@ export const CharactorCard: FC<{
   const [charactor, setCharactor] = useState<Charactor | string>('入力してください');
 
   const onBlur = () => {
-    const hiredCharactor = hireCharactor(getValues(`charactors.${index}` as const));
+    const hiredCharactor = toCharactor(getValues(`charactors.${index}` as const));
 
     if (hiredCharactor instanceof DataNotFoundError || hiredCharactor instanceof EmptyParameter) {
       setCharactor('入力してください');
