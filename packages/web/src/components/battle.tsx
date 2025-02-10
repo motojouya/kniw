@@ -45,6 +45,7 @@ import {
 import { CharactorDetail } from './charactor';
 import {
   doSkillFormSchema,
+  toSkill,
   receiverSelectOption,
   ReceiverDuplicationError,
 } from '../form/battle';
@@ -160,8 +161,12 @@ const SkillSelect: FC<{
 
   const onBlur = () => {
     const skillName = getValues('skillName');
-    const receiverCount = skillReceiverCount(skillName);
-    replace(Array(receiverCount).fill(''));
+    const skill = toSkill(skillName);
+    if (skill) {
+      replace(Array(skill.receiverCount).fill(''));
+    } else {
+      replace([]);
+    }
   };
 
   const collection = createListCollection({ items: skillOptions });

@@ -52,3 +52,24 @@ export const hireCharactor: HireCharactor = (charactorForm) => {
 
   return createCharactor(charactorName, race, blessing, clothing, weapon);
 };
+
+
+import { describe, it, expect } from "vitest";
+
+// test hireCharactor
+describe("hireCharactor", () => {
+  it("should return a charactor", () => {
+    const charactorForm = {
+      name
+
+// TODO このモジュールは削除して、toCharactorの実装を使うだけにする。
+// 本当はformモジュールにもテストを書くべきだが、どうしようかな
+
+
+
+
+
+
+
+
+

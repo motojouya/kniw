@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
-import { getPhysical, validate } from "@motojouya/kniw-core/model/charactor";
+import { getPhysical, validate, createCharactor } from "@motojouya/kniw-core/model/charactor";
 import {
   raceRepository,
   weaponRepository,
@@ -62,6 +62,11 @@ export const toCharactor: ToCharactor = (charactorForm) => {
     return new DataNotFoundError(charactorForm.weapon, "weapon", `${charactorForm.weapon}という武器は存在しません`);
   }
 
+  // TODO 以降のコードはmodel/charactor#createCharactorを使うべき
+  // 違うね。そもそもCharactorとCharactorBattlingは別物なので、それを分けて置くべき
+  // んでformからはCharactorにだけ変換できる。storeは両方のパターンがあるので、両方の関数を作る。
+  // CharactorBattlingはBattleからしか呼ばれない感じ。createCharactorはBattle#start時に適用するので、それまではCharactorの状態にしておく。
+  // charactorFormも必要ならcharacorBattingFormを用意したらいいわけで、こっちはCharacor専用
   const validateResult = validate(name, race, blessing, clothing, weapon);
   if (validateResult instanceof NotWearableErorr) {
     return validateResult;
