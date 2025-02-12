@@ -22,7 +22,7 @@ import { toBattle } from "../../src/store_schema/battle";
 import { toParty } from "../../src/store_schema/party";
 import { format } from "date-fns";
 
-import { toCharactor } from "../../src/store_schema/charactor";
+import { toCharactorBattling } from "../../src/store_schema/charactor";
 import { NotWearableErorr } from "../../src/model/acquirement";
 import { CharactorDuplicationError } from "../../src/model/party";
 import { JsonSchemaUnmatchError, DataNotFoundError } from "../../src/store_utility/schema";
@@ -267,8 +267,8 @@ describe("Battle#start", function () {
 describe("Battle#act", function () {
   it("charactor", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.home.charactors[0]) as CharactorBattling;
-    const receiver = toCharactor(testData.visitor.charactors[0]) as CharactorBattling;
+    const actor = toCharactorBattling(testData.home.charactors[0]) as CharactorBattling;
+    const receiver = toCharactorBattling(testData.visitor.charactors[0]) as CharactorBattling;
     const skill = skillRepository.get("chop") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -305,7 +305,7 @@ describe("Battle#act", function () {
 describe("Battle#stay", function () {
   it("ok", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.home.charactors[0]) as CharactorBattling;
+    const actor = toCharactorBattling(testData.home.charactors[0]) as CharactorBattling;
 
     const turn = stay(battle, actor, new Date());
 

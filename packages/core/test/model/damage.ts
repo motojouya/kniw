@@ -8,7 +8,7 @@ import { describe, it, expect } from "vitest";
 import { actToCharactor, GameOngoing } from "../../src/model/battle";
 import { toBattle } from "../../src/store_schema/battle";
 
-import { toCharactor } from "../../src/store_schema/charactor";
+import { toCharactorBattling } from "../../src/store_schema/charactor";
 import { skillRepository } from "../../src/store/skill";
 
 const testData = {
@@ -235,8 +235,8 @@ const testData = {
 describe("Damage#rapier", function () {
   it("前衛刺突耐性なし", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
     const skill = skillRepository.get("stab") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -255,8 +255,8 @@ describe("Damage#rapier", function () {
   });
   it("前衛刺突耐性あり", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
     const skill = skillRepository.get("stab") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -275,8 +275,8 @@ describe("Damage#rapier", function () {
   });
   it("弓使い", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[1]) as CharactorBattling; // jonny
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[1]) as CharactorBattling; // jonny
     const skill = skillRepository.get("stab") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -295,8 +295,8 @@ describe("Damage#rapier", function () {
   });
   it("魔法使い", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[5]) as CharactorBattling; // noa
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[5]) as CharactorBattling; // noa
     const skill = skillRepository.get("stab") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -318,8 +318,8 @@ describe("Damage#rapier", function () {
 describe("Damage#samuraiBow", function () {
   it("前衛刺突耐性なし", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
     const skill = skillRepository.get("shot") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -338,8 +338,8 @@ describe("Damage#samuraiBow", function () {
   });
   it("前衛刺突耐性あり", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[6]) as CharactorBattling; // sam
     const skill = skillRepository.get("shot") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -358,8 +358,8 @@ describe("Damage#samuraiBow", function () {
   });
   it("弓使い", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[1]) as CharactorBattling; // jonny
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[1]) as CharactorBattling; // jonny
     const skill = skillRepository.get("shot") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -378,8 +378,8 @@ describe("Damage#samuraiBow", function () {
   });
   it("魔法使い", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[5]) as CharactorBattling; // noa
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[0]) as CharactorBattling; // sara
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[5]) as CharactorBattling; // noa
     const skill = skillRepository.get("shot") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -400,8 +400,8 @@ describe("Damage#samuraiBow", function () {
 describe("Damage#flameFall", function () {
   it("前衛", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[7]) as CharactorBattling; // john
     const skill = skillRepository.get("flameFall") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -420,8 +420,8 @@ describe("Damage#flameFall", function () {
   });
   it("弓使い", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[1]) as CharactorBattling; // jonny
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[1]) as CharactorBattling; // jonny
     const skill = skillRepository.get("flameFall") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -440,8 +440,8 @@ describe("Damage#flameFall", function () {
   });
   it("属性相性よい", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[3]) as CharactorBattling; // funcy
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[3]) as CharactorBattling; // funcy
     const skill = skillRepository.get("flameFall") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -460,8 +460,8 @@ describe("Damage#flameFall", function () {
   });
   it("属性相性悪い", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[2]) as CharactorBattling; // yoshua
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[2]) as CharactorBattling; // yoshua
     const skill = skillRepository.get("flameFall") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
@@ -480,8 +480,8 @@ describe("Damage#flameFall", function () {
   });
   it("属性相性なし", function () {
     const battle = toBattle(testData) as Battle;
-    const actor = toCharactor(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
-    const receiver = toCharactor(testData.turns[0].sortedCharactors[5]) as CharactorBattling; // noa
+    const actor = toCharactorBattling(testData.turns[0].sortedCharactors[4]) as CharactorBattling; // nick
+    const receiver = toCharactorBattling(testData.turns[0].sortedCharactors[5]) as CharactorBattling; // noa
     const skill = skillRepository.get("flameFall") as Skill;
 
     const turn = actToCharactor(battle, actor, skill, [receiver], new Date(), {
