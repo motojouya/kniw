@@ -8,10 +8,6 @@ import type { Skill } from "./skill";
 import { addPhysicals } from "./physical";
 import { NotWearableErorr } from "./acquirement";
 
-export function isBattlingCharactor(charactor: Charactor): charactor is CharactorBattling {
-  return Object.prototype.hasOwnProperty.call(charactor, "isVisitor") && typeof charactor.isVisitor === "boolean";
-}
-
 const basePhysical: Physical = {
   MaxHP: 300,
   MaxMP: 200,
@@ -137,6 +133,29 @@ export const toBattleCharactor: toBattleCharactor = (charactor, isVisitor) => {
     restWt: physical.WT,
     isVisitor: isVisitor,
   }
+};
+
+export type CreateCharactor = (
+  name: string,
+  race: Race,
+  blessing: Blessing,
+  clothing: Clothing,
+  weapon: Weapon,
+) => Charactor | NotWearableErorr;
+export const createCharactor: CreateCharactor = (name, race, blessing, clothing, weapon) => {
+
+  const validateResult = validate(name, race, blessing, clothing, weapon);
+  if (validateResult instanceof NotWearableErorr) {
+    return validateResult;
+  }
+
+  return {
+    name,
+    race,
+    blessing,
+    clothing,
+    weapon,
+  };
 };
 
 export type IsVisitorString = (isVisitor: boolean) => string;

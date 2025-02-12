@@ -13,13 +13,6 @@ import { underStatus } from "./status";
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
-export class NotBattlingError {
-  constructor(
-    readonly charactor: Charactor | Party,
-    readonly message: string,
-  ) {}
-}
-
 export type GameResult = "ONGOING" | "HOME" | "VISITOR" | "DRAW";
 export const GameOngoing: GameResult = "ONGOING";
 export const GameHome: GameResult = "HOME";

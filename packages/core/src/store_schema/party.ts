@@ -29,7 +29,6 @@ export const toPartyJson: ToJson<Party, PartyJson> = (party) => ({
   charactors: party.charactors.map(toCharactorJson),
 });
 
-// TODO toPartyもBattlingとある程度まで共通化したい。
 export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = (
   partyJson,
 ) => {

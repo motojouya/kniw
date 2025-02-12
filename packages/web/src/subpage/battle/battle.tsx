@@ -4,7 +4,6 @@ import { Box, Text } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { BattleTurn } from '../../components/battle';
-import { NotBattlingError } from '@motojouya/kniw-core/model/battle';
 import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
@@ -19,8 +18,7 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
     battle instanceof NotWearableErorr ||
     battle instanceof DataNotFoundError ||
     battle instanceof CharactorDuplicationError ||
-    battle instanceof JsonSchemaUnmatchError ||
-    battle instanceof NotBattlingError
+    battle instanceof JsonSchemaUnmatchError
   ) {
     return (
       <Box>

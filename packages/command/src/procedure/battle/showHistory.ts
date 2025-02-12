@@ -4,7 +4,6 @@ import { createRepository } from "@motojouya/kniw-core/store/battle";
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
 import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { CharactorDuplicationError } from "@motojouya/kniw-core/model/party";
-import { NotBattlingError } from "@motojouya/kniw-core/model/battle";
 
 export type ShowHistory = (dialogue: Dialogue, database: Database) => (title: string) => Promise<void>;
 export const showHistory: ShowHistory =
@@ -20,8 +19,7 @@ export const showHistory: ShowHistory =
       battle instanceof NotWearableErorr ||
       battle instanceof DataNotFoundError ||
       battle instanceof CharactorDuplicationError ||
-      battle instanceof JsonSchemaUnmatchError ||
-      battle instanceof NotBattlingError
+      battle instanceof JsonSchemaUnmatchError
     ) {
       await notice(`${title}は不正なデータです。取り出せません。`);
       return;

@@ -17,7 +17,6 @@ import {
   GameHome,
   GameVisitor,
   GameDraw,
-  NotBattlingError,
 } from "../../src/model/battle";
 import { toBattle } from "../../src/store_schema/battle";
 import { toParty } from "../../src/store_schema/party";
@@ -165,8 +164,7 @@ describe("Battle#toBattle", function () {
       battle instanceof NotWearableErorr ||
       battle instanceof DataNotFoundError ||
       battle instanceof CharactorDuplicationError ||
-      battle instanceof JsonSchemaUnmatchError ||
-      battle instanceof NotBattlingError
+      battle instanceof JsonSchemaUnmatchError
     ) {
       expect.unreachable("battle is value");
     } else {
