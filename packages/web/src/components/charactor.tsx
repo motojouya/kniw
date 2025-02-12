@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Acquirement } from '@motojouya/kniw-core/model/acquirement';
-import type { Charactor } from '@motojouya/kniw-core/model/charactor';
+import type { Charactor, CharactorBattling } from '@motojouya/kniw-core/model/charactor';
 import type { PartyForm } from '../form/party';
 
 import { useState } from 'react';
@@ -98,7 +98,7 @@ const SelectAcquirement: FC<{
   );
 }
 
-export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
+export const CharactorDetail: FC<{ charactor: CharactorBattling }> = ({ charactor }) => {
   const physical = getPhysical(charactor);
 
   const abilities = getAbilities(charactor);

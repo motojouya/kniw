@@ -1,5 +1,5 @@
-import type { Party } from "../model/party";
-import type { Charactor } from "../model/charactor";
+import type { Party, PartyBattling } from "../model/party";
+import type { Charactor, CharactorBattling } from "../model/charactor";
 import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";
@@ -74,7 +74,7 @@ export const toPartyBattling: ToModel<
 > = (partyJson) => {
   const { name } = partyJson;
 
-  const charactorObjs: Charactor[] = [];
+  const charactorObjs: CharactorBattling[] = [];
   for (const charactor of partyJson.charactors) {
     const charactorObj = toCharactorBattling(charactor);
     if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr) {

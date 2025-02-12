@@ -54,7 +54,7 @@ export type CharactorBattling = Charactor & {
   isVisitor: boolean;
 };
 
-export type GetSelectOption = (charactor: Charactor) => SelectOption;
+export type GetSelectOption = (charactor: CharactorBattling) => SelectOption;
 export const getSelectOption: GetSelectOption = (charactor) => ({
   label: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,
   value: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,

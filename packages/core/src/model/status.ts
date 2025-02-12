@@ -1,4 +1,4 @@
-import type { Charactor } from "./charactor";
+import type { CharactorBattling } from "./charactor";
 
 export type Status = {
   name: string;
@@ -7,6 +7,6 @@ export type Status = {
   description: string;
 };
 
-export type UnderStatus = (status: Status, charactor: Charactor) => boolean;
+export type UnderStatus = (status: Status, charactor: CharactorBattling) => boolean;
 export const underStatus: UnderStatus = (status, charactor) =>
   !!charactor.statuses.find((s) => s.status.name === status.name);
