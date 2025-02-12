@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
-import { getPhysical, validate } from "@motojouya/kniw-core/model/charactor";
+import { createCharactor } from "@motojouya/kniw-core/model/charactor";
 import {
   raceRepository,
   weaponRepository,
@@ -31,7 +31,9 @@ export const toCharactorForm: ToCharactorForm = (charactor) => ({
   weapon: charactor.weapon.name,
 });
 
-export type ToCharactor = (charactorForm: CharactorForm) => Charactor | NotWearableErorr | DataNotFoundError | EmptyParameter;
+export type ToCharactor = (
+  charactorForm: CharactorForm,
+) => Charactor | NotWearableErorr | DataNotFoundError | EmptyParameter;
 export const toCharactor: ToCharactor = (charactorForm) => {
   const { name } = charactorForm;
   if (!name) {
@@ -66,16 +68,5 @@ export const toCharactor: ToCharactor = (charactorForm) => {
     return new DataNotFoundError(charactorForm.weapon, "weapon", `${charactorForm.weapon}という武器は存在しません`);
   }
 
-  const validateResult = validate(name, race, blessing, clothing, weapon);
-  if (validateResult instanceof NotWearableErorr) {
-    return validateResult;
-  }
-
-  return {
-    name,
-    race,
-    blessing,
-    clothing,
-    weapon,
-  };
+  return createCharactor(name, race, blessing, clothing, weapon);
 };

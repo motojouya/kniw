@@ -60,7 +60,6 @@ import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import { act } from '../procedure/battle/act';
 import { surrender } from '../procedure/battle/surrender';
 import { simulate } from '../procedure/battle/simulate';
-import { skillReceiverCount } from '../procedure/battle/skillReceiverCount';
 import { UserCancel } from '../io/window_dialogue';
 import { useIO } from './context';
 import { Link } from './utility';

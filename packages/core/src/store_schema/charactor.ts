@@ -96,8 +96,11 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
   return createCharactor(name, race, blessing, clothing, weapon);
 };
 
-export const toCharactorBattling: ToModel<CharactorBattling, CharactorBattlingJson, NotWearableErorr | DataNotFoundError> = (charactorJson) => {
-
+export const toCharactorBattling: ToModel<
+  CharactorBattling,
+  CharactorBattlingJson,
+  NotWearableErorr | DataNotFoundError
+> = (charactorJson) => {
   const charactor = toCharactor(charactorJson);
   if (charactor instanceof NotWearableErorr) {
     return charactor;

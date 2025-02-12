@@ -98,9 +98,7 @@ export const toTurnJson: ToJson<Turn, TurnJson> = (turn) => ({
   field: turn.field,
 });
 
-export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFoundError> = (
-  actionJson,
-) => {
+export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFoundError> = (actionJson) => {
   if (actionJson.type === "DO_SKILL") {
     const skillActor = toCharactorBattling(actionJson.actor);
     if (skillActor instanceof NotWearableErorr || skillActor instanceof DataNotFoundError) {
@@ -157,11 +155,9 @@ export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFou
   };
 };
 
-export const toTurn: ToModel<
-  Turn,
-  TurnJson,
-  NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError
-> = (turnJson) => {
+export const toTurn: ToModel<Turn, TurnJson, NotWearableErorr | DataNotFoundError | JsonSchemaUnmatchError> = (
+  turnJson,
+) => {
   // TODO date parse不要では？JsonSchemaUnmatchErrorも
   let datetime = null;
   try {

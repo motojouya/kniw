@@ -7,7 +7,14 @@ import { z } from "zod";
 import { NotWearableErorr } from "../model/acquirement";
 import { DataNotFoundError } from "../store_utility/schema";
 import { validate, CharactorDuplicationError } from "../model/party";
-import { toCharactor, toCharactorBattling, toCharactorJson, toCharactorBattlingJson, charactorSchema, charactorBattlingSchema } from "./charactor";
+import {
+  toCharactor,
+  toCharactorBattling,
+  toCharactorJson,
+  toCharactorBattlingJson,
+  charactorSchema,
+  charactorBattlingSchema,
+} from "./charactor";
 
 export const partySchema = z.object({
   name: z.string(),
@@ -27,6 +34,12 @@ export type ToPartyJson = (party: Party) => PartyJson;
 export const toPartyJson: ToJson<Party, PartyJson> = (party) => ({
   name: party.name,
   charactors: party.charactors.map(toCharactorJson),
+});
+
+export type ToPartyBattlingJson = (party: PartyBattling) => PartyBattlingJson;
+export const toPartyBattlingJson: ToJson<PartyBattling, PartyBattlingJson> = (party) => ({
+  name: party.name,
+  charactors: party.charactors.map(toCharactorBattlingJson),
 });
 
 export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = (
@@ -54,9 +67,11 @@ export const toParty: ToModel<Party, PartyJson, NotWearableErorr | DataNotFoundE
   };
 };
 
-export const toPartyBattling: ToModel<PartyBattling, PartyBattlingJson, NotWearableErorr | DataNotFoundError | CharactorDuplicationError> = (
-  partyJson,
-) => {
+export const toPartyBattling: ToModel<
+  PartyBattling,
+  PartyBattlingJson,
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError
+> = (partyJson) => {
   const { name } = partyJson;
 
   const charactorObjs: Charactor[] = [];

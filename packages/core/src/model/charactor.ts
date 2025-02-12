@@ -123,7 +123,6 @@ export const validate: Validate = (name, race, blessing, clothing, weapon) => {
 
 export type toBattleCharactor = (charactor: Charactor, isVisitor: boolean) => CharactorBattling;
 export const toBattleCharactor: toBattleCharactor = (charactor, isVisitor) => {
-
   const physical = getPhysical(charactor);
   return {
     ...charactor,
@@ -132,7 +131,7 @@ export const toBattleCharactor: toBattleCharactor = (charactor, isVisitor) => {
     mp: 0,
     restWt: physical.WT,
     isVisitor: isVisitor,
-  }
+  };
 };
 
 export type CreateCharactor = (
@@ -143,7 +142,6 @@ export type CreateCharactor = (
   weapon: Weapon,
 ) => Charactor | NotWearableErorr;
 export const createCharactor: CreateCharactor = (name, race, blessing, clothing, weapon) => {
-
   const validateResult = validate(name, race, blessing, clothing, weapon);
   if (validateResult instanceof NotWearableErorr) {
     return validateResult;

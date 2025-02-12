@@ -1,5 +1,5 @@
 import type { Party, PartyBattling } from "./party";
-import type { Charactor, CharactorBattling } from "./charactor";
+import type { CharactorBattling } from "./charactor";
 import type { Skill } from "./skill";
 import type { Randoms } from "./random";
 import type { Turn } from "./turn";
@@ -73,11 +73,11 @@ export type CreateBattle = (title: string, home: Party, visitor: Party) => Battl
 export const createBattle: CreateBattle = (title, home, visitor) => {
   const homeBatting: PartyBattling = {
     name: home.name,
-    charactors: home.charactors.map((charactor) => (toBattleCharactor(charactor, false))),
+    charactors: home.charactors.map((charactor) => toBattleCharactor(charactor, false)),
   };
   const visitorBatting: PartyBattling = {
     name: visitor.name,
-    charactors: visitor.charactors.map((charactor) => (toBattleCharactor(charactor,true))),
+    charactors: visitor.charactors.map((charactor) => toBattleCharactor(charactor, true)),
   };
   return {
     title,
