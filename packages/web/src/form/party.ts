@@ -30,7 +30,11 @@ export const toParty: ToParty = (partyForm) => {
   const charactorObjs: Charactor[] = [];
   for (const charactor of partyForm.charactors) {
     const charactorObj = toCharactor(charactor);
-    if (charactorObj instanceof DataNotFoundError || charactorObj instanceof NotWearableErorr || charactorObj instanceof EmptyParameter) {
+    if (
+      charactorObj instanceof DataNotFoundError ||
+      charactorObj instanceof NotWearableErorr ||
+      charactorObj instanceof EmptyParameter
+    ) {
       return charactorObj;
     }
     charactorObjs.push(charactorObj);

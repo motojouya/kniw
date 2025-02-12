@@ -55,7 +55,9 @@ export type CharactorBattling = Charactor & {
 };
 
 export function isBattling(charctor: Charactor): charctor is CharactorBattling {
-  return "statuses" in charctor && "hp" in charctor && "mp" in charctor && "restWt" in charctor && "isVisitor" in charctor;
+  return (
+    "statuses" in charctor && "hp" in charctor && "mp" in charctor && "restWt" in charctor && "isVisitor" in charctor
+  );
 }
 
 export type GetSelectOption = (charactor: CharactorBattling) => SelectOption;
