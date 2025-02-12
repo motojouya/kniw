@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import type { Acquirement } from '@motojouya/kniw-core/model/acquirement';
-import type { Charactor, CharactorBattling } from '@motojouya/kniw-core/model/charactor';
+import type { Charactor } from '@motojouya/kniw-core/model/charactor';
 import type { PartyForm } from '../form/party';
 
 import { useState } from 'react';
@@ -41,6 +41,7 @@ import {
   weaponRepository,
 } from '@motojouya/kniw-core/store/acquirement';
 import {
+  isBattling,
   getPhysical,
   getAbilities,
   getSkills,
@@ -98,7 +99,7 @@ const SelectAcquirement: FC<{
   );
 }
 
-export const CharactorDetail: FC<{ charactor: CharactorBattling }> = ({ charactor }) => {
+export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
   const physical = getPhysical(charactor);
 
   const abilities = getAbilities(charactor);
@@ -107,21 +108,35 @@ export const CharactorDetail: FC<{ charactor: CharactorBattling }> = ({ characto
   const skills = getSkills(charactor);
   const skillsText = skills.map(skill => skill.label).join(', ');
 
-  const statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
+  let hpText: string;
+  let mpText: string;
+  let wtText: string;
+  let statusesText: string;
+  let isVisitorTag;
 
-   
-  const isVisitorTag = charactor.isVisitor === undefined ? null
-    : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
-    : (<Tag>{'HOME'}</Tag>);
+  if (isBattling(charactor)) {
+    hpText = `${charactor.hp}/${physical.MaxHP}`;
+    mpText = `${charactor.mp}/${physical.MaxMP}`;
+    wtText = `${charactor.restWt}(${physical.WT})`;
+    statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
+    isVisitorTag = charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
+
+  } else {
+    hpText = `${physical.MaxHP}`;
+    mpText = `${physical.MaxMP}`;
+    wtText = `${physical.WT}`;
+    statusesText = 'No Status';
+    isVisitorTag = null;
+  }
 
   return (
     <Table.Root variant='line'>
       <Table.Body>
         <Table.Row>
           <Table.ColumnHeader>名前      </Table.ColumnHeader><Table.Cell>{`${charactor.name}`}{isVisitorTag}    </Table.Cell>
-          <Table.ColumnHeader>HP        </Table.ColumnHeader><Table.Cell>{`${charactor.hp}/${physical.MaxHP}`}  </Table.Cell>
-          <Table.ColumnHeader>MP        </Table.ColumnHeader><Table.Cell>{`${charactor.mp}/${physical.MaxMP}`}  </Table.Cell>
-          <Table.ColumnHeader>WT        </Table.ColumnHeader><Table.Cell>{`${charactor.restWt}(${physical.WT})`}</Table.Cell>
+          <Table.ColumnHeader>HP        </Table.ColumnHeader><Table.Cell>{hpText}                               </Table.Cell>
+          <Table.ColumnHeader>MP        </Table.ColumnHeader><Table.Cell>{mpText}                               </Table.Cell>
+          <Table.ColumnHeader>WT        </Table.ColumnHeader><Table.Cell>{wtText}                               </Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.ColumnHeader colSpan={2}>ステータス</Table.ColumnHeader><Table.Cell colSpan={6}>{statusesText} </Table.Cell>

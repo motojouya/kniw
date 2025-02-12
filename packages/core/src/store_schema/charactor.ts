@@ -31,7 +31,7 @@ export const charactorBattlingSchema = charactorSchema.extend({
   hp: z.number().int(),
   mp: z.number().int(),
   restWt: z.number().int(),
-  isVisitor: z.boolean().optional(),
+  isVisitor: z.boolean(),
 });
 export type CharactorBattlingSchema = typeof charactorBattlingSchema;
 export type CharactorBattlingJson = z.infer<CharactorBattlingSchema>;

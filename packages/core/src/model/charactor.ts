@@ -54,6 +54,10 @@ export type CharactorBattling = Charactor & {
   isVisitor: boolean;
 };
 
+export function isBattling(charctor: Charactor): charctor is CharactorBattling {
+  return "statuses" in charctor && "hp" in charctor && "mp" in charctor && "restWt" in charctor && "isVisitor" in charctor;
+}
+
 export type GetSelectOption = (charactor: CharactorBattling) => SelectOption;
 export const getSelectOption: GetSelectOption = (charactor) => ({
   label: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,

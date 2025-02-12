@@ -11,7 +11,7 @@ import {
   clothingRepository,
   blessingRepository,
 } from "@motojouya/kniw-core/store/acquirement";
-import { EmptyParameter } from "../../io/window_dialogue";
+import { EmptyParameter } from "../io/window_dialogue";
 
 export const charactorFormSchema = z.object({
   name: z.string().min(1),
