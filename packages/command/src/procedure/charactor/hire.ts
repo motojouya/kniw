@@ -10,7 +10,7 @@ import {
   weaponRepository,
 } from "@motojouya/kniw-core/store/acquirement";
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
-import { validate } from "@motojouya/kniw-core/model/charactor";
+import { createCharactor } from "@motojouya/kniw-core/model/charactor";
 
 export type Hire = (dialogue: Dialogue, database: Database) => (name: string) => Promise<void>;
 export const hire: Hire = (dialogue, database) => async (name) => {
@@ -75,10 +75,10 @@ export const hire: Hire = (dialogue, database) => async (name) => {
     return;
   }
 
-  const validateResult = validate(name, race, blessing, clothing, weapon);
-  if (validateResult instanceof NotWearableErorr) {
-    await notice(validateResult.message);
-    return validateResult;
+  const charactor = createCharactor(name, race, blessing, clothing, weapon);
+  if (charactor instanceof NotWearableErorr) {
+    await notice(charactor.message);
+    return;
   }
 
   await repository.save(charactor);
