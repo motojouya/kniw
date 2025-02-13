@@ -1,5 +1,4 @@
 import type { Charactor, CharactorBattling } from "./charactor";
-import { isBattlingCharactor } from "./charactor";
 
 export type Party = {
   name: string;
@@ -10,10 +9,6 @@ export type PartyBattling = {
   name: string;
   charactors: CharactorBattling[];
 };
-
-export function isBattlingParty(party: Party): party is PartyBattling {
-  return party.charactors.every((charactor) => isBattlingCharactor(charactor));
-}
 
 export class CharactorDuplicationError {
   constructor(

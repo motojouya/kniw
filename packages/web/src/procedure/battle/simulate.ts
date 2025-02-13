@@ -8,17 +8,17 @@ import { toReceiver } from "../../form/battle";
 import { createAbsolute } from "@motojouya/kniw-core/model/random";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 
-export type WillReceiver = { survive: boolean; receiver: CharactorBattling };
+export type Simulated = { survive: boolean; receiver: CharactorBattling };
 
-export type SelectReceiver = (
+export type Simulate = (
   battle: Battle,
   actor: CharactorBattling,
   skill: Skill,
   receiverWithIsVisitor: string,
   lastTurn: Turn,
   actionDate: Date,
-) => WillReceiver | DataNotFoundError;
-export const selectReceiver: SelectReceiver = (battle, actor, skill, receiverWithIsVisitor, lastTurn, actionDate) => {
+) => Simulated | DataNotFoundError;
+export const simulate: Simulate = (battle, actor, skill, receiverWithIsVisitor, lastTurn, actionDate) => {
   const receiver = toReceiver(receiverWithIsVisitor, lastTurn.sortedCharactors);
   if (receiver instanceof DataNotFoundError) {
     return receiver;

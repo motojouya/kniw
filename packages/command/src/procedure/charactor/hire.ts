@@ -76,7 +76,6 @@ export const hire: Hire = (dialogue, database) => async (name) => {
   }
 
   const charactor = createCharactor(name, race, blessing, clothing, weapon);
-
   if (charactor instanceof NotWearableErorr) {
     await notice(charactor.message);
     return;

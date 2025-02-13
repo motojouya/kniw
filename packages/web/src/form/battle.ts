@@ -21,6 +21,15 @@ export const doSkillFormSchema = z.object({
 });
 export type DoSkillForm = z.infer<typeof doSkillFormSchema>;
 
+export type ToSkill = (skillName: string) => Skill | null;
+export const toSkill: ToSkill = (skillName) => {
+  if (skillName === ACTION_DO_NOTHING) {
+    return null;
+  }
+
+  return skillRepository.get(skillName);
+};
+
 export type ReceiverSelectOption = (receiver: CharactorBattling) => SelectOption;
 export const receiverSelectOption: ReceiverSelectOption = (receiver) => ({
   value: `${receiver.name}__${isVisitorString(receiver.isVisitor)}`,

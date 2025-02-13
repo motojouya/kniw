@@ -41,11 +41,12 @@ import {
   weaponRepository,
 } from '@motojouya/kniw-core/store/acquirement';
 import {
+  isBattling,
   getPhysical,
   getAbilities,
   getSkills,
 } from '@motojouya/kniw-core/model/charactor';
-import { hireCharactor } from '../procedure/charactor/hire';
+import { toCharactor } from '../form/charactor';
 import { EmptyParameter } from '../io/window_dialogue';
 
 type GetCharactorError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
@@ -107,21 +108,35 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
   const skills = getSkills(charactor);
   const skillsText = skills.map(skill => skill.label).join(', ');
 
-  const statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
+  let hpText: string;
+  let mpText: string;
+  let wtText: string;
+  let statusesText: string;
+  let isVisitorTag;
 
-   
-  const isVisitorTag = charactor.isVisitor === undefined ? null
-    : charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>)
-    : (<Tag>{'HOME'}</Tag>);
+  if (isBattling(charactor)) {
+    hpText = `${charactor.hp}/${physical.MaxHP}`;
+    mpText = `${charactor.mp}/${physical.MaxMP}`;
+    wtText = `${charactor.restWt}(${physical.WT})`;
+    statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
+    isVisitorTag = charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
+
+  } else {
+    hpText = `${physical.MaxHP}`;
+    mpText = `${physical.MaxMP}`;
+    wtText = `${physical.WT}`;
+    statusesText = 'No Status';
+    isVisitorTag = null;
+  }
 
   return (
     <Table.Root variant='line'>
       <Table.Body>
         <Table.Row>
           <Table.ColumnHeader>名前      </Table.ColumnHeader><Table.Cell>{`${charactor.name}`}{isVisitorTag}    </Table.Cell>
-          <Table.ColumnHeader>HP        </Table.ColumnHeader><Table.Cell>{`${charactor.hp}/${physical.MaxHP}`}  </Table.Cell>
-          <Table.ColumnHeader>MP        </Table.ColumnHeader><Table.Cell>{`${charactor.mp}/${physical.MaxMP}`}  </Table.Cell>
-          <Table.ColumnHeader>WT        </Table.ColumnHeader><Table.Cell>{`${charactor.restWt}(${physical.WT})`}</Table.Cell>
+          <Table.ColumnHeader>HP        </Table.ColumnHeader><Table.Cell>{hpText}                               </Table.Cell>
+          <Table.ColumnHeader>MP        </Table.ColumnHeader><Table.Cell>{mpText}                               </Table.Cell>
+          <Table.ColumnHeader>WT        </Table.ColumnHeader><Table.Cell>{wtText}                               </Table.Cell>
         </Table.Row>
         <Table.Row>
           <Table.ColumnHeader colSpan={2}>ステータス</Table.ColumnHeader><Table.Cell colSpan={6}>{statusesText} </Table.Cell>
@@ -186,7 +201,7 @@ export const CharactorCard: FC<{
   const [charactor, setCharactor] = useState<Charactor | string>('入力してください');
 
   const onBlur = () => {
-    const hiredCharactor = hireCharactor(getValues(`charactors.${index}` as const));
+    const hiredCharactor = toCharactor(getValues(`charactors.${index}` as const));
 
     if (hiredCharactor instanceof DataNotFoundError || hiredCharactor instanceof EmptyParameter) {
       setCharactor('入力してください');

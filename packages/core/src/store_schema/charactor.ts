@@ -1,11 +1,11 @@
-import type { Charactor, AttachedStatus } from "../model/charactor";
+import type { Charactor, CharactorBattling, AttachedStatus } from "../model/charactor";
 import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";
 
 import { NotWearableErorr } from "../model/acquirement";
 import { DataNotFoundError } from "../store_utility/schema";
-import { validate } from "../model/charactor";
+import { createCharactor } from "../model/charactor";
 import { statusSchema, toStatus, toStatusJson } from "./status";
 import { raceRepository, weaponRepository, clothingRepository, blessingRepository } from "../store/acquirement";
 
@@ -22,39 +22,45 @@ export const charactorSchema = z.object({
   blessing: z.string(),
   clothing: z.string(),
   weapon: z.string(),
+});
+export type CharactorSchema = typeof charactorSchema;
+export type CharactorJson = z.infer<CharactorSchema>;
+
+export const charactorBattlingSchema = charactorSchema.extend({
   statuses: z.array(attachedStatusSchema),
   hp: z.number().int(),
   mp: z.number().int(),
   restWt: z.number().int(),
-  isVisitor: z.boolean().optional(),
+  isVisitor: z.boolean(),
 });
-export type CharactorSchema = typeof charactorSchema;
-export type CharactorJson = z.infer<CharactorSchema>;
+export type CharactorBattlingSchema = typeof charactorBattlingSchema;
+export type CharactorBattlingJson = z.infer<CharactorBattlingSchema>;
 
 export const toAttachedStatusJson: ToJson<AttachedStatus, AttachedStatusJson> = (attached) => ({
   status: toStatusJson(attached.status),
   restWt: attached.restWt,
 });
 
-export const toCharactorJson: ToJson<Charactor, CharactorJson> = (charactor) => {
-  const json: CharactorJson = {
-    name: charactor.name,
-    race: charactor.race.name,
-    blessing: charactor.blessing.name,
-    clothing: charactor.clothing.name,
-    weapon: charactor.weapon.name,
-    statuses: charactor.statuses.map(toAttachedStatusJson),
-    hp: charactor.hp,
-    mp: charactor.mp,
-    restWt: charactor.restWt,
-  };
+export const toCharactorJson: ToJson<Charactor, CharactorJson> = (charactor) => ({
+  name: charactor.name,
+  race: charactor.race.name,
+  blessing: charactor.blessing.name,
+  clothing: charactor.clothing.name,
+  weapon: charactor.weapon.name,
+});
 
-  if (Object.prototype.hasOwnProperty.call(charactor, "isVisitor")) {
-    json.isVisitor = charactor.isVisitor;
-  }
-
-  return json;
-};
+export const toCharactorBattlingJson: ToJson<CharactorBattling, CharactorBattlingJson> = (charactor) => ({
+  name: charactor.name,
+  race: charactor.race.name,
+  blessing: charactor.blessing.name,
+  clothing: charactor.clothing.name,
+  weapon: charactor.weapon.name,
+  statuses: charactor.statuses.map(toAttachedStatusJson),
+  hp: charactor.hp,
+  mp: charactor.mp,
+  restWt: charactor.restWt,
+  isVisitor: charactor.isVisitor,
+});
 
 export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | DataNotFoundError> = (charactorJson) => {
   const { name } = charactorJson;
@@ -87,9 +93,17 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
     return new DataNotFoundError(charactorJson.weapon, "weapon", `${charactorJson.weapon}という武器は存在しません`);
   }
 
-  const validateResult = validate(name, race, blessing, clothing, weapon);
-  if (validateResult instanceof NotWearableErorr) {
-    return validateResult;
+  return createCharactor(name, race, blessing, clothing, weapon);
+};
+
+export const toCharactorBattling: ToModel<
+  CharactorBattling,
+  CharactorBattlingJson,
+  NotWearableErorr | DataNotFoundError
+> = (charactorJson) => {
+  const charactor = toCharactor(charactorJson);
+  if (charactor instanceof NotWearableErorr) {
+    return charactor;
   }
 
   const statuses: AttachedStatus[] = [];
@@ -106,21 +120,12 @@ export const toCharactor: ToModel<Charactor, CharactorJson, NotWearableErorr | D
     });
   }
 
-  const someone: Charactor = {
-    name,
-    race,
-    blessing,
-    clothing,
-    weapon,
+  return {
+    ...charactor,
     statuses,
     hp: 0 + charactorJson.hp,
     mp: 0 + charactorJson.mp,
     restWt: 0 + charactorJson.restWt,
+    isVisitor: charactorJson.isVisitor,
   };
-
-  if (Object.prototype.hasOwnProperty.call(charactorJson, "isVisitor")) {
-    someone.isVisitor = charactorJson.isVisitor;
-  }
-
-  return someone;
 };

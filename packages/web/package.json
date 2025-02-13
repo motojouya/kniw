@@ -17,7 +17,7 @@
     "vitest": "^3.0.5"
   },
   "scripts": {
-    "test": "echo 'vitest run'",
+    "test": "vitest run --root=.",
     "preview": "vite preview",
     "dev": "vite",
     "build": "tsc -b && vite build"

@@ -20,7 +20,6 @@ import {
   GameVisitor,
   GameOngoing,
   getLastTurn,
-  NotBattlingError,
 } from "@motojouya/kniw-core/model/battle";
 import {
   getSkills,
@@ -239,7 +238,7 @@ const playerSelect: PlayerSelect = (dialogue) => async (actor, battle) => {
 
 type BattleRepository = Repository<
   Battle,
-  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError | NotBattlingError
+  NotWearableErorr | DataNotFoundError | CharactorDuplicationError | JsonSchemaUnmatchError
 >;
 
 export type ContinueBattle = (
@@ -342,8 +341,7 @@ export const resume: Resume = (dialogue, database) => async (title) => {
     battle instanceof NotWearableErorr ||
     battle instanceof DataNotFoundError ||
     battle instanceof CharactorDuplicationError ||
-    battle instanceof JsonSchemaUnmatchError ||
-    battle instanceof NotBattlingError
+    battle instanceof JsonSchemaUnmatchError
   ) {
     await dialogue.notice(`${title}のbattleは不正なデータです`);
     return;

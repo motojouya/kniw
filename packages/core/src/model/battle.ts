@@ -1,24 +1,17 @@
 import type { Party, PartyBattling } from "./party";
-import type { Charactor, CharactorBattling } from "./charactor";
+import type { CharactorBattling } from "./charactor";
 import type { Skill } from "./skill";
 import type { Randoms } from "./random";
 import type { Turn } from "./turn";
 
 import { MAGIC_TYPE_NONE } from "./skill";
-import { getPhysical, getAbilities } from "./charactor";
+import { getPhysical, getAbilities, toBattleCharactor } from "./charactor";
 import { changeClimate } from "./field";
 
 import { acid, paralysis, quick, silent, sleep, slow } from "../store_data/status/index";
 import { underStatus } from "./status";
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
-
-export class NotBattlingError {
-  constructor(
-    readonly charactor: Charactor | Party,
-    readonly message: string,
-  ) {}
-}
 
 export type GameResult = "ONGOING" | "HOME" | "VISITOR" | "DRAW";
 export const GameOngoing: GameResult = "ONGOING";
@@ -80,11 +73,11 @@ export type CreateBattle = (title: string, home: Party, visitor: Party) => Battl
 export const createBattle: CreateBattle = (title, home, visitor) => {
   const homeBatting: PartyBattling = {
     name: home.name,
-    charactors: home.charactors.map((charactor) => ({ ...charactor, isVisitor: false })),
+    charactors: home.charactors.map((charactor) => toBattleCharactor(charactor, false)),
   };
   const visitorBatting: PartyBattling = {
     name: visitor.name,
-    charactors: visitor.charactors.map((charactor) => ({ ...charactor, isVisitor: true })),
+    charactors: visitor.charactors.map((charactor) => toBattleCharactor(charactor, true)),
   };
   return {
     title,

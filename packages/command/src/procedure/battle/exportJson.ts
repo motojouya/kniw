@@ -2,7 +2,6 @@ import type { Dialogue } from "../../io/standard_dialogue";
 import type { Database } from "@motojouya/kniw-core/io/database";
 import { createRepository } from "@motojouya/kniw-core/store/battle";
 import { CopyFailError } from "@motojouya/kniw-core/io/database";
-import { NotBattlingError } from "@motojouya/kniw-core/model/battle";
 import { CharactorDuplicationError } from "@motojouya/kniw-core/model/party";
 import { NotWearableErorr } from "@motojouya/kniw-core/model/acquirement";
 import { JsonSchemaUnmatchError, DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
@@ -20,8 +19,7 @@ export const exportJson: ExportJson = (dialogue, database) => async (title, file
     battle instanceof NotWearableErorr ||
     battle instanceof DataNotFoundError ||
     battle instanceof CharactorDuplicationError ||
-    battle instanceof JsonSchemaUnmatchError ||
-    battle instanceof NotBattlingError
+    battle instanceof JsonSchemaUnmatchError
   ) {
     await dialogue.notice(`${title}のbattleは不正なデータです`);
     return;
