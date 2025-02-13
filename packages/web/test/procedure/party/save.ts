@@ -67,15 +67,14 @@ describe("saveParty", () => {
       list: async () => ["home"],
     };
 
-    const result = await saveParty(mockRepo, true)({
+    const result = await saveParty(
+      mockRepo,
+      true,
+    )({
       ...testData,
-      charactors: [
-        testData.charactors[0],
-        testData.charactors[0],
-      ],
+      charactors: [testData.charactors[0], testData.charactors[0]],
     });
 
     expect(result).toBeInstanceOf(CharactorDuplicationError);
   });
 });
-

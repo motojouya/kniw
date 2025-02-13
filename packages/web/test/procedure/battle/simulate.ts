@@ -3,7 +3,7 @@ import { describe, it, expect } from "vitest";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { toBattle } from "@motojouya/kniw-core/store_schema/battle";
 import { GameOngoing } from "@motojouya/kniw-core/model/battle";
-import { skillRepository } from '@motojouya/kniw-core/store/skill';
+import { skillRepository } from "@motojouya/kniw-core/store/skill";
 import { simulate } from "../../../src/procedure/battle/simulate";
 
 const battleData = {
