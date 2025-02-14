@@ -156,7 +156,7 @@ describe("act", () => {
 
     const mockRepo: BattleRepository = {
       ...battleRepository,
-      save: async (battle) => {
+      save: async (_battle) => {
         expect(true).toBe(true);
       },
     };
@@ -180,7 +180,7 @@ describe("act", () => {
 
     const mockRepo: BattleRepository = {
       ...battleRepository,
-      save: async (battle) => {
+      save: async (_battle) => {
         expect.unreachable();
       },
     };
@@ -204,7 +204,7 @@ describe("act", () => {
 
     const mockRepo: BattleRepository = {
       ...battleRepository,
-      save: async () => {
+      save: async (_battle) => {
         expect.unreachable();
       },
     };
