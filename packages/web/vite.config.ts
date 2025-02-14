@@ -15,6 +15,9 @@ export default defineConfig({
     tsconfigPaths(),
     VitePWA({
       registerType: "autoUpdate",
+      workbox: {
+        ignoreURLParametersMatching: [/./],
+      },
       manifest: {
         scope: path,
         name: "KNIW - tactics board game",
