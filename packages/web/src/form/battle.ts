@@ -1,4 +1,5 @@
 import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
+import type { Action } from "@motojouya/kniw-core/model/battle";
 import type { SelectOption } from "@motojouya/kniw-core/io/dialogue";
 import type { Skill } from "@motojouya/kniw-core/model/skill";
 
@@ -62,15 +63,10 @@ export const toReceiver: ToReceiver = (receiver, candidates) => {
   return willReceiver;
 };
 
-export type DoAction = {
-  skill: Skill;
-  receivers: CharactorBattling[];
-} | null;
-
 export type ToAction = (
   doSkillForm: DoSkillForm,
   candidates: CharactorBattling[],
-) => DoAction | DataNotFoundError | ReceiverDuplicationError;
+) => Action | null | DataNotFoundError | ReceiverDuplicationError;
 export const toAction: ToAction = (doSkillForm, candidates) => {
   const { skillName } = doSkillForm;
   if (skillName === ACTION_DO_NOTHING) {

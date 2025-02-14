@@ -5,20 +5,8 @@ import type { BattleRepository } from "@motojouya/kniw-core/store/battle";
 import type { DoSkillForm } from "../../form/battle";
 import type { Dialogue } from "../../io/window_dialogue";
 
-import {
-  GameOngoing,
-  wait,
-  stay,
-  nextActor,
-  isSettlement,
-  actToField,
-  actToCharactor,
-} from "@motojouya/kniw-core/model/battle";
-
+import { spendTurn } from "@motojouya/kniw-core/model/battle";
 import { toAction, ReceiverDuplicationError } from "../../form/battle";
-import { underStatus } from "@motojouya/kniw-core/model/status";
-import { sleep } from "@motojouya/kniw-core/store_data/status/index";
-import { createRandoms } from "@motojouya/kniw-core/model/random";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { UserCancel } from "../../io/window_dialogue";
 
@@ -41,49 +29,8 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     return new UserCancel("Cancelされました");
   }
 
-  if (doAction === null) {
-    battle.turns.push(stay(battle, actor, new Date()));
-  } else {
-    const selectedSkill = doAction.skill;
-    const newTurn =
-      selectedSkill.type === "SKILL_TO_FIELD"
-        ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
-        : actToCharactor(battle, actor, selectedSkill, doAction.receivers, new Date(), createRandoms());
-    battle.turns.push(newTurn);
-  }
+  const newBattle = spendTurn(battle, actor, doAction);
 
-  battle.result = isSettlement(battle);
-  if (battle.result !== GameOngoing) {
-    await repository.save(battle);
-    return null;
-  }
-
-  let firstWaiting = nextActor(battle);
-  battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
-
-  battle.result = isSettlement(battle);
-  if (battle.result !== GameOngoing) {
-    await repository.save(battle);
-    return null;
-  }
-
-  while (underStatus(sleep, firstWaiting)) {
-    battle.turns.push(stay(battle, firstWaiting, new Date()));
-    battle.result = isSettlement(battle);
-    if (battle.result !== GameOngoing) {
-      await repository.save(battle);
-      return null;
-    }
-
-    firstWaiting = nextActor(battle);
-    battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
-    battle.result = isSettlement(battle);
-    if (battle.result !== GameOngoing) {
-      await repository.save(battle);
-      return null;
-    }
-  }
-
-  await repository.save(battle);
+  await repository.save(newBattle);
   return null;
 };
