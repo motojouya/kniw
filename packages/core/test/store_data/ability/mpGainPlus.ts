@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 
 import type { CharactorBattling } from "../../../src/model/charactor";
 
-import { toCharactor } from "../../../src/store_schema/charactor";
+import { toCharactorBattling } from "../../../src/store_schema/charactor";
 import { mpGainPlus } from "../../../src/store_data/ability/mpGainPlus";
 
 describe("mpGainPlus#wait", function () {
@@ -12,7 +12,7 @@ describe("mpGainPlus#wait", function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charactor = toCharactor({
+    const charactor = toCharactorBattling({
       name: "sam",
       race: "human",
       blessing: "earth",
@@ -22,6 +22,7 @@ describe("mpGainPlus#wait", function () {
       hp: 100,
       mp: 0,
       restWt: 115,
+      isVisitor: false,
     }) as CharactorBattling;
     expect(charactor.mp).toBe(0);
 
@@ -34,7 +35,7 @@ describe("mpGainPlus#wait", function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charactor = toCharactor({
+    const charactor = toCharactorBattling({
       name: "sam",
       race: "human",
       blessing: "earth",
@@ -44,6 +45,7 @@ describe("mpGainPlus#wait", function () {
       hp: 100,
       mp: 0,
       restWt: 115,
+      isVisitor: false,
     }) as CharactorBattling;
     expect(charactor.mp).toBe(0);
 
@@ -56,7 +58,7 @@ describe("mpGainPlus#wait", function () {
       damage: 0.1,
       accuracy: 0.1,
     };
-    const charactor = toCharactor({
+    const charactor = toCharactorBattling({
       name: "sam",
       race: "human",
       blessing: "earth",
@@ -66,6 +68,7 @@ describe("mpGainPlus#wait", function () {
       hp: 100,
       mp: 0,
       restWt: 115,
+      isVisitor: false,
     }) as CharactorBattling;
     expect(charactor.mp).toBe(0);
 

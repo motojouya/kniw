@@ -45,6 +45,7 @@ import {
 import { CharactorDetail } from './charactor';
 import {
   doSkillFormSchema,
+  toSkill,
   receiverSelectOption,
   ReceiverDuplicationError,
 } from '../form/battle';
@@ -58,8 +59,7 @@ import { silent } from '@motojouya/kniw-core/store_data/status/index';
 import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import { act } from '../procedure/battle/act';
 import { surrender } from '../procedure/battle/surrender';
-import { selectReceiver } from '../procedure/battle/selectReceiver';
-import { skillReceiverCount } from '../procedure/battle/skillReceiverCount';
+import { simulate } from '../procedure/battle/simulate';
 import { UserCancel } from '../io/window_dialogue';
 import { useIO } from './context';
 import { Link } from './utility';
@@ -90,7 +90,7 @@ const ReceiverSelect: FC<{
   const onBlur = () => {
 
     const receiverWithIsVisitor = getValues(formItemName);
-    const result = selectReceiver(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
+    const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
     if (result instanceof DataNotFoundError) {
       setReceiverResult(null);
@@ -160,8 +160,12 @@ const SkillSelect: FC<{
 
   const onBlur = () => {
     const skillName = getValues('skillName');
-    const receiverCount = skillReceiverCount(skillName);
-    replace(Array(receiverCount).fill(''));
+    const skill = toSkill(skillName);
+    if (skill) {
+      replace(Array(skill.receiverCount).fill(''));
+    } else {
+      replace([]);
+    }
   };
 
   const collection = createListCollection({ items: skillOptions });

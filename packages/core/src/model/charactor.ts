@@ -8,10 +8,6 @@ import type { Skill } from "./skill";
 import { addPhysicals } from "./physical";
 import { NotWearableErorr } from "./acquirement";
 
-export function isBattlingCharactor(charactor: Charactor): charactor is CharactorBattling {
-  return Object.prototype.hasOwnProperty.call(charactor, "isVisitor") && typeof charactor.isVisitor === "boolean";
-}
-
 const basePhysical: Physical = {
   MaxHP: 300,
   MaxMP: 200,
@@ -48,16 +44,23 @@ export type Charactor = {
   clothing: Clothing;
   blessing: Blessing;
   race: Race;
+};
+
+export type CharactorBattling = Charactor & {
   statuses: AttachedStatus[];
   hp: number;
   mp: number;
   restWt: number;
-  isVisitor?: boolean;
+  isVisitor: boolean;
 };
 
-export type CharactorBattling = Required<Charactor>;
+export function isBattling(charctor: Charactor): charctor is CharactorBattling {
+  return (
+    "statuses" in charctor && "hp" in charctor && "mp" in charctor && "restWt" in charctor && "isVisitor" in charctor
+  );
+}
 
-export type GetSelectOption = (charactor: Charactor) => SelectOption;
+export type GetSelectOption = (charactor: CharactorBattling) => SelectOption;
 export const getSelectOption: GetSelectOption = (charactor) => ({
   label: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,
   value: `${charactor.isVisitor ? "V" : "H"}:${charactor.name}`,
@@ -124,6 +127,19 @@ export const validate: Validate = (name, race, blessing, clothing, weapon) => {
   return null;
 };
 
+export type toBattleCharactor = (charactor: Charactor, isVisitor: boolean) => CharactorBattling;
+export const toBattleCharactor: toBattleCharactor = (charactor, isVisitor) => {
+  const physical = getPhysical(charactor);
+  return {
+    ...charactor,
+    statuses: [],
+    hp: physical.MaxHP,
+    mp: 0,
+    restWt: physical.WT,
+    isVisitor: isVisitor,
+  };
+};
+
 export type CreateCharactor = (
   name: string,
   race: Race,
@@ -137,23 +153,13 @@ export const createCharactor: CreateCharactor = (name, race, blessing, clothing,
     return validateResult;
   }
 
-  const someone: Charactor = {
+  return {
     name,
     race,
     blessing,
     clothing,
     weapon,
-    statuses: [],
-    hp: 0,
-    mp: 0,
-    restWt: 0,
   };
-
-  const someonesPhysical = getPhysical(someone);
-  someone.hp = someonesPhysical.MaxHP;
-  someone.restWt = someonesPhysical.WT;
-
-  return someone;
 };
 
 export type IsVisitorString = (isVisitor: boolean) => string;

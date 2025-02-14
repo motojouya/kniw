@@ -1,24 +1,18 @@
 import type { Party, PartyBattling } from "./party";
-import type { Charactor, CharactorBattling } from "./charactor";
+import type { CharactorBattling } from "./charactor";
 import type { Skill } from "./skill";
 import type { Randoms } from "./random";
 import type { Turn } from "./turn";
 
 import { MAGIC_TYPE_NONE } from "./skill";
-import { getPhysical, getAbilities } from "./charactor";
+import { getPhysical, getAbilities, toBattleCharactor } from "./charactor";
 import { changeClimate } from "./field";
 
 import { acid, paralysis, quick, silent, sleep, slow } from "../store_data/status/index";
 import { underStatus } from "./status";
+import { createRandoms } from "./random";
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
-
-export class NotBattlingError {
-  constructor(
-    readonly charactor: Charactor | Party,
-    readonly message: string,
-  ) {}
-}
 
 export type GameResult = "ONGOING" | "HOME" | "VISITOR" | "DRAW";
 export const GameOngoing: GameResult = "ONGOING";
@@ -80,11 +74,11 @@ export type CreateBattle = (title: string, home: Party, visitor: Party) => Battl
 export const createBattle: CreateBattle = (title, home, visitor) => {
   const homeBatting: PartyBattling = {
     name: home.name,
-    charactors: home.charactors.map((charactor) => ({ ...charactor, isVisitor: false })),
+    charactors: home.charactors.map((charactor) => toBattleCharactor(charactor, false)),
   };
   const visitorBatting: PartyBattling = {
     name: visitor.name,
-    charactors: visitor.charactors.map((charactor) => ({ ...charactor, isVisitor: true })),
+    charactors: visitor.charactors.map((charactor) => toBattleCharactor(charactor, true)),
   };
   return {
     title,
@@ -360,4 +354,52 @@ export const isSettlement: IsSettlement = (battle) => {
     return GameVisitor;
   }
   return GameOngoing;
+};
+
+export type Action = {
+  skill: Skill;
+  receivers: CharactorBattling[];
+};
+export type SpendTurn = (battle: Battle, actor: CharactorBattling, action: Action | null) => Battle;
+export const spendTurn: SpendTurn = (battle, actor, action) => {
+  if (action === null) {
+    battle.turns.push(stay(battle, actor, new Date()));
+  } else {
+    const selectedSkill = action.skill;
+    const newTurn =
+      selectedSkill.type === "SKILL_TO_FIELD"
+        ? actToField(battle, actor, selectedSkill, new Date(), createRandoms())
+        : actToCharactor(battle, actor, selectedSkill, action.receivers, new Date(), createRandoms());
+    battle.turns.push(newTurn);
+  }
+
+  battle.result = isSettlement(battle);
+  if (battle.result !== GameOngoing) {
+    return battle;
+  }
+
+  let firstWaiting = nextActor(battle);
+  battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+
+  battle.result = isSettlement(battle);
+  if (battle.result !== GameOngoing) {
+    return battle;
+  }
+
+  while (underStatus(sleep, firstWaiting)) {
+    battle.turns.push(stay(battle, firstWaiting, new Date()));
+    battle.result = isSettlement(battle);
+    if (battle.result !== GameOngoing) {
+      return battle;
+    }
+
+    firstWaiting = nextActor(battle);
+    battle.turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+    battle.result = isSettlement(battle);
+    if (battle.result !== GameOngoing) {
+      return battle;
+    }
+  }
+
+  return battle;
 };
