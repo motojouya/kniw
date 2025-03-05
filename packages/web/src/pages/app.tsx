@@ -4,12 +4,14 @@ import {
   List,
   Heading,
   Text,
+  Icon,
 } from '@chakra-ui/react';
+import { IoIosArrowBack } from "react-icons/io";
 import { Link } from '../components/utility';
 
 export const App: FC = () => (
   <Box p='10'>
-    <Heading>KNIW</Heading>
+    <Header />
     <Box>
       <Text>kniwは、Tactics Ogreを参考に作ったボードゲームです。</Text>
       <Text>このアプリケーションでは以下のことを行うことができます。</Text>
@@ -31,3 +33,23 @@ export const App: FC = () => (
     </Box>
   </Box>
 );
+
+export const Header: React.FC<{ backLink: string; }> = ({ backLink }) => {
+  return (
+      <header className="w-full max-w-5xl h-12 flex flex-nowrap justify-between items-center bg-white border-b">
+        {backLink && (
+          <div className="grow shrink m-2">
+            <Icon fontSize="2xl" color="pink.700">
+              <HiHeart />
+            </Icon>
+          </div>
+        )}
+        <div className="grow shrink m-2">
+          <Link href="/">
+            <Heading>KNIW</Heading>
+          </Link>
+        </div>
+      </header>
+  );
+};
+
