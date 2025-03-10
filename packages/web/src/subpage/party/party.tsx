@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 
-import { Button, Box, Text } from '@chakra-ui/react';
+import { Text, Button } from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { PartyEditor } from '../../components/party';
@@ -8,7 +8,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
 import { useIO } from '../../components/context';
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
-import { Link } from '../../components/utility';
+import { Container, Link, ButtonLink } from '../../components/utility';
 
 export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   const { partyRepository } = useIO();
@@ -21,19 +21,17 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
     party instanceof JsonSchemaUnmatchError
   ) {
     return (
-      <Box>
+      <Container backLink="/party/">
         <Text>{party.message}</Text>
-        <Link href='/party/'><span>戻る</span></Link>
-      </Box>
+      </Container>
     );
   }
 
   if (!party) {
     return (
-      <Box>
+      <Container backLink="/party/">
         <Text>{`${partyName}というpartyは見つかりません`}</Text>
-        <Link href='/party/'><span>戻る</span></Link>
-      </Box>
+      </Container>
     );
   }
 

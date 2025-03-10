@@ -8,6 +8,7 @@ import {
   Text,
   Icon,
   Link as ChakraLink,
+  Button,
 } from '@chakra-ui/react';
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -40,6 +41,16 @@ export const Link: FC<{ href: string, line: boolean | null, children: ReactNode 
   }
 
   return (<ChakraLink href={assignPath} variant={variant}>{children}</ChakraLink>);
+};
+
+export const ButtonLink: FC<{ href: string, children: ReactNode }> = ({ href, children }) => {
+
+  let assignPath = href;
+  if (urlPrefix) {
+    assignPath = "/" + urlPrefix + href;
+  }
+
+  return (<Button asChild><a href={assignPath}>{children}</a></Button>);
 };
 
 export const App: FC = () => (
@@ -84,9 +95,11 @@ export const Header: FC<{ backLink: string | null; }> = ({ backLink }) => {
       <Flex p="3" justify="flex-start">
         {backLink && (
           <Box p="1">
-            <Icon fontSize="xl">
-              <IoIosArrowBack />
-            </Icon>
+            <a href={backLink}>
+              <Icon fontSize="xl">
+                <IoIosArrowBack />
+              </Icon>
+            </a>
           </Box>
         )}
         <Box p="1">

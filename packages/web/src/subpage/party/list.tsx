@@ -1,29 +1,34 @@
 import type { FC } from 'react';
 
-import { Box, List } from '@chakra-ui/react';
+import {
+  Box,
+  Flex,
+  Text,
+  List,
+} from '@chakra-ui/react';
 import { useLiveQuery } from "dexie-react-hooks";
 import { useIO } from '../../components/context';
-import { Link } from '../../components/utility';
+import { Container, Link, ButtonLink } from '../../components/utility';
 
 export const PartyList: FC = () => {
   const { partyRepository } = useIO();
   const partyNames = useLiveQuery(() => partyRepository.list(), []);
 
   return (
-    <Box>
-      <Link href="/"><span>戻る</span></Link>
-      <Box>
-        <List.Root>
-          <List.Item key='party-new'>
-            <Link href='/party/?name=__new'><span>新しく作る</span></Link>
-          </List.Item>
+    <Container backLink="/">
+      <Flex direction="column" justify="flex-start" align="center">
+        <Flex p='3' justify='space-between' w="100%">
+          <Text>パーティ一覧</Text>
+          <ButtonLink href='/party/?name=__new'><Text>新しく作る</Text></ButtonLink>
+        </Flex>
+        <List.Root w="100%">
           {partyNames && partyNames.map((partyName, index) => (
-            <List.Item key={`party-${index}`}>
-              <Link href={`/party/?name=${partyName}`}><span>{partyName}</span></Link>
+            <List.Item key={`party-${index}`} listStyle='none' py='1' px='5'>
+              <Link href={`/party/?name=${partyName}`} line><Text>{partyName}</Text></Link>
             </List.Item>
           ))}
         </List.Root>
-      </Box>
-    </Box>
+      </Flex>
+    </Container>
   );
 };
