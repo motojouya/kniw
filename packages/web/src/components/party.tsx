@@ -9,6 +9,7 @@ import {
   Input,
   Button,
   Box,
+  Flex,
   List,
   Heading,
   Text,
@@ -26,7 +27,7 @@ import { useIO } from './context';
 import { importParty } from '../procedure/party/importJson';
 import { UserCancel, EmptyParameter } from '../io/window_dialogue';
 import { transit } from './utility';
-import { Link } from './utility';
+import { Container, Link } from './utility';
 
 // FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
 export const ImportParty: FC<{
@@ -114,39 +115,48 @@ export const PartyEditor: FC<{
   // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
   // FIXME Button  loading={isSubmitting} loadingText="Creating Party..." としたかったがloadingがエラーになる
   return (
-    <Box p={4}>
-      <Link href='/party/'><span>戻る</span></Link>
-      <Text>This is the party page</Text>
-      {inoutButton}
-      <form onSubmit={handleSubmit(save)}>
-        {saveMessage.message && (
-          saveMessage.error
-            ? <Text>{saveMessage.message}</Text>
-            : <Text>{saveMessage.message}</Text>
-        )}
-        {exist ? (
-          <Box as={'dl'}>
-            <Heading as={'dt'}>party name</Heading>
-            <Text as={'dd'}>{partyForm.name}</Text>
-          </Box>
-        ) : (
-          <Field invalid={!!errors.name} label="name" errorText={errors.name && errors.name.message}>
-            <Input id="name" placeholder="name" {...register('name')} />
-          </Field>
-        )}
-        <List.Root>
-          {fields.map((item, index) => (
-            <List.Item key={`charactor-${index}`}>
+    <Container backLink="/party/">
+      <Flex direction="column" justify="flex-start">
+        <form onSubmit={handleSubmit(save)}>
+          <Flex justify="space-between" p="1">
+            <Box w='100px'>
+              <Text>Edit the party</Text>
+            </Box>
+            <Flex justify="flex-end" align="center">
+              <Box px="1">
+                <Button colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
+              </Box>
+              {exist && (
+                <Box px="1">
+                  <Button type="button" onClick={() => deleteParty(partyForm.name)}>Dismiss</Button>
+                </Box>
+              )}
+              {inoutButton}
+            </Flex>
+          </Flex>
+          {saveMessage.message && (
+            saveMessage.error
+              ? <Text>{saveMessage.message}</Text>
+              : <Text>{saveMessage.message}</Text>
+          )}
+          {exist ? (
+            <Box as={'dl'} p="1">
+              <Text as={'dt'}>Party Name</Text>
+              <Heading as={'dd'}>{partyForm.name}</Heading>
+            </Box>
+          ) : (
+            <Field invalid={!!errors.name} label="Party Name" errorText={errors.name && errors.name.message} p="1">
+              <Input id="name" placeholder="name" {...register('name')} />
+            </Field>
+          )}
+          <Flex direction="column" justify="flex-start" p="1">
+            <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire Charactor</Button>
+            {fields.map((item, index) => (
               <CharactorCard register={register} getValues={getValues} remove={remove} errors={errors} index={index} />
-            </List.Item>
-          ))}
-        </List.Root>
-        <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire</Button>
-        <Button colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
-        {exist && (
-          <Button type="button" onClick={() => deleteParty(partyForm.name)} >Dismiss</Button>
-        )}
-      </form>
-    </Box>
+            ))}
+          </Flex>
+        </form>
+      </Flex>
+    </Container>
   );
 };
