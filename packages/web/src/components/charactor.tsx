@@ -80,10 +80,10 @@ const SelectAcquirement: FC<{
   error: FieldError | undefined,
 }> = ({ name, keyPrefix, allAcquirements, selectProps, error }) => {
   const collection = createListCollection({ items: allAcquirements });
+  const { onChange, ...restSelectProps } = selectProps;
   return (
     <Field invalid={!!error} label={name} errorText={!!error && error.message}>
-      <SelectRoot {...selectProps} collection={collection}>
-        <SelectLabel>{name}</SelectLabel>
+      <SelectRoot onValueChange={onChange} {...restSelectProps} collection={collection}>
         <SelectTrigger>
           <SelectValueText placeholder={name} />
         </SelectTrigger>

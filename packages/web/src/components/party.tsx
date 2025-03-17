@@ -150,9 +150,9 @@ export const PartyEditor: FC<{
             </Field>
           )}
           <Flex direction="column" justify="flex-start" p="1">
-            <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire Charactor</Button>
+            <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
             {fields.map((item, index) => (
-              <CharactorCard register={register} getValues={getValues} remove={remove} errors={errors} index={index} />
+              <CharactorCard key={`party_charactor_${index}`} register={register} getValues={getValues} remove={remove} errors={errors} index={index} />
             ))}
           </Flex>
         </form>
