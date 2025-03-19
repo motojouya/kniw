@@ -5,6 +5,9 @@ import type { PartyForm } from '../form/party';
 
 import { useState } from 'react';
 import {
+  Field as HookFormField,
+  Control,
+  Controller,
   FieldError,
   FieldErrors,
   Merge,
@@ -76,14 +79,20 @@ const SelectAcquirement: FC<{
   name: string,
   keyPrefix: string,
   allAcquirements: Acquirement[],
-  selectProps: UseFormRegisterReturn,
+  field: HookFormField,
+  onBlur: () => void,
   error: FieldError | undefined,
-}> = ({ name, keyPrefix, allAcquirements, selectProps, error }) => {
+}> = ({ name, keyPrefix, allAcquirements, field, onBlur, error }) => {
   const collection = createListCollection({ items: allAcquirements });
-  const { onChange, ...restSelectProps } = selectProps;
   return (
     <Field invalid={!!error} label={name} errorText={!!error && error.message}>
-      <SelectRoot onValueChange={onChange} {...restSelectProps} collection={collection}>
+      <SelectRoot
+        collection={collection}
+        name={field.name}
+        value={field.value}
+        onValueChange={({ value }) => { console.log(value); field.onChange(value); }}
+        onInteractOutside={onBlur}
+      >
         <SelectTrigger>
           <SelectValueText placeholder={name} />
         </SelectTrigger>
@@ -195,7 +204,8 @@ export const CharactorCard: FC<{
   remove: (index?: number | number[]) => void,
   errors: FieldErrors<PartyForm>,
   index: number,
-}> = ({ register, getValues, remove, errors, index, }) => {
+  control: Control,
+}> = ({ register, getValues, remove, errors, index, control }) => {
 
   const nameError = getCharactorError(errors, index, 'name');
   const [charactor, setCharactor] = useState<Charactor | string>('入力してください');
@@ -223,33 +233,61 @@ export const CharactorCard: FC<{
         <Field invalid={!!nameError} label="name" errorText={!!nameError && nameError.message}>
           <Input {...register(`charactors.${index}.name` as const, { onBlur })} placeholder="name" />
         </Field>
-        <SelectAcquirement
-          name={'race'}
-          keyPrefix={`charactors.${index}.race`}
-          allAcquirements={raceRepository.all}
-          error={getCharactorError(errors, index, 'race')}
-          selectProps={register(`charactors.${index}.race` as const, { onBlur })}
+        <Controller
+          name={`charactors.${index}.race`}
+          control={control}
+          render={({ field }) => (
+            <SelectAcquirement
+              name={'race'}
+              keyPrefix={`charactors.${index}.race`}
+              allAcquirements={raceRepository.all}
+              error={getCharactorError(errors, index, 'race')}
+              field={field}
+              onBlur={onBlur}
+            />
+          )}
         />
-        <SelectAcquirement
-          name={'blessing'}
-          keyPrefix={`charactors.${index}.blessing`}
-          allAcquirements={blessingRepository.all}
-          error={getCharactorError(errors, index, 'blessing')}
-          selectProps={register(`charactors.${index}.blessing` as const, { onBlur })}
+        <Controller
+          name={`charactors.${index}.blessing`}
+          control={control}
+          render={({ field }) => (
+            <SelectAcquirement
+              name={'blessing'}
+              keyPrefix={`charactors.${index}.blessing`}
+              allAcquirements={blessingRepository.all}
+              error={getCharactorError(errors, index, 'blessing')}
+              field={field}
+              onBlur={onBlur}
+            />
+          )}
         />
-        <SelectAcquirement
-          name={'clothing'}
-          keyPrefix={`charactors.${index}.clothing`}
-          allAcquirements={clothingRepository.all}
-          error={getCharactorError(errors, index, 'clothing')}
-          selectProps={register(`charactors.${index}.clothing` as const, { onBlur })}
+        <Controller
+          name={`charactors.${index}.clothing`}
+          control={control}
+          render={({ field }) => (
+            <SelectAcquirement
+              name={'clothing'}
+              keyPrefix={`charactors.${index}.clothing`}
+              allAcquirements={clothingRepository.all}
+              error={getCharactorError(errors, index, 'clothing')}
+              field={field}
+              onBlur={onBlur}
+            />
+          )}
         />
-        <SelectAcquirement
-          name={'weapon'}
-          keyPrefix={`charactors.${index}.weapon`}
-          allAcquirements={weaponRepository.all}
-          error={getCharactorError(errors, index, 'weapon')}
-          selectProps={register(`charactors.${index}.weapon` as const, { onBlur })}
+        <Controller
+          name={`charactors.${index}.weapon`}
+          control={control}
+          render={({ field }) => (
+            <SelectAcquirement
+              name={'weapon'}
+              keyPrefix={`charactors.${index}.weapon`}
+              allAcquirements={weaponRepository.all}
+              error={getCharactorError(errors, index, 'weapon')}
+              field={field}
+              onBlur={onBlur}
+            />
+          )}
         />
       </Card.Body>
       <Card.Footer>
