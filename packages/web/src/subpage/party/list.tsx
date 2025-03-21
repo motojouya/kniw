@@ -1,11 +1,11 @@
 import type { FC } from 'react';
 
 import {
-  Box,
-  Flex,
-  Text,
+  Stack,
+  Typography,
   List,
-} from '@chakra-ui/react';
+  ListItem,
+} from '@mui/material';
 import { useLiveQuery } from "dexie-react-hooks";
 import { useIO } from '../../components/context';
 import { Container, Link, ButtonLink } from '../../components/utility';
@@ -16,19 +16,19 @@ export const PartyList: FC = () => {
 
   return (
     <Container backLink="/">
-      <Flex direction="column" justify="flex-start" align="center">
-        <Flex p='3' justify='space-between' w="100%">
-          <Text>パーティ一覧</Text>
-          <ButtonLink href='/party/?name=__new'><Text>新しく作る</Text></ButtonLink>
-        </Flex>
-        <List.Root w="100%">
+      <Stack direction="column" sx={{ justifyContent: 'flex-start', alignItems: "center" }}>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', p: 3, width: "100%", alignItems: "center" }}>
+          <Typography>パーティ一覧</Typography>
+          <ButtonLink href='/party/?name=__new'><Typography>新しく作る</Typography></ButtonLink>
+        </Stack>
+        <List w="100%">
           {partyNames && partyNames.map((partyName, index) => (
-            <List.Item key={`party-${index}`} listStyle='none' py='1' px='5'>
-              <Link href={`/party/?name=${partyName}`} line><Text>{partyName}</Text></Link>
-            </List.Item>
+            <ListItem key={`party-${index}`} listStyle='none' py='1' px='5'>
+              <Link href={`/party/?name=${partyName}`} line><Typography>{partyName}</Typography></Link>
+            </ListItem>
           ))}
-        </List.Root>
-      </Flex>
+        </List>
+      </Stack>
     </Container>
   );
 };

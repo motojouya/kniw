@@ -1,6 +1,10 @@
 import type { FC } from 'react';
 
-import { Box, Text, Button } from '@chakra-ui/react';
+import {
+  Button,
+  Box,
+  Typography,
+} from '@mui/material';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { PartyEditor } from '../../components/party';
@@ -22,7 +26,7 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   ) {
     return (
       <Container backLink="/party/">
-        <Text>{party.message}</Text>
+        <Typography>{party.message}</Typography>
       </Container>
     );
   }
@@ -30,15 +34,15 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   if (!party) {
     return (
       <Container backLink="/party/">
-        <Text>{`${partyName}というpartyは見つかりません`}</Text>
+        <Typography>{`${partyName}というpartyは見つかりません`}</Typography>
       </Container>
     );
   }
 
   return (
     <PartyEditor exist={true} party={party} inoutButton={(
-      <Box px="1">
-        <Button type="button" onClick={() => partyRepository.exportJson(party, '')} >Export</Button>
+      <Box sx={{ px: 1 }}>
+        <Button variant="contained" type="button" onClick={() => partyRepository.exportJson(party, '')} >Export</Button>
       </Box>
     )} />
   );

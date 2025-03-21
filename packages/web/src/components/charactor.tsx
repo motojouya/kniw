@@ -90,7 +90,7 @@ const SelectAcquirement: FC<{
         collection={collection}
         name={field.name}
         value={field.value}
-        onValueChange={({ value }) => { console.log(value); field.onChange(value); }}
+        onValueChange={({ value }) => { console.log(value); field.onChange(value[0]); }}
         onInteractOutside={onBlur}
       >
         <SelectTrigger>
