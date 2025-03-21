@@ -1,29 +1,29 @@
 import type { FC } from 'react';
 import {
   Box,
-  Flex,
-  Text,
-  Link as ChakraLink,
-} from '@chakra-ui/react';
+  Stack,
+  Typography,
+  Link as MaterialLink,
+} from '@mui/material';
 import { Container, Link } from '../components/utility';
 
 export const App: FC = () => (
-  <Container>
-    <Flex direction="column" justify="flex-start" align="center">
-      <Text p="1">KNIWはタクティクスオウガを参考にしたボードゲームです。</Text>
-      <Text p="1">遊び方やルールは<ChakraLink href="https://github.com/motojouya/kniw" variant="underline">こちらのページ</ChakraLink>を参照してください。</Text>
-      <Flex p="1" justify="space-around" w="100%">
+  <Container maxWidth="sm">
+    <Stack sx={{ justifyContent: 'flex-start', alignItems: "center" }}>
+      <Typography sx={{ p: 1 }}>KNIWはタクティクスオウガを参考にしたボードゲームです。</Typography>
+      <Typography sx={{ p: 1 }}>遊び方やルールは<MaterialLink href="https://github.com/motojouya/kniw" underline="always">こちらのページ</MaterialLink>を参照してください。</Typography>
+      <Stack direction="row" sx={{ justifyContent: 'space-around', p: 1, width: '100%' }}>
         <Box>
           <Link href="/party/" line>
-            <Text>パーティの作成</Text>
+            <Typography>パーティの作成</Typography>
           </Link>
         </Box>
         <Box>
           <Link href="/battle/" line>
-            <Text>バトルの管理</Text>
+            <Typography>バトルの管理</Typography>
           </Link>
         </Box>
-      </Flex>
-    </Flex>
+      </Stack>
+    </Stack>
   </Container>
 );
