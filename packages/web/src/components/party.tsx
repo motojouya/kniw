@@ -6,14 +6,16 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import {
-  Input,
   Button,
+  TextField,
   Box,
-  Flex,
-  List,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
+  Stack,
+  Typography,
+  FormControl,
+  InputLabel,
+  Input,
+  FormHelperText,
+} from '@mui/material';
 
 import { Field } from "./ui/field"
 import { CharactorCard } from './charactor';
@@ -53,7 +55,7 @@ export const ImportParty: FC<{
 
   return (
     <Box>
-      {party && <Text>{`${type} Party: ${party.name}`}</Text>}
+      {party && <Typography>{`${type} Party: ${party.name}`}</Typography>}
       <Button type="button" onClick={importJson} >{`Select ${type} Party`}</Button>
     </Box>
   );
@@ -112,51 +114,58 @@ export const PartyEditor: FC<{
     }
   };
 
-  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
+  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Typographyで代用
   // FIXME Button  loading={isSubmitting} loadingText="Creating Party..." としたかったがloadingがエラーになる
   return (
     <Container backLink="/party/">
-      <Flex direction="column" justify="flex-start">
-        <form onSubmit={handleSubmit(save)}>
-          <Flex justify="space-between" p="1">
-            <Box w='100px'>
-              <Text>Edit the party</Text>
+      <form onSubmit={handleSubmit(save)}>
+        <Stack direction="column" sx={{ justifyContent: "flex-start", alignItems: "center" }}>
+          <Stack direction="row" sx={{ justifyContent: "space-between", p: 1, width: '100%' }}>
+            <Box sx={{ width: '100px' }}>
+              <Typography>Edit the party</Typography>
             </Box>
-            <Flex justify="flex-end" align="center">
-              <Box px="1">
-                <Button colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
+            <Stack direction="row" sx={{ justifyContent: "flex-end", alignItems: "center" }}>
+              <Box sx={{ px: 1 }}>
+                <Button variant="contained" colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
               </Box>
               {exist && (
-                <Box px="1">
-                  <Button type="button" onClick={() => deleteParty(partyForm.name)}>Dismiss</Button>
+                <Box sx={{ px: 1 }}>
+                  <Button variant="contained" type="button" onClick={() => deleteParty(partyForm.name)}>Dismiss</Button>
                 </Box>
               )}
               {inoutButton}
-            </Flex>
-          </Flex>
+            </Stack>
+          </Stack>
           {saveMessage.message && (
             saveMessage.error
-              ? <Text>{saveMessage.message}</Text>
-              : <Text>{saveMessage.message}</Text>
+              ? <Typography>{saveMessage.message}</Typography>
+              : <Typography>{saveMessage.message}</Typography>
           )}
           {exist ? (
-            <Box as={'dl'} p="1">
-              <Text as={'dt'}>Party Name</Text>
-              <Heading as={'dd'}>{partyForm.name}</Heading>
-            </Box>
+            <Stack direction="row" sx={{ px: 1 }}>
+              <Typography>Party Name</Typography>
+              <Typography variant="h4">{partyForm.name}</Typography>
+            </Stack>
           ) : (
+            <Stack direction="row" sx={{ px: 1 }}>
+              <FormControl disabled variant="standard">
+                <InputLabel htmlFor="component-disabled">Party Name</InputLabel>
+                <Input id="party_name" placeholder="party name" variant="outlined" {...register('name')} />
+                <FormHelperText>{errors.name && errors.name.message}</FormHelperText>
+              </FormControl>
             <Field invalid={!!errors.name} label="Party Name" errorText={errors.name && errors.name.message} p="1">
-              <Input id="name" placeholder="name" {...register('name')} />
+              <TextField id="party_name"  label="Party Name" placeholder="party name" variant="outlined" {...register('name')} />
             </Field>
+            </Stack>
           )}
-          <Flex direction="column" justify="flex-start" p="1">
-            <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
+          <Stack direction="column" sx={{ justifyContent: "flex-start", px: 1 }}>
+            <Button variant="contained" type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
             {fields.map((item, index) => (
               <CharactorCard key={`party_charactor_${item.id}`} register={register} getValues={getValues} remove={remove} errors={errors} index={index} control={control} />
             ))}
-          </Flex>
-        </form>
-      </Flex>
+          </Stack>
+        </Stack>
+      </form>
     </Container>
   );
 };
