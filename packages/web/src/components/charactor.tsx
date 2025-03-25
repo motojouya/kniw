@@ -5,7 +5,7 @@ import type { PartyForm } from '../form/party';
 
 import { useState } from 'react';
 import {
-  Field as HookFormField,
+  Field,
   Control,
   Controller,
   FieldError,
@@ -17,24 +17,28 @@ import {
   UseFormGetValues,
 } from 'react-hook-form';
 import {
-  Input,
-  Button,
-  Card,
-  Text,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+  Chip,
   Table,
-  createListCollection,
-} from '@chakra-ui/react';
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableFooter,
+  TableHead,
+  TablePagination,
+  TableRow,
+  TableSortLabel,
+  Button,
+  TextField,
+  Box,
+  Stack,
+  Typography,
+} from '@mui/material';
 
-import {
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectRoot,
-  SelectTrigger,
-  SelectValueText,
-} from "./ui/select"
-import { Tag } from "./ui/tag"
-import { Field } from "./ui/field"
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import {
@@ -79,32 +83,30 @@ const SelectAcquirement: FC<{
   name: string,
   keyPrefix: string,
   allAcquirements: Acquirement[],
-  field: HookFormField,
+  field: Field,
   onBlur: () => void,
   error: FieldError | undefined,
 }> = ({ name, keyPrefix, allAcquirements, field, onBlur, error }) => {
-  const collection = createListCollection({ items: allAcquirements });
   return (
-    <Field invalid={!!error} label={name} errorText={!!error && error.message}>
-      <SelectRoot
-        collection={collection}
+    <FormControl error={!!error}>
+      <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+      <Select
+        labelId="demo-simple-select-helper-label"
+        id="demo-simple-select-helper"
         name={field.name}
         value={field.value}
-        onValueChange={({ value }) => { console.log(value); field.onChange(value[0]); }}
-        onInteractOutside={onBlur}
+        label="Age"
+        onChange={field.onChange}
+        onBlur={onBlur}
       >
-        <SelectTrigger>
-          <SelectValueText placeholder={name} />
-        </SelectTrigger>
-        <SelectContent>
-          {collection.items.map(acquirement => (
-            <SelectItem key={`${keyPrefix}.${acquirement.name}`} item={{ label: acquirement.label, value: acquirement.name }}>
-              {acquirement.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </SelectRoot>
-    </Field>
+        {allAcquirements.map(acquirement => (
+          <MenuItem key={`${keyPrefix}.${acquirement.name}`} value={acquirement.name}>
+            {acquirement.label}
+          </MenuItem>
+        ))}
+      </Select>
+      <FormHelperText>{!!error && error.message}</FormHelperText>
+    </FormControl>
   );
 }
 
@@ -128,7 +130,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
     mpText = `${charactor.mp}/${physical.MaxMP}`;
     wtText = `${charactor.restWt}(${physical.WT})`;
     statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
-    isVisitorTag = charactor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
+    isVisitorTag = <Chip label={charactor.isVisitor ? 'VISITOR' : 'HOME'} variant="outlined" />;
 
   } else {
     hpText = `${physical.MaxHP}`;
@@ -139,62 +141,64 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
   }
 
   return (
-    <Table.Root variant='line'>
-      <Table.Body>
-        <Table.Row>
-          <Table.ColumnHeader>名前      </Table.ColumnHeader><Table.Cell>{`${charactor.name}`}{isVisitorTag}    </Table.Cell>
-          <Table.ColumnHeader>HP        </Table.ColumnHeader><Table.Cell>{hpText}                               </Table.Cell>
-          <Table.ColumnHeader>MP        </Table.ColumnHeader><Table.Cell>{mpText}                               </Table.Cell>
-          <Table.ColumnHeader>WT        </Table.ColumnHeader><Table.Cell>{wtText}                               </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader colSpan={2}>ステータス</Table.ColumnHeader><Table.Cell colSpan={6}>{statusesText} </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>種族      </Table.ColumnHeader><Table.Cell>{charactor.race.label}                 </Table.Cell>
-          <Table.ColumnHeader>祝福      </Table.ColumnHeader><Table.Cell>{charactor.blessing.label}             </Table.Cell>
-          <Table.ColumnHeader>装備      </Table.ColumnHeader><Table.Cell>{charactor.clothing.label}             </Table.Cell>
-          <Table.ColumnHeader>武器      </Table.ColumnHeader><Table.Cell>{charactor.weapon.label}               </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>STR       </Table.ColumnHeader><Table.Cell>{physical.STR}                         </Table.Cell>
-          <Table.ColumnHeader>VIT       </Table.ColumnHeader><Table.Cell>{physical.VIT}                         </Table.Cell>
-          <Table.ColumnHeader>DEX       </Table.ColumnHeader><Table.Cell>{physical.DEX}                         </Table.Cell>
-          <Table.ColumnHeader>AGI       </Table.ColumnHeader><Table.Cell>{physical.AGI}                         </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>AVD       </Table.ColumnHeader><Table.Cell>{physical.AVD}                         </Table.Cell>
-          <Table.ColumnHeader>INT       </Table.ColumnHeader><Table.Cell>{physical.INT}                         </Table.Cell>
-          <Table.ColumnHeader>MND       </Table.ColumnHeader><Table.Cell>{physical.MND}                         </Table.Cell>
-          <Table.ColumnHeader>RES       </Table.ColumnHeader><Table.Cell>{physical.RES}                         </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>刺突耐性  </Table.ColumnHeader><Table.Cell>{physical.StabResistance}              </Table.Cell>
-          <Table.ColumnHeader>斬撃耐性  </Table.ColumnHeader><Table.Cell>{physical.SlashResistance}             </Table.Cell>
-          <Table.ColumnHeader>打撃耐性  </Table.ColumnHeader><Table.Cell>{physical.BlowResistance}              </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>火属性    </Table.ColumnHeader><Table.Cell>{physical.FireSuitable}                </Table.Cell>
-          <Table.ColumnHeader>岩属性    </Table.ColumnHeader><Table.Cell>{physical.RockSuitable}                </Table.Cell>
-          <Table.ColumnHeader>水属性    </Table.ColumnHeader><Table.Cell>{physical.WaterSuitable}               </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>氷属性    </Table.ColumnHeader><Table.Cell>{physical.IceSuitable}                 </Table.Cell>
-          <Table.ColumnHeader>風属性    </Table.ColumnHeader><Table.Cell>{physical.AirSuitable}                 </Table.Cell>
-          <Table.ColumnHeader>雷属性    </Table.ColumnHeader><Table.Cell>{physical.ThunderSuitable}             </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader colSpan={2}>アビリティ</Table.ColumnHeader><Table.Cell colSpan={6}>{abilitiesText}</Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader colSpan={2}>スキル    </Table.ColumnHeader><Table.Cell colSpan={6}>{skillsText}   </Table.Cell>
-        </Table.Row>
-        <Table.Row>
-          <Table.ColumnHeader>移動距離  </Table.ColumnHeader><Table.Cell>{physical.move}                        </Table.Cell>
-          <Table.ColumnHeader>移動高さ  </Table.ColumnHeader><Table.Cell>{physical.jump}                        </Table.Cell>
-        </Table.Row>
-      </Table.Body>
-    </Table.Root>
+    <TableContainer>
+      <Table variant='line'>
+        <TableBody>
+          <TableRow>
+            <TableCell>名前      </TableCell><TableCell>{`${charactor.name}`}{isVisitorTag}    </TableCell>
+            <TableCell>HP        </TableCell><TableCell>{hpText}                               </TableCell>
+            <TableCell>MP        </TableCell><TableCell>{mpText}                               </TableCell>
+            <TableCell>WT        </TableCell><TableCell>{wtText}                               </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={2}>ステータス</TableCell><TableCell colSpan={6}>{statusesText} </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>種族      </TableCell><TableCell>{charactor.race.label}                 </TableCell>
+            <TableCell>祝福      </TableCell><TableCell>{charactor.blessing.label}             </TableCell>
+            <TableCell>装備      </TableCell><TableCell>{charactor.clothing.label}             </TableCell>
+            <TableCell>武器      </TableCell><TableCell>{charactor.weapon.label}               </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>STR       </TableCell><TableCell>{physical.STR}                         </TableCell>
+            <TableCell>VIT       </TableCell><TableCell>{physical.VIT}                         </TableCell>
+            <TableCell>DEX       </TableCell><TableCell>{physical.DEX}                         </TableCell>
+            <TableCell>AGI       </TableCell><TableCell>{physical.AGI}                         </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>AVD       </TableCell><TableCell>{physical.AVD}                         </TableCell>
+            <TableCell>INT       </TableCell><TableCell>{physical.INT}                         </TableCell>
+            <TableCell>MND       </TableCell><TableCell>{physical.MND}                         </TableCell>
+            <TableCell>RES       </TableCell><TableCell>{physical.RES}                         </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>刺突耐性  </TableCell><TableCell>{physical.StabResistance}              </TableCell>
+            <TableCell>斬撃耐性  </TableCell><TableCell>{physical.SlashResistance}             </TableCell>
+            <TableCell>打撃耐性  </TableCell><TableCell>{physical.BlowResistance}              </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>火属性    </TableCell><TableCell>{physical.FireSuitable}                </TableCell>
+            <TableCell>岩属性    </TableCell><TableCell>{physical.RockSuitable}                </TableCell>
+            <TableCell>水属性    </TableCell><TableCell>{physical.WaterSuitable}               </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>氷属性    </TableCell><TableCell>{physical.IceSuitable}                 </TableCell>
+            <TableCell>風属性    </TableCell><TableCell>{physical.AirSuitable}                 </TableCell>
+            <TableCell>雷属性    </TableCell><TableCell>{physical.ThunderSuitable}             </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={2}>アビリティ</TableCell><TableCell colSpan={6}>{abilitiesText}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={2}>スキル    </TableCell><TableCell colSpan={6}>{skillsText}   </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>移動距離  </TableCell><TableCell>{physical.move}                        </TableCell>
+            <TableCell>移動高さ  </TableCell><TableCell>{physical.jump}                        </TableCell>
+          </TableRow>
+        </TableBody>
+      </Table>
+    </TableContainer>
   );
 };
 
@@ -225,14 +229,19 @@ export const CharactorCard: FC<{
   };
 
   return (
-    <Card.Root p={3} border='solid'>
-      <Card.Header>
-        <Button type="button" onClick={() => remove(index)}>Fire</Button>
-      </Card.Header>
-      <Card.Body>
-        <Field invalid={!!nameError} label="name" errorText={!!nameError && nameError.message}>
-          <Input {...register(`charactors.${index}.name` as const, { onBlur })} placeholder="name" />
-        </Field>
+    <Stack p={3} border='solid'>
+      <Box>
+        <Button variant="contained" type="button" onClick={() => remove(index)}>Fire</Button>
+      </Box>
+      <Box>
+        <TextField
+          error={!!nameError}
+          label="Name"
+          placeholder="Name"
+          variant="outlined"
+          {...register(`charactors.${index}.name` as const, { onBlur })}
+          helperText={!!nameError && nameError.message}
+        />
         <Controller
           name={`charactors.${index}.race`}
           control={control}
@@ -289,10 +298,10 @@ export const CharactorCard: FC<{
             />
           )}
         />
-      </Card.Body>
-      <Card.Footer>
-        {typeof charactor === 'string' ? <Text>{charactor}</Text> : <CharactorDetail charactor={charactor} />}
-      </Card.Footer>
-    </Card.Root>
+      </Box>
+      <Box>
+        {typeof charactor === 'string' ? <Typography>{charactor}</Typography> : <CharactorDetail charactor={charactor} />}
+      </Box>
+    </Stack>
   );
 };

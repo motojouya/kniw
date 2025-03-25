@@ -11,13 +11,8 @@ import {
   Box,
   Stack,
   Typography,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
 } from '@mui/material';
 
-import { Field } from "./ui/field"
 import { CharactorCard } from './charactor';
 import { partyFormSchema, toPartyForm } from '../form/party';
 import { saveParty } from '../procedure/party/save';
@@ -126,7 +121,7 @@ export const PartyEditor: FC<{
             </Box>
             <Stack direction="row" sx={{ justifyContent: "flex-end", alignItems: "center" }}>
               <Box sx={{ px: 1 }}>
-                <Button variant="contained" colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
+                <Button variant="contained" type="submit">{exist ? 'Change' : 'Create'}</Button>
               </Box>
               {exist && (
                 <Box sx={{ px: 1 }}>
@@ -142,24 +137,28 @@ export const PartyEditor: FC<{
               : <Typography>{saveMessage.message}</Typography>
           )}
           {exist ? (
-            <Stack direction="row" sx={{ px: 1 }}>
+            <Stack direction="row" sx={{ p: 1 }}>
               <Typography>Party Name</Typography>
               <Typography variant="h4">{partyForm.name}</Typography>
             </Stack>
           ) : (
-            <Stack direction="row" sx={{ px: 1 }}>
-              <FormControl disabled variant="standard">
-                <InputLabel htmlFor="component-disabled">Party Name</InputLabel>
-                <Input id="party_name" placeholder="party name" variant="outlined" {...register('name')} />
-                <FormHelperText>{errors.name && errors.name.message}</FormHelperText>
-              </FormControl>
-            <Field invalid={!!errors.name} label="Party Name" errorText={errors.name && errors.name.message} p="1">
-              <TextField id="party_name"  label="Party Name" placeholder="party name" variant="outlined" {...register('name')} />
-            </Field>
+            <Stack direction="row" sx={{ p: 1, width: '100%' }}>
+              <TextField
+                id="party_name"
+                error={!!errors.name}
+                label="Party Name"
+                placeholder="party name"
+                variant="outlined"
+                {...register('name')}
+                helperText={errors.name && errors.name.message}
+                sx={{ width: '100%' }}
+              />
             </Stack>
           )}
-          <Stack direction="column" sx={{ justifyContent: "flex-start", px: 1 }}>
-            <Button variant="contained" type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
+          <Stack direction="column" sx={{ justifyContent: "flex-start", px: 1, width: '100%' }}>
+            <Box sx={{ pb: 1, width: '100%' }}>
+              <Button variant="contained" type="button" sx={{ width: '100%' }} onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
+            </Box>
             {fields.map((item, index) => (
               <CharactorCard key={`party_charactor_${item.id}`} register={register} getValues={getValues} remove={remove} errors={errors} index={index} control={control} />
             ))}
