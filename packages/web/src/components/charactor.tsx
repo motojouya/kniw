@@ -89,13 +89,13 @@ const SelectAcquirement: FC<{
 }> = ({ name, keyPrefix, allAcquirements, field, onBlur, error }) => {
   return (
     <FormControl error={!!error}>
-      <InputLabel id="demo-simple-select-helper-label">Age</InputLabel>
+      <InputLabel id={`${keyPrefix}.select_label`}>{name}</InputLabel>
       <Select
-        labelId="demo-simple-select-helper-label"
-        id="demo-simple-select-helper"
+        labelId={`${keyPrefix}.select_label`}
+        id={`${keyPrefix}.select`}
         name={field.name}
         value={field.value}
-        label="Age"
+        label={name}
         onChange={field.onChange}
         onBlur={onBlur}
       >
@@ -160,6 +160,12 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
             <TableCell>武器      </TableCell><TableCell>{charactor.weapon.label}               </TableCell>
           </TableRow>
           <TableRow>
+            <TableCell colSpan={2}>アビリティ</TableCell><TableCell colSpan={6}>{abilitiesText}</TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell colSpan={2}>スキル    </TableCell><TableCell colSpan={6}>{skillsText}   </TableCell>
+          </TableRow>
+          <TableRow>
             <TableCell>STR       </TableCell><TableCell>{physical.STR}                         </TableCell>
             <TableCell>VIT       </TableCell><TableCell>{physical.VIT}                         </TableCell>
             <TableCell>DEX       </TableCell><TableCell>{physical.DEX}                         </TableCell>
@@ -185,12 +191,6 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
             <TableCell>氷属性    </TableCell><TableCell>{physical.IceSuitable}                 </TableCell>
             <TableCell>風属性    </TableCell><TableCell>{physical.AirSuitable}                 </TableCell>
             <TableCell>雷属性    </TableCell><TableCell>{physical.ThunderSuitable}             </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>アビリティ</TableCell><TableCell colSpan={6}>{abilitiesText}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>スキル    </TableCell><TableCell colSpan={6}>{skillsText}   </TableCell>
           </TableRow>
           <TableRow>
             <TableCell>移動距離  </TableCell><TableCell>{physical.move}                        </TableCell>
@@ -229,11 +229,8 @@ export const CharactorCard: FC<{
   };
 
   return (
-    <Stack p={3} border='solid'>
-      <Box>
-        <Button variant="contained" type="button" onClick={() => remove(index)}>Fire</Button>
-      </Box>
-      <Box>
+    <Stack direction="column" border='solid' sx={{ p: 3, justifyContent: "flex-start" }}>
+      <Stack direction="column" sx={{ justifyContent: "flex-start" }}>
         <TextField
           error={!!nameError}
           label="Name"
@@ -241,6 +238,7 @@ export const CharactorCard: FC<{
           variant="outlined"
           {...register(`charactors.${index}.name` as const, { onBlur })}
           helperText={!!nameError && nameError.message}
+          sx={{ pb: 1 }}
         />
         <Controller
           name={`charactors.${index}.race`}
@@ -298,6 +296,9 @@ export const CharactorCard: FC<{
             />
           )}
         />
+      </Stack>
+      <Box>
+        <Button variant="contained" type="button" onClick={() => remove(index)}>Fire</Button>
       </Box>
       <Box>
         {typeof charactor === 'string' ? <Typography>{charactor}</Typography> : <CharactorDetail charactor={charactor} />}
