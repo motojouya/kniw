@@ -23,15 +23,6 @@ import {
   MenuItem,
   FormHelperText,
   Chip,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableFooter,
-  TableHead,
-  TablePagination,
-  TableRow,
-  TableSortLabel,
   Button,
   TextField,
   Box,
@@ -79,33 +70,39 @@ const getCharactorError: GetCharactorError = (errors, i, property) => {
 };
 
 const SelectAcquirement: FC<{
-  name: string,
-  keyPrefix: string,
+  acquirementName: string,
+  acquirementType: string,
   allAcquirements: Acquirement[],
-  field: Field,
   onBlur: () => void,
   error: FieldError | undefined,
-}> = ({ name, keyPrefix, allAcquirements, field, onBlur, error }) => {
+  control: Control,
+}> = ({ acquirementName, acquirementType, allAcquirements, onBlur, error, control }) => {
   return (
-    <FormControl error={!!error}>
-      <InputLabel id={`${keyPrefix}.select_label`}>{name}</InputLabel>
-      <Select
-        labelId={`${keyPrefix}.select_label`}
-        id={`${keyPrefix}.select`}
-        name={field.name}
-        value={field.value}
-        label={name}
-        onChange={field.onChange}
-        onBlur={onBlur}
-      >
-        {allAcquirements.map(acquirement => (
-          <MenuItem key={`${keyPrefix}.${acquirement.name}`} value={acquirement.name}>
-            {acquirement.label}
-          </MenuItem>
-        ))}
-      </Select>
-      <FormHelperText>{!!error && error.message}</FormHelperText>
-    </FormControl>
+    <Controller
+      name={acquirementName}
+      control={control}
+      render={({ field }) => (
+        <FormControl error={!!error}>
+          <InputLabel id={`${acquirementName}.select_label`}>{acquirementType}</InputLabel>
+          <Select
+            labelId={`${acquirementName}.select_label`}
+            id={`${acquirementName}.select`}
+            name={field.name}
+            value={field.value}
+            label={acquirementType}
+            onChange={field.onChange}
+            onBlur={onBlur}
+          >
+            {allAcquirements.map(acquirement => (
+              <MenuItem key={`${acquirementName}.${acquirement.name}`} value={acquirement.name}>
+                {acquirement.label}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>{!!error && error.message}</FormHelperText>
+        </FormControl>
+      )}
+    />
   );
 }
 
@@ -129,7 +126,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
     mpText = `${charactor.mp}/${physical.MaxMP}`;
     wtText = `${charactor.restWt}(${physical.WT})`;
     statusesText = charactor.statuses.map(attachedStatus => `${attachedStatus.status.label}(${attachedStatus.restWt})`).join(', ');
-    isVisitorTag = <Chip label={charactor.isVisitor ? 'VISITOR' : 'HOME'} variant="outlined" />;
+    isVisitorTag = <Chip label={charactor.isVisitor ? 'VISITOR' : 'HOME'} variant="outlined" color='primary' />;
 
   } else {
     hpText = `${physical.MaxHP}/${physical.MaxHP}`;
@@ -142,7 +139,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
   return (
     <Stack sx={{ py: 1 }}>
       <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
-        <Box sx={{ pr: 1 }}><Typography>名前: {`${charactor.name}`}{isVisitorTag}</Typography></Box>
+        <Box sx={{ pr: 1 }} flex="1 1 auto"><Typography display="inline-block" sx={{ pr: 1 }}>名前: {`${charactor.name}`}</Typography>{isVisitorTag}</Box>
       </Stack>
       <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
         <Box sx={{ pr: 1 }} flex="0 0 110px"><Typography>HP: {hpText}</Typography></Box>
@@ -216,7 +213,7 @@ export const CharactorCard: FC<{
   useEffect(calculateCharactor, [calculateCharactor]);
 
   return (
-    <Stack direction="column" border='1px solid royalblue' borderRadius="5px" sx={{ px: 1, py: 2, justifyContent: "flex-start" }}>
+    <Stack direction="column" border='1px solid royalblue' borderRadius="5px" sx={{ px: 1, py: 2, mb: 1, justifyContent: "flex-start" }}>
       <Stack direction="column" sx={{ justifyContent: "flex-start" }}>
         <TextField
           error={!!nameError}
@@ -227,61 +224,37 @@ export const CharactorCard: FC<{
           helperText={!!nameError && nameError.message}
           sx={{ pb: 1 }}
         />
-        <Controller
-          name={`charactors.${index}.race`}
+        <SelectAcquirement
+          acquirementType='race'
+          acquirementName={`charactors.${index}.race`}
+          allAcquirements={raceRepository.all}
+          error={getCharactorError(errors, index, 'race')}
+          onBlur={calculateCharactor}
           control={control}
-          render={({ field }) => (
-            <SelectAcquirement
-              name={'race'}
-              keyPrefix={`charactors.${index}.race`}
-              allAcquirements={raceRepository.all}
-              error={getCharactorError(errors, index, 'race')}
-              field={field}
-              onBlur={calculateCharactor}
-            />
-          )}
         />
-        <Controller
-          name={`charactors.${index}.blessing`}
+        <SelectAcquirement
+          acquirementType='blessing'
+          acquirementName={`charactors.${index}.blessing`}
+          allAcquirements={blessingRepository.all}
+          error={getCharactorError(errors, index, 'blessing')}
+          onBlur={calculateCharactor}
           control={control}
-          render={({ field }) => (
-            <SelectAcquirement
-              name={'blessing'}
-              keyPrefix={`charactors.${index}.blessing`}
-              allAcquirements={blessingRepository.all}
-              error={getCharactorError(errors, index, 'blessing')}
-              field={field}
-              onBlur={calculateCharactor}
-            />
-          )}
         />
-        <Controller
-          name={`charactors.${index}.clothing`}
+        <SelectAcquirement
+          acquirementType='clothing'
+          acquirementName={`charactors.${index}.clothing`}
+          allAcquirements={clothingRepository.all}
+          error={getCharactorError(errors, index, 'clothing')}
+          onBlur={calculateCharactor}
           control={control}
-          render={({ field }) => (
-            <SelectAcquirement
-              name={'clothing'}
-              keyPrefix={`charactors.${index}.clothing`}
-              allAcquirements={clothingRepository.all}
-              error={getCharactorError(errors, index, 'clothing')}
-              field={field}
-              onBlur={calculateCharactor}
-            />
-          )}
         />
-        <Controller
-          name={`charactors.${index}.weapon`}
+        <SelectAcquirement
+          acquirementType='weapon'
+          acquirementName={`charactors.${index}.weapon`}
+          allAcquirements={weaponRepository.all}
+          error={getCharactorError(errors, index, 'weapon')}
+          onBlur={calculateCharactor}
           control={control}
-          render={({ field }) => (
-            <SelectAcquirement
-              name={'weapon'}
-              keyPrefix={`charactors.${index}.weapon`}
-              allAcquirements={weaponRepository.all}
-              error={getCharactorError(errors, index, 'weapon')}
-              field={field}
-              onBlur={calculateCharactor}
-            />
-          )}
         />
       </Stack>
       <Box>

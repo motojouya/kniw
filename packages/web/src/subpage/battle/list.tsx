@@ -1,29 +1,34 @@
 import type { FC } from 'react';
 
-import { Box, List } from '@chakra-ui/react';
+import {
+  Stack,
+  Typography,
+  List,
+  ListItem,
+} from '@mui/material';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { useIO } from '../../components/context';
-import { Link } from '../../components/utility';
+import { Container, Link, ButtonLink } from '../../components/utility';
 
 export const BattleList: FC = () => {
   const { battleRepository } = useIO();
   const battleNames = useLiveQuery(() => battleRepository.list(), []);
   return (
-    <Box>
-      <Link href="/"><span>戻る</span></Link>
-      <Box>
-        <List.Root>
-          <List.Item key='battle-new'>
-            <Link href="/battle/?title=__new"><span>新しく作る</span></Link>
-          </List.Item>
+    <Container backLink="/">
+      <Stack direction="column" sx={{ justifyContent: 'flex-start', alignItems: "center" }}>
+        <Stack direction="row" sx={{ justifyContent: 'space-between', p: 3, width: "100%", alignItems: "center" }}>
+          <Typography>バトル一覧</Typography>
+          <ButtonLink href='/battle/?title=__new'><Typography>新しく作る</Typography></ButtonLink>
+        </Stack>
+        <List sx={{ width: "100%" }}>
           {battleNames && battleNames.map((battleTitle: string, index: number) => (
-            <List.Item key={`battle-${index}`}>
-              <Link href={`/battle/?title=${battleTitle}`}><span>{battleTitle}</span></Link>
-            </List.Item>
+            <ListItem key={`battle-${index}`} listStyle='none' py='1' px='5'>
+              <Link href={`/battle/?title=${battleTitle}`} line><Typography>{battleTitle}</Typography></Link>
+            </ListItem>
           ))}
-        </List.Root>
-      </Box>
-    </Box>
+        </List>
+      </Stack>
+    </Container>
   );
 };

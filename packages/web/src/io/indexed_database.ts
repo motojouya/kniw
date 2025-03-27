@@ -59,14 +59,6 @@ const createRemove: CreateRemove = (db) => async (namespace, objctKey) => {
   await table.delete(objctKey);
 };
 
-const exportJson: ExportJson = async (json, _fileName) => {
-  const newHandle = await window.showSaveFilePicker();
-  const writableStream = await newHandle.createWritable();
-  await writableStream.write(JSON.stringify(json));
-  await writableStream.close();
-  return null;
-};
-
 const pickerOpts = {
   types: [
     {
@@ -77,12 +69,20 @@ const pickerOpts = {
     },
   ],
   excludeAcceptAllOption: true,
-  multiple: false,
+};
+
+const exportJson: ExportJson = async (json, fileName) => {
+  // @ts-expect-error window is not defined
+  const newHandle = await window.showSaveFilePicker({ ...pickerOpts, suggestedName: `${fileName}.json` });
+  const writableStream = await newHandle.createWritable();
+  await writableStream.write(JSON.stringify(json));
+  await writableStream.close();
+  return null;
 };
 
 export const importJson: ImportJson = async (_dammyFileName) => {
-  // @ts-expect-error なんか型エラーでるので要対応ですけど？
-  const [fileHandle] = await window.showOpenFilePicker(pickerOpts);
+  // @ts-expect-error window is not defined
+  const [fileHandle] = await window.showOpenFilePicker({ ...pickerOpts, multiple: false });
   const file = await fileHandle.getFile();
   const text = await file.text();
   return JSON.parse(text) as object;

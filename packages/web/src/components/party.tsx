@@ -49,10 +49,16 @@ export const ImportParty: FC<{
   };
 
   return (
-    <Box>
-      {party && <Typography>{`${type} Party: ${party.name}`}</Typography>}
-      <Button type="button" onClick={importJson} >{`Select ${type} Party`}</Button>
-    </Box>
+    <Stack direction='row' sx={{ justifyContents: 'flex-start', alignItems: 'center' }}>
+      <Box sx={{ pr: 1 }}>
+        <Button variant="contained" type="button" onClick={importJson}>{`Select ${type} Party`}</Button>
+      </Box>
+      {party && (
+      <Box>
+        <Typography>{party.name}</Typography>
+      </Box>
+      )}
+    </Stack>
   );
 };
 

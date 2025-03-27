@@ -14,26 +14,22 @@ import {
   UseFormRegister,
   UseFormGetValues,
   UseFieldArrayReplace,
+  Controller,
 } from 'react-hook-form';
 import {
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  FormHelperText,
+  Chip,
   Button,
+  TextField,
   Box,
-  List,
-  Heading,
-  Text,
-  createListCollection,
-} from '@chakra-ui/react';
+  Stack,
+  Typography,
+} from '@mui/material';
 
-import {
-  SelectContent,
-  SelectItem,
-  SelectLabel,
-  SelectRoot,
-  SelectTrigger,
-  SelectValueText,
-} from "./ui/select"
-import { Tag } from "./ui/tag"
-import { Field } from "./ui/field"
 import {
   GameOngoing,
   GameHome,
@@ -62,15 +58,15 @@ import { surrender } from '../procedure/battle/surrender';
 import { simulate } from '../procedure/battle/simulate';
 import { UserCancel } from '../io/window_dialogue';
 import { useIO } from './context';
-import { Link } from './utility';
+import { Container, Link } from './utility';
 
 const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
   switch (battle.result) {
-    case GameHome: return <Text>{`${card} HOME側の勝利`}</Text>;
-    case GameVisitor: return <Text>{`${card} VISITOR側の勝利`}</Text>;
-    case GameDraw: return <Text>{`${card} 引き分け`}</Text>;
-    default: return <Text>{card}</Text>;
+    case GameHome: return <Typography>{`${card} HOME側の勝利`}</Typography>;
+    case GameVisitor: return <Typography>{`${card} VISITOR側の勝利`}</Typography>;
+    case GameDraw: return <Typography>{`${card} 引き分け`}</Typography>;
+    default: return <Typography>{card}</Typography>;
   }
 };
 
@@ -82,7 +78,8 @@ const ReceiverSelect: FC<{
   index: number,
   getValues: UseFormGetValues<DoSkillForm>,
   register: UseFormRegister<DoSkillForm>,
-}> = ({ battle, actor, lastTurn, skill, index, getValues, register }) => {
+  control: Control,
+}> = ({ battle, actor, lastTurn, skill, index, getValues, register, control }) => {
 
   const formItemName = `receiversWithIsVisitor.${index}.value` as const;
   const [receiverResult, setReceiverResult] = useState<CharactorBattling | string | null>(null);
@@ -109,25 +106,33 @@ const ReceiverSelect: FC<{
 
   const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
 
-  const collection = createListCollection({ items: receiverOptions });
-  // TODO working select tag https://www.chakra-ui.com/docs/components/select
   return (
     <Box>
-      <Field label="receiver">
-        <SelectRoot  {...register(formItemName, { onBlur })} collection={collection}>
-          <SelectLabel>receiver</SelectLabel>
-          <SelectTrigger>
-            <SelectValueText placeholder='receiver' />
-          </SelectTrigger>
-          <SelectContent>
-            {collection.items.map(receiverOption => (
-              <SelectItem key={`${receiverOption.value}`} item={receiverOption}>
-                {receiverOption.label}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </SelectRoot>
-      </Field>
+      <Controller
+        name={formItemName}
+        control={control}
+        render={({ field }) => (
+          <FormControl error={!!error}>
+            <InputLabel id="receiver_label">receiver</InputLabel>
+            <Select
+              labelId='receiver_label'
+              id='receiver_select'
+              name={field.name}
+              value={field.value}
+              label='receiver'
+              onChange={field.onChange}
+              onBlur={onBlur}
+            >
+              {receiverOptions.map(receiverOption => (
+                <MenuItem key={`${receiverOption.value}`} value={receiverOption.value}>
+                  {receiverOption.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <FormHelperText>{!!error && error.message}</FormHelperText>
+          </FormControl>
+        )}
+      />
       <Box>
         {receiverResult && (typeof receiverResult === 'string' ? receiverResult : <CharactorDetail charactor={receiverResult} />)}
       </Box>
@@ -149,7 +154,8 @@ const SkillSelect: FC<{
   getValues: UseFormGetValues<DoSkillForm>,
   register: UseFormRegister<DoSkillForm>,
   errors: FieldErrors<DoSkillForm>,
-}> = ({ actor, replace, getValues, register, errors }) => {
+  control: Control,
+}> = ({ actor, replace, getValues, register, errors, control }) => {
 
   const skills = getSkills(actor);
   const skillOptions = skills
@@ -168,23 +174,32 @@ const SkillSelect: FC<{
     }
   };
 
-  const collection = createListCollection({ items: skillOptions });
   return (
-    <Field invalid={!!errors.skillName} label="skill" errorText={!!errors.skillName && errors.skillName.message}>
-      <SelectRoot  {...register('skillName', { onBlur })} collection={collection}>
-        <SelectLabel>skill</SelectLabel>
-        <SelectTrigger>
-          <SelectValueText placeholder='skill' />
-        </SelectTrigger>
-        <SelectContent>
-          {collection.items.map(skillOption => (
-            <SelectItem key={`${skillOption.value}`} item={skillOption}>
-              {skillOption.label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </SelectRoot>
-    </Field>
+    <Controller
+      name='skillName'
+      control={control}
+      render={({ field }) => (
+        <FormControl error={!!errors.skillName}>
+          <InputLabel id="skill_label">skill</InputLabel>
+          <Select
+            labelId='skill_label'
+            id='skill_select'
+            name={field.name}
+            value={field.value}
+            label='skill'
+            onChange={field.onChange}
+            onBlur={onBlur}
+          >
+            {skillOptions.map(skillOption => (
+              <MenuItem key={`${skillOption.value}`} value={skillOption.value}>
+                {skillOption.label}
+              </MenuItem>
+            ))}
+          </Select>
+          <FormHelperText>{!!errors.skillName && errors.skillName.message}</FormHelperText>
+        </FormControl>
+      )}
+    />
   );
 };
 
@@ -227,54 +242,66 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     replace([]);
   };
 
-  const isVisitorTag = actor.isVisitor ? (<Tag>{'VISITOR'}</Tag>) : (<Tag>{'HOME'}</Tag>);
   const skill = skillRepository.get(getValues('skillName'))
 
-  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
-    <Box p={4}>
-      <Link href='/battle/'><span>戻る</span></Link>
-      <Text>This is the battle page</Text>
+    <Container backLink="/battle/">
+      <Typography>Battle!</Typography>
       {battle.result !== GameOngoing && <Button type="button" onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}
       <GameResultView battle={battle} />
       {battle.result === GameOngoing && (
         <>
           <form onSubmit={handleSubmit(actSkill)}>
-            {message && (<Text>{message}</Text>)}
+            {message && (<Typography>{message}</Typography>)}
             {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} />}
             <Box as={'dl'}>
-              <Heading as={'dt'}>battle title</Heading>
-              <Text as={'dd'}>{battle.title}</Text>
+              <Typography variant="h4" as={'dt'}>battle title</Typography>
+              <Typography as={'dd'}>{battle.title}</Typography>
             </Box>
-            <Text>{`${actor.name}のターン`}{isVisitorTag}</Text>
+            <Box>
+              <Typography display="inline-block" sx={{ pr: 1 }}>{`${actor.name}のターン`}</Typography>
+              <Chip variant="outlined" color='primary' label={actor.isVisitor ? 'VISITOR' : 'HOME'} />
+            </Box>
             <SkillSelect
               actor={actor}
               getValues={getValues}
               register={register}
               errors={errors}
               replace={replace}
+              control={control}
             />
-            <List.Root>
+            <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
               {fields.map((item, index) => (
-                <List.Item key={`receiversWithIsVisitor.${index}`}>
-                  {skill && (<ReceiverSelect battle={battle} actor={actor} lastTurn={lastTurn} skill={skill} getValues={getValues} register={register} index={index} />)}
-                </List.Item>
+                <Box key={`receiversWithIsVisitor.${index}`}>
+                  {skill && (
+                    <ReceiverSelect
+                      battle={battle}
+                      actor={actor}
+                      lastTurn={lastTurn}
+                      skill={skill}
+                      getValues={getValues}
+                      register={register}
+                      index={index}
+                      control={control}
+                    />
+                  )}
+                </Box>
               ))}
-            </List.Root>
-            <Button colorScheme="teal" type="submit">実行</Button>
+            </Stack>
+            <Button type="submit">実行</Button>
           </form>
           <Box>
-            <List.Root>
+            <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
               {lastTurn.sortedCharactors.map(charactor => (
-                <List.Item key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
+                <Box key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
                   <CharactorDetail charactor={charactor} />
-                </List.Item>
+                </Box>
               ))}
-            </List.Root>
+            </Stack>
           </Box>
         </>
       )}
-    </Box>
+    </Container>
   );
 };
