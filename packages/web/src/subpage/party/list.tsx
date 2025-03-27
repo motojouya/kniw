@@ -21,7 +21,7 @@ export const PartyList: FC = () => {
           <Typography>パーティ一覧</Typography>
           <ButtonLink href='/party/?name=__new'><Typography>新しく作る</Typography></ButtonLink>
         </Stack>
-        <List w="100%">
+        <List sx={{ width: "100%" }}>
           {partyNames && partyNames.map((partyName, index) => (
             <ListItem key={`party-${index}`} listStyle='none' py='1' px='5'>
               <Link href={`/party/?name=${partyName}`} line><Typography>{partyName}</Typography></Link>

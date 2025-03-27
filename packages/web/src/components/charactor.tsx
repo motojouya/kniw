@@ -3,7 +3,7 @@ import type { Acquirement } from '@motojouya/kniw-core/model/acquirement';
 import type { Charactor } from '@motojouya/kniw-core/model/charactor';
 import type { PartyForm } from '../form/party';
 
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   Field,
   Control,
@@ -78,7 +78,6 @@ const getCharactorError: GetCharactorError = (errors, i, property) => {
   return error as FieldError;
 };
 
-// TODO working select tag https://www.chakra-ui.com/docs/components/select
 const SelectAcquirement: FC<{
   name: string,
   keyPrefix: string,
@@ -133,72 +132,58 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
     isVisitorTag = <Chip label={charactor.isVisitor ? 'VISITOR' : 'HOME'} variant="outlined" />;
 
   } else {
-    hpText = `${physical.MaxHP}`;
-    mpText = `${physical.MaxMP}`;
-    wtText = `${physical.WT}`;
-    statusesText = 'No Status';
+    hpText = `${physical.MaxHP}/${physical.MaxHP}`;
+    mpText = `${physical.MaxMP}/${physical.MaxMP}`;
+    wtText = `${physical.WT}(${physical.WT})`;
+    statusesText = '-';
     isVisitorTag = null;
   }
 
   return (
-    <TableContainer>
-      <Table variant='line'>
-        <TableBody>
-          <TableRow>
-            <TableCell>名前      </TableCell><TableCell>{`${charactor.name}`}{isVisitorTag}    </TableCell>
-            <TableCell>HP        </TableCell><TableCell>{hpText}                               </TableCell>
-            <TableCell>MP        </TableCell><TableCell>{mpText}                               </TableCell>
-            <TableCell>WT        </TableCell><TableCell>{wtText}                               </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>ステータス</TableCell><TableCell colSpan={6}>{statusesText} </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>種族      </TableCell><TableCell>{charactor.race.label}                 </TableCell>
-            <TableCell>祝福      </TableCell><TableCell>{charactor.blessing.label}             </TableCell>
-            <TableCell>装備      </TableCell><TableCell>{charactor.clothing.label}             </TableCell>
-            <TableCell>武器      </TableCell><TableCell>{charactor.weapon.label}               </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>アビリティ</TableCell><TableCell colSpan={6}>{abilitiesText}</TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell colSpan={2}>スキル    </TableCell><TableCell colSpan={6}>{skillsText}   </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>STR       </TableCell><TableCell>{physical.STR}                         </TableCell>
-            <TableCell>VIT       </TableCell><TableCell>{physical.VIT}                         </TableCell>
-            <TableCell>DEX       </TableCell><TableCell>{physical.DEX}                         </TableCell>
-            <TableCell>AGI       </TableCell><TableCell>{physical.AGI}                         </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>AVD       </TableCell><TableCell>{physical.AVD}                         </TableCell>
-            <TableCell>INT       </TableCell><TableCell>{physical.INT}                         </TableCell>
-            <TableCell>MND       </TableCell><TableCell>{physical.MND}                         </TableCell>
-            <TableCell>RES       </TableCell><TableCell>{physical.RES}                         </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>刺突耐性  </TableCell><TableCell>{physical.StabResistance}              </TableCell>
-            <TableCell>斬撃耐性  </TableCell><TableCell>{physical.SlashResistance}             </TableCell>
-            <TableCell>打撃耐性  </TableCell><TableCell>{physical.BlowResistance}              </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>火属性    </TableCell><TableCell>{physical.FireSuitable}                </TableCell>
-            <TableCell>岩属性    </TableCell><TableCell>{physical.RockSuitable}                </TableCell>
-            <TableCell>水属性    </TableCell><TableCell>{physical.WaterSuitable}               </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>氷属性    </TableCell><TableCell>{physical.IceSuitable}                 </TableCell>
-            <TableCell>風属性    </TableCell><TableCell>{physical.AirSuitable}                 </TableCell>
-            <TableCell>雷属性    </TableCell><TableCell>{physical.ThunderSuitable}             </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>移動距離  </TableCell><TableCell>{physical.move}                        </TableCell>
-            <TableCell>移動高さ  </TableCell><TableCell>{physical.jump}                        </TableCell>
-          </TableRow>
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Stack sx={{ py: 1 }}>
+      <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 1 }}><Typography>名前: {`${charactor.name}`}{isVisitorTag}</Typography></Box>
+      </Stack>
+      <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 1 }} flex="0 0 110px"><Typography>HP: {hpText}</Typography></Box>
+        <Box sx={{ pr: 1 }} flex="0 0 110px"><Typography>MP: {mpText}</Typography></Box>
+        <Box sx={{ pr: 1 }} flex="0 0 110px"><Typography>WT: {wtText}</Typography></Box>
+        <Box sx={{ pr: 1 }} flex="1 1 auto"><Typography>ステータス: {statusesText}</Typography></Box>
+      </Stack>
+      <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 2 }}><Typography>種族: {charactor.race.label}    </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>祝福: {charactor.blessing.label}</Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>装備: {charactor.clothing.label}</Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>武器: {charactor.weapon.label}  </Typography></Box>
+      </Stack>
+      <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 2 }}><Typography>アビリティ: {abilitiesText}</Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>スキル: {skillsText}       </Typography></Box>
+      </Stack>
+      <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 2 }}><Typography>STR: {physical.STR}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>VIT: {physical.VIT}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>DEX: {physical.DEX}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>AGI: {physical.AGI}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>AVD: {physical.AVD}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>INT: {physical.INT}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>MND: {physical.MND}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>RES: {physical.RES}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>MOVE: {physical.move}</Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>JUMP: {physical.jump}</Typography></Box>
+      </Stack>
+      <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+        <Box sx={{ pr: 2 }}><Typography>火属性: {physical.FireSuitable}     </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>岩属性: {physical.RockSuitable}     </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>水属性: {physical.WaterSuitable}    </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>氷属性: {physical.IceSuitable}      </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>風属性: {physical.AirSuitable}      </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>雷属性: {physical.ThunderSuitable}  </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>刺突耐性: {physical.StabResistance} </Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>斬撃耐性: {physical.SlashResistance}</Typography></Box>
+        <Box sx={{ pr: 2 }}><Typography>打撃耐性: {physical.BlowResistance} </Typography></Box>
+      </Stack>
+    </Stack>
   );
 };
 
@@ -214,7 +199,7 @@ export const CharactorCard: FC<{
   const nameError = getCharactorError(errors, index, 'name');
   const [charactor, setCharactor] = useState<Charactor | string>('入力してください');
 
-  const onBlur = () => {
+  const calculateCharactor = useCallback(() => {
     const hiredCharactor = toCharactor(getValues(`charactors.${index}` as const));
 
     if (hiredCharactor instanceof DataNotFoundError || hiredCharactor instanceof EmptyParameter) {
@@ -226,17 +211,19 @@ export const CharactorCard: FC<{
       return;
     }
     setCharactor(hiredCharactor);
-  };
+  }, [getValues, index, setCharactor]);
+
+  useEffect(calculateCharactor, [calculateCharactor]);
 
   return (
-    <Stack direction="column" border='solid' sx={{ p: 3, justifyContent: "flex-start" }}>
+    <Stack direction="column" border='1px solid royalblue' borderRadius="5px" sx={{ px: 1, py: 2, justifyContent: "flex-start" }}>
       <Stack direction="column" sx={{ justifyContent: "flex-start" }}>
         <TextField
           error={!!nameError}
           label="Name"
           placeholder="Name"
           variant="outlined"
-          {...register(`charactors.${index}.name` as const, { onBlur })}
+          {...register(`charactors.${index}.name` as const, { onBlur: calculateCharactor })}
           helperText={!!nameError && nameError.message}
           sx={{ pb: 1 }}
         />
@@ -250,7 +237,7 @@ export const CharactorCard: FC<{
               allAcquirements={raceRepository.all}
               error={getCharactorError(errors, index, 'race')}
               field={field}
-              onBlur={onBlur}
+              onBlur={calculateCharactor}
             />
           )}
         />
@@ -264,7 +251,7 @@ export const CharactorCard: FC<{
               allAcquirements={blessingRepository.all}
               error={getCharactorError(errors, index, 'blessing')}
               field={field}
-              onBlur={onBlur}
+              onBlur={calculateCharactor}
             />
           )}
         />
@@ -278,7 +265,7 @@ export const CharactorCard: FC<{
               allAcquirements={clothingRepository.all}
               error={getCharactorError(errors, index, 'clothing')}
               field={field}
-              onBlur={onBlur}
+              onBlur={calculateCharactor}
             />
           )}
         />
@@ -292,7 +279,7 @@ export const CharactorCard: FC<{
               allAcquirements={weaponRepository.all}
               error={getCharactorError(errors, index, 'weapon')}
               field={field}
-              onBlur={onBlur}
+              onBlur={calculateCharactor}
             />
           )}
         />

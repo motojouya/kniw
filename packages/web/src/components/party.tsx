@@ -109,7 +109,6 @@ export const PartyEditor: FC<{
     }
   };
 
-  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Typographyで代用
   // FIXME Button  loading={isSubmitting} loadingText="Creating Party..." としたかったがloadingがエラーになる
   return (
     <Container backLink="/party/">
@@ -137,9 +136,9 @@ export const PartyEditor: FC<{
               : <Typography>{saveMessage.message}</Typography>
           )}
           {exist ? (
-            <Stack direction="row" sx={{ p: 1 }}>
-              <Typography>Party Name</Typography>
-              <Typography variant="h4">{partyForm.name}</Typography>
+            <Stack direction="row" sx={{ p: 1, width: '100%', alignItems: 'center' }}>
+              <Box flex="0 0 100px"><Typography>Party Name</Typography></Box>
+              <Box><Typography variant="h4">{partyForm.name}</Typography></Box>
             </Stack>
           ) : (
             <Stack direction="row" sx={{ p: 1, width: '100%' }}>
@@ -155,7 +154,7 @@ export const PartyEditor: FC<{
               />
             </Stack>
           )}
-          <Stack direction="column" sx={{ justifyContent: "flex-start", px: 1, width: '100%' }}>
+          <Stack direction="column" sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
             <Box sx={{ pb: 1, width: '100%' }}>
               <Button variant="contained" type="button" sx={{ width: '100%' }} onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
             </Box>
