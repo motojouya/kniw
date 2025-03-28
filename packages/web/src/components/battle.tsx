@@ -60,13 +60,13 @@ import { UserCancel } from '../io/window_dialogue';
 import { useIO } from './context';
 import { Container, Link } from './utility';
 
-const GameResultView: FC<{ battle: Battle }> = ({ battle }) => {
+const GameStatus: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
   switch (battle.result) {
     case GameHome: return <Typography>{`${card} HOME側の勝利`}</Typography>;
     case GameVisitor: return <Typography>{`${card} VISITOR側の勝利`}</Typography>;
     case GameDraw: return <Typography>{`${card} 引き分け`}</Typography>;
-    default: return <Typography>{card}</Typography>;
+    default: return <Typography>{`${card} Turn No.${battle.turns.length}`}</Typography>;
   }
 };
 
@@ -145,7 +145,7 @@ const Surrender: FC<{ battle: Battle, actor: CharactorBattling }> = ({ battle, a
   // FIXME 降参した後にbattleの状態を変化させる気がするがどうかな
   const doSurrender = () => surrender(battleRepository, dialogue)(battle, actor, new Date());
 
-  return <Button type="button" onClick={doSurrender} >降参</Button>;
+  return <Button variant='outlined' type="button" onClick={doSurrender} >降参</Button>;
 };
 
 const SkillSelect: FC<{
@@ -243,65 +243,74 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   };
 
   const skill = skillRepository.get(getValues('skillName'))
+  console.log(fields);
 
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
     <Container backLink="/battle/">
-      <Typography>Battle!</Typography>
-      {battle.result !== GameOngoing && <Button type="button" onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}
-      <GameResultView battle={battle} />
-      {battle.result === GameOngoing && (
-        <>
-          <form onSubmit={handleSubmit(actSkill)}>
-            {message && (<Typography>{message}</Typography>)}
-            {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} />}
-            <Box as={'dl'}>
-              <Typography variant="h4" as={'dt'}>battle title</Typography>
-              <Typography as={'dd'}>{battle.title}</Typography>
-            </Box>
-            <Box>
-              <Typography display="inline-block" sx={{ pr: 1 }}>{`${actor.name}のターン`}</Typography>
-              <Chip variant="outlined" color='primary' label={actor.isVisitor ? 'VISITOR' : 'HOME'} />
-            </Box>
-            <SkillSelect
-              actor={actor}
-              getValues={getValues}
-              register={register}
-              errors={errors}
-              replace={replace}
-              control={control}
-            />
-            <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
-              {fields.map((item, index) => (
-                <Box key={`receiversWithIsVisitor.${index}`}>
-                  {skill && (
-                    <ReceiverSelect
-                      battle={battle}
-                      actor={actor}
-                      lastTurn={lastTurn}
-                      skill={skill}
-                      getValues={getValues}
-                      register={register}
-                      index={index}
-                      control={control}
-                    />
-                  )}
-                </Box>
-              ))}
-            </Stack>
-            <Button type="submit">実行</Button>
-          </form>
+      <Stack>
+        <Stack>
+          <Stack direction="row" sx={{ justifyContent: "space-between", width: '100%' }}>
+            <Box flex="0 0 70px"><Typography>Battle!</Typography></Box>
+            <Box flex="1 0 110px"><Typography>{battle.title}</Typography></Box>
+            <Box flex="1 1 auto">{battle.result !== GameOngoing && <Button type="button" onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}</Box>
+          </Stack>
           <Box>
-            <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
-              {lastTurn.sortedCharactors.map(charactor => (
-                <Box key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
-                  <CharactorDetail charactor={charactor} />
-                </Box>
-              ))}
-            </Stack>
+            <GameStatus battle={battle} />
           </Box>
-        </>
-      )}
+        </Stack>
+        {battle.result === GameOngoing && (
+          <Stack>
+            <form onSubmit={handleSubmit(actSkill)}>
+              {message && (<Typography>{message}</Typography>)}
+              <Box>
+                <Typography display="inline-block" sx={{ pr: 1 }}>{`${actor.name}のターン`}</Typography>
+                <Chip variant="outlined" color='primary' label={actor.isVisitor ? 'VISITOR' : 'HOME'} />
+              </Box>
+              <Stack>
+                <SkillSelect
+                  actor={actor}
+                  getValues={getValues}
+                  register={register}
+                  errors={errors}
+                  replace={replace}
+                  control={control}
+                />
+              </Stack>
+              <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
+                {fields.map((item, index) => (
+                  <Box key={`receiversWithIsVisitor.${index}`}>
+                    {skill && (
+                      <ReceiverSelect
+                        battle={battle}
+                        actor={actor}
+                        lastTurn={lastTurn}
+                        skill={skill}
+                        getValues={getValues}
+                        register={register}
+                        index={index}
+                        control={control}
+                      />
+                    )}
+                  </Box>
+                ))}
+              </Stack>
+              <Stack>actor to receiver images here with each charactor statuses</Stack>
+              <Button type="submit" variant='outlined'>実行</Button>
+              {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} />}
+            </form>
+            <Box>
+              <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
+                {lastTurn.sortedCharactors.map(charactor => (
+                  <Box key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
+                    <CharactorDetail charactor={charactor} />
+                  </Box>
+                ))}
+              </Stack>
+            </Box>
+          </Stack>
+        )}
+      </Stack>
     </Container>
   );
 };
