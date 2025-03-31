@@ -70,6 +70,28 @@ const GameStatus: FC<{ battle: Battle }> = ({ battle }) => {
   }
 };
 
+type GetReceiverError = (errors: FieldErrors, i: number) => FieldError | undefined;
+const getReceiverError: GetReceiverError = (errors, i, property) => {
+  const errorsReceivers = errors.receiversWithIsVisitor;
+  if (!errorsReceivers) {
+    return errorsReceivers;
+  }
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const errorsReceiverIndexed = (errorsReceivers as Merge<FieldError, FieldErrorsImpl<any>>)[i];
+  if (!errorsReceiverIndexed) {
+    return errorsReceiverIndexed;
+  }
+  // FIXME
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const error = (errorsReceiverIndexed as Merge<FieldError, FieldErrorsImpl<any>>)['value'];
+  if (!error) {
+    return error;
+  }
+
+  return error as FieldError;
+};
+
 const ReceiverSelect: FC<{
   battle: Battle,
   actor: CharactorBattling,
@@ -77,20 +99,23 @@ const ReceiverSelect: FC<{
   skill: Skill,
   index: number,
   getValues: UseFormGetValues<DoSkillForm>,
-  register: UseFormRegister<DoSkillForm>,
+  errors: FieldErrors<DoSkillForm>,
   control: Control,
-}> = ({ battle, actor, lastTurn, skill, index, getValues, register, control }) => {
+}> = ({ battle, actor, lastTurn, skill, index, getValues, errors, control }) => {
 
   const formItemName = `receiversWithIsVisitor.${index}.value` as const;
+  const error = getReceiverError(errors, index);
   const [receiverResult, setReceiverResult] = useState<CharactorBattling | string | null>(null);
 
-  const onBlur = () => {
+  // FIXME useCallback
+  const onChange = (field) => (e) => {
 
-    const receiverWithIsVisitor = getValues(formItemName);
+    const receiverWithIsVisitor = e.target.value;
     const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
     if (result instanceof DataNotFoundError) {
       setReceiverResult(null);
+      field.onChange(e);
       return;
     }
 
@@ -98,16 +123,18 @@ const ReceiverSelect: FC<{
 
     if (!survive) {
       setReceiverResult(`${receiver.name} will dead`);
+      field.onChange(e);
       return;
     }
 
     setReceiverResult(receiver);
+    field.onChange(e);
   };
 
   const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
 
   return (
-    <Box>
+    <>
       <Controller
         name={formItemName}
         control={control}
@@ -120,8 +147,7 @@ const ReceiverSelect: FC<{
               name={field.name}
               value={field.value}
               label='receiver'
-              onChange={field.onChange}
-              onBlur={onBlur}
+              onChange={onChange(field)}
             >
               {receiverOptions.map(receiverOption => (
                 <MenuItem key={`${receiverOption.value}`} value={receiverOption.value}>
@@ -136,7 +162,7 @@ const ReceiverSelect: FC<{
       <Box>
         {receiverResult && (typeof receiverResult === 'string' ? receiverResult : <CharactorDetail charactor={receiverResult} />)}
       </Box>
-    </Box>
+    </>
   );
 };
 
@@ -152,10 +178,9 @@ const SkillSelect: FC<{
   actor: CharactorBattling,
   replace: UseFieldArrayReplace<DoSkillForm, 'receiversWithIsVisitor'>
   getValues: UseFormGetValues<DoSkillForm>,
-  register: UseFormRegister<DoSkillForm>,
   errors: FieldErrors<DoSkillForm>,
   control: Control,
-}> = ({ actor, replace, getValues, register, errors, control }) => {
+}> = ({ actor, replace, getValues, errors, control }) => {
 
   const skills = getSkills(actor);
   const skillOptions = skills
@@ -164,14 +189,16 @@ const SkillSelect: FC<{
     .map(skill => ({ value: skill.name, label: skill.name }));
   skillOptions.push({ value: ACTION_DO_NOTHING, label: '何もしない' });
 
-  const onBlur = () => {
-    const skillName = getValues('skillName');
+  // FIXME useCallback
+  const onChange = (field) => (e) => {
+    const skillName = e.target.value;
     const skill = toSkill(skillName);
     if (skill) {
       replace(Array(skill.receiverCount).fill(''));
     } else {
       replace([]);
     }
+    field.onChange(e);
   };
 
   return (
@@ -187,8 +214,7 @@ const SkillSelect: FC<{
             name={field.name}
             value={field.value}
             label='skill'
-            onChange={field.onChange}
-            onBlur={onBlur}
+            onChange={onChange(field)}
           >
             {skillOptions.map(skillOption => (
               <MenuItem key={`${skillOption.value}`} value={skillOption.value}>
@@ -211,7 +237,6 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
   const {
     handleSubmit,
-    register,
     getValues,
     formState: { errors }, //, isSubmitting
     control,
@@ -271,7 +296,6 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                 <SkillSelect
                   actor={actor}
                   getValues={getValues}
-                  register={register}
                   errors={errors}
                   replace={replace}
                   control={control}
@@ -279,7 +303,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
               </Stack>
               <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
                 {fields.map((item, index) => (
-                  <Box key={`receiversWithIsVisitor.${index}`}>
+                  <Stack key={`receiversWithIsVisitor.${index}`}>
                     {skill && (
                       <ReceiverSelect
                         battle={battle}
@@ -287,12 +311,12 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                         lastTurn={lastTurn}
                         skill={skill}
                         getValues={getValues}
-                        register={register}
                         index={index}
+                        errors={errors}
                         control={control}
                       />
                     )}
-                  </Box>
+                  </Stack>
                 ))}
               </Stack>
               <Stack>actor to receiver images here with each charactor statuses</Stack>
