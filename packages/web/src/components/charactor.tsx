@@ -106,14 +106,9 @@ const SelectAcquirement: FC<{
   );
 }
 
-export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
+export const CharactorStatus: FC<{ charactor: Charactor }> = ({ charactor }) => {
+
   const physical = getPhysical(charactor);
-
-  const abilities = getAbilities(charactor);
-  const abilitiesText = abilities.map(ability => ability.label).join(', ');
-
-  const skills = getSkills(charactor);
-  const skillsText = skills.map(skill => skill.label).join(', ');
 
   let hpText: string;
   let mpText: string;
@@ -137,7 +132,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
   }
 
   return (
-    <Stack sx={{ py: 1 }}>
+    <>
       <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
         <Box sx={{ pr: 1 }} flex="1 1 auto"><Typography display="inline-block" sx={{ pr: 1 }}>名前: {`${charactor.name}`}</Typography>{isVisitorTag}</Box>
       </Stack>
@@ -147,6 +142,22 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
         <Box sx={{ pr: 1 }} flex="0 0 110px"><Typography>WT: {wtText}</Typography></Box>
         <Box sx={{ pr: 1 }} flex="1 1 auto"><Typography>ステータス: {statusesText}</Typography></Box>
       </Stack>
+    </>
+  );
+};
+
+export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => {
+  const physical = getPhysical(charactor);
+
+  const abilities = getAbilities(charactor);
+  const abilitiesText = abilities.map(ability => ability.label).join(', ');
+
+  const skills = getSkills(charactor);
+  const skillsText = skills.map(skill => skill.label).join(', ');
+
+  return (
+    <Stack sx={{ py: 1 }}>
+      <CharactorStatus charactor={charactor} />
       <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
         <Box sx={{ pr: 2 }}><Typography>種族: {charactor.race.label}    </Typography></Box>
         <Box sx={{ pr: 2 }}><Typography>祝福: {charactor.blessing.label}</Typography></Box>

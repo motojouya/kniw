@@ -38,7 +38,7 @@ import {
   nextActor,
   getLastTurn,
 } from '@motojouya/kniw-core/model/battle';
-import { CharactorDetail } from './charactor';
+import { CharactorDetail, CharactorStatus } from './charactor';
 import {
   doSkillFormSchema,
   toSkill,
@@ -93,42 +93,20 @@ const getReceiverError: GetReceiverError = (errors, i, property) => {
 };
 
 const ReceiverSelect: FC<{
-  battle: Battle,
-  actor: CharactorBattling,
   lastTurn: Turn,
-  skill: Skill,
   index: number,
-  getValues: UseFormGetValues<DoSkillForm>,
   errors: FieldErrors<DoSkillForm>,
   control: Control,
-}> = ({ battle, actor, lastTurn, skill, index, getValues, errors, control }) => {
+  addReceiver: () => void,
+}> = ({ lastTurn, index, errors, control, addReceiver }) => {
 
   const formItemName = `receiversWithIsVisitor.${index}.value` as const;
   const error = getReceiverError(errors, index);
-  const [receiverResult, setReceiverResult] = useState<CharactorBattling | string | null>(null);
 
   // FIXME useCallback
   const onChange = (field) => (e) => {
-
-    const receiverWithIsVisitor = e.target.value;
-    const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
-
-    if (result instanceof DataNotFoundError) {
-      setReceiverResult(null);
-      field.onChange(e);
-      return;
-    }
-
-    const { survive, receiver } = result;
-
-    if (!survive) {
-      setReceiverResult(`${receiver.name} will dead`);
-      field.onChange(e);
-      return;
-    }
-
-    setReceiverResult(receiver);
     field.onChange(e);
+    addReceiver();
   };
 
   const receiverOptions = lastTurn.sortedCharactors.map(receiverSelectOption);
@@ -159,9 +137,6 @@ const ReceiverSelect: FC<{
           </FormControl>
         )}
       />
-      <Box>
-        {receiverResult && (typeof receiverResult === 'string' ? receiverResult : <CharactorDetail charactor={receiverResult} />)}
-      </Box>
     </>
   );
 };
@@ -244,6 +219,9 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');
+  const [receivers, setReceivers] = useState<(CharactorBattling | null)[]>([]);
+
+  const skill = skillRepository.get(getValues('skillName'))
 
   const actSkill = async (doSkillForm: DoSkillForm) => {
 
@@ -267,8 +245,26 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     replace([]);
   };
 
-  const skill = skillRepository.get(getValues('skillName'))
-  console.log(fields);
+  const addReceiver = (index) => () => {
+    const receiverWithIsVisitor = getValues(`receiversWithIsVisitor.${index}.value` as const);
+    const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
+
+    if (result instanceof DataNotFoundError) {
+      if (receivers.length > index) {
+        setReceivers(receivers.toSpliced(index, 1, null));
+      }
+      return;
+    }
+
+    const { receiver } = result;
+
+    let newReceivers = [...receivers];
+    if (receivers.length <= index) {
+      const shortage = index - receivers.length + 1;
+      newReceivers = newReceivers.concat(Array(shortage).fill(null));
+    }
+    setReceivers(newReceivers.toSpliced(index, 1, receiver));
+  };
 
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
@@ -306,20 +302,27 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                   <Stack key={`receiversWithIsVisitor.${index}`}>
                     {skill && (
                       <ReceiverSelect
-                        battle={battle}
-                        actor={actor}
                         lastTurn={lastTurn}
-                        skill={skill}
-                        getValues={getValues}
                         index={index}
                         errors={errors}
                         control={control}
+                        addReceiver={addReceiver(index)}
                       />
                     )}
                   </Stack>
                 ))}
               </Stack>
-              <Stack>actor to receiver images here with each charactor statuses</Stack>
+              <Stack>
+                <Stack>
+                  <CharactorStatus charactor={actor} />
+                </Stack>
+                <Box>
+                  <Typography>images here</Typography>
+                </Box>
+                {receivers.map((receiver, index) => (
+                  receiver && <Stack><CharactorStatus charactor={receiver} /></Stack>
+                ))}
+              </Stack>
               <Button type="submit" variant='outlined'>実行</Button>
               {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} />}
             </form>
