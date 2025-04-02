@@ -146,7 +146,7 @@ const Surrender: FC<{ battle: Battle, actor: CharactorBattling }> = ({ battle, a
   // FIXME 降参した後にbattleの状態を変化させる気がするがどうかな
   const doSurrender = () => surrender(battleRepository, dialogue)(battle, actor, new Date());
 
-  return <Button variant='outlined' type="button" onClick={doSurrender} >降参</Button>;
+  return <Button variant='outlined' type="button" onClick={doSurrender}>降参</Button>;
 };
 
 const SkillSelect: FC<{
@@ -242,6 +242,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
       return;
     }
 
+    setReceivers([]);
     replace([]);
   };
 
@@ -270,21 +271,21 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   return (
     <Container backLink="/battle/">
       <Stack>
-        <Stack>
+        <Stack sx={{ pb: 1 }}>
           <Stack direction="row" sx={{ justifyContent: "space-between", width: '100%' }}>
             <Box flex="0 0 70px"><Typography>Battle!</Typography></Box>
             <Box flex="1 0 110px"><Typography>{battle.title}</Typography></Box>
-            <Box flex="1 1 auto">{battle.result !== GameOngoing && <Button type="button" onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}</Box>
+            <Box flex="1 1 auto">{battle.result !== GameOngoing && <Button type="button" variant='outlined' onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}</Box>
           </Stack>
           <Box>
             <GameStatus battle={battle} />
           </Box>
         </Stack>
         {battle.result === GameOngoing && (
-          <Stack>
+          <Stack borderTop='1px solid royalblue'>
             <form onSubmit={handleSubmit(actSkill)}>
               {message && (<Typography>{message}</Typography>)}
-              <Box>
+              <Box sx={{ py: 1 }}>
                 <Typography display="inline-block" sx={{ pr: 1 }}>{`${actor.name}のターン`}</Typography>
                 <Chip variant="outlined" color='primary' label={actor.isVisitor ? 'VISITOR' : 'HOME'} />
               </Box>
@@ -313,23 +314,37 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                 ))}
               </Stack>
               <Stack>
-                <Stack>
+                <Box>
                   <CharactorStatus charactor={actor} />
-                </Stack>
+                </Box>
                 <Box>
                   <Typography>images here</Typography>
                 </Box>
                 {receivers.map((receiver, index) => (
-                  receiver && <Stack><CharactorStatus charactor={receiver} /></Stack>
+                  receiver && <Stack sx={{ pl: 2 }}><CharactorStatus charactor={receiver} /></Stack>
                 ))}
               </Stack>
-              <Button type="submit" variant='outlined'>実行</Button>
-              {battle.result === GameOngoing && <Surrender battle={battle} actor={actor} />}
+              <Stack direction='row' sx={{ justifyContent: "flex-end", py: 1 }}>
+                <Box sx={{ px: 1 }}>
+                  <Button type="submit" variant='outlined' sx={{ px: 1 }}>実行</Button>
+                </Box>
+                {battle.result === GameOngoing && (
+                  <Box sx={{ px: 1 }}>
+                    <Surrender battle={battle} actor={actor} />
+                  </Box>
+                )}
+              </Stack>
             </form>
-            <Box>
+            <Box borderTop='1px solid royalblue' sx={{ py: 1 }}>
+              <Box>
+                <Typography variant='h5'>Action Orders</Typography>
+              </Box>
               <Stack sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
-                {lastTurn.sortedCharactors.map(charactor => (
-                  <Box key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`}>
+                {lastTurn.sortedCharactors.map((charactor, index) => (
+                  <Box key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`} sx={{ pb: 2 }}>
+                    <Box borderBottom='1px dotted royalblue'>
+                      <Typography variant="h6">{index === 0 ? 'Next Actor' : `Action Order ${index + 1}`}</Typography>
+                    </Box>
                     <CharactorDetail charactor={charactor} />
                   </Box>
                 ))}

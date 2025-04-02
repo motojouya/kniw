@@ -27,7 +27,7 @@ export const BattleList: FC = () => {
             <ListItem key={`battle-${index}`} listStyle='none' py='1' px='5'>
               <Stack direction="row" sx={{ justifyContent: 'space-between', width: "100%", alignItems: "center" }}>
                 <Link href={`/battle/?title=${battleTitle}`} line><Typography>{battleTitle}</Typography></Link>
-                <Button variant="contained" type="button" onClick={() => console.log('Not Deleted! TODO!')}><Typography>Delete</Typography></Button>
+                <Button variant="outlined" type="button" onClick={() => console.log('Not Deleted! TODO!')}><Typography>Delete</Typography></Button>
               </Stack>
             </ListItem>
           ))}

@@ -156,7 +156,7 @@ export const CharactorDetail: FC<{ charactor: Charactor }> = ({ charactor }) => 
   const skillsText = skills.map(skill => skill.label).join(', ');
 
   return (
-    <Stack sx={{ py: 1 }}>
+    <Stack>
       <CharactorStatus charactor={charactor} />
       <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
         <Box sx={{ pr: 2 }}><Typography>種族: {charactor.race.label}    </Typography></Box>
