@@ -63,10 +63,10 @@ import { Container, Link } from './utility';
 const GameStatus: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
   switch (battle.result) {
-    case GameHome: return <Typography>{`${card} HOME側の勝利`}</Typography>;
-    case GameVisitor: return <Typography>{`${card} VISITOR側の勝利`}</Typography>;
+    case GameHome: return <Typography>{`${card} HOMEの勝利`}</Typography>;
+    case GameVisitor: return <Typography>{`${card} VISITORの勝利`}</Typography>;
     case GameDraw: return <Typography>{`${card} 引き分け`}</Typography>;
-    default: return <Typography>{`${card} Turn No.${battle.turns.length}`}</Typography>;
+    default: return <Typography>{`${card} Turn No.${battle.turns.length + 1}`}</Typography>;
   }
 };
 
@@ -204,6 +204,23 @@ const SkillSelect: FC<{
   );
 };
 
+const ACTION_STATUS_NONE = 'NONE' as const;
+const ACTION_STATUS_START = 'START' as const;
+const ACTION_STATUS_ING01 = 'ING01' as const;
+const ACTION_STATUS_ING02 = 'ING02' as const;
+const ACTION_STATUS_ING03 = 'ING03' as const;
+const ACTION_STATUS_HIT = 'HIT' as const;
+const ACTION_STATUS_DODGE = 'DODGE' as const;
+type ACTION_STATUSES =
+  | typeof ACTION_STATUS_NONE
+  | typeof ACTION_STATUS_START
+  | typeof ACTION_STATUS_ING01
+  | typeof ACTION_STATUS_ING02
+  | typeof ACTION_STATUS_ING03
+  | typeof ACTION_STATUS_HIT
+  | typeof ACTION_STATUS_DODGE
+;
+
 export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
   const { battleRepository, dialogue } = useIO();
@@ -220,6 +237,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const { fields, replace } = useFieldArray({ control, name: 'receiversWithIsVisitor' });
   const [message, setMessage] = useState<string>('');
   const [receivers, setReceivers] = useState<(CharactorBattling | null)[]>([]);
+  const [actionStatus, setActionStatus] = useState<ACTION_STATUSES>(ACTION_STATUS_NONE);
 
   const skill = skillRepository.get(getValues('skillName'))
 
@@ -267,14 +285,48 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     setReceivers(newReceivers.toSpliced(index, 1, receiver));
   };
 
+  const progressAction = (newBattle: Battle) => {
+    setActionStatus(ACTION_STATUS_START);
+    Promise.resolve(() => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setActionStatus(ACTION_STATUS_ING01);
+          resolve();
+        }, 1000);
+      });
+    }).then((resolve) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setActionStatus(ACTION_STATUS_ING02);
+          resolve();
+        }, 1000);
+      });
+    }).then((resolve) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          setActionStatus(ACTION_STATUS_ING03);
+          resolve();
+        }, 1000);
+      });
+    }).then((resolve) => {
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          // TODO newBattleの結果を見てhit/dodgeを決める
+          setActionStatus(ACTION_STATUS_HIT);
+          resolve();
+        }, 1000);
+      });
+    });
+  };
+
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
     <Container backLink="/battle/">
       <Stack>
         <Stack sx={{ pb: 1 }}>
-          <Stack direction="row" sx={{ justifyContent: "space-between", width: '100%' }}>
-            <Box flex="0 0 70px"><Typography>Battle!</Typography></Box>
-            <Box flex="1 0 110px"><Typography>{battle.title}</Typography></Box>
+          <Stack direction="row" sx={{ justifyContent: "space-between", width: '100%', pb: 1 }}>
+            <Stack flex="0 0 70px" sx={{ justifyContent: "center" }}><Typography>Battle!</Typography></Stack>
+            <Stack flex="1 0 110px" sx={{ justifyContent: "center" }}><Typography>{battle.title}</Typography></Stack>
             <Box flex="1 1 auto">{battle.result !== GameOngoing && <Button type="button" variant='outlined' onClick={() => battleRepository.exportJson(battle, '')} >Export</Button>}</Box>
           </Stack>
           <Box>
@@ -318,11 +370,24 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                   <CharactorStatus charactor={actor} />
                 </Box>
                 <Box>
-                  <Typography>images here</Typography>
+                  {actionStatus === ACTION_STATUS_NONE && <Typography>image none 360 * 270</Typography>}
+                  {actionStatus === ACTION_STATUS_START && <Typography>image start 360 * 270</Typography>}
+                  {actionStatus === ACTION_STATUS_ING01 && <Typography>image ing01 360 * 270</Typography>}
+                  {actionStatus === ACTION_STATUS_ING02 && <Typography>image ing02 360 * 270</Typography>}
+                  {actionStatus === ACTION_STATUS_ING03 && <Typography>image ing03 360 * 270</Typography>}
+                  {actionStatus === ACTION_STATUS_HIT && <Typography>image hit 360 * 270</Typography>}
+                  {actionStatus === ACTION_STATUS_DODGE && <Typography>image dodge 360 * 270</Typography>}
                 </Box>
                 {receivers.map((receiver, index) => (
                   receiver && <Stack sx={{ pl: 2 }}><CharactorStatus charactor={receiver} /></Stack>
                 ))}
+                {!receivers.some(receiver => receiver !== null) && (
+                  <Stack sx={{ pl: 2 }}>
+                    <Stack direction="row" borderBottom='1px dotted royalblue' sx={{ justifyContent: "flex-start", flexWrap: 'wrap' }}>
+                      <Box sx={{ pr: 1 }} flex="1 1 auto"><Typography display="inline-block" sx={{ pr: 1 }}>名前: ?????</Typography></Box>
+                    </Stack>
+                  </Stack>
+                )}
               </Stack>
               <Stack direction='row' sx={{ justifyContent: "flex-end", py: 1 }}>
                 <Box sx={{ px: 1 }}>
