@@ -260,8 +260,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
       return;
     }
 
-    setReceivers([]);
-    replace([]);
+    progressAction(result);
   };
 
   const addReceiver = (index) => () => {
@@ -286,37 +285,36 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   };
 
   const progressAction = (newBattle: Battle) => {
-    setActionStatus(ACTION_STATUS_START);
     Promise.resolve(() => {
+      setActionStatus(ACTION_STATUS_START);
       return new Promise((resolve) => {
-        setTimeout(() => {
-          setActionStatus(ACTION_STATUS_ING01);
-          resolve();
-        }, 1000);
+        setTimeout(resolve, 1000);
       });
     }).then((resolve) => {
       return new Promise((resolve) => {
-        setTimeout(() => {
-          setActionStatus(ACTION_STATUS_ING02);
-          resolve();
-        }, 1000);
+        setActionStatus(ACTION_STATUS_ING01);
+        setTimeout(resolve, 1000);
       });
     }).then((resolve) => {
+      setActionStatus(ACTION_STATUS_ING02);
       return new Promise((resolve) => {
-        setTimeout(() => {
-          setActionStatus(ACTION_STATUS_ING03);
-          resolve();
-        }, 1000);
+        setTimeout(resolve, 1000);
       });
     }).then((resolve) => {
+      setActionStatus(ACTION_STATUS_ING03);
       return new Promise((resolve) => {
-        setTimeout(() => {
-          // TODO newBattleの結果を見てhit/dodgeを決める
-          setActionStatus(ACTION_STATUS_HIT);
-          resolve();
-        }, 1000);
+        setTimeout(resolve, 1000);
       });
+    }).then((resolve) => {
+      // TODO newBattleの結果を見てhit/dodgeを決める
+      replace([]);
+      setActionStatus(ACTION_STATUS_HIT);
     });
+  };
+
+  const clear = () => {
+    setReceivers([]);
+    setActionStatus(ACTION_STATUS_NONE);
   };
 
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
@@ -391,7 +389,12 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
               </Stack>
               <Stack direction='row' sx={{ justifyContent: "flex-end", py: 1 }}>
                 <Box sx={{ px: 1 }}>
-                  <Button type="submit" variant='outlined' sx={{ px: 1 }}>実行</Button>
+                  {(actionStatus === ACTION_STATUS_HIT || actionStatus === ACTION_STATUS_DODGE) && (
+                    <Button type="button" variant='outlined' sx={{ px: 1 }} onClick={clear}>Next Turn</Button>
+                  )}
+                  {!(actionStatus === ACTION_STATUS_HIT || actionStatus === ACTION_STATUS_DODGE) && (
+                    <Button type="submit" variant='outlined' sx={{ px: 1 }}>実行</Button>
+                  )}
                 </Box>
                 {battle.result === GameOngoing && (
                   <Box sx={{ px: 1 }}>
