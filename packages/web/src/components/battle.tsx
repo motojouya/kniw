@@ -5,7 +5,7 @@ import type { Skill } from '@motojouya/kniw-core/model/skill';
 import type { Turn } from '@motojouya/kniw-core/model/turn';
 import type { DoSkillForm } from '../form/battle';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useForm,
@@ -225,7 +225,6 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
   const { battleRepository, dialogue } = useIO();
   const lastTurn = getLastTurn(battle);
-  const actor = nextActor(battle);
 
   const {
     handleSubmit,
@@ -238,10 +237,16 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const [message, setMessage] = useState<string>('');
   const [receivers, setReceivers] = useState<(CharactorBattling | null)[]>([]);
   const [actionStatus, setActionStatus] = useState<ACTION_STATUSES>(ACTION_STATUS_NONE);
+  const [actor, setActor] = useState<CharactorBattling | null>(null);
 
   const skill = skillRepository.get(getValues('skillName'))
 
   const actSkill = async (doSkillForm: DoSkillForm) => {
+
+    if (!actor) {
+      setMessage('actor not found');
+      return;
+    }
 
     const result = await act(dialogue, battleRepository)(battle, actor, doSkillForm, lastTurn);
 
@@ -264,6 +269,12 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   };
 
   const addReceiver = (index) => () => {
+
+    if (!actor) {
+      setMessage('actor not found');
+      return;
+    }
+
     const receiverWithIsVisitor = getValues(`receiversWithIsVisitor.${index}.value` as const);
     const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
@@ -315,7 +326,14 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const clear = () => {
     setReceivers([]);
     setActionStatus(ACTION_STATUS_NONE);
+    setActor(nextActor(battle));
   };
+
+  useEffect(() => {
+    if (!actor) {
+      setActor(nextActor(battle));
+    }
+  }, []);
 
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
@@ -331,7 +349,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
             <GameStatus battle={battle} />
           </Box>
         </Stack>
-        {battle.result === GameOngoing && (
+        {battle.result === GameOngoing && actor && (
           <Stack borderTop='1px solid royalblue'>
             <form onSubmit={handleSubmit(actSkill)}>
               {message && (<Typography>{message}</Typography>)}
