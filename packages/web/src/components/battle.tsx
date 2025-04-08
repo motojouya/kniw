@@ -385,17 +385,17 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                 <Box>
                   <CharactorStatus charactor={actor} />
                 </Box>
-                <Box>
-                  {actionStatus === ACTION_STATUS_NONE && <Typography>image none 360 * 270</Typography>}
-                  {actionStatus === ACTION_STATUS_START && <Typography>image start 360 * 270</Typography>}
-                  {actionStatus === ACTION_STATUS_ING01 && <Typography>image ing01 360 * 270</Typography>}
-                  {actionStatus === ACTION_STATUS_ING02 && <Typography>image ing02 360 * 270</Typography>}
-                  {actionStatus === ACTION_STATUS_ING03 && <Typography>image ing03 360 * 270</Typography>}
-                  {actionStatus === ACTION_STATUS_HIT && <Typography>image hit 360 * 270</Typography>}
-                  {actionStatus === ACTION_STATUS_DODGE && <Typography>image dodge 360 * 270</Typography>}
+                <Box sx={{ textAlign: 'center', py: 1 }}>
+                  {actionStatus === ACTION_STATUS_NONE  && <img src='/battling_none.jpg' alt='battling_none' />}
+                  {actionStatus === ACTION_STATUS_START && <img src='/battling_start.jpg' alt='battling_start' />}
+                  {actionStatus === ACTION_STATUS_ING01 && <img src='/battling_ing01.jpg' alt='battling_ing01' />}
+                  {actionStatus === ACTION_STATUS_ING02 && <img src='/battling_ing02.jpg' alt='battling_ing02' />}
+                  {actionStatus === ACTION_STATUS_ING03 && <img src='/battling_ing03.jpg' alt='battling_ing03' />}
+                  {actionStatus === ACTION_STATUS_HIT   && <img src='/battling_hit.jpg' alt='battling_hit' />}
+                  {actionStatus === ACTION_STATUS_DODGE && <img src='/battling_dodge.jpg' alt='battling_dodge' />}
                 </Box>
                 {receivers.map((receiver, index) => (
-                  receiver && <Stack sx={{ pl: 2 }}><CharactorStatus charactor={receiver} /></Stack>
+                  receiver && <Stack sx={{ pl: 5 }}><CharactorStatus charactor={receiver} /></Stack>
                 ))}
                 {!receivers.some(receiver => receiver !== null) && (
                   <Stack sx={{ pl: 2 }}>
