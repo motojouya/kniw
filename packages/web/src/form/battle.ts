@@ -18,7 +18,7 @@ export class ReceiverDuplicationError {
 
 export const doSkillFormSchema = z.object({
   skillName: z.string().min(1),
-  receiversWithIsVisitor: z.array(z.object({ value: z.string().min(1) })),
+  receiversWithIsVisitor: z.array(z.object({ value: z.string().min(1) }).optional()),
 });
 export type DoSkillForm = z.infer<typeof doSkillFormSchema>;
 

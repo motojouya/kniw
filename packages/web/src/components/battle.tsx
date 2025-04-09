@@ -161,7 +161,7 @@ const SkillSelect: FC<{
   const skillOptions = skills
     .filter(skill => skill.mpConsumption <= actor.mp)
     .filter(skill => !underStatus(silent, actor) || skill.magicType === MAGIC_TYPE_NONE)
-    .map(skill => ({ value: skill.name, label: skill.name }));
+    .map(skill => ({ value: skill.name, label: skill.label }));
   skillOptions.push({ value: ACTION_DO_NOTHING, label: '何もしない' });
 
   // FIXME useCallback
@@ -221,8 +221,18 @@ type ACTION_STATUSES =
   | typeof ACTION_STATUS_DODGE
 ;
 
+const BattlingImage: FC<{ actionStatus: ACTION_STATUSES, skill: Skill | null }> = ({ actionStatus, skill }) => {
+  return (
+    <Box sx={{ position: 'relative' }}>
+      <Typography sx={{ position: 'absolute', top: '50%', left: '48%', transform: 'translate(-50%, -50%)' }}>{skill ? skill.label : ''}</Typography>
+      <img src={`/BATTLING_${actionStatus}.jpg`} alt={`BATTLING_${actionStatus}`} sx={{ width: '100%' }}/>
+    </Box>
+  );
+};
+
 export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
+  // TODO 複数対象skillを選択した場合に、全員分指定しなくていいんだけど、receiverが全部requiredになってしまう
   const { battleRepository, dialogue } = useIO();
   const lastTurn = getLastTurn(battle);
 
@@ -230,6 +240,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     handleSubmit,
     getValues,
     formState: { errors }, //, isSubmitting
+    reset,
     control,
   } = useForm<DoSkillForm>({ resolver: zodResolver(doSkillFormSchema) });
 
@@ -280,7 +291,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
     if (result instanceof DataNotFoundError) {
       if (receivers.length > index) {
-        setReceivers(receivers.toSpliced(index, 1, null));
+        setReceivers(receivers.toSpliced(index, 1, undefined));
       }
       return;
     }
@@ -290,7 +301,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     let newReceivers = [...receivers];
     if (receivers.length <= index) {
       const shortage = index - receivers.length + 1;
-      newReceivers = newReceivers.concat(Array(shortage).fill(null));
+      newReceivers = newReceivers.concat(Array(shortage).fill(undefined));
     }
     setReceivers(newReceivers.toSpliced(index, 1, receiver));
   };
@@ -327,6 +338,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     setReceivers([]);
     setActionStatus(ACTION_STATUS_NONE);
     setActor(nextActor(battle));
+    reset();
   };
 
   useEffect(() => {
@@ -386,13 +398,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                   <CharactorStatus charactor={actor} />
                 </Box>
                 <Box sx={{ textAlign: 'center', py: 1 }}>
-                  {actionStatus === ACTION_STATUS_NONE  && <img src='/battling_none.jpg' alt='battling_none' />}
-                  {actionStatus === ACTION_STATUS_START && <img src='/battling_start.jpg' alt='battling_start' />}
-                  {actionStatus === ACTION_STATUS_ING01 && <img src='/battling_ing01.jpg' alt='battling_ing01' />}
-                  {actionStatus === ACTION_STATUS_ING02 && <img src='/battling_ing02.jpg' alt='battling_ing02' />}
-                  {actionStatus === ACTION_STATUS_ING03 && <img src='/battling_ing03.jpg' alt='battling_ing03' />}
-                  {actionStatus === ACTION_STATUS_HIT   && <img src='/battling_hit.jpg' alt='battling_hit' />}
-                  {actionStatus === ACTION_STATUS_DODGE && <img src='/battling_dodge.jpg' alt='battling_dodge' />}
+                  <BattlingImage actionStatus={actionStatus} skill={skill} />
                 </Box>
                 {receivers.map((receiver, index) => (
                   receiver && <Stack sx={{ pl: 5 }}><CharactorStatus charactor={receiver} /></Stack>
