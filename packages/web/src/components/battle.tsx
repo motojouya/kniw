@@ -301,7 +301,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     setReceivers(newReceivers.toSpliced(index, 1, receiver));
   };
 
-  const progressAction = (newBattle: Battle) => {
+  const progressAction = (_newBattle: Battle) => {
     Promise.resolve(() => {
       setActionStatus(ACTION_STATUS_START);
       return new Promise((resolve) => {
@@ -324,6 +324,9 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
       });
     }).then(() => {
       // TODO newBattleの結果を見てhit/dodgeを決める
+      // 現状Turnにあたったか否かの結果がないので判断しづらい。
+      // modelに手を入れてDoSkillにhit/dodgeの結果を持たせる形にしたい
+      // あたった状態に関しては、結果としてのcharactor listがあるので、そちらを参照すればよく、hit/dodgeだけでいいはず
       replace([]);
       setActionStatus(ACTION_STATUS_HIT);
     });
