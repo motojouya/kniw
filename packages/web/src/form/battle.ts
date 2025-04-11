@@ -18,7 +18,7 @@ export class ReceiverDuplicationError {
 
 export const doSkillFormSchema = z.object({
   skillName: z.string().min(1),
-  receiversWithIsVisitor: z.array(z.object({ value: z.string().min(1) }).optional()),
+  receiversWithIsVisitor: z.array(z.object({ value: z.string().min(1).optional() }).optional()),
 });
 export type DoSkillForm = z.infer<typeof doSkillFormSchema>;
 
@@ -78,14 +78,17 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
     return new DataNotFoundError(skillName, "skill", `${skillName}というskillは存在しません`);
   }
 
-  const receiverSet = new Set(doSkillForm.receiversWithIsVisitor.map((obj) => obj.value));
-  if (receiverSet.size !== doSkillForm.receiversWithIsVisitor.length) {
+  const receiverValues = doSkillForm.receiversWithIsVisitor
+    .filter((receiver) => !!receiver && !!receiver.value)
+    .map((receiver) => receiver.value);
+
+  if ((new Set(receiverValues)).size !== receiverValues.length) {
     return new ReceiverDuplicationError("同じキャラクターを複数回えらべません");
   }
 
   const receivers: CharactorBattling[] = [];
-  for (const receiverObj of doSkillForm.receiversWithIsVisitor) {
-    const receiver = toReceiver(receiverObj.value, candidates);
+  for (const receiverValue of receiverValues) {
+    const receiver = toReceiver(receiverValue, candidates);
     if (receiver instanceof DataNotFoundError) {
       return receiver;
     }
