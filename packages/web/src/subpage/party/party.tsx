@@ -12,7 +12,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
 import { useIO } from '../../components/context';
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
-import { Container, Link, ButtonLink } from '../../components/utility';
+import { Container } from '../../components/utility';
 
 export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   const { partyRepository } = useIO();

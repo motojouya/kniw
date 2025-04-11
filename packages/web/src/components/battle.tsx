@@ -11,8 +11,6 @@ import {
   useForm,
   useFieldArray,
   FieldErrors,
-  UseFormRegister,
-  UseFormGetValues,
   UseFieldArrayReplace,
   Controller,
 } from 'react-hook-form';
@@ -24,7 +22,6 @@ import {
   FormHelperText,
   Chip,
   Button,
-  TextField,
   Box,
   Stack,
   Typography,
@@ -58,7 +55,7 @@ import { surrender } from '../procedure/battle/surrender';
 import { simulate } from '../procedure/battle/simulate';
 import { UserCancel } from '../io/window_dialogue';
 import { useIO } from './context';
-import { Container, Link } from './utility';
+import { Container } from './utility';
 
 const GameStatus: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
@@ -70,7 +67,7 @@ const GameStatus: FC<{ battle: Battle }> = ({ battle }) => {
   }
 };
 
-type GetReceiverError = (errors: FieldErrors, i: number) => FieldError | undefined;
+type GetReceiverError = (errors: FieldErrors, i: number, property: string) => FieldError | undefined;
 const getReceiverError: GetReceiverError = (errors, i, property) => {
   const errorsReceivers = errors.receiversWithIsVisitor;
   if (!errorsReceivers) {
@@ -84,7 +81,7 @@ const getReceiverError: GetReceiverError = (errors, i, property) => {
   }
   // FIXME
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const error = (errorsReceiverIndexed as Merge<FieldError, FieldErrorsImpl<any>>)['value'];
+  const error = (errorsReceiverIndexed as Merge<FieldError, FieldErrorsImpl<any>>)[property];
   if (!error) {
     return error;
   }
@@ -101,7 +98,7 @@ const ReceiverSelect: FC<{
 }> = ({ lastTurn, index, errors, control, addReceiver }) => {
 
   const formItemName = `receiversWithIsVisitor.${index}.value` as const;
-  const error = getReceiverError(errors, index);
+  const error = getReceiverError(errors, index, 'value');
 
   // FIXME useCallback
   const onChange = (field) => (e) => {
@@ -152,10 +149,9 @@ const Surrender: FC<{ battle: Battle, actor: CharactorBattling }> = ({ battle, a
 const SkillSelect: FC<{
   actor: CharactorBattling,
   replace: UseFieldArrayReplace<DoSkillForm, 'receiversWithIsVisitor'>
-  getValues: UseFormGetValues<DoSkillForm>,
   errors: FieldErrors<DoSkillForm>,
   control: Control,
-}> = ({ actor, replace, getValues, errors, control }) => {
+}> = ({ actor, replace, errors, control }) => {
 
   const skills = getSkills(actor);
   const skillOptions = skills
@@ -232,7 +228,6 @@ const BattlingImage: FC<{ actionStatus: ACTION_STATUSES, skill: Skill | null }> 
 
 export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
 
-  // TODO 複数対象skillを選択した場合に、全員分指定しなくていいんだけど、receiverが全部requiredになってしまう
   const { battleRepository, dialogue } = useIO();
   const lastTurn = getLastTurn(battle);
 
@@ -312,22 +307,22 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
       return new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
-    }).then((resolve) => {
+    }).then(() => {
       return new Promise((resolve) => {
         setActionStatus(ACTION_STATUS_ING01);
         setTimeout(resolve, 1000);
       });
-    }).then((resolve) => {
+    }).then(() => {
       setActionStatus(ACTION_STATUS_ING02);
       return new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
-    }).then((resolve) => {
+    }).then(() => {
       setActionStatus(ACTION_STATUS_ING03);
       return new Promise((resolve) => {
         setTimeout(resolve, 1000);
       });
-    }).then((resolve) => {
+    }).then(() => {
       // TODO newBattleの結果を見てhit/dodgeを決める
       replace([]);
       setActionStatus(ACTION_STATUS_HIT);
@@ -345,7 +340,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
     if (!actor) {
       setActor(nextActor(battle));
     }
-  }, []);
+  }, [actor, battle]);
 
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
@@ -372,7 +367,6 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
               <Stack>
                 <SkillSelect
                   actor={actor}
-                  getValues={getValues}
                   errors={errors}
                   replace={replace}
                   control={control}
@@ -401,7 +395,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                   <BattlingImage actionStatus={actionStatus} skill={skill} />
                 </Box>
                 {receivers.map((receiver, index) => (
-                  receiver && <Stack sx={{ pl: 5 }}><CharactorStatus charactor={receiver} /></Stack>
+                  receiver && <Stack sx={{ pl: 5 }} key={`receiver-status-${index}`}><CharactorStatus charactor={receiver} /></Stack>
                 ))}
                 {!receivers.some(receiver => receiver !== null) && (
                   <Stack sx={{ pl: 2 }}>

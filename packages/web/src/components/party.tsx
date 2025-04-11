@@ -24,7 +24,7 @@ import { useIO } from './context';
 import { importParty } from '../procedure/party/importJson';
 import { UserCancel, EmptyParameter } from '../io/window_dialogue';
 import { transit } from './utility';
-import { Container, Link } from './utility';
+import { Container } from './utility';
 
 // FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
 export const ImportParty: FC<{

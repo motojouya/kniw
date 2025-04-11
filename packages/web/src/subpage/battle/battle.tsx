@@ -1,10 +1,6 @@
 import type { FC } from 'react';
 
-import {
-  Button,
-  Box,
-  Typography,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { BattleTurn } from '../../components/battle';
@@ -12,7 +8,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import { useIO } from '../../components/context';
-import { Container, Link } from '../../components/utility';
+import { Container } from '../../components/utility';
 
 export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => {
   const { battleRepository } = useIO();

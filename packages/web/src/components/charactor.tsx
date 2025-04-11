@@ -5,7 +5,6 @@ import type { PartyForm } from '../form/party';
 
 import { useState, useEffect, useCallback } from 'react';
 import {
-  Field,
   Control,
   Controller,
   FieldError,
@@ -13,7 +12,6 @@ import {
   Merge,
   FieldErrorsImpl,
   UseFormRegister,
-  UseFormRegisterReturn,
   UseFormGetValues,
 } from 'react-hook-form';
 import {
