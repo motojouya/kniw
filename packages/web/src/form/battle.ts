@@ -82,7 +82,7 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
     .filter((receiver) => !!receiver && !!receiver.value)
     .map((receiver) => receiver.value);
 
-  if ((new Set(receiverValues)).size !== receiverValues.length) {
+  if (new Set(receiverValues).size !== receiverValues.length) {
     return new ReceiverDuplicationError("同じキャラクターを複数回えらべません");
   }
 
