@@ -5,7 +5,7 @@ import type { Skill } from '@motojouya/kniw-core/model/skill';
 import type { Turn } from '@motojouya/kniw-core/model/turn';
 import type { DoSkillForm } from '../form/battle';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useForm,
@@ -32,7 +32,7 @@ import {
   GameHome,
   GameVisitor,
   GameDraw,
-  nextActor,
+  turnActor,
   getLastTurn,
 } from '@motojouya/kniw-core/model/battle';
 import { CharactorDetail, CharactorStatus } from './charactor';
@@ -59,6 +59,7 @@ import { Container } from './utility';
 
 const GameStatus: FC<{ battle: Battle }> = ({ battle }) => {
   const card = `${battle.home.name}(HOME) vs ${battle.visitor.name}(VISITOR)`;
+  // FIXME Actionを終えるとbattle.turnsは更新されるので、Turn Noは次の値になってしまう。これはNext Turnボタンを押しても変わらないので違和感があるはず
   switch (battle.result) {
     case GameHome: return <Typography>{`${card} HOMEの勝利`}</Typography>;
     case GameVisitor: return <Typography>{`${card} VISITORの勝利`}</Typography>;
@@ -226,10 +227,32 @@ const BattlingImage: FC<{ actionStatus: ACTION_STATUSES, skill: Skill | null }> 
   );
 };
 
-export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
+export const BattleContainer: FC<{ battle: Battle }> = ({ battle }) => {
+
+  const [lastTurn, setLastTurn] = useState<Turn | null>(null);
+
+  useEffect(() => {
+    if (!lastTurn) {
+      setLastTurn(getLastTurn(battle));
+    }
+  }, [battle]);
+
+  const reloadTurn = useCallback(() => {
+    setLastTurn(getLastTurn(battle));
+  }, [battle]);
+
+  return lastTurn
+    ? <BattleTurn battle={battle} lastTurn={lastTurn} reloadTurn={reloadTurn} />
+    : <Box>loading</Box>;
+};
+
+export const BattleTurn: FC<{
+  battle: Battle,
+  lastTurn: Turn,
+  reloadTurn: () => void,
+}> = ({ battle, lastTurn, reloadTurn }) => {
 
   const { battleRepository, dialogue } = useIO();
-  const lastTurn = getLastTurn(battle);
 
   const {
     handleSubmit,
@@ -243,7 +266,8 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const [message, setMessage] = useState<string>('');
   const [receivers, setReceivers] = useState<(CharactorBattling | null)[]>([]);
   const [actionStatus, setActionStatus] = useState<ACTION_STATUSES>(ACTION_STATUS_NONE);
-  const [actor, setActor] = useState<CharactorBattling | null>(null);
+
+  const actor = turnActor(lastTurn);
 
   const skill = skillRepository.get(getValues('skillName'))
 
@@ -337,15 +361,9 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
   const clear = () => {
     setReceivers([]);
     setActionStatus(ACTION_STATUS_NONE);
-    setActor(nextActor(battle));
+    reloadTurn();
     reset();
   };
-
-  useEffect(() => {
-    if (!actor) {
-      setActor(nextActor(battle));
-    }
-  }, [actor, battle]);
 
   // FIXME Button loading={isSubmitting} loadingText="executing action..." としたかったがloadingがエラーになる
   return (
@@ -434,7 +452,7 @@ export const BattleTurn: FC<{ battle: Battle }> = ({ battle }) => {
                 {lastTurn.sortedCharactors.map((charactor, index) => (
                   <Box key={`CharactorDetail-${charactor.name}-${isVisitorString(charactor.isVisitor)}`} sx={{ pb: 2 }}>
                     <Box borderBottom='1px dotted royalblue'>
-                      <Typography variant="h6">{index === 0 ? 'Next Actor' : `Action Order ${index + 1}`}</Typography>
+                      <Typography variant="h6">{index === 0 ? 'Now Actor' : `Action Order ${index}`}</Typography>
                     </Box>
                     <CharactorDetail charactor={charactor} />
                   </Box>

@@ -2,7 +2,7 @@ import type { Battle } from "@motojouya/kniw-core/model/battle";
 import type { Party } from "@motojouya/kniw-core/model/party";
 import type { BattleRepository } from "@motojouya/kniw-core/store/battle";
 
-import { wait, nextActor, createBattle, start } from "@motojouya/kniw-core/model/battle";
+import { wait, turnActor, createBattle, start } from "@motojouya/kniw-core/model/battle";
 import { createRandoms } from "@motojouya/kniw-core/model/random";
 
 export type StartBattle = (
@@ -13,7 +13,7 @@ export const startBattle: StartBattle = (battleRepository) => async (title, home
   const turn = start(battle, startDate, createRandoms());
   battle.turns.push(turn);
 
-  const firstWaiting = nextActor(battle);
+  const firstWaiting = turnActor(turn);
   battle.turns.push(wait(battle, firstWaiting.restWt, startDate, createRandoms()));
 
   await battleRepository.save(battle);

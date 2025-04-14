@@ -33,6 +33,8 @@ export const getLastTurn: GetLastTurn = (battle) => arrayLast(battle.turns);
 
 export type NextActor = (battle: Battle) => CharactorBattling;
 export const nextActor: NextActor = (battle) => arrayLast(battle.turns).sortedCharactors[0];
+export type TurnActor = (turn: Turn) => CharactorBattling;
+export const turnActor: TurnActor = (turn) => turn.sortedCharactors[0];
 
 type SortByWT = (charactors: CharactorBattling[]) => CharactorBattling[];
 const sortByWT: SortByWT = (charactors) =>

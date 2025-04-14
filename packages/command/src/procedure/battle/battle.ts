@@ -14,7 +14,7 @@ import {
   start as startBattle,
   isSettlement,
   surrender,
-  nextActor,
+  turnActor,
   GameDraw,
   GameHome,
   GameVisitor,
@@ -249,10 +249,12 @@ export const continueBattle: ContinueBattle = (dialogue, battleRepository) => as
   const { turns } = battle;
 
   for (;;) {
-    const firstWaiting = nextActor(battle);
-    turns.push(wait(battle, firstWaiting.restWt, new Date(), createRandoms()));
+    const lastTurn = getLastTurn(battle);
+    const firstWaiting = turnActor(lastTurn);
+    const waitTurn = wait(battle, firstWaiting.restWt, new Date(), createRandoms());
+    turns.push(waitTurn);
 
-    const actor = nextActor(battle);
+    const actor = turnActor(waitTurn);
 
     if (underStatus(sleep, actor)) {
       turns.push(stay(battle, actor, new Date()));
