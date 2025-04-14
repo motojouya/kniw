@@ -185,7 +185,9 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   };
 
   const resultReceivers = receivers.map((receiver) => skill.action(skill, actor, randoms, lastTurn.field, receiver));
-  newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers)).filter(charactor => charactor.hp > 0);
+  newTurn.sortedCharactors = newTurn.sortedCharactors
+    .map(updateCharactor(resultReceivers))
+    .filter((charactor) => charactor.hp > 0);
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map((charactor) => {
     const newCharactor = {
