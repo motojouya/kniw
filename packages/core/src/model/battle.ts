@@ -180,12 +180,12 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
       skill,
       receivers,
     },
-    sortedCharactors: lastTurn.sortedCharactors,
+    sortedCharactors: [...lastTurn.sortedCharactors],
     field: lastTurn.field,
   };
 
   const resultReceivers = receivers.map((receiver) => skill.action(skill, actor, randoms, lastTurn.field, receiver));
-  newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers));
+  newTurn.sortedCharactors = newTurn.sortedCharactors.map(updateCharactor(resultReceivers)).filter(charactor => charactor.hp > 0);
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map((charactor) => {
     const newCharactor = {
@@ -241,7 +241,7 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
       skill,
       receivers: [],
     },
-    sortedCharactors: lastTurn.sortedCharactors,
+    sortedCharactors: [...lastTurn.sortedCharactors],
     field: lastTurn.field,
   };
 
@@ -358,6 +358,9 @@ export const isSettlement: IsSettlement = (battle) => {
   return GameOngoing;
 };
 
+// TODO battleを引き回して更新しているので、同じ名前空間に前後のbattleがあっても値が同じになってしまう。
+// web procedure/act関数のtestが通ってしまっているが、実態として正しいテストになってない。
+// spendTurnに限らず、この問題はありそう。
 export type Action = {
   skill: Skill;
   receivers: CharactorBattling[];

@@ -315,7 +315,10 @@ export const BattleTurn: FC<{
       return;
     }
 
-    const { receiver } = result;
+    const { receiver, suvive } = result;
+    if (!suvive) {
+      receiver.hp = 0;
+    }
 
     let newReceivers = [...receivers];
     if (receivers.length <= index) {
