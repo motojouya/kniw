@@ -24,7 +24,7 @@ export const copyParty: CopyParty = (party) => ({
   charactors: party.charactors.map(copyCharactor),
 });
 
-export type CopyPartyBattling = (party: Party) => Party;
+export type CopyPartyBattling = (party: PartyBattling) => PartyBattling;
 export const copyPartyBattling: CopyPartyBattling = (party) => ({
   name: party.name,
   charactors: party.charactors.map(copyCharactorBattling),

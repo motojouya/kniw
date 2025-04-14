@@ -23,7 +23,7 @@ export const PartyList: FC = () => {
         </Stack>
         <List sx={{ width: "100%" }}>
           {partyNames && partyNames.map((partyName, index) => (
-            <ListItem key={`party-${index}`} listStyle='none' py='1' px='5'>
+            <ListItem key={`party-${index}`} sx={{ listStyle: 'none', py: '1', px: '5', }}>
               <Link href={`/party/?name=${partyName}`} line><Typography>{partyName}</Typography></Link>
             </ListItem>
           ))}

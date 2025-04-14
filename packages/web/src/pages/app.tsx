@@ -8,7 +8,7 @@ import {
 import { Container, Link } from '../components/utility';
 
 export const App: FC = () => (
-  <Container maxWidth="sm">
+  <Container backLink={null}>
     <Stack sx={{ justifyContent: 'flex-start', alignItems: "center" }}>
       <Typography sx={{ p: 1 }}>KNIWはタクティクスオウガを参考にしたボードゲームです。</Typography>
       <Typography sx={{ p: 1 }}>遊び方やルールは<MaterialLink href="https://github.com/motojouya/kniw" underline="always">こちらのページ</MaterialLink>を参照してください。</Typography>

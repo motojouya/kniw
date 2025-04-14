@@ -10,9 +10,14 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useForm,
   useFieldArray,
+  Field,
+  FieldError,
   FieldErrors,
   UseFieldArrayReplace,
   Controller,
+  Control,
+  Merge,
+  FieldErrorsImpl,
 } from 'react-hook-form';
 import {
   FormControl,
@@ -94,7 +99,7 @@ const ReceiverSelect: FC<{
   lastTurn: Turn,
   index: number,
   errors: FieldErrors<DoSkillForm>,
-  control: Control,
+  control: Control<DoSkillForm>,
   addReceiver: () => void,
 }> = ({ lastTurn, index, errors, control, addReceiver }) => {
 
@@ -102,7 +107,7 @@ const ReceiverSelect: FC<{
   const error = getReceiverError(errors, index, 'value');
 
   // FIXME useCallback
-  const onChange = (field) => (e) => {
+  const onChange = (field: Field) => (e: React.ChangeEvent<HTMLInputElement>) => {
     field.onChange(e);
     addReceiver();
   };
@@ -151,7 +156,7 @@ const SkillSelect: FC<{
   actor: CharactorBattling,
   replace: UseFieldArrayReplace<DoSkillForm, 'receiversWithIsVisitor'>
   errors: FieldErrors<DoSkillForm>,
-  control: Control,
+  control: Control<DoSkillForm>,
 }> = ({ actor, replace, errors, control }) => {
 
   const skills = getSkills(actor);
@@ -162,7 +167,7 @@ const SkillSelect: FC<{
   skillOptions.push({ value: ACTION_DO_NOTHING, label: '何もしない' });
 
   // FIXME useCallback
-  const onChange = (field) => (e) => {
+  const onChange = (field: Field) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const skillName = e.target.value;
     const skill = toSkill(skillName);
     if (skill) {
@@ -298,34 +303,41 @@ export const BattleTurn: FC<{
     progressAction(result);
   };
 
-  const addReceiver = (index) => () => {
+  const addReceiver = (index: number) => () => {
 
     if (!actor) {
       setMessage('actor not found');
       return;
     }
 
+    if (!skill) {
+      setMessage('skill not selected');
+      return;
+    }
+
+    let newReceivers = [...receivers];
     const receiverWithIsVisitor = getValues(`receiversWithIsVisitor.${index}.value` as const);
     const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
     if (result instanceof DataNotFoundError) {
       if (receivers.length > index) {
-        setReceivers(receivers.toSpliced(index, 1, undefined));
+        newReceivers.splice(index, 1, undefined)
+        setReceivers(newReceivers);
       }
       return;
     }
 
-    const { receiver, suvive } = result;
-    if (!suvive) {
+    const { receiver, survive } = result;
+    if (!survive) {
       receiver.hp = 0;
     }
 
-    let newReceivers = [...receivers];
     if (receivers.length <= index) {
       const shortage = index - receivers.length + 1;
       newReceivers = newReceivers.concat(Array(shortage).fill(undefined));
     }
-    setReceivers(newReceivers.toSpliced(index, 1, receiver));
+    newReceivers.splice(index, 1, receiver);
+    setReceivers(newReceivers);
   };
 
   const progressAction = (_newBattle: Battle) => {

@@ -27,16 +27,16 @@ export const transit: Transit = (path) => {
 export type GetSearchParams = () => URLSearchParams;
 export const getSearchParams: GetSearchParams = () => new URLSearchParams(window.location.search);
 
-export const Link: FC<{ href: string, line: boolean | null, children: ReactNode }> = ({ href, line, children }) => {
+export const Link: FC<{ href: string, line: boolean, children: ReactNode }> = ({ href, line, children }) => {
 
   let assignPath = href;
   if (urlPrefix) {
     assignPath = "/" + urlPrefix + href;
   }
 
-  let underline = 'none';
+  let underline: 'none' | 'always' = 'none' as const;
   if (line) {
-    underline = "always";
+    underline = "always" as const;
   }
 
   return (<MaterialLink href={assignPath} underline={underline} sx={{ color: '#000000' }}>{children}</MaterialLink>);
@@ -74,7 +74,7 @@ export const Header: FC<{ backLink: string | null; }> = ({ backLink }) => {
           </Box>
         )}
         <Box sx={{ p: 1 }}>
-          <Link href="/">
+          <Link href="/" line={false}>
             <Typography variant="h3">KNIW</Typography>
           </Link>
         </Box>

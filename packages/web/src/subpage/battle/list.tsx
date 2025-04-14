@@ -24,7 +24,7 @@ export const BattleList: FC = () => {
         </Stack>
         <List sx={{ width: "100%" }}>
           {battleNames && battleNames.map((battleTitle: string, index: number) => (
-            <ListItem key={`battle-${index}`} listStyle='none' py='1' px='5'>
+            <ListItem key={`battle-${index}`}  sx={{ listStyle: 'none', py: '1', px: '5', }}>
               <Stack direction="row" sx={{ justifyContent: 'space-between', width: "100%", alignItems: "center" }}>
                 <Link href={`/battle/?title=${battleTitle}`} line><Typography>{battleTitle}</Typography></Link>
                 <Button variant="outlined" type="button" onClick={() => console.log('Not Deleted! TODO!')}><Typography>Delete</Typography></Button>

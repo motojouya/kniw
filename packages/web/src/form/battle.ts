@@ -79,8 +79,9 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
   }
 
   const receiverValues = doSkillForm.receiversWithIsVisitor
-    .filter((receiver) => !!receiver && !!receiver.value)
-    .map((receiver) => receiver.value);
+    .filter((receiver) => !!receiver)
+    .map((receiver) => receiver.value)
+    .filter((receiverValue) => !!receiverValue);
 
   if (new Set(receiverValues).size !== receiverValues.length) {
     return new ReceiverDuplicationError("同じキャラクターを複数回えらべません");
@@ -88,6 +89,7 @@ export const toAction: ToAction = (doSkillForm, candidates) => {
 
   const receivers: CharactorBattling[] = [];
   for (const receiverValue of receiverValues) {
+    // @ts-expect-error receiverValueはfilterしてるのでundefinedにならない
     const receiver = toReceiver(receiverValue, candidates);
     if (receiver instanceof DataNotFoundError) {
       return receiver;

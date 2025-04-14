@@ -73,7 +73,7 @@ const SelectAcquirement: FC<{
   allAcquirements: Acquirement[],
   onBlur: () => void,
   error: FieldError | undefined,
-  control: Control,
+  control: Control<PartyForm>,
 }> = ({ acquirementName, acquirementType, allAcquirements, onBlur, error, control }) => {
   return (
     <Controller
@@ -199,7 +199,7 @@ export const CharactorCard: FC<{
   remove: (index?: number | number[]) => void,
   errors: FieldErrors<PartyForm>,
   index: number,
-  control: Control,
+  control: Control<PartyForm>,
 }> = ({ register, getValues, remove, errors, index, control }) => {
 
   const nameError = getCharactorError(errors, index, 'name');
