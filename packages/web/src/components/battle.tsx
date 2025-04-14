@@ -235,7 +235,7 @@ export const BattleContainer: FC<{ battle: Battle }> = ({ battle }) => {
     if (!lastTurn) {
       setLastTurn(getLastTurn(battle));
     }
-  }, [battle]);
+  }, [lastTurn, battle]);
 
   const reloadTurn = useCallback(() => {
     setLastTurn(getLastTurn(battle));
