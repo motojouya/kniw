@@ -109,7 +109,10 @@ export const start: Start = (battle, datetime, randoms) => ({
     type: "TIME_PASSING",
     wt: 0,
   },
-  sortedCharactors: sortByWT([...battle.home.charactors.map(copyCharactorBattling), ...battle.visitor.charactors.map(copyCharactorBattling)]),
+  sortedCharactors: sortByWT([
+    ...battle.home.charactors.map(copyCharactorBattling),
+    ...battle.visitor.charactors.map(copyCharactorBattling),
+  ]),
   field: {
     climate: changeClimate(randoms),
   },
@@ -380,7 +383,6 @@ export type Action = {
 };
 export type SpendTurn = (battle: Battle, actor: CharactorBattling, action: Action | null) => Battle;
 export const spendTurn: SpendTurn = (battle, actor, action) => {
-
   const newBattle = copyBattle(battle);
 
   if (action === null) {

@@ -1,5 +1,5 @@
 import type { Charactor, CharactorBattling } from "./charactor";
-import { copyCharactor, copyCharactorBattling, } from "./charactor";
+import { copyCharactor, copyCharactorBattling } from "./charactor";
 
 export type Party = {
   name: string;
