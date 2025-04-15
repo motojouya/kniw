@@ -95,6 +95,7 @@ const getReceiverError: GetReceiverError = (errors, i, property) => {
   return error as FieldError;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 type HookOnChange = (e: any) => void;
 
 const ReceiverSelect: FC<{

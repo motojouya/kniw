@@ -170,9 +170,13 @@ describe("act", () => {
 
     const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn);
 
-    const _spendedTurn = result.turns.pop();
+    const turnJustBefore = result.turns.pop();
+    const turnNextBefore = result.turns.pop();
 
-    expect(result).toBe(battle);
+    expect(result).toStrictEqual(battle);
+
+    expect(turnJustBefore.action.type).toBe("TIME_PASSING");
+    expect(turnNextBefore.action.type).toBe("DO_SKILL");
   });
 
   it("data not found", async () => {
