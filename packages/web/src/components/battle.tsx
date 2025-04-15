@@ -4,13 +4,13 @@ import type { CharactorBattling } from '@motojouya/kniw-core/model/charactor';
 import type { Skill } from '@motojouya/kniw-core/model/skill';
 import type { Turn } from '@motojouya/kniw-core/model/turn';
 import type { DoSkillForm } from '../form/battle';
+import type { SelectChangeEvent } from '@mui/material';
 
 import { useState, useEffect, useCallback } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   useForm,
   useFieldArray,
-  Field,
   FieldError,
   FieldErrors,
   UseFieldArrayReplace,
@@ -95,6 +95,8 @@ const getReceiverError: GetReceiverError = (errors, i, property) => {
   return error as FieldError;
 };
 
+type HookOnChange = (e: any) => void;
+
 const ReceiverSelect: FC<{
   lastTurn: Turn,
   index: number,
@@ -107,8 +109,8 @@ const ReceiverSelect: FC<{
   const error = getReceiverError(errors, index, 'value');
 
   // FIXME useCallback
-  const onChange = (field: Field) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    field.onChange(e);
+  const onChange = (hookOnChange: HookOnChange) => (e: SelectChangeEvent<string>) => {
+    hookOnChange(e);
     addReceiver();
   };
 
@@ -123,12 +125,11 @@ const ReceiverSelect: FC<{
           <FormControl error={!!error}>
             <InputLabel id="receiver_label">receiver</InputLabel>
             <Select
-              labelId='receiver_label'
               id='receiver_select'
-              name={field.name}
-              value={field.value}
+              labelId='receiver_label'
               label='receiver'
-              onChange={onChange(field)}
+              {...field}
+              onChange={onChange(field.onChange)}
             >
               {receiverOptions.map(receiverOption => (
                 <MenuItem key={`${receiverOption.value}`} value={receiverOption.value}>
@@ -167,7 +168,7 @@ const SkillSelect: FC<{
   skillOptions.push({ value: ACTION_DO_NOTHING, label: '何もしない' });
 
   // FIXME useCallback
-  const onChange = (field: Field) => (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (hookOnChange: HookOnChange) => (e: SelectChangeEvent<string>) => {
     const skillName = e.target.value;
     const skill = toSkill(skillName);
     if (skill) {
@@ -175,7 +176,7 @@ const SkillSelect: FC<{
     } else {
       replace([]);
     }
-    field.onChange(e);
+    hookOnChange(e);
   };
 
   return (
@@ -186,12 +187,11 @@ const SkillSelect: FC<{
         <FormControl error={!!errors.skillName}>
           <InputLabel id="skill_label">skill</InputLabel>
           <Select
-            labelId='skill_label'
             id='skill_select'
-            name={field.name}
-            value={field.value}
+            labelId='skill_label'
             label='skill'
-            onChange={onChange(field)}
+            {...field}
+            onChange={onChange(field.onChange)}
           >
             {skillOptions.map(skillOption => (
               <MenuItem key={`${skillOption.value}`} value={skillOption.value}>
@@ -227,7 +227,7 @@ const BattlingImage: FC<{ actionStatus: ACTION_STATUSES, skill: Skill | null }> 
   return (
     <Box sx={{ position: 'relative' }}>
       <Typography sx={{ position: 'absolute', top: '50%', left: '48%', transform: 'translate(-50%, -50%)' }}>{skill ? skill.label : ''}</Typography>
-      <img src={`/BATTLING_${actionStatus}.jpg`} alt={`BATTLING_${actionStatus}`} sx={{ width: '100%' }}/>
+      <img src={`/BATTLING_${actionStatus}.jpg`} alt={`BATTLING_${actionStatus}`} />
     </Box>
   );
 };
@@ -317,11 +317,15 @@ export const BattleTurn: FC<{
 
     let newReceivers = [...receivers];
     const receiverWithIsVisitor = getValues(`receiversWithIsVisitor.${index}.value` as const);
+    if (!receiverWithIsVisitor) {
+      return;
+    }
+
     const result = simulate(battle, actor, skill, receiverWithIsVisitor, lastTurn, new Date());
 
     if (result instanceof DataNotFoundError) {
       if (receivers.length > index) {
-        newReceivers.splice(index, 1, undefined)
+        newReceivers.splice(index, 1, null);
         setReceivers(newReceivers);
       }
       return;

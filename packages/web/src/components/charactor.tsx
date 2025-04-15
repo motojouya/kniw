@@ -67,8 +67,10 @@ const getCharactorError: GetCharactorError = (errors, i, property) => {
   return error as FieldError;
 };
 
+type AcquirementName = "name" | "charactors" | `charactors.${number}` | `charactors.${number}.name` | `charactors.${number}.race` | `charactors.${number}.blessing` | `charactors.${number}.clothing` | `charactors.${number}.weapon`;
+
 const SelectAcquirement: FC<{
-  acquirementName: string,
+  acquirementName: AcquirementName,
   acquirementType: string,
   allAcquirements: Acquirement[],
   onBlur: () => void,
