@@ -66,11 +66,11 @@ export const Header: FC<{ backLink: string | null; }> = ({ backLink }) => {
     <Stack sx={{ justifyContent: 'flex-start', alignItems: 'center', p: 1 }} direction="row" >
         {backLink && (
           <Box sx={{ p: 1 }}>
-            <a href={backLink}>
+            <Link href={backLink} line={false}>
               <SvgIcon>
                 <ArrowBackIcon />
               </SvgIcon>
-            </a>
+            </Link>
           </Box>
         )}
         <Box sx={{ p: 1 }}>
