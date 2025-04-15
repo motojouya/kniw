@@ -6,15 +6,13 @@ import { useState } from 'react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm, useFieldArray } from 'react-hook-form';
 import {
-  Input,
   Button,
+  TextField,
   Box,
-  List,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
+  Stack,
+  Typography,
+} from '@mui/material';
 
-import { Field } from "./ui/field"
 import { CharactorCard } from './charactor';
 import { partyFormSchema, toPartyForm } from '../form/party';
 import { saveParty } from '../procedure/party/save';
@@ -26,7 +24,7 @@ import { useIO } from './context';
 import { importParty } from '../procedure/party/importJson';
 import { UserCancel, EmptyParameter } from '../io/window_dialogue';
 import { transit } from './utility';
-import { Link } from './utility';
+import { Container } from './utility';
 
 // FIXME subpage/party/newにも似たようなものがあるので共通化したいができるかな。こちらはbattleのparty import用
 export const ImportParty: FC<{
@@ -51,10 +49,16 @@ export const ImportParty: FC<{
   };
 
   return (
-    <Box>
-      {party && <Text>{`${type} Party: ${party.name}`}</Text>}
-      <Button type="button" onClick={importJson} >{`Select ${type} Party`}</Button>
-    </Box>
+    <Stack direction='row' sx={{ justifyContents: 'flex-start', alignItems: 'center' }}>
+      <Box sx={{ pr: 1 }}>
+        <Button variant="contained" type="button" onClick={importJson}>{`Select ${type} Party`}</Button>
+      </Box>
+      {party && (
+      <Box>
+        <Typography>{party.name}</Typography>
+      </Box>
+      )}
+    </Stack>
   );
 };
 
@@ -111,42 +115,61 @@ export const PartyEditor: FC<{
     }
   };
 
-  // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
   // FIXME Button  loading={isSubmitting} loadingText="Creating Party..." としたかったがloadingがエラーになる
   return (
-    <Box p={4}>
-      <Link href='/party/'><span>戻る</span></Link>
-      <Text>This is the party page</Text>
-      {inoutButton}
+    <Container backLink="/party/">
       <form onSubmit={handleSubmit(save)}>
-        {saveMessage.message && (
-          saveMessage.error
-            ? <Text>{saveMessage.message}</Text>
-            : <Text>{saveMessage.message}</Text>
-        )}
-        {exist ? (
-          <Box as={'dl'}>
-            <Heading as={'dt'}>party name</Heading>
-            <Text as={'dd'}>{partyForm.name}</Text>
-          </Box>
-        ) : (
-          <Field invalid={!!errors.name} label="name" errorText={errors.name && errors.name.message}>
-            <Input id="name" placeholder="name" {...register('name')} />
-          </Field>
-        )}
-        <List.Root>
-          {fields.map((item, index) => (
-            <List.Item key={`charactor-${index}`}>
-              <CharactorCard register={register} getValues={getValues} remove={remove} errors={errors} index={index} />
-            </List.Item>
-          ))}
-        </List.Root>
-        <Button type="button" onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })} >Hire</Button>
-        <Button colorScheme="teal" type="submit">{exist ? 'Change' : 'Create'}</Button>
-        {exist && (
-          <Button type="button" onClick={() => deleteParty(partyForm.name)} >Dismiss</Button>
-        )}
+        <Stack direction="column" sx={{ justifyContent: "flex-start", alignItems: "center" }}>
+          <Stack direction="row" sx={{ justifyContent: "space-between", p: 1, width: '100%' }}>
+            <Box sx={{ width: '100px' }}>
+              <Typography>Edit the party</Typography>
+            </Box>
+            <Stack direction="row" sx={{ justifyContent: "flex-end", alignItems: "center" }}>
+              <Box sx={{ px: 1 }}>
+                <Button variant="contained" type="submit">{exist ? 'Change' : 'Create'}</Button>
+              </Box>
+              {exist && (
+                <Box sx={{ px: 1 }}>
+                  <Button variant="contained" type="button" onClick={() => deleteParty(partyForm.name)}>Dismiss</Button>
+                </Box>
+              )}
+              {inoutButton}
+            </Stack>
+          </Stack>
+          {saveMessage.message && (
+            saveMessage.error
+              ? <Typography>{saveMessage.message}</Typography>
+              : <Typography>{saveMessage.message}</Typography>
+          )}
+          {exist ? (
+            <Stack direction="row" sx={{ p: 1, width: '100%', alignItems: 'center' }}>
+              <Box flex="0 0 100px"><Typography>Party Name</Typography></Box>
+              <Box><Typography variant="h4">{partyForm.name}</Typography></Box>
+            </Stack>
+          ) : (
+            <Stack direction="row" sx={{ p: 1, width: '100%' }}>
+              <TextField
+                id="party_name"
+                error={!!errors.name}
+                label="Party Name"
+                placeholder="party name"
+                variant="outlined"
+                {...register('name')}
+                helperText={errors.name && errors.name.message}
+                sx={{ width: '100%' }}
+              />
+            </Stack>
+          )}
+          <Stack direction="column" sx={{ justifyContent: "flex-start", p: 1, width: '100%' }}>
+            <Box sx={{ pb: 1, width: '100%' }}>
+              <Button variant="contained" type="button" sx={{ width: '100%' }} onClick={() => append({ name: '', race: '', blessing: '', clothing: '', weapon: '' })}>Hire Charactor</Button>
+            </Box>
+            {fields.map((item, index) => (
+              <CharactorCard key={`party_charactor_${item.id}`} register={register} getValues={getValues} remove={remove} errors={errors} index={index} control={control} />
+            ))}
+          </Stack>
+        </Stack>
       </form>
-    </Box>
+    </Container>
   );
 };

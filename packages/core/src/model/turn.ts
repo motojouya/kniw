@@ -2,6 +2,8 @@ import type { Field } from "./field";
 import type { CharactorBattling } from "./charactor";
 import type { Skill } from "./skill";
 
+import { copyCharactorBattling } from "./charactor";
+
 export const ACTION_DO_NOTHING = "DO_NOTHING";
 
 export type DoSkill = {
@@ -34,3 +36,39 @@ export type Turn = {
   sortedCharactors: CharactorBattling[];
   field: Field;
 };
+
+export type CopyAction = (action: Action) => Action;
+export const copyAction: CopyAction = (action) => {
+  if (action.type === "DO_SKILL") {
+    return {
+      type: action.type,
+      actor: copyCharactorBattling(action.actor),
+      skill: action.skill,
+      receivers: action.receivers.map(copyCharactorBattling),
+    };
+  }
+  if (action.type === "DO_NOTHING") {
+    return {
+      type: action.type,
+      actor: copyCharactorBattling(action.actor),
+    };
+  }
+  if (action.type === "SURRENDER") {
+    return {
+      type: action.type,
+      actor: copyCharactorBattling(action.actor),
+    };
+  }
+  return {
+    type: action.type,
+    wt: action.wt,
+  };
+};
+
+export type CopyTurn = (turn: Turn) => Turn;
+export const copyTurn: CopyTurn = (turn) => ({
+  datetime: new Date(turn.datetime.getTime()),
+  action: copyAction(turn.action),
+  sortedCharactors: turn.sortedCharactors.map(copyCharactorBattling),
+  field: turn.field,
+});

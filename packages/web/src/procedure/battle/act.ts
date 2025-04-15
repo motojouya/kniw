@@ -18,7 +18,7 @@ export type Act = (
   actor: CharactorBattling,
   doSkillForm: DoSkillForm,
   lastTurn: Turn,
-) => Promise<null | DataNotFoundError | ReceiverDuplicationError | UserCancel>;
+) => Promise<Battle | DataNotFoundError | ReceiverDuplicationError | UserCancel>;
 export const act: Act = (dialogue, repository) => async (battle, actor, doSkillForm, lastTurn) => {
   const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
   if (doAction instanceof DataNotFoundError || doAction instanceof ReceiverDuplicationError) {
@@ -32,5 +32,5 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
   const newBattle = spendTurn(battle, actor, doAction);
 
   await repository.save(newBattle);
-  return null;
+  return newBattle;
 };

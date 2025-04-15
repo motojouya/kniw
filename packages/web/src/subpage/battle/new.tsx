@@ -3,14 +3,19 @@ import type { Party } from '@motojouya/kniw-core/model/party';
 
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { Input, Button, Box, Text } from '@chakra-ui/react';
-import { Field } from "../../components/ui/field"
+import {
+  Button,
+  TextField,
+  Box,
+  Stack,
+  Typography,
+} from '@mui/material';
 
 import { ImportParty } from '../../components/party';
 import { startBattle } from '../../procedure/battle/start';
 import { useIO } from '../../components/context';
 import { transit } from '../../components/utility';
-import { Link } from '../../components/utility';
+import { Container } from '../../components/utility';
 
 export const BattleNew: FC = () => {
 
@@ -53,18 +58,38 @@ export const BattleNew: FC = () => {
   // FIXME messageの表示で以前はFormErrorMessageを使っていたがchakra v3ではなくなったため、一旦Textで代用
   // FIXME Button loading={isSubmitting} loadingText="Starting Battle..." としたかったがloadingがエラーになる
   return (
-    <Box p={4}>
-      <Link href="/battle/"><span>戻る</span></Link>
-      <Text>This is the battle page</Text>
+    <Container backLink="/battle/">
+      <Typography>Start The Battle</Typography>
       <form onSubmit={handleSubmit(start)}>
-        {message && (<Text>{message}</Text>)}
-        <Field label="title" invalid={!!errors.title} errorText={errors.title && errors.title.message}>
-          <Input id="title" placeholder="title" {...register('title')} />
-        </Field>
-        <ImportParty type='HOME' party={homeParty} setParty={setHomeParty}/>
-        <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty}/>
-        <Button colorScheme="teal" type="submit">Start Battle</Button>
+        <Stack>
+          {message && (
+            <Box sx={{ p: 1 }}>
+              <Typography>{message}</Typography>
+            </Box>
+          )}
+          <Box sx={{ p: 1 }}>
+            <TextField
+              id="title"
+              error={!!errors.title}
+              label="Battle Title"
+              placeholder="Title"
+              variant="outlined"
+              {...register('title')}
+              helperText={errors.title && errors.title.message}
+              sx={{ width: '100%' }}
+            />
+          </Box>
+          <Box sx={{ p: 1 }}>
+            <ImportParty type='HOME' party={homeParty} setParty={setHomeParty}/>
+          </Box>
+          <Box sx={{ p: 1 }}>
+            <ImportParty type='VISITOR' party={visitorParty} setParty={setVisitorParty}/>
+          </Box>
+          <Box sx={{ p: 1 }}>
+            <Button variant="contained" type="submit">Start Battle</Button>
+          </Box>
+        </Stack>
       </form>
-    </Box>
+    </Container>
   );
 };

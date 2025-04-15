@@ -1,4 +1,5 @@
 import type { Charactor, CharactorBattling } from "./charactor";
+import { copyCharactor, copyCharactorBattling } from "./charactor";
 
 export type Party = {
   name: string;
@@ -16,6 +17,18 @@ export class CharactorDuplicationError {
     readonly message: string,
   ) {}
 }
+
+export type CopyParty = (party: Party) => Party;
+export const copyParty: CopyParty = (party) => ({
+  name: party.name,
+  charactors: party.charactors.map(copyCharactor),
+});
+
+export type CopyPartyBattling = (party: PartyBattling) => PartyBattling;
+export const copyPartyBattling: CopyPartyBattling = (party) => ({
+  name: party.name,
+  charactors: party.charactors.map(copyCharactorBattling),
+});
 
 export type Validate = (name: string, charactors: Charactor[]) => CharactorDuplicationError | null;
 export const validate: Validate = (name, charactors) => {

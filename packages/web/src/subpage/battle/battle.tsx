@@ -1,14 +1,14 @@
 import type { FC } from 'react';
 
-import { Box, Text } from '@chakra-ui/react';
+import { Typography } from '@mui/material';
 import { useLiveQuery } from "dexie-react-hooks";
 
-import { BattleTurn } from '../../components/battle';
+import { BattleContainer } from '../../components/battle';
 import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
 import { useIO } from '../../components/context';
-import { Link } from '../../components/utility';
+import { Container } from '../../components/utility';
 
 export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => {
   const { battleRepository } = useIO();
@@ -21,21 +21,19 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
     battle instanceof JsonSchemaUnmatchError
   ) {
     return (
-      <Box>
-        <Text>{battle.message}</Text>
-        <Link href='/battle/'><span>戻る</span></Link>
-      </Box>
+      <Container backLink="/party/">
+        <Typography>{battle.message}</Typography>
+      </Container>
     );
   }
 
   if (!battle) {
     return (
-      <Box>
-        <Link href='/battle/'><span>戻る</span></Link>
-        <Text>{`${battleTitle}というbattleは見つかりません`}</Text>
-      </Box>
+      <Container backLink="/battle/">
+        <Typography>{`${battleTitle}というbattleは見つかりません`}</Typography>
+      </Container>
     );
   }
 
-  return (<BattleTurn battle={battle} />);
+  return (<BattleContainer battle={battle} />);
 };

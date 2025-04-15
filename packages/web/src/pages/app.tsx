@@ -1,33 +1,29 @@
 import type { FC } from 'react';
 import {
   Box,
-  List,
-  Heading,
-  Text,
-} from '@chakra-ui/react';
-import { Link } from '../components/utility';
+  Stack,
+  Typography,
+  Link as MaterialLink,
+} from '@mui/material';
+import { Container, Link } from '../components/utility';
 
 export const App: FC = () => (
-  <Box p='10'>
-    <Heading>KNIW</Heading>
-    <Box>
-      <Text>kniwは、Tactics Ogreを参考に作ったボードゲームです。</Text>
-      <Text>このアプリケーションでは以下のことを行うことができます。</Text>
-      <List.Root>
-        <List.Item>
-          <Text>ゲームの準備</Text>
-          <Link href="/party/">
-            <Text>Partyの作成</Text>
+  <Container backLink={null}>
+    <Stack sx={{ justifyContent: 'flex-start', alignItems: "center" }}>
+      <Typography sx={{ p: 1 }}>KNIWはタクティクスオウガを参考にしたボードゲームです。</Typography>
+      <Typography sx={{ p: 1 }}>遊び方やルールは<MaterialLink href="https://github.com/motojouya/kniw" underline="always">こちらのページ</MaterialLink>を参照してください。</Typography>
+      <Stack direction="row" sx={{ justifyContent: 'space-around', p: 1, width: '100%' }}>
+        <Box>
+          <Link href="/party/" line>
+            <Typography>パーティの作成</Typography>
           </Link>
-        </List.Item>
-        <List.Item>
-          <Text>ゲームの進行</Text>
-          <Link href="/battle/">
-            <Text>Battleの管理</Text>
+        </Box>
+        <Box>
+          <Link href="/battle/" line>
+            <Typography>バトルの管理</Typography>
           </Link>
-        </List.Item>
-      </List.Root>
-      <Text>更に詳しい説明は<a href="https://github.com/motojouya/kniw">こちらのページ</a>を参照してください。</Text>
-    </Box>
-  </Box>
+        </Box>
+      </Stack>
+    </Stack>
+  </Container>
 );

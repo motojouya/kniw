@@ -54,6 +54,18 @@ export type CharactorBattling = Charactor & {
   isVisitor: boolean;
 };
 
+export type CopyAttachedStatus = (attachedStatus: AttachedStatus) => AttachedStatus;
+export const copyAttachedStatus: CopyAttachedStatus = (attachedStatus) => ({ ...attachedStatus });
+
+export type CopyCharactor = (charactor: Charactor) => Charactor;
+export const copyCharactor: CopyCharactor = (charactor) => ({ ...charactor });
+
+export type CopyCharactorBattling = (charactor: CharactorBattling) => CharactorBattling;
+export const copyCharactorBattling: CopyCharactorBattling = (charactor) => ({
+  ...charactor,
+  statuses: charactor.statuses.map(copyAttachedStatus),
+});
+
 export function isBattling(charctor: Charactor): charctor is CharactorBattling {
   return (
     "statuses" in charctor && "hp" in charctor && "mp" in charctor && "restWt" in charctor && "isVisitor" in charctor
@@ -131,7 +143,7 @@ export type toBattleCharactor = (charactor: Charactor, isVisitor: boolean) => Ch
 export const toBattleCharactor: toBattleCharactor = (charactor, isVisitor) => {
   const physical = getPhysical(charactor);
   return {
-    ...charactor,
+    ...copyCharactor(charactor),
     statuses: [],
     hp: physical.MaxHP,
     mp: 0,

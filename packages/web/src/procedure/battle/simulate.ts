@@ -29,8 +29,10 @@ export const simulate: Simulate = (battle, actor, skill, receiverWithIsVisitor, 
     (charactor) => charactor.isVisitor === receiver.isVisitor && charactor.name === receiver.name,
   );
 
+  const survive = !!survivedReceiver;
+
   return {
-    receiver,
-    survive: !!survivedReceiver,
+    receiver: survive ? survivedReceiver : receiver,
+    survive,
   };
 };

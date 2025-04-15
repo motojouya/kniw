@@ -1,6 +1,10 @@
 import type { FC } from 'react';
 
-import { Button, Box, Text } from '@chakra-ui/react';
+import {
+  Button,
+  Box,
+  Typography,
+} from '@mui/material';
 import { useLiveQuery } from "dexie-react-hooks";
 
 import { PartyEditor } from '../../components/party';
@@ -8,7 +12,7 @@ import { CharactorDuplicationError } from '@motojouya/kniw-core/model/party';
 import { useIO } from '../../components/context';
 import { NotWearableErorr } from '@motojouya/kniw-core/model/acquirement';
 import { JsonSchemaUnmatchError, DataNotFoundError } from '@motojouya/kniw-core/store_utility/schema';
-import { Link } from '../../components/utility';
+import { Container } from '../../components/utility';
 
 export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
   const { partyRepository } = useIO();
@@ -21,25 +25,25 @@ export const PartyExsiting: FC<{ partyName: string }> = ({ partyName }) => {
     party instanceof JsonSchemaUnmatchError
   ) {
     return (
-      <Box>
-        <Text>{party.message}</Text>
-        <Link href='/party/'><span>戻る</span></Link>
-      </Box>
+      <Container backLink="/party/">
+        <Typography>{party.message}</Typography>
+      </Container>
     );
   }
 
   if (!party) {
     return (
-      <Box>
-        <Text>{`${partyName}というpartyは見つかりません`}</Text>
-        <Link href='/party/'><span>戻る</span></Link>
-      </Box>
+      <Container backLink="/party/">
+        <Typography>{`${partyName}というpartyは見つかりません`}</Typography>
+      </Container>
     );
   }
 
   return (
     <PartyEditor exist={true} party={party} inoutButton={(
-      <Button type="button" onClick={() => partyRepository.exportJson(party, '')} >Export</Button>
+      <Box sx={{ px: 1 }}>
+        <Button variant="contained" type="button" onClick={() => partyRepository.exportJson(party, party.name)} >Export</Button>
+      </Box>
     )} />
   );
 };

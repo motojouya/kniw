@@ -2,7 +2,10 @@ import type { FC } from 'react';
 import type { Party } from '@motojouya/kniw-core/model/party';
 
 import { useState } from 'react';
-import { Button } from '@chakra-ui/react';
+import {
+  Button,
+  Box,
+} from '@mui/material';
 
 import { PartyEditor } from '../../components/party';
 import { importParty } from '../../procedure/party/importJson';
@@ -33,7 +36,9 @@ export const PartyNew: FC = () => {
 
   return (
     <PartyEditor exist={false} party={party} inoutButton={(
-      <Button type="button" onClick={importJson} >Import</Button>
+      <Box sx={{ px: 1 }}>
+        <Button variant="contained" type="button" onClick={importJson} >Import</Button>
+      </Box>
     )} />
   );
 };

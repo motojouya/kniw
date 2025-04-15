@@ -3,7 +3,10 @@ import type { PartyRepository } from '@motojouya/kniw-core/store/party';
 import type { BattleRepository } from '@motojouya/kniw-core/store/battle';
 
 import { useState, useEffect } from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import {
+  Box,
+  Typography,
+} from '@mui/material';
 
 import { createRepository as createPartyRepository } from '@motojouya/kniw-core/store/party';
 import { createRepository as createBattleRepository } from '@motojouya/kniw-core/store/battle';
@@ -30,7 +33,7 @@ export const App: FC = () => {
   }, []);
 
   if (!repositories) {
-    return (<Box><Text>loading...</Text></Box>);
+    return (<Box><Typography>loading...</Typography></Box>);
   }
 
   const io = {
