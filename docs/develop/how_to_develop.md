@@ -29,10 +29,10 @@ Node.jsをインストールした後`npm install`してください。
 
 ### 開発コマンド
 開発に利用するコマンドは`package.json`に記載していますが、`npm workspace`を利用しているので、いくつかのファイルに分かれています。  
-- root(./package.json)
-- core(./packages/core/package.json)
-- web(./packages/web/package.json)
-- command(./packages/command/package.json)
+- root (package.json)
+- core (packages/core/package.json)
+- web (packages/web/package.json)
+- command (packages/command/package.json)
 
 rootでlintを実行する際には`npm run lint`ですが、サブパッケージで開発webサーバを立ち上げる際は、プロジェクト名の指定が必要です。  
 ```
