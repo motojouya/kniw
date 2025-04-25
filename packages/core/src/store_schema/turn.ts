@@ -12,7 +12,7 @@ import { NotWearableErorr } from "../model/acquirement";
 import { skillRepository } from "../store/skill";
 import { JsonSchemaUnmatchError, DataNotFoundError } from "../store_utility/schema";
 import { toCharactorBattling, toCharactorBattlingJson, charactorBattlingSchema } from "./charactor";
-import { toRandoms, toRandomsJson, randomsSchema } from "./randoms";
+import { toRandoms, toRandomsJson, randomsSchema } from "./random";
 
 export const surrenderSchema = z.object({
   type: z.literal("SURRENDER"),

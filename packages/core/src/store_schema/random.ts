@@ -1,4 +1,4 @@
-import type { Randoms } from "../model/randoms";
+import type { Randoms } from "../model/random";
 import type { ToModel, ToJson } from "../store_utility/schema";
 
 import { z } from "zod";

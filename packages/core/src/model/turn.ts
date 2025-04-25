@@ -37,7 +37,7 @@ export type Turn = {
   action: Action;
   sortedCharactors: CharactorBattling[];
   field: Field;
-  ramdoms: Randoms;
+  randoms: Randoms;
 };
 
 export type CopyAction = (action: Action) => Action;
@@ -74,5 +74,5 @@ export const copyTurn: CopyTurn = (turn) => ({
   action: copyAction(turn.action),
   sortedCharactors: turn.sortedCharactors.map(copyCharactorBattling),
   field: turn.field,
-  ramdoms: copyRandoms(turn.ramdoms),
+  randoms: copyRandoms(turn.randoms),
 });
