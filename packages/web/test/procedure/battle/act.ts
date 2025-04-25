@@ -169,7 +169,7 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn);
+    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn, () => new Date(), getAbsolute);
 
     const turnJustBefore = result.turns.pop();
     const turnNextBefore = result.turns.pop();
@@ -199,7 +199,7 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, { ...skillForm, skillName: "not-found" }, lastTurn);
+    const result = await act(dialogue, mockRepo)(battle, actor, { ...skillForm, skillName: "not-found" }, lastTurn, () => new Date(), getAbsolute);
 
     expect(result).toBeInstanceOf(DataNotFoundError);
   });
@@ -223,7 +223,7 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn);
+    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn, () => new Date(), getAbsolute);
 
     expect(result).toBeInstanceOf(UserCancel);
   });

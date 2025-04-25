@@ -12,6 +12,7 @@ import { NotWearableErorr } from "../model/acquirement";
 import { skillRepository } from "../store/skill";
 import { JsonSchemaUnmatchError, DataNotFoundError } from "../store_utility/schema";
 import { toCharactorBattling, toCharactorBattlingJson, charactorBattlingSchema } from "./charactor";
+import { toRandoms, toRandomsJson, randomsSchema } from "./randoms";
 
 export const surrenderSchema = z.object({
   type: z.literal("SURRENDER"),
@@ -54,6 +55,7 @@ export const turnSchema = z.object({
   field: z.object({
     climate: z.string(),
   }),
+  randoms: randomsSchema,
 });
 export type TurnSchema = typeof turnSchema;
 export type TurnJson = z.infer<TurnSchema>;
@@ -96,6 +98,7 @@ export const toTurnJson: ToJson<Turn, TurnJson> = (turn) => ({
   action: toActionJson(turn.action),
   sortedCharactors: turn.sortedCharactors.map(toCharactorBattlingJson),
   field: turn.field,
+  randoms: toRandomsJson(turn.randoms),
 });
 
 export const toAction: ToModel<Action, ActionJson, NotWearableErorr | DataNotFoundError> = (actionJson) => {
@@ -184,10 +187,13 @@ export const toTurn: ToModel<Turn, TurnJson, NotWearableErorr | DataNotFoundErro
     climate: turnJson.field.climate as Climate,
   };
 
+  const randoms = toRandoms(turnJson.randoms);
+
   return {
     datetime,
     action,
     sortedCharactors,
     field,
+    randoms,
   };
 };
