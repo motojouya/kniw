@@ -4,9 +4,9 @@ import type { ToModel, ToJson } from "../store_utility/schema";
 import { z } from "zod";
 
 export const randomsSchema = z.object({
-  times: z.number().int(),
-  damage: z.number().int(),
-  accuracy: z.number().int(),
+  times: z.number(),
+  damage: z.number(),
+  accuracy: z.number(),
 });
 export type RandomsSchema = typeof randomsSchema;
 export type RandomsJson = z.infer<RandomsSchema>;
