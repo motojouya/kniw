@@ -7,7 +7,7 @@ import { GameOngoing, GameHome, GameVisitor } from "@motojouya/kniw-core/model/b
 import { toBattle } from "@motojouya/kniw-core/store_schema/battle";
 import { UserCancel } from "../../../src/io/window_dialogue";
 import { surrender } from "../../../src/procedure/battle/surrender";
-import { getAbsolute } from "@motojouya/kniw-core/model/random";
+import { createAbsolute } from "@motojouya/kniw-core/model/random";
 
 const testData = {
   title: "first-title",
@@ -163,7 +163,7 @@ describe("surrender", () => {
       battleData,
       battleData.home.charactors[0],
       new Date(),
-      getAbsolute(),
+      createAbsolute(),
     );
 
     expect(battle).toBe(null);
@@ -187,7 +187,7 @@ describe("surrender", () => {
       battleData,
       battleData.visitor.charactors[0],
       new Date(),
-      getAbsolute(),
+      createAbsolute(),
     );
 
     expect(battle).toBe(null);
@@ -211,7 +211,7 @@ describe("surrender", () => {
       battleData,
       battleData.home.charactors[0],
       new Date(),
-      getAbsolute(),
+      createAbsolute(),
     );
 
     expect(battle).toBeInstanceOf(UserCancel);
