@@ -74,5 +74,5 @@ export const copyTurn: CopyTurn = (turn) => ({
   action: copyAction(turn.action),
   sortedCharactors: turn.sortedCharactors.map(copyCharactorBattling),
   field: turn.field,
-  ramdoms: copyRandoms(turn.ramdoms);
+  ramdoms: copyRandoms(turn.ramdoms),
 });

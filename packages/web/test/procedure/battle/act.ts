@@ -199,7 +199,14 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, { ...skillForm, skillName: "not-found" }, lastTurn, () => new Date(), getAbsolute);
+    const result = await act(dialogue, mockRepo)(
+      battle,
+      actor,
+      { ...skillForm, skillName: "not-found" },
+      lastTurn,
+      () => new Date(),
+      getAbsolute,
+    );
 
     expect(result).toBeInstanceOf(DataNotFoundError);
   });

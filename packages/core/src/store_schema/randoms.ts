@@ -5,8 +5,8 @@ import { z } from "zod";
 
 export const randomsSchema = z.object({
   times: z.integer(),
-  damage: z.integer();
-  accuracy: z.integer();
+  damage: z.integer(),
+  accuracy: z.integer(),
 });
 export type RandomsSchema = typeof randomsSchema;
 export type RandomsJson = z.infer<RandomsSchema>;

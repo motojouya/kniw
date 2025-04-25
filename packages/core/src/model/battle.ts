@@ -387,7 +387,13 @@ export type Action = {
   skill: Skill;
   receivers: CharactorBattling[];
 };
-export type SpendTurn = (battle: Battle, actor: CharactorBattling, action: Action | null, getDatetime: () => Date, getRandoms: () => Randoms) => Battle;
+export type SpendTurn = (
+  battle: Battle,
+  actor: CharactorBattling,
+  action: Action | null,
+  getDatetime: () => Date,
+  getRandoms: () => Randoms,
+) => Battle;
 export const spendTurn: SpendTurn = (battle, actor, action, getDatetime, getRandoms) => {
   const newBattle = copyBattle(battle);
 
