@@ -12,7 +12,7 @@ import { copyTurn } from "./turn";
 
 import { acid, paralysis, quick, silent, sleep, slow } from "../store_data/status/index";
 import { underStatus } from "./status";
-import { createRandoms } from "./random";
+import { copyRandoms } from "./random";
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
@@ -116,10 +116,11 @@ export const start: Start = (battle, datetime, randoms) => ({
   field: {
     climate: changeClimate(randoms),
   },
+  randoms,
 });
 
-export type Stay = (battle: Battle, actor: CharactorBattling, datetime: Date) => Turn;
-export const stay: Stay = (battle, actor, datetime) => {
+export type Stay = (battle: Battle, actor: CharactorBattling, datetime: Date, randoms: Randoms) => Turn;
+export const stay: Stay = (battle, actor, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   const newTurn: Turn = {
     datetime,
@@ -129,6 +130,7 @@ export const stay: Stay = (battle, actor, datetime) => {
     },
     sortedCharactors: lastTurn.sortedCharactors.map(copyCharactorBattling),
     field: lastTurn.field,
+    randoms,
   };
 
   newTurn.sortedCharactors = newTurn.sortedCharactors.map((charactor) => {
@@ -177,12 +179,12 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
   }
 
   if (underStatus(sleep, actor)) {
-    return stay(battle, actor, datetime);
+    return stay(battle, actor, datetime, randoms);
   }
 
   // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
   if (underStatus(paralysis, actor) && randoms.accuracy > 0.5) {
-    return stay(battle, actor, datetime);
+    return stay(battle, actor, datetime, randoms);
   }
 
   const lastTurn = arrayLast(battle.turns);
@@ -196,6 +198,7 @@ export const actToCharactor: ActToCharactor = (battle, actor, skill, receivers, 
     },
     sortedCharactors: lastTurn.sortedCharactors.map(copyCharactorBattling),
     field: lastTurn.field,
+    randoms,
   };
 
   const resultReceivers = receivers.map((receiver) => skill.action(skill, actor, randoms, lastTurn.field, receiver));
@@ -240,12 +243,12 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
   }
 
   if (underStatus(sleep, actor)) {
-    return stay(battle, actor, datetime);
+    return stay(battle, actor, datetime, randoms);
   }
 
   // FIXME 動けなかった際に麻痺が理由とかそういうのわかるとよい
   if (underStatus(paralysis, actor) && randoms.accuracy > 0.5) {
-    return stay(battle, actor, datetime);
+    return stay(battle, actor, datetime, randoms);
   }
 
   const lastTurn = arrayLast(battle.turns);
@@ -259,6 +262,7 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
     },
     sortedCharactors: lastTurn.sortedCharactors.map(copyCharactorBattling),
     field: lastTurn.field,
+    randoms,
   };
 
   newTurn.field = skill.action(skill, actor, randoms, lastTurn.field);
@@ -279,8 +283,8 @@ export const actToField: ActToField = (battle, actor, skill, datetime, randoms) 
   return newTurn;
 };
 
-export type Surrender = (battle: Battle, actor: CharactorBattling, datetime: Date) => Turn;
-export const surrender: Surrender = (battle, actor, datetime) => {
+export type Surrender = (battle: Battle, actor: CharactorBattling, datetime: Date, randoms: Randoms) => Turn;
+export const surrender: Surrender = (battle, actor, datetime, randoms) => {
   const lastTurn = arrayLast(battle.turns);
   return {
     datetime,
@@ -290,6 +294,7 @@ export const surrender: Surrender = (battle, actor, datetime) => {
     },
     sortedCharactors: lastTurn.sortedCharactors.map(copyCharactorBattling),
     field: lastTurn.field,
+    randoms,
   };
 };
 
@@ -342,6 +347,7 @@ export const wait: Wait = (battle, wt, datetime, randoms) => {
     field: {
       climate: changeClimate(randoms),
     },
+    randoms,
   };
   newTurn.sortedCharactors = newTurn.sortedCharactors.map((charactor) => waitCharactor(charactor, wt, randoms));
 
@@ -381,18 +387,18 @@ export type Action = {
   skill: Skill;
   receivers: CharactorBattling[];
 };
-export type SpendTurn = (battle: Battle, actor: CharactorBattling, action: Action | null) => Battle;
-export const spendTurn: SpendTurn = (battle, actor, action) => {
+export type SpendTurn = (battle: Battle, actor: CharactorBattling, action: Action | null, getDatetime: () => Date, getRandoms: () => Randoms) => Battle;
+export const spendTurn: SpendTurn = (battle, actor, action, getDatetime, getRandoms) => {
   const newBattle = copyBattle(battle);
 
   if (action === null) {
-    newBattle.turns.push(stay(newBattle, actor, new Date()));
+    newBattle.turns.push(stay(newBattle, actor, getDatetime(), getRandoms()));
   } else {
     const selectedSkill = action.skill;
     const newTurn =
       selectedSkill.type === "SKILL_TO_FIELD"
-        ? actToField(newBattle, actor, selectedSkill, new Date(), createRandoms())
-        : actToCharactor(newBattle, actor, selectedSkill, action.receivers, new Date(), createRandoms());
+        ? actToField(newBattle, actor, selectedSkill, getDatetime(), getRandoms())
+        : actToCharactor(newBattle, actor, selectedSkill, action.receivers, getDatetime(), getRandoms());
     newBattle.turns.push(newTurn);
   }
 
@@ -402,7 +408,7 @@ export const spendTurn: SpendTurn = (battle, actor, action) => {
   }
 
   let firstWaiting = nextActor(newBattle);
-  newBattle.turns.push(wait(newBattle, firstWaiting.restWt, new Date(), createRandoms()));
+  newBattle.turns.push(wait(newBattle, firstWaiting.restWt, getDatetime(), getRandoms()));
 
   newBattle.result = isSettlement(newBattle);
   if (newBattle.result !== GameOngoing) {
@@ -410,14 +416,14 @@ export const spendTurn: SpendTurn = (battle, actor, action) => {
   }
 
   while (underStatus(sleep, firstWaiting)) {
-    newBattle.turns.push(stay(newBattle, firstWaiting, new Date()));
+    newBattle.turns.push(stay(newBattle, firstWaiting, getDatetime(), getRandoms()));
     newBattle.result = isSettlement(newBattle);
     if (newBattle.result !== GameOngoing) {
       return newBattle;
     }
 
     firstWaiting = nextActor(newBattle);
-    newBattle.turns.push(wait(newBattle, firstWaiting.restWt, new Date(), createRandoms()));
+    newBattle.turns.push(wait(newBattle, firstWaiting.restWt, getDatetime(), getRandoms()));
     newBattle.result = isSettlement(newBattle);
     if (newBattle.result !== GameOngoing) {
       return newBattle;

@@ -4,6 +4,7 @@ import type { CharactorBattling } from "@motojouya/kniw-core/model/charactor";
 import type { BattleRepository } from "@motojouya/kniw-core/store/battle";
 import type { DoSkillForm } from "../../form/battle";
 import type { Dialogue } from "../../io/window_dialogue";
+import { Randoms } from "@motojouya/kniw-core/model/random";
 
 import { spendTurn } from "@motojouya/kniw-core/model/battle";
 import { toAction, ReceiverDuplicationError } from "../../form/battle";
@@ -18,8 +19,10 @@ export type Act = (
   actor: CharactorBattling,
   doSkillForm: DoSkillForm,
   lastTurn: Turn,
+  getDate: () => Date,
+  getRandoms: () => Randoms,
 ) => Promise<Battle | DataNotFoundError | ReceiverDuplicationError | UserCancel>;
-export const act: Act = (dialogue, repository) => async (battle, actor, doSkillForm, lastTurn) => {
+export const act: Act = (dialogue, repository) => async (battle, actor, doSkillForm, lastTurn, getDate, getRandoms) => {
   const doAction = toAction(doSkillForm, lastTurn.sortedCharactors);
   if (doAction instanceof DataNotFoundError || doAction instanceof ReceiverDuplicationError) {
     return doAction;
@@ -29,7 +32,7 @@ export const act: Act = (dialogue, repository) => async (battle, actor, doSkillF
     return new UserCancel("Cancelされました");
   }
 
-  const newBattle = spendTurn(battle, actor, doAction);
+  const newBattle = spendTurn(battle, actor, doAction, getDate, getRandoms);
 
   await repository.save(newBattle);
   return newBattle;

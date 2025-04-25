@@ -8,6 +8,7 @@ import { GameOngoing } from "@motojouya/kniw-core/model/battle";
 import { act } from "../../../src/procedure/battle/act";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { UserCancel } from "../../../src/io/window_dialogue";
+import { getAbsolute } from "@motojouya/kniw-core/model/random";
 
 const skillForm = {
   skillName: "chop",

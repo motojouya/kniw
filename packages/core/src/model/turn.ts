@@ -1,8 +1,10 @@
 import type { Field } from "./field";
 import type { CharactorBattling } from "./charactor";
 import type { Skill } from "./skill";
+import type { Randoms } from "./random";
 
 import { copyCharactorBattling } from "./charactor";
+import { copyRandoms } from "./random";
 
 export const ACTION_DO_NOTHING = "DO_NOTHING";
 
@@ -35,6 +37,7 @@ export type Turn = {
   action: Action;
   sortedCharactors: CharactorBattling[];
   field: Field;
+  ramdoms: Randoms;
 };
 
 export type CopyAction = (action: Action) => Action;
@@ -71,4 +74,5 @@ export const copyTurn: CopyTurn = (turn) => ({
   action: copyAction(turn.action),
   sortedCharactors: turn.sortedCharactors.map(copyCharactorBattling),
   field: turn.field,
+  ramdoms: copyRandoms(turn.ramdoms);
 });

@@ -39,3 +39,6 @@ export const createAbsolute: CreateAbsolute = () => ({
   damage: 1,
   accuracy: 1,
 });
+
+export type CopyRandoms = (randoms: Randoms) => Randoms;
+export const copyRandoms: CopyRandoms = (randoms) => ({ ...randoms });
