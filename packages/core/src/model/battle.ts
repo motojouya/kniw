@@ -12,7 +12,6 @@ import { copyTurn } from "./turn";
 
 import { acid, paralysis, quick, silent, sleep, slow } from "../store_data/status/index";
 import { underStatus } from "./status";
-import { copyRandoms } from "./random";
 
 const arrayLast = <T>(ary: Array<T>): T => ary.slice(-1)[0];
 
