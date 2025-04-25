@@ -7,6 +7,7 @@ import { GameOngoing, GameHome, GameVisitor } from "@motojouya/kniw-core/model/b
 import { toBattle } from "@motojouya/kniw-core/store_schema/battle";
 import { UserCancel } from "../../../src/io/window_dialogue";
 import { surrender } from "../../../src/procedure/battle/surrender";
+import { createAbsolute } from "@motojouya/kniw-core/model/random";
 
 const testData = {
   title: "first-title",
@@ -158,7 +159,12 @@ describe("surrender", () => {
       notice: (_message) => {},
     };
 
-    const battle = await surrender(mockRepo, dialogue)(battleData, battleData.home.charactors[0], new Date());
+    const battle = await surrender(mockRepo, dialogue)(
+      battleData,
+      battleData.home.charactors[0],
+      new Date(),
+      createAbsolute(),
+    );
 
     expect(battle).toBe(null);
   });
@@ -177,7 +183,12 @@ describe("surrender", () => {
       notice: (_message) => {},
     };
 
-    const battle = await surrender(mockRepo, dialogue)(battleData, battleData.visitor.charactors[0], new Date());
+    const battle = await surrender(mockRepo, dialogue)(
+      battleData,
+      battleData.visitor.charactors[0],
+      new Date(),
+      createAbsolute(),
+    );
 
     expect(battle).toBe(null);
   });
@@ -196,7 +207,12 @@ describe("surrender", () => {
       notice: (_message) => {},
     };
 
-    const battle = await surrender(mockRepo, dialogue)(battleData, battleData.home.charactors[0], new Date());
+    const battle = await surrender(mockRepo, dialogue)(
+      battleData,
+      battleData.home.charactors[0],
+      new Date(),
+      createAbsolute(),
+    );
 
     expect(battle).toBeInstanceOf(UserCancel);
   });

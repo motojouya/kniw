@@ -8,6 +8,7 @@ import { GameOngoing } from "@motojouya/kniw-core/model/battle";
 import { act } from "../../../src/procedure/battle/act";
 import { DataNotFoundError } from "@motojouya/kniw-core/store_utility/schema";
 import { UserCancel } from "../../../src/io/window_dialogue";
+import { createAbsolute } from "@motojouya/kniw-core/model/random";
 
 const skillForm = {
   skillName: "chop",
@@ -168,7 +169,7 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn);
+    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn, () => new Date(), createAbsolute);
 
     const turnJustBefore = result.turns.pop();
     const turnNextBefore = result.turns.pop();
@@ -198,7 +199,14 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, { ...skillForm, skillName: "not-found" }, lastTurn);
+    const result = await act(dialogue, mockRepo)(
+      battle,
+      actor,
+      { ...skillForm, skillName: "not-found" },
+      lastTurn,
+      () => new Date(),
+      createAbsolute,
+    );
 
     expect(result).toBeInstanceOf(DataNotFoundError);
   });
@@ -222,7 +230,7 @@ describe("act", () => {
       notice: (_message) => {},
     };
 
-    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn);
+    const result = await act(dialogue, mockRepo)(battle, actor, skillForm, lastTurn, () => new Date(), createAbsolute);
 
     expect(result).toBeInstanceOf(UserCancel);
   });

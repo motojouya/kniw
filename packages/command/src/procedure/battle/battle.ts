@@ -219,11 +219,11 @@ const playerSelect: PlayerSelect = (dialogue) => async (actor, battle) => {
         await showCharactorStatus(dialogue)(battle);
         break;
       case NOTHING:
-        return stay(battle, actor, new Date());
+        return stay(battle, actor, new Date(), createRandoms());
       case SURRENDER: {
         const isSurrender = await dialogue.confirm("降参してもよいですか？");
         if (!(isSurrender instanceof NotApplicable) && isSurrender) {
-          return surrender(battle, actor, new Date());
+          return surrender(battle, actor, new Date(), createRandoms());
         }
         break;
       }
@@ -257,7 +257,7 @@ export const continueBattle: ContinueBattle = (dialogue, battleRepository) => as
     const actor = turnActor(waitTurn);
 
     if (underStatus(sleep, actor)) {
-      turns.push(stay(battle, actor, new Date()));
+      turns.push(stay(battle, actor, new Date(), createRandoms()));
       await battleRepository.save(battle);
     } else {
       const turn = await playerSelect(dialogue)(actor, battle);

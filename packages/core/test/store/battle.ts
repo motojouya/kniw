@@ -127,6 +127,11 @@ const testData = {
       field: {
         climate: "SUNNY",
       },
+      randoms: {
+        times: 1,
+        damage: 1,
+        accuracy: 1,
+      },
     },
   ],
   result: GameOngoing,

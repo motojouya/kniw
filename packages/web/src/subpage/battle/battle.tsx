@@ -21,7 +21,7 @@ export const BattleExsiting: FC<{ battleTitle: string }> = ({ battleTitle }) => 
     battle instanceof JsonSchemaUnmatchError
   ) {
     return (
-      <Container backLink="/party/">
+      <Container backLink="/battle/">
         <Typography>{battle.message}</Typography>
       </Container>
     );
