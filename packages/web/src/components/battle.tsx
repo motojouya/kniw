@@ -433,6 +433,13 @@ export const BattleTurn: FC<{
               <Stack>
                 <Box>
                   <CharactorStatus charactor={actor} />
+                  {skill && (
+                    <Box sx={{ pt: 1 }}>
+                      <Typography>
+                        {`Skill: ${skill.label} MP-${skill.mpConsumption} WT+${skill.additionalWt} 距離${skill.effectLength}`}
+                      </Typography>
+                    </Box>
+                  )}
                 </Box>
                 <Box sx={{ textAlign: 'center', py: 1 }}>
                   <BattlingImage actionStatus={actionStatus} skill={skill} />
